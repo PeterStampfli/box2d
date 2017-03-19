@@ -24,6 +24,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Physics implements Disposable{
 
+    BodyBuilder bodyBuilder;
+
     static float METERS_PER_PIXEL;
     Viewport viewport;
     float minWidth;
@@ -32,13 +34,112 @@ public class Physics implements Disposable{
     World world;
     Box2DDebugRenderer debugRenderer;
 
-    BodyDef bodyDef;
     FixtureDef fixtureDef;
 
     final float TIME_STEP=1/60f;
     private float accumulator=0f;
 
+    public class BodyBuilder{
+
+        private BodyDef bodyDef;
+
+        public BodyBuilder(){
+            bodyDef=new BodyDef();
+        }
+
+        public BodyBuilder type(BodyDef.BodyType bodyType){
+            bodyDef.type=bodyType;
+            return this;
+        }
+
+        public BodyBuilder reset(){
+            bodyDef.angle=0;
+            bodyDef.bullet=false;
+            bodyDef.fixedRotation=false;
+            bodyDef.gravityScale=1;
+            bodyDef.allowSleep=true;
+            bodyDef.active=true;
+            bodyDef.awake=true;
+            bodyDef.angularVelocity=0;
+            bodyDef.linearVelocity.setZero();
+            bodyDef.angularDamping=0;
+            bodyDef.linearDamping=0;
+            return this;
+        }
+
+        public BodyBuilder position(float x,float y){
+            bodyDef.position.set(x, y);
+            return this;
+        }
+
+        public BodyBuilder position(Vector2 p){
+            bodyDef.position.set(p);
+            return this;
+        }
+
+        public BodyBuilder angle(float a){
+            bodyDef.angle=a;
+            return this;
+        }
+
+        public BodyBuilder angularDamping(float a){
+            bodyDef.angularDamping=a;
+            return this;
+        }
+
+        public BodyBuilder angularVelocity(float a){
+            bodyDef.angularVelocity=a;
+            return this;
+        }
+
+        public BodyBuilder linearDamping(float d){
+            bodyDef.linearDamping=d;
+            return this;
+        }
+
+        public BodyBuilder linearVelocity(float x,float y){
+            bodyDef.linearVelocity.set(x, y);
+            return this;
+        }
+
+        public BodyBuilder linearVelocity(Vector2 v){
+            bodyDef.linearVelocity.set(v);
+            return this;
+        }
+
+        public BodyBuilder gravityScale(float s){
+            bodyDef.gravityScale=s;
+            return this;
+        }
+
+        public BodyBuilder active(boolean b){
+            bodyDef.active=b;
+            return this;
+        }
+
+        public BodyBuilder awake(boolean b){
+            bodyDef.awake=b;
+            return this;
+        }
+
+        public BodyBuilder bullet(boolean b){
+            bodyDef.bullet=b;
+            return this;
+        }
+
+        public BodyBuilder allowSleep(boolean b){
+            bodyDef.allowSleep=b;
+            return this;
+        }
+
+        public Body build(){
+            return world.createBody(bodyDef);
+        }
+
+    }
+
     public Physics(float metersPerPixel,boolean debug){
+        bodyBuilder=new BodyBuilder().reset();
         METERS_PER_PIXEL=metersPerPixel;
         if (debug) debugRenderer =new Box2DDebugRenderer();
     }
@@ -49,7 +150,6 @@ public class Physics implements Disposable{
         }
         Box2D.init();
         world=new World(new Vector2(gx,gy),maySleep);
-        bodyDef=new BodyDef();
         fixtureDef=new FixtureDef();
         fixtureDef.density=1;                         // important: finite density  !!!
         fixtureDef.friction=0.3f;
@@ -76,32 +176,18 @@ public class Physics implements Disposable{
         return viewport;
     }
 
-    public Body createBody(float x,float y,float angle,BodyDef.BodyType bodyType){
-        bodyDef.position.set(x, y);
-        bodyDef.type=bodyType;
-        bodyDef.angle=angle;
-        return world.createBody(bodyDef);
-    }
-
     public FixtureDef getFixtureDef(){
         return fixtureDef;
     }
 
-    public Body createDynamicBody(float x,float y){
-        return createBody(x,y,0, BodyDef.BodyType.DynamicBody);
+    public BodyBuilder dynamicBody(){
+        return bodyBuilder.type(BodyDef.BodyType.DynamicBody);
     }
 
-    public Body createDynamicBody(float x,float y,float angle){
-        return createBody(x,y,angle, BodyDef.BodyType.DynamicBody);
+    public BodyBuilder staticBody(){
+        return bodyBuilder.type(BodyDef.BodyType.StaticBody);
     }
 
-    public Body createStaticBody(float x,float y){
-        return createBody(x,y,0, BodyDef.BodyType.StaticBody);
-    }
-
-    public Body createStaticBody(float x,float y,float angle){
-        return createBody(x,y,angle, BodyDef.BodyType.StaticBody);
-    }
 
     public void debugRender(){
         if (debugRenderer !=null) debugRenderer.render(world,viewport.getCamera().combined);
