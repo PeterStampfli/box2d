@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -25,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Physics implements Disposable{
 
     BodyBuilder bodyBuilder;
+    FixtureBuilder fixtureBuilder;
 
     static float METERS_PER_PIXEL;
     Viewport viewport;
@@ -41,7 +44,7 @@ public class Physics implements Disposable{
 
     public class BodyBuilder{
 
-        private BodyDef bodyDef;
+        public BodyDef bodyDef;
 
         public BodyBuilder(){
             bodyDef=new BodyDef();
@@ -138,8 +141,83 @@ public class Physics implements Disposable{
 
     }
 
+    public class FixtureBuilder{
+        public FixtureDef fixtureDef;
+        private  boolean needToDisposeShape;
+
+        public FixtureBuilder(){
+            fixtureDef=new FixtureDef();
+            needToDisposeShape =false;
+        }
+
+        private void disposeShape(){
+            if (needToDisposeShape){
+                needToDisposeShape =false;
+                fixtureDef.shape.dispose();
+                fixtureDef.shape=null;
+            }
+        }
+
+        public FixtureBuilder reset(){
+            disposeShape();
+            fixtureDef.density=1;
+            fixtureDef.filter.groupIndex=0;
+            fixtureDef.filter.maskBits=1;
+            fixtureDef.filter.categoryBits=1;
+            fixtureDef.friction=0.3f;
+            fixtureDef.isSensor=false;
+            fixtureDef.restitution=0.6f;
+            return this;
+        }
+
+        public FixtureBuilder density(float d){
+            fixtureDef.density=d;
+            return this;
+        }
+
+        public FixtureBuilder filterGroupIndex(short d){
+            fixtureDef.filter.groupIndex=d;
+            return this;
+        }
+
+        public FixtureBuilder filterCategoryBits(short d){
+            fixtureDef.filter.categoryBits=d;
+            return this;
+        }
+
+        public FixtureBuilder filterMaskBits(short d){
+            fixtureDef.filter.maskBits=d;
+            return this;
+        }
+
+        public FixtureBuilder friction(float d){
+            fixtureDef.friction=d;
+            return this;
+        }
+
+        public FixtureBuilder isSensor(boolean b){
+            fixtureDef.isSensor=b;
+            return this;
+        }
+
+        public FixtureBuilder restitution(float d){
+            fixtureDef.restitution=d;
+            return this;
+        }
+
+        public FixtureBuilder shape(Shape shape){
+            fixtureDef.shape=shape;
+            return this;
+        }
+
+        public Fixture attachTo(Body body){
+            return body.createFixture(fixtureDef);
+        }
+    }
+
     public Physics(float metersPerPixel,boolean debug){
         bodyBuilder=new BodyBuilder().reset();
+        fixtureBuilder=new FixtureBuilder().reset();
         METERS_PER_PIXEL=metersPerPixel;
         if (debug) debugRenderer =new Box2DDebugRenderer();
     }
@@ -188,6 +266,9 @@ public class Physics implements Disposable{
         return bodyBuilder.type(BodyDef.BodyType.StaticBody);
     }
 
+    public FixtureBuilder fixture(){
+        return fixtureBuilder;
+    }
 
     public void debugRender(){
         if (debugRenderer !=null) debugRenderer.render(world,viewport.getCamera().combined);
