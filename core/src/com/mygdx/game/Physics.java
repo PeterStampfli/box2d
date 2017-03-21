@@ -10,9 +10,12 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.utils.Array;
@@ -34,6 +37,7 @@ public class Physics implements Disposable{
     BodyBuilder bodyBuilder;
     FixtureBuilder fixtureBuilder;
     MouseJointBuilder mouseJointBuilder;
+    DistanceJointBuilder distanceJointBuilder;
 
 
     static float METERS_PER_PIXEL;
@@ -46,6 +50,8 @@ public class Physics implements Disposable{
 
     final float TIME_STEP=1/60f;
     private float accumulator=0f;
+    final int VELOCITY_ITERATIONS=8;
+    final int POSITION_ITERATIONS=3;
 
     public class BodyBuilder{
 
@@ -308,6 +314,11 @@ public class Physics implements Disposable{
             return this;
         }
 
+        public FixtureBuilder boxShape(float width,float height,float angle){
+            boxShape(width, height, new Vector2(),angle);
+            return this;
+        }
+
         public FixtureBuilder userData(Object data){
             userData=data;
             return this;
@@ -322,6 +333,7 @@ public class Physics implements Disposable{
 
     public class MouseJointBuilder{
         private MouseJointDef mouseJointDef;
+        private Object userData;
 
         public MouseJointBuilder(){
             mouseJointDef=new MouseJointDef();
@@ -332,6 +344,7 @@ public class Physics implements Disposable{
             mouseJointDef.dampingRatio=0.7f;
             mouseJointDef.frequencyHz=5;
             mouseJointDef.maxForce=10;
+            userData=null;
             return this;
         }
 
@@ -375,16 +388,114 @@ public class Physics implements Disposable{
             return this;
         }
 
-        public MouseJoint build(){
-            return (MouseJoint) world.createJoint(mouseJointDef);
+        public MouseJointBuilder userData(Object data){
+            userData=data;
+            return this;
         }
 
+        public MouseJoint build(){
+            MouseJoint mouseJoint= (MouseJoint) world.createJoint(mouseJointDef);
+            mouseJoint.setUserData(userData);
+            return mouseJoint;
+        }
+    }
+
+    public class DistanceJointBuilder {
+        private DistanceJointDef distanceJointDef;
+        private Object userData;
+
+        public DistanceJointBuilder() {
+            distanceJointDef = new DistanceJointDef();
+            reset();
+        }
+
+        public DistanceJointBuilder reset(){
+            distanceJointDef.dampingRatio=0;
+            distanceJointDef.frequencyHz=0;
+            distanceJointDef.length=1;
+            distanceJointDef.collideConnected=true;
+            distanceJointDef.localAnchorA.setZero();
+            distanceJointDef.localAnchorB.setZero();
+            return this;
+        }
+
+        public DistanceJointBuilder userData(Object data){
+            userData=data;
+            return this;
+        }
+
+        public DistanceJointBuilder dampingRatio(float d){
+            distanceJointDef.dampingRatio=d;
+            return this;
+        }
+
+        public DistanceJointBuilder frequencyHz(float d){
+            distanceJointDef.frequencyHz=d;
+            return this;
+        }
+
+        public DistanceJointBuilder collideConnected(boolean c){
+            distanceJointDef.collideConnected=c;
+            return this;
+        }
+
+        public DistanceJointBuilder length(float d){
+            distanceJointDef.length=d;
+            return this;
+        }
+
+        public DistanceJointBuilder bodyA(Body body){
+            distanceJointDef.bodyA=body;
+            return this;
+        }
+
+        public DistanceJointBuilder bodyB(Body body){
+            distanceJointDef.bodyB=body;
+            return this;
+        }
+
+        public DistanceJointBuilder localAnchorA(Vector2 p){
+            distanceJointDef.localAnchorA.set(p);
+            return this;
+        }
+
+        public DistanceJointBuilder localAnchorA(float x,float y){
+            distanceJointDef.localAnchorA.set(x, y);
+            return this;
+        }
+
+        public DistanceJointBuilder localAnchorB(Vector2 p){
+            distanceJointDef.localAnchorB.set(p);
+            return this;
+        }
+
+        public DistanceJointBuilder localAnchorB(float x,float y){
+            distanceJointDef.localAnchorB.set(x, y);
+            return this;
+        }
+
+        public DistanceJointBuilder length(){
+            Vector2 anchorDistance=new Vector2(distanceJointDef.bodyA.getPosition())
+                                                .add(distanceJointDef.localAnchorA)
+                                                .sub(distanceJointDef.bodyB.getPosition())
+                                                .sub(distanceJointDef.localAnchorB);
+            length(anchorDistance.len());
+            return this;
+        }
+
+
+        public DistanceJoint build(){
+            DistanceJoint distanceJoint= (DistanceJoint) world.createJoint(distanceJointDef);
+            distanceJoint.setUserData(userData);
+            return distanceJoint;
+        }
     }
 
     public Physics(float metersPerPixel,boolean debug){
         bodyBuilder=new BodyBuilder();
         fixtureBuilder=new FixtureBuilder();
         mouseJointBuilder=new MouseJointBuilder();
+        distanceJointBuilder=new DistanceJointBuilder();
         METERS_PER_PIXEL=metersPerPixel;
         if (debug) debugRenderer =new Box2DDebugRenderer();
     }
@@ -434,6 +545,8 @@ public class Physics implements Disposable{
 
     public MouseJointBuilder mouseJoint(){return mouseJointBuilder;}
 
+    public DistanceJointBuilder distanceJoint(){return distanceJointBuilder;}
+
     public void debugRender(){
         if (debugRenderer !=null) debugRenderer.render(world,viewport.getCamera().combined);
     }
@@ -443,12 +556,18 @@ public class Physics implements Disposable{
         accumulator+=frameTime;
         while (accumulator>=TIME_STEP){
             // worldmanager???
-            world.step(TIME_STEP,6,2);
+            world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
             accumulator-=TIME_STEP;
         }
     }
 
+    public float getReactionTorque(Joint joint){
+        return joint.getReactionTorque(1.0f/TIME_STEP);
+    }
 
+    public Vector2 getReactionForce(Joint joint){
+        return joint.getReactionForce(1.0f/TIME_STEP);
+    }
 
     public void dispose(){
         world.dispose();
