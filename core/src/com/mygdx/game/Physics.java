@@ -13,6 +13,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -31,6 +33,8 @@ public class Physics implements Disposable{
 
     BodyBuilder bodyBuilder;
     FixtureBuilder fixtureBuilder;
+    MouseJointBuilder mouseJointBuilder;
+
 
     static float METERS_PER_PIXEL;
     Viewport viewport;
@@ -39,8 +43,6 @@ public class Physics implements Disposable{
 
     World world;
     Box2DDebugRenderer debugRenderer;
-
-    FixtureDef fixtureDef;
 
     final float TIME_STEP=1/60f;
     private float accumulator=0f;
@@ -52,6 +54,7 @@ public class Physics implements Disposable{
 
         public BodyBuilder(){
             bodyDef=new BodyDef();
+            reset();
         }
 
         public BodyBuilder type(BodyDef.BodyType bodyType){
@@ -178,7 +181,7 @@ public class Physics implements Disposable{
 
         public FixtureBuilder(){
             fixtureDef=new FixtureDef();
-            needToDisposeShape =false;
+            reset();
         }
 
         private void disposeShape(boolean disposeNext){
@@ -317,9 +320,71 @@ public class Physics implements Disposable{
         }
     }
 
+    public class MouseJointBuilder{
+        private MouseJointDef mouseJointDef;
+
+        public MouseJointBuilder(){
+            mouseJointDef=new MouseJointDef();
+        }
+
+        public MouseJointBuilder reset(){
+            mouseJointDef.collideConnected=true;
+            mouseJointDef.dampingRatio=0.7f;
+            mouseJointDef.frequencyHz=5;
+            mouseJointDef.maxForce=10;
+            return this;
+        }
+
+        public MouseJointBuilder dummyBody(Body body){
+            mouseJointDef.bodyA=body;
+            return this;
+        }
+
+        public MouseJointBuilder body(Body body){
+            mouseJointDef.bodyB=body;
+            return this;
+        }
+
+        public MouseJointBuilder collideConnected(Boolean b){
+            mouseJointDef.collideConnected=b;
+            return this;
+        }
+
+        public MouseJointBuilder dampingRatio(float d){
+            mouseJointDef.dampingRatio=d;
+            return this;
+        }
+
+        public MouseJointBuilder frequencyHz(float d){
+            mouseJointDef.frequencyHz=d;
+            return this;
+        }
+
+        public MouseJointBuilder maxForce(float d){
+            mouseJointDef.maxForce=d;
+            return this;
+        }
+
+        public MouseJointBuilder target(Vector2 p){
+            mouseJointDef.target.set(p);
+            return this;
+        }
+
+        public MouseJointBuilder target(float x,float y){
+            mouseJointDef.target.set(x, y);
+            return this;
+        }
+
+        public MouseJoint build(){
+            return (MouseJoint) world.createJoint(mouseJointDef);
+        }
+
+    }
+
     public Physics(float metersPerPixel,boolean debug){
-        bodyBuilder=new BodyBuilder().reset();
-        fixtureBuilder=new FixtureBuilder().reset();
+        bodyBuilder=new BodyBuilder();
+        fixtureBuilder=new FixtureBuilder();
+        mouseJointBuilder=new MouseJointBuilder();
         METERS_PER_PIXEL=metersPerPixel;
         if (debug) debugRenderer =new Box2DDebugRenderer();
     }
@@ -330,13 +395,8 @@ public class Physics implements Disposable{
         }
         Box2D.init();
         world=new World(new Vector2(gx,gy),maySleep);
-        fixtureDef=new FixtureDef();
-        fixtureDef.density=1;                         // important: finite density  !!!
-        fixtureDef.friction=0.3f;
-        fixtureDef.restitution=0.5f;
         return world;
     }
-
 
     public Viewport createExtendViewport(float minWidth, float minHeight){
         this.minWidth=minWidth;
@@ -356,10 +416,6 @@ public class Physics implements Disposable{
         return viewport;
     }
 
-    public FixtureDef getFixtureDef(){
-        return fixtureDef;
-    }
-
     public BodyBuilder dynamicBody(){
         return bodyBuilder.type(BodyDef.BodyType.DynamicBody);
     }
@@ -376,6 +432,8 @@ public class Physics implements Disposable{
         return fixtureBuilder;
     }
 
+    public MouseJointBuilder mouseJoint(){return mouseJointBuilder;}
+
     public void debugRender(){
         if (debugRenderer !=null) debugRenderer.render(world,viewport.getCamera().combined);
     }
@@ -388,7 +446,6 @@ public class Physics implements Disposable{
             world.step(TIME_STEP,6,2);
             accumulator-=TIME_STEP;
         }
-
     }
 
 
