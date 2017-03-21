@@ -7,10 +7,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -45,6 +48,7 @@ public class Physics implements Disposable{
     public class BodyBuilder{
 
         public BodyDef bodyDef;
+        private Object userData;
 
         public BodyBuilder(){
             bodyDef=new BodyDef();
@@ -67,6 +71,45 @@ public class Physics implements Disposable{
             bodyDef.linearVelocity.setZero();
             bodyDef.angularDamping=0;
             bodyDef.linearDamping=0;
+            userData=null;
+            return this;
+        }
+
+        public BodyBuilder sameAs(Body body){
+            bodyDef.type=body.getType();
+            bodyDef.angle=body.getAngle();
+            bodyDef.bullet=body.isBullet();
+            bodyDef.fixedRotation=body.isFixedRotation();
+            bodyDef.gravityScale=body.getGravityScale();
+            bodyDef.allowSleep=body.isSleepingAllowed();
+            bodyDef.active=body.isActive();
+            bodyDef.awake=body.isAwake();
+            bodyDef.angularVelocity=body.getAngularVelocity();
+            bodyDef.linearVelocity.set(body.getLinearVelocity());
+            bodyDef.angularDamping=body.getAngularDamping();
+            bodyDef.linearDamping=body.getLinearDamping();
+            userData=body.getUserData();
+            return this;
+        }
+
+        public BodyBuilder active(boolean b){
+            bodyDef.active=b;
+            return this;
+        }
+
+        public BodyBuilder awake(boolean b){
+            bodyDef.awake=b;
+            return this;
+        }
+
+        public BodyBuilder allowSleep(boolean b){
+            bodyDef.allowSleep=b;
+            return this;
+        }
+
+
+        public BodyBuilder bullet(boolean b){
+            bodyDef.bullet=b;
             return this;
         }
 
@@ -115,28 +158,15 @@ public class Physics implements Disposable{
             return this;
         }
 
-        public BodyBuilder active(boolean b){
-            bodyDef.active=b;
-            return this;
-        }
-
-        public BodyBuilder awake(boolean b){
-            bodyDef.awake=b;
-            return this;
-        }
-
-        public BodyBuilder bullet(boolean b){
-            bodyDef.bullet=b;
-            return this;
-        }
-
-        public BodyBuilder allowSleep(boolean b){
-            bodyDef.allowSleep=b;
+        public BodyBuilder userData(Object data){
+            userData=data;
             return this;
         }
 
         public Body build(){
-            return world.createBody(bodyDef);
+            Body body= world.createBody(bodyDef);
+            body.setUserData(userData);
+            return body;
         }
 
     }
@@ -144,22 +174,22 @@ public class Physics implements Disposable{
     public class FixtureBuilder{
         public FixtureDef fixtureDef;
         private  boolean needToDisposeShape;
+        private Object userData;
 
         public FixtureBuilder(){
             fixtureDef=new FixtureDef();
             needToDisposeShape =false;
         }
 
-        private void disposeShape(){
+        private void disposeShape(boolean disposeNext){
             if (needToDisposeShape){
-                needToDisposeShape =false;
                 fixtureDef.shape.dispose();
-                fixtureDef.shape=null;
+                needToDisposeShape=disposeNext;
             }
         }
 
         public FixtureBuilder reset(){
-            disposeShape();
+            disposeShape(false);
             fixtureDef.density=1;
             fixtureDef.filter.groupIndex=0;
             fixtureDef.filter.maskBits=1;
@@ -167,6 +197,7 @@ public class Physics implements Disposable{
             fixtureDef.friction=0.3f;
             fixtureDef.isSensor=false;
             fixtureDef.restitution=0.6f;
+            userData=null;
             return this;
         }
 
@@ -206,12 +237,83 @@ public class Physics implements Disposable{
         }
 
         public FixtureBuilder shape(Shape shape){
+            disposeShape(false);
             fixtureDef.shape=shape;
             return this;
         }
 
+        public FixtureBuilder circleShape(Vector2 position, float radius){
+            disposeShape(true);
+            CircleShape circle=new CircleShape();
+            circle.setRadius(radius);
+            if (position!=null) circle.setPosition(position);
+            shape(circle);
+            return this;
+        }
+
+        public FixtureBuilder circleShape(float radius){
+            circleShape(null,radius);
+            return this;
+        }
+
+        public FixtureBuilder circleShape(float x,float y,float radius){
+            circleShape(new Vector2(x,y),radius);
+            return this;
+        }
+
+        public FixtureBuilder polygonShape(float[] vertices){
+            disposeShape(true);
+            PolygonShape polygon=new PolygonShape();
+            polygon.set(vertices);
+            shape(polygon);
+            return this;
+        }
+
+        public FixtureBuilder polygonShape(Array<Vector2> vertices){
+            polygonShape(Vector2Array.toFloats(vertices));
+            return this;
+        }
+
+        public FixtureBuilder boxShape(float width,float height){
+            disposeShape(true);
+            PolygonShape polygon=new PolygonShape();
+            polygon.setAsBox(0.5f*width,0.5f*height);
+            shape(polygon);
+            return this;
+        }
+
+        public FixtureBuilder boxShape(float width,float height,Vector2 center,float angle){
+            disposeShape(true);
+            PolygonShape polygon=new PolygonShape();
+            polygon.setAsBox(0.5f*width,0.5f*height,center,angle);
+            shape(polygon);
+            return this;
+        }
+
+        public FixtureBuilder boxShape(float width,float height,Vector2 center){
+            boxShape(width, height, center,0f);
+            return this;
+        }
+
+        public FixtureBuilder boxShape(float width,float height,float centerX,float centerY,float angle){
+            boxShape(width, height, new Vector2(centerX,centerY),angle);
+            return this;
+        }
+
+        public FixtureBuilder boxShape(float width,float height,float centerX,float centerY){
+            boxShape(width, height, new Vector2(centerX,centerY),0f);
+            return this;
+        }
+
+        public FixtureBuilder userData(Object data){
+            userData=data;
+            return this;
+        }
+
         public Fixture attachTo(Body body){
-            return body.createFixture(fixtureDef);
+            Fixture fixture=body.createFixture(fixtureDef);
+            fixture.setUserData(userData);
+            return  fixture;
         }
     }
 
@@ -266,6 +368,10 @@ public class Physics implements Disposable{
         return bodyBuilder.type(BodyDef.BodyType.StaticBody);
     }
 
+    public BodyBuilder body(){
+        return bodyBuilder;
+    }
+
     public FixtureBuilder fixture(){
         return fixtureBuilder;
     }
@@ -290,5 +396,6 @@ public class Physics implements Disposable{
     public void dispose(){
         world.dispose();
         if (debugRenderer !=null) debugRenderer.dispose();
+        fixtureBuilder.disposeShape(false);
     }
 }
