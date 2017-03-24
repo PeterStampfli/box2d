@@ -22,6 +22,11 @@ public class FixtureBuilder {
         reset();
     }
 
+    /**
+     * dispose the shape only if it has been created by the fixture builder
+     * external shapes have to be disposed extra
+     * @param disposeNext
+     */
     public void disposeShape(boolean disposeNext) {
         if (needToDisposeShape) {
             fixtureDef.shape.dispose();
@@ -29,6 +34,10 @@ public class FixtureBuilder {
         }
     }
 
+    /**
+     * reset the fixtureDef with defaults
+     * @return
+     */
     public FixtureBuilder reset() {
         disposeShape(false);
         fixtureDef.density = 1;
@@ -42,47 +51,96 @@ public class FixtureBuilder {
         return this;
     }
 
-    public FixtureBuilder density(float d) {
-        fixtureDef.density = d;
+    /**
+     * set the mass density (default=1)
+     * @param density
+     * @return
+     */
+    public FixtureBuilder density(float density) {
+        fixtureDef.density = density;
         return this;
     }
 
-    public FixtureBuilder filterGroupIndex(short d) {
-        fixtureDef.filter.groupIndex = d;
+    /**
+     * set groupIndex (default=0)
+     * @param index
+     * @return
+     */
+    public FixtureBuilder groupIndex(short index) {
+        fixtureDef.filter.groupIndex = index;
         return this;
     }
 
-    public FixtureBuilder filterCategoryBits(short d) {
-        fixtureDef.filter.categoryBits = d;
+    /**
+     * set the category bits (default=1)
+     * @param bits
+     * @return
+     */
+    public FixtureBuilder categoryBits(short bits) {
+        fixtureDef.filter.categoryBits = bits;
         return this;
     }
 
-    public FixtureBuilder filterMaskBits(short d) {
-        fixtureDef.filter.maskBits = d;
+    /**
+     * set the mask bits (default=1)
+     * @param bits
+     * @return
+     */
+    public FixtureBuilder maskBits(short bits) {
+        fixtureDef.filter.maskBits = bits;
         return this;
     }
 
-    public FixtureBuilder friction(float d) {
-        fixtureDef.friction = d;
+    /**
+     * set the friction for surface contact with other bodies (default=0.3 ?)
+     * @param friction
+     * @return
+     */
+    public FixtureBuilder friction(float friction) {
+        fixtureDef.friction = friction;
         return this;
     }
 
-    public FixtureBuilder isSensor(boolean b) {
-        fixtureDef.isSensor = b;
+    /**
+     * set if fixture is sensor (default=false)
+     * @param isSensor
+     * @return
+     */
+    public FixtureBuilder isSensor(boolean isSensor) {
+        fixtureDef.isSensor = isSensor;
         return this;
     }
 
-    public FixtureBuilder restitution(float d) {
-        fixtureDef.restitution = d;
+    /**
+     * set restition, bouncyness at collision (default=0.6 ?)
+     * @param restitition
+     * @return
+     */
+    public FixtureBuilder restitution(float restitition) {
+        fixtureDef.restitution = restitition;
         return this;
     }
 
+    /**
+     * provide an external shape for the fixture
+     * dispose this shape explicitely outside
+     * Disposes any shape created by the fixtureBuilder
+     * @param shape
+     * @return
+     */
     public FixtureBuilder shape(Shape shape) {
         disposeShape(false);
         fixtureDef.shape = shape;
         return this;
     }
 
+    /**
+     * create a circle shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param position
+     * @param radius
+     * @return
+     */
     public FixtureBuilder circleShape(Vector2 position, float radius) {
         disposeShape(true);
         CircleShape circle = new CircleShape();
@@ -92,16 +150,36 @@ public class FixtureBuilder {
         return this;
     }
 
+    /**
+     * create a circle shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param radius
+     * @return
+     */
     public FixtureBuilder circleShape(float radius) {
         circleShape(null, radius);
         return this;
     }
 
-    public FixtureBuilder circleShape(float x, float y, float radius) {
-        circleShape(new Vector2(x, y), radius);
+    /**
+     * create a circle shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param positionX
+     * @param positionY
+     * @param radius
+     * @return
+     */
+    public FixtureBuilder circleShape(float positionX, float positionY, float radius) {
+        circleShape(new Vector2(positionX, positionY), radius);
         return this;
     }
 
+    /**
+     * create a polygon shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param vertices
+     * @return
+     */
     public FixtureBuilder polygonShape(float[] vertices) {
         disposeShape(true);
         PolygonShape polygon = new PolygonShape();
@@ -110,19 +188,26 @@ public class FixtureBuilder {
         return this;
     }
 
+    /**
+     * create a polygon shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param vertices
+     * @return
+     */
     public FixtureBuilder polygonShape(Array<Vector2> vertices) {
         polygonShape(com.mygdx.game.utilities.Basic.toFloats(vertices));
         return this;
     }
 
-    public FixtureBuilder boxShape(float width, float height) {
-        disposeShape(true);
-        PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.5f * width, 0.5f * height);
-        shape(polygon);
-        return this;
-    }
-
+    /**
+     * create a rectangular polygon shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param width  full width
+     * @param height  full height
+     * @param center
+     * @param angle
+     * @return
+     */
     public FixtureBuilder boxShape(float width, float height, Vector2 center, float angle) {
         disposeShape(true);
         PolygonShape polygon = new PolygonShape();
@@ -151,11 +236,34 @@ public class FixtureBuilder {
         return this;
     }
 
+    /**
+     * create a rectangular polygon shape for the fixtureDef
+     * centered and axis aligned
+     * this shape will be disposed when other shapes are used
+     * @param width the full width
+     * @param height the full height
+     * @return
+     */
+    public FixtureBuilder boxShape(float width, float height) {
+        boxShape(width, height,0,0,0);
+        return this;
+    }
+
+    /**
+     * set user data to be used for the fixture
+     * @param data
+     * @return
+     */
     public FixtureBuilder userData(Object data) {
         userData = data;
         return this;
     }
 
+    /**
+     * create the fixture and attach it to the body, set the user data of the fixture
+     * @param body
+     * @return the fixture
+     */
     public Fixture attachTo(Body body) {
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(userData);

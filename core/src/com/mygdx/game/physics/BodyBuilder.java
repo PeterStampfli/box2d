@@ -147,7 +147,7 @@ public class BodyBuilder {
     }
 
     /**
-     * set angular damping. (default=0)
+     * set angular damping. (default=0), reduces rotational velocity
      * can be larger than 1. Effect depends on time step for large values.
      * @param damping
      * @return
@@ -168,7 +168,7 @@ public class BodyBuilder {
     }
 
     /**
-     * set linear damping (default=0)
+     * set linear damping (default=0), reduces linear velocity
      * can be larger than 1. Effect depends on time step for large values.
      * @param damping
      * @return
