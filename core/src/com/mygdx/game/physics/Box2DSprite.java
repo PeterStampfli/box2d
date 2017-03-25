@@ -6,16 +6,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 3/24/17.
  */
 
-public class Box2DSprite extends Sprite {
+public class Box2DSprite extends Sprite implements Drawable{
 
-    float angleBefore,angleAfter;
-    float positionXBefore,positionXAfter;   // position of the worldCenter of the body = worldOrigin of sprite
-    float positionYBefore,positionYAfter;
+    float previousPhysicsAngle, newPhysicsAngle;
+    float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
+    float previousPhysicsWorldCenterY, newPhysicsWorldCenterY;
 
     /**
      * creates a box2DSprite based on a Texture with same size
@@ -83,7 +84,7 @@ public class Box2DSprite extends Sprite {
     }
 
     /**
-     * set position and angle of the sprite to agree with the box2D body
+     * without interpolation: set position and angle of the sprite to agree with the box2D body
      * @param body
      */
     public void setPositionAngle(Body body){
@@ -92,46 +93,47 @@ public class Box2DSprite extends Sprite {
     }
 
     /**
-     * set position and angle from body at last physics update before graphics time
+     * if new Physics position and angle have data of result of the previous physics step
+     * and a new time step has been done then this method results in:
+     * -previous position and angle will have result of previous time step
+     * -new position and angle will contain result of the new (last) time step
+     *
      * @param body
      */
-    public void setPositionAngleBefore(Body body){
-        angleBefore=body.getAngle();
+    public void setPhysicsResult(Body body){
+        previousPhysicsAngle = newPhysicsAngle;
+        previousPhysicsWorldCenterX = newPhysicsWorldCenterX;
+        previousPhysicsWorldCenterY = newPhysicsWorldCenterY;
+        newPhysicsAngle =body.getAngle();
         Vector2 worldCenter=body.getWorldCenter();
-        positionXBefore=worldCenter.x;
-        positionYBefore=worldCenter.y;
+        newPhysicsWorldCenterX =worldCenter.x;
+        newPhysicsWorldCenterY =worldCenter.y;
+        L.og(newPhysicsWorldCenterX);
     }
 
     /**
-     * set position and angle from body at next physics update after graphics time
-     * @param body
-     */
-    public void setPositionAngleAfter(Body body){
-        angleBefore=body.getAngle();
-        Vector2 worldCenter=body.getWorldCenter();
-        positionXAfter=worldCenter.x;
-        positionYAfter=worldCenter.y;
-    }
-
-    /**
-     * set position and angle before graphics time equal to earlier data after previous graphics time
-     */
-    public void positionAngleBeforeEqualAfter(){
-        angleBefore=angleAfter;
-        positionXBefore=positionXAfter;
-        positionYBefore=positionYAfter;
-    }
-
-    /**
-     * set angle and position of sprite from linear interpolation
-     * progress=1 for graphics time equals next physics time after
-     * progress=0 for graphics time equals last physics time before graphics time
-     * constant TIME_STEP between physics times, thus progress=(graphics time-time before)/TIME_STEP
+     * angle and position of sprite from linear interpolation between previous and new physics data
+     *
+     * progress=1 for graphics time equal to time of new physics data
+     * progress=0 for graphics time equal to time of previous physics data
+     * use constant TIME_STEP between physics times, thus progress=(graphics time-time previous physics step)/TIME_STEP
+     * if (time of new physics step-time of previous physics step)=TIME_STEP
      * @param progress
      */
-    public void setInterpolatedPositionAngle(float progress){
-        setPosition(MathUtils.lerp(positionXBefore,positionXAfter,progress),
-                    MathUtils.lerp(positionYBefore,positionYAfter,progress));
-        setAngle(MathUtils.lerpAngle(angleBefore,angleAfter,progress));
+    public void interpolateGraphics(float progress){
+        setWorldOrigin(MathUtils.lerp(previousPhysicsWorldCenterX, newPhysicsWorldCenterX,progress),
+                       MathUtils.lerp(previousPhysicsWorldCenterY, newPhysicsWorldCenterY,progress));
+        setAngle(MathUtils.lerpAngle(previousPhysicsAngle, newPhysicsAngle,progress));
+    }
+
+    /**
+     * set origin, physics position and angle of sprite according to body
+     * @param body
+     */
+    public void initializePhysics(Body body){
+        setLocalOrigin(body);
+        setPhysicsResult(body);
+        // repeat to set both previous and new data
+        setPhysicsResult(body);
     }
 }

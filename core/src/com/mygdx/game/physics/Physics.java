@@ -2,16 +2,20 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.utilities.Basic;
 
 /**
  * Created by peter on 3/18/17.
@@ -36,7 +40,12 @@ public class Physics implements Disposable{
     World world;
     Box2DDebugRenderer debugRenderer;
 
+    float physicsTime;
+    float graphicsTime;
+    Array<Body> bodies;
+
     final float TIME_STEP=1/60f;
+    final float MAX_TIMEINTERVAL=0.25f;
     private float accumulator=0f;
     final int VELOCITY_ITERATIONS=8;
     final int POSITION_ITERATIONS=3;
@@ -50,6 +59,7 @@ public class Physics implements Disposable{
         fixtureBuilder=new FixtureBuilder();
         mouseJointBuilder=new MouseJointBuilder(this);
         distanceJointBuilder=new DistanceJointBuilder(this);
+        bodies=new Array<Body>();
         if (debug) debugRenderer =new Box2DDebugRenderer();
     }
 
@@ -106,7 +116,7 @@ public class Physics implements Disposable{
     }
 
     public void step(float dTime){
-        float frameTime=Math.min(dTime,0.25f);
+        float frameTime=Math.min(dTime,MAX_TIMEINTERVAL);
         accumulator+=frameTime;
         while (accumulator>=TIME_STEP){
             // worldmanager???
@@ -122,6 +132,50 @@ public class Physics implements Disposable{
     public Vector2 getReactionForce(Joint joint){
         return joint.getReactionForce(1.0f/TIME_STEP);
     }
+
+
+
+    public void start(){
+        physicsTime= Basic.getTime();
+    }
+
+    public void step(){
+        world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
+        physicsTime+=TIME_STEP;
+    }
+
+    public void advance(){
+        world.getBodies(bodies);
+        graphicsTime=Basic.getTime();
+        if (physicsTime<graphicsTime){   // we have to advance time with fixed timestep
+            physicsTime=Math.max(physicsTime,graphicsTime-MAX_TIMEINTERVAL);  //prevent spiral of death
+            if (physicsTime<graphicsTime-TIME_STEP){   // we need more than one time step
+                while (physicsTime<graphicsTime-TIME_STEP){  // advance until we are close
+                    step();
+                }
+                // set physics result
+            }
+            // physics time is less than TIME_STEP behind graphics time,
+            // new physics result of sprites is set to this time
+            step();
+            //set physics result
+            float progress=1-(physicsTime-graphicsTime)/TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
+            // interpolate graphics
+
+        }
+    }
+
+    public void draw(Batch batch){
+        Object userData;
+        world.getBodies(bodies);
+        for (Body body:bodies){
+            userData=body.getUserData();
+            if (userData instanceof Drawable){
+                ((Drawable)userData).draw(batch);
+            }
+        }
+    }
+
 
     public void dispose(){
         world.dispose();
