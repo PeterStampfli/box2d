@@ -6,13 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 3/24/17.
  */
 
-public class Box2DSprite extends Sprite implements Drawable{
+public class Box2DSprite extends Sprite implements Drawable,Positionable{
 
     float previousPhysicsAngle, newPhysicsAngle;
     float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
@@ -100,7 +99,7 @@ public class Box2DSprite extends Sprite implements Drawable{
      *
      * @param body
      */
-    public void setPhysicsResult(Body body){
+    public void setPhysicsData(Body body){
         previousPhysicsAngle = newPhysicsAngle;
         previousPhysicsWorldCenterX = newPhysicsWorldCenterX;
         previousPhysicsWorldCenterY = newPhysicsWorldCenterY;
@@ -108,7 +107,6 @@ public class Box2DSprite extends Sprite implements Drawable{
         Vector2 worldCenter=body.getWorldCenter();
         newPhysicsWorldCenterX =worldCenter.x;
         newPhysicsWorldCenterY =worldCenter.y;
-        L.og(newPhysicsWorldCenterX);
     }
 
     /**
@@ -120,7 +118,7 @@ public class Box2DSprite extends Sprite implements Drawable{
      * if (time of new physics step-time of previous physics step)=TIME_STEP
      * @param progress
      */
-    public void interpolateGraphics(float progress){
+    public void updateGraphicsData(float progress){
         setWorldOrigin(MathUtils.lerp(previousPhysicsWorldCenterX, newPhysicsWorldCenterX,progress),
                        MathUtils.lerp(previousPhysicsWorldCenterY, newPhysicsWorldCenterY,progress));
         setAngle(MathUtils.lerpAngle(previousPhysicsAngle, newPhysicsAngle,progress));
@@ -132,8 +130,8 @@ public class Box2DSprite extends Sprite implements Drawable{
      */
     public void initializePhysics(Body body){
         setLocalOrigin(body);
-        setPhysicsResult(body);
+        setPhysicsData(body);
         // repeat to set both previous and new data
-        setPhysicsResult(body);
+        setPhysicsData(body);
     }
 }

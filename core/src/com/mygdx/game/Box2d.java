@@ -10,10 +10,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.physics.Box2DSprite;
+import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.Viewports;
 
 public class Box2d extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -21,7 +22,7 @@ public class Box2d extends ApplicationAdapter {
 	Texture img;
 
 	World world;
-	com.mygdx.game.physics.Physics physics;
+	Physics physics;
 
 	Viewport viewport;
 
@@ -33,15 +34,19 @@ public class Box2d extends ApplicationAdapter {
 	float pixelsPerMeter=100f;
 	Body test;
 
+	boolean debug;
+
 
 	@Override
 	public void create () {
+		debug=true;
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-		physics=new com.mygdx.game.physics.Physics(true);
+		Basic.linearInterpolation(img);
+		viewport= Viewports.createExtendViewport(10,10);
+		physics=new Physics(viewport,debug);
 
 		world=physics.createWorld(0,-10,true);
-		viewport=physics.createExtendViewport(10,10);
 		//viewport=physics.createFitViewport(10,10);
 
 		shapeRenderer=new ShapeRenderer();
@@ -54,12 +59,12 @@ public class Box2d extends ApplicationAdapter {
 		sprite.adjustSizeToPixelScale(256);
 
 		//bodyDef.gravityScale=-0.1f;
-		movingBody=physics.dynamicBody().userData(sprite).position(3,5).build();
+		movingBody=physics.dynamicBody().position(3,5).build(sprite);
 		physics.fixture().circleShape(0.5f,0.5f,0.5f).attachTo(movingBody);
 
 		sprite.initializePhysics(movingBody);
 
-		Body top=physics.staticBody().position(9,9).build();
+		Body top=physics.staticBody().position(6,10).build();
 
 
 
@@ -73,7 +78,6 @@ public class Box2d extends ApplicationAdapter {
 
 		physics.fixture().boxShape(20,0.2f).attachTo(ground);
 		groundBox.dispose();
-		com.mygdx.game.utilities.L.og(new MouseJointDef().collideConnected);
 
 		//mouseJoint=physics.mouseJoint().dummyBody(ground).body(bottom).maxForce(12).target(5,4.7f).build();
 		physics.distanceJoint().bodyA(top).bodyB(movingBody).localAnchorB(0.5f,0.7f).length().build();
@@ -94,6 +98,7 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		if (Basic.timeSinceLastFrameIsSmallerThan(0.03f)) return;
 		viewport.apply();
 
 		Basic.clearBackground(Color.BLUE);
@@ -105,6 +110,9 @@ public class Box2d extends ApplicationAdapter {
 		batch.begin();
 		//batch.draw(img, 0, 0,0,0,15,10);
 		//sprite.draw(batch);
+		if (debug){
+			physics.updateGraphicsData(1);
+		}
 		physics.draw(batch);
 		batch.end();
 		physics.debugRender();
@@ -115,10 +123,7 @@ public class Box2d extends ApplicationAdapter {
 		//mouseJoint.setTarget(new Vector2(9, 9));
 		//physics.step(1/60f);
 		physics.advance();
-		/*L.og("test position "+test.getPosition());
-		L.og(" angle "+test.getAngle());
-		L.og("world center "+test.getWorldCenter());
-		L.og("local center "+test.getLocalCenter());*/
+
 
 	}
 	

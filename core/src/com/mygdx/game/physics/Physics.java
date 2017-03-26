@@ -1,7 +1,6 @@
 package com.mygdx.game.physics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.Basic;
 
@@ -34,8 +31,6 @@ public class Physics implements Disposable{
     DistanceJointBuilder distanceJointBuilder;
 
     Viewport viewport;
-    float minWidth;
-    float minHeight;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -52,100 +47,159 @@ public class Physics implements Disposable{
 
     /**
      * create all builders, debug renderer only if debug==true
+     * initialize box2D
+     * @param viewport
      * @param debug
      */
-    public Physics(boolean debug){
+    public Physics(Viewport viewport,boolean debug){
         bodyBuilder=new BodyBuilder(this);
         fixtureBuilder=new FixtureBuilder();
         mouseJointBuilder=new MouseJointBuilder(this);
         distanceJointBuilder=new DistanceJointBuilder(this);
         bodies=new Array<Body>();
-        if (debug) debugRenderer =new Box2DDebugRenderer();
+        this.viewport=viewport;
+        if (debug) {
+            debugRenderer =new Box2DDebugRenderer();
+        }
+        Box2D.init();
     }
 
-
-    public World createWorld(float gx,float gy,boolean maySleep){
+    /**
+     * create and return box2D world with given components of gravity and flag for bodies may sleep
+     * @param gravityX
+     * @param gravityY
+     * @param maySleep
+     * @return
+     */
+    public World createWorld(float gravityX,float gravityY,boolean maySleep){
         if (world!=null){
             Gdx.app.log("***** Physics", "World already exists!!!!!!!!!!!!!");
         }
-        Box2D.init();
-        world=new World(new Vector2(gx,gy),maySleep);
+        else {
+            world = new World(new Vector2(gravityX, gravityY), maySleep);
+        }
         return world;
     }
 
-    public Viewport createExtendViewport(float minWidth, float minHeight){
-        this.minWidth=minWidth;
-        this.minHeight=minHeight;
-        OrthographicCamera camera=new OrthographicCamera();
-        viewport=new ExtendViewport(minWidth,minHeight,camera);
-        camera.setToOrtho(false,minWidth,minHeight);
-        return viewport;
-    }
-
-    public Viewport createFitViewport(float minWidth, float minHeight){
-        this.minWidth=minWidth;
-        this.minHeight=minHeight;
-        OrthographicCamera camera=new OrthographicCamera();
-        viewport=new FitViewport(minWidth,minHeight,camera);
-        camera.setToOrtho(false,minWidth,minHeight);
-        return viewport;
-    }
-
+    /**
+     * set the body type to dynamic body and return the bodybuilder
+     * @return
+     */
     public BodyBuilder dynamicBody(){
         return bodyBuilder.type(BodyDef.BodyType.DynamicBody);
     }
 
+    /**
+     *set the body type to static body and return the bodybuilder
+     * @return
+     */
     public BodyBuilder staticBody(){
         return bodyBuilder.type(BodyDef.BodyType.StaticBody);
     }
 
+    /**
+     * get the bodyBuilder
+     * @return
+     */
     public BodyBuilder body(){
         return bodyBuilder;
     }
 
+    /**
+     * get the fixture builder
+     * @return
+     */
     public FixtureBuilder fixture(){
         return fixtureBuilder;
     }
 
+    /**
+     * get the mouse joint builder
+     * @return
+     */
     public MouseJointBuilder mouseJoint(){return mouseJointBuilder;}
 
+    /**
+     * get the distance joint builder
+     * @return
+     */
     public DistanceJointBuilder distanceJoint(){return distanceJointBuilder;}
 
+    /**
+     * if debug==true at physics creation then do a debug rendering of result of last physics step
+     * note that for interpolation the graphics and physics positions are different
+     */
     public void debugRender(){
-        if (debugRenderer !=null) debugRenderer.render(world,viewport.getCamera().combined);
-    }
-
-    public void step(float dTime){
-        float frameTime=Math.min(dTime,MAX_TIMEINTERVAL);
-        accumulator+=frameTime;
-        while (accumulator>=TIME_STEP){
-            // worldmanager???
-            world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
-            accumulator-=TIME_STEP;
+        if (debugRenderer !=null) {
+            debugRenderer.render(world,viewport.getCamera().combined);
         }
     }
 
+    /**
+     * get the reaction torque of a joint, using the fixed physics time step
+     * @param joint
+     * @return
+     */
     public float getReactionTorque(Joint joint){
         return joint.getReactionTorque(1.0f/TIME_STEP);
     }
 
+    /**
+     * get the reaction force of a joint, using the fixed physics time step
+     * @param joint
+     * @return
+     */
     public Vector2 getReactionForce(Joint joint){
         return joint.getReactionForce(1.0f/TIME_STEP);
     }
 
-
-
+    /**
+     * start the physics. (sets the physics time equal to currrent time.)
+     */
     public void start(){
         physicsTime= Basic.getTime();
     }
 
+    /**
+     * Make one time step. Increase physics time.
+     * Override/Extend to remove/create bodies/sprites after the world step
+     */
     public void step(){
         world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
         physicsTime+=TIME_STEP;
     }
 
-    public void advance(){
+    /**
+     * check all bodies.
+     *  set physics data of all userData objects implementing the Movable interface
+     *  Updates the Array of bodies because some bodies may have been destroyed or created in the world step
+     */
+    public void setPhysicsData(){
+        Object userData;
         world.getBodies(bodies);
+        for (Body body:bodies){
+            userData=body.getUserData();
+            if (userData instanceof Positionable){
+                ((Positionable)userData).setPhysicsData(body);
+            }
+        }
+    }
+
+
+    public void updateGraphicsData(float progress){
+        Object userData;
+        world.getBodies(bodies);
+        for (Body body:bodies){
+            userData=body.getUserData();
+            if (userData instanceof Positionable){
+                ((Positionable)userData).updateGraphicsData(progress);
+            }
+        }
+    }
+
+
+
+    public void advance(){
         graphicsTime=Basic.getTime();
         if (physicsTime<graphicsTime){   // we have to advance time with fixed timestep
             physicsTime=Math.max(physicsTime,graphicsTime-MAX_TIMEINTERVAL);  //prevent spiral of death
@@ -153,16 +207,17 @@ public class Physics implements Disposable{
                 while (physicsTime<graphicsTime-TIME_STEP){  // advance until we are close
                     step();
                 }
-                // set physics result
+                setPhysicsData();
             }
             // physics time is less than TIME_STEP behind graphics time,
             // new physics result of sprites is set to this time
             step();
-            //set physics result
-            float progress=1-(physicsTime-graphicsTime)/TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
-            // interpolate graphics
-
+            setPhysicsData();
         }
+        float progress=1-(physicsTime-graphicsTime)/TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
+      //  L.og("times phys "+physicsTime+" graph "+graphicsTime);
+       // L.og("progress "+progress);
+        updateGraphicsData(progress);
     }
 
     public void draw(Batch batch){
@@ -176,7 +231,10 @@ public class Physics implements Disposable{
         }
     }
 
-
+    /**
+     * do not forget to dispose the world and
+     * maybe the debugRenderer and a shape left in the fixture builder
+     */
     public void dispose(){
         world.dispose();
         if (debugRenderer !=null) debugRenderer.dispose();

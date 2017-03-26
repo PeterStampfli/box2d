@@ -11,7 +11,6 @@ public class BodyBuilder {
 
     private Physics physics;
     public BodyDef bodyDef;
-    private Object userData;
 
     /**
      * creates and resets the bodydef
@@ -49,7 +48,6 @@ public class BodyBuilder {
         bodyDef.linearVelocity.setZero();
         bodyDef.angularDamping = 0;
         bodyDef.linearDamping = 0;
-        userData = null;
         return this;
     }
 
@@ -71,7 +69,6 @@ public class BodyBuilder {
         bodyDef.linearVelocity.set(body.getLinearVelocity());
         bodyDef.angularDamping = body.getAngularDamping();
         bodyDef.linearDamping = body.getLinearDamping();
-        userData = body.getUserData();
         return this;
     }
 
@@ -210,23 +207,22 @@ public class BodyBuilder {
     }
 
     /**
-     * set user data
-     * @param data
+     * build the body from BodyDef and attach the supplied userData
+     * @param userData
      * @return
      */
-    public BodyBuilder userData(Object data) {
-        userData = data;
-        return this;
-    }
-
-    /**
-     * build the body from BodyDef and attach the userData
-     * @return
-     */
-    public Body build() {
+    public Body build(Object userData) {
         Body body = physics.world.createBody(bodyDef);
         body.setUserData(userData);
         return body;
+    }
+
+    /**
+     * build the body from BodyDef without userData
+     * @return
+     */
+    public Body build() {
+        return build(null);
     }
 
 }

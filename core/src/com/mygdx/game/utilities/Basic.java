@@ -17,6 +17,9 @@ public class Basic {
 
     private static int numberOfRenderCalls;
 
+    private static float timeOfLastFrame=0;
+
+
     /**
      * switch continuous rendering
      *    input events trigger rendering!
@@ -115,6 +118,21 @@ public class Basic {
      */
     public static float getTrueDeltaTime() {
         return Gdx.graphics.getRawDeltaTime();
+    }
+
+    /**
+     * check if time passed since last frame is smaller than given value
+     * for debugging, reducing the frame rate
+     * @param t
+     * @return
+     */
+    public static boolean timeSinceLastFrameIsSmallerThan(float t){
+        timeOfLastFrame+=getTrueDeltaTime();
+        if (timeOfLastFrame>=t){
+            timeOfLastFrame=0;
+            return false;
+        }
+        return true;
     }
 
     /**
