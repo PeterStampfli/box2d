@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 public class MouseJointBuilder {
     private Physics physics;
     private MouseJointDef mouseJointDef;
-    private Object userData;
 
     public MouseJointBuilder(Physics physics) {
         this.physics = physics;
@@ -23,7 +22,6 @@ public class MouseJointBuilder {
         mouseJointDef.dampingRatio = 0.7f;
         mouseJointDef.frequencyHz = 5;
         mouseJointDef.maxForce = 10;
-        userData = null;
         return this;
     }
 
@@ -67,14 +65,13 @@ public class MouseJointBuilder {
         return this;
     }
 
-    public MouseJointBuilder userData(Object data) {
-        userData = data;
-        return this;
-    }
-
-    public MouseJoint build() {
+    public MouseJoint build(Object userData) {
         MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
         mouseJoint.setUserData(userData);
         return mouseJoint;
+    }
+
+    public MouseJoint build() {
+        return build(null);
     }
 }

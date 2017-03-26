@@ -170,8 +170,7 @@ public class Physics implements Disposable{
     }
 
     /**
-     * check all bodies.
-     *  set physics data of all userData objects implementing the Movable interface
+     *  set physics data of all bodies userData objects implementing the Movable interface
      *  Updates the Array of bodies because some bodies may have been destroyed or created in the world step
      */
     public void setPhysicsData(){
@@ -185,7 +184,11 @@ public class Physics implements Disposable{
         }
     }
 
-
+    /**
+     * Interpolate the physics data of bodies userData objects that implement the Movable interface.
+     * progress=1 gets new physics data, progress=0 gets previous physics data
+     * @param progress
+     */
     public void updateGraphicsData(float progress){
         Object userData;
         world.getBodies(bodies);
@@ -197,8 +200,12 @@ public class Physics implements Disposable{
         }
     }
 
-
-
+    /**
+     * the graphics time is the time at call of this method.
+     * advance the physics time past the graphics time.
+     * Update physics data (eg. world center position and angle) of userData objects.
+     * Let userData objects ionterpolate physics data to get data at graphics time.
+     */
     public void advance(){
         graphicsTime=Basic.getTime();
         if (physicsTime<graphicsTime){   // we have to advance time with fixed timestep
@@ -215,11 +222,13 @@ public class Physics implements Disposable{
             setPhysicsData();
         }
         float progress=1-(physicsTime-graphicsTime)/TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
-      //  L.og("times phys "+physicsTime+" graph "+graphicsTime);
-       // L.og("progress "+progress);
         updateGraphicsData(progress);
     }
 
+    /**
+     * Draws all physics bodies with userData that implements the Drawable interface.
+     * @param batch
+     */
     public void draw(Batch batch){
         Object userData;
         world.getBodies(bodies);

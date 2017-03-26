@@ -60,7 +60,7 @@ public class Box2d extends ApplicationAdapter {
 
 		//bodyDef.gravityScale=-0.1f;
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
-		physics.fixture().circleShape(0.5f,0.5f,0.5f).attachTo(movingBody);
+		physics.fixture().circleShape(0.5f,0.5f,0.5f).attach(movingBody);
 
 		sprite.initializePhysics(movingBody);
 
@@ -68,19 +68,19 @@ public class Box2d extends ApplicationAdapter {
 
 
 
-		physics.fixture().boxShape(0.5f,1,0.6f).attachTo(top);
-		//physics.fixture().polygonShape(triangle).attachTo(body);
+		physics.fixture().boxShape(0.5f,1,0.6f).attach(top);
+		//physics.fixture().polygonShape(triangle).attach(body);
 
 
 		Body ground=physics.staticBody().reset().position(5,-0.1f).build();
 		PolygonShape groundBox=new PolygonShape();
 		groundBox.setAsBox(20,0.2f);
 
-		physics.fixture().boxShape(20,0.2f).attachTo(ground);
+		physics.fixture().boxShape(20,0.2f).attach(ground);
 		groundBox.dispose();
 
 		//mouseJoint=physics.mouseJoint().dummyBody(ground).body(bottom).maxForce(12).target(5,4.7f).build();
-		physics.distanceJoint().bodyA(top).bodyB(movingBody).localAnchorB(0.5f,0.7f).length().build();
+		physics.distanceJoint().bodyA(top).bodyB(movingBody).localAnchorBIsLocalCenter().length().build();
 
 		physics.start();
 

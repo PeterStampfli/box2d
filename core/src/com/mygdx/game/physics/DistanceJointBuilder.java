@@ -11,14 +11,22 @@ import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 public class DistanceJointBuilder {
     private Physics physics;
     private DistanceJointDef distanceJointDef;
-    private Object userData;
 
+    /**
+     * creates and resets the distanceJointDef
+     * @param physics
+     */
     public DistanceJointBuilder(Physics physics) {
         this.physics = physics;
         distanceJointDef = new DistanceJointDef();
         reset();
     }
 
+    /**
+     * reset the distanceJointDef to default values
+     *  (a stiff joint)
+     * @return
+     */
     public DistanceJointBuilder reset() {
         distanceJointDef.dampingRatio = 0;
         distanceJointDef.frequencyHz = 0;
@@ -26,11 +34,6 @@ public class DistanceJointBuilder {
         distanceJointDef.collideConnected = true;
         distanceJointDef.localAnchorA.setZero();
         distanceJointDef.localAnchorB.setZero();
-        return this;
-    }
-
-    public DistanceJointBuilder userData(Object data) {
-        userData = data;
         return this;
     }
 
@@ -46,11 +49,6 @@ public class DistanceJointBuilder {
 
     public DistanceJointBuilder collideConnected(boolean c) {
         distanceJointDef.collideConnected = c;
-        return this;
-    }
-
-    public DistanceJointBuilder length(float d) {
-        distanceJointDef.length = d;
         return this;
     }
 
@@ -74,6 +72,11 @@ public class DistanceJointBuilder {
         return this;
     }
 
+    public DistanceJointBuilder localAnchorAIsLocalCenter() {
+        distanceJointDef.localAnchorA.set(distanceJointDef.bodyA.getLocalCenter());
+        return this;
+    }
+
     public DistanceJointBuilder localAnchorB(Vector2 p) {
         distanceJointDef.localAnchorB.set(p);
         return this;
@@ -81,6 +84,16 @@ public class DistanceJointBuilder {
 
     public DistanceJointBuilder localAnchorB(float x, float y) {
         distanceJointDef.localAnchorB.set(x, y);
+        return this;
+    }
+
+    public DistanceJointBuilder localAnchorBIsLocalCenter() {
+        distanceJointDef.localAnchorB.set(distanceJointDef.bodyB.getLocalCenter());
+        return this;
+    }
+
+    public DistanceJointBuilder length(float d) {
+        distanceJointDef.length = d;
         return this;
     }
 
@@ -94,9 +107,13 @@ public class DistanceJointBuilder {
     }
 
 
-    public DistanceJoint build() {
+    public DistanceJoint build(Object userData) {
         DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
         distanceJoint.setUserData(userData);
         return distanceJoint;
+    }
+
+    public DistanceJoint build() {
+        return build(null);
     }
 }

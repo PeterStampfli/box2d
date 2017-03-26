@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Array;
 public class FixtureBuilder {
     public FixtureDef fixtureDef;
     private boolean needToDisposeShape;
-    private Object userData;
 
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();
@@ -47,7 +46,6 @@ public class FixtureBuilder {
         fixtureDef.friction = 0.3f;
         fixtureDef.isSensor = false;
         fixtureDef.restitution = 0.6f;
-        userData = null;
         return this;
     }
 
@@ -250,23 +248,23 @@ public class FixtureBuilder {
     }
 
     /**
-     * set user data to be used for the fixture
-     * @param data
-     * @return
-     */
-    public FixtureBuilder userData(Object data) {
-        userData = data;
-        return this;
-    }
-
-    /**
-     * create the fixture and attach it to the body, set the user data of the fixture
+     * create the fixture, attach it to the body and set the user data of the fixture
      * @param body
      * @return the fixture
      */
-    public Fixture attachTo(Body body) {
+    public Fixture attach(Body body,Object userData) {
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(userData);
         return fixture;
+    }
+
+    /**
+     * create the fixture, attach it to the body, no user data
+     * @param body
+     * @return the fixture
+     */
+    public Fixture attach(Body body) {
+        Fixture fixture = body.createFixture(fixtureDef);
+        return attach(body,null);
     }
 }
