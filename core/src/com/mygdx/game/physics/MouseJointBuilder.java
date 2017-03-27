@@ -10,11 +10,11 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
  * Created by peter on 3/22/17.
  */
 public class MouseJointBuilder {
-    private World world;
+    private Physics physics;
     private MouseJointDef mouseJointDef;
 
-    public MouseJointBuilder(World world) {
-        this.world = world;
+    public MouseJointBuilder(Physics physics) {
+        this.physics = physics;
         mouseJointDef = new MouseJointDef();
     }
 
@@ -67,7 +67,7 @@ public class MouseJointBuilder {
     }
 
     public MouseJoint build(Object userData) {
-        MouseJoint mouseJoint = (MouseJoint) world.createJoint(mouseJointDef);
+        MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
         mouseJoint.setUserData(userData);
         return mouseJoint;
     }

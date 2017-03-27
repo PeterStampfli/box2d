@@ -33,4 +33,14 @@ public class L {
     public static void og(boolean b){  og(""+b);}
 
 
+    public static void og(Object object){
+        if (object==null){
+            og("null");
+        }
+        else{
+            og(object.toString());
+        }
+    }
+
+
 }

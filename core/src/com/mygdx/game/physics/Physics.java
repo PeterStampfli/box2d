@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -38,6 +39,7 @@ public class Physics implements Disposable{
     float physicsTime;
     float graphicsTime;
     Array<Body> bodies;
+    boolean bodiesNeedUpdate=true;
 
     final float TIME_STEP=1/60f;
     final float MAX_TIMEINTERVAL=0.25f;
@@ -74,15 +76,23 @@ public class Physics implements Disposable{
         }
         else {
             world = new World(new Vector2(gravityX, gravityY), maySleep);
-            bodyBuilder=new BodyBuilder(world);
+            bodyBuilder=new BodyBuilder(this);
             fixtureBuilder=new FixtureBuilder();
-            mouseJointBuilder=new MouseJointBuilder(world);
-            distanceJointBuilder=new DistanceJointBuilder(world);
-
+            mouseJointBuilder=new MouseJointBuilder(this);
+            distanceJointBuilder=new DistanceJointBuilder(this);
         }
         return world;
     }
 
+    /**
+     * update the bodies array if needed
+     */
+    public void updateBodies(){
+        if (bodiesNeedUpdate){
+            world.getBodies(bodies);
+            bodiesNeedUpdate=false;
+        }
+    }
     /**
      * set the body type to dynamic body and return the bodybuilder
      * @return
@@ -177,7 +187,7 @@ public class Physics implements Disposable{
      */
     public void setPhysicsData(){
         Object userData;
-        world.getBodies(bodies);
+        updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
             if (userData instanceof Positionable){
@@ -193,7 +203,7 @@ public class Physics implements Disposable{
      */
     public void updateGraphicsData(float progress){
         Object userData;
-        world.getBodies(bodies);
+        updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
             if (userData instanceof Positionable){
@@ -233,13 +243,48 @@ public class Physics implements Disposable{
      */
     public void draw(Batch batch){
         Object userData;
-        world.getBodies(bodies);
+        updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
             if (userData instanceof Drawable){
                 ((Drawable)userData).draw(batch);
             }
         }
+    }
+
+
+    /**
+     * test if a given body contains a given point
+     * @param body
+     * @param positionX
+     * @param positionY
+     * @return
+     */
+    public boolean bodyContains(Body body, float positionX, float positionY){
+        Array<Fixture> fixtures=body.getFixtureList();
+        for (Fixture fixture:fixtures){
+            if (fixture.testPoint(positionX,positionY)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * get (first) body that contains given position. Assumes that bodies do not overlap.
+     * Returns null if there is no such body.
+     * @param positionX
+     * @param positionY
+     * @return
+     */
+    public Body findBodyAt(float positionX, float positionY){
+        updateBodies();
+        for (Body body:bodies){
+            if (bodyContains(body,positionX,positionY)){
+                return body;
+            }
+        }
+        return  null;
     }
 
     /**

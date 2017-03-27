@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.physics.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.L;
 import com.mygdx.game.utilities.Viewports;
 
 public class Box2d extends ApplicationAdapter {
@@ -72,7 +73,7 @@ public class Box2d extends ApplicationAdapter {
 		//physics.fixture().polygonShape(triangle).attach(body);
 
 
-		Body ground=physics.staticBody().reset().position(5,-0.1f).build();
+		Body ground=physics.staticBody().reset().position(5,0.1f).build();
 		PolygonShape groundBox=new PolygonShape();
 		groundBox.setAsBox(20,0.2f);
 
@@ -83,6 +84,12 @@ public class Box2d extends ApplicationAdapter {
 		physics.distanceJoint().bodyA(top).bodyB(movingBody).localAnchorBIsLocalCenter().length().build();
 
 		physics.start();
+
+		L.og(physics.bodyContains(ground,0,0.01f));
+		L.og("string");
+		L.og(null);
+		L.og(ground);
+		L.og(physics.findBodyAt(6,9.9f));
 
 
 
