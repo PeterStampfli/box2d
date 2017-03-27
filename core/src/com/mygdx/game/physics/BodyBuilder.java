@@ -3,21 +3,22 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * Created by peter on 3/22/17.
  */
 public class BodyBuilder {
 
-    private Physics physics;
+    private World world;
     public BodyDef bodyDef;
 
     /**
      * creates and resets the bodydef
-     * @param physics we need access to physics.world to create the body
+     * @param world we need the world to create the body
      */
-    public BodyBuilder(Physics physics) {
-        this.physics = physics;
+    public BodyBuilder(World world) {
+        this.world = world;
         bodyDef = new BodyDef();
         reset();
     }
@@ -212,7 +213,7 @@ public class BodyBuilder {
      * @return
      */
     public Body build(Object userData) {
-        Body body = physics.world.createBody(bodyDef);
+        Body body = world.createBody(bodyDef);
         body.setUserData(userData);
         return body;
     }

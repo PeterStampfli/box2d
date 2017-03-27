@@ -2,6 +2,7 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
@@ -9,11 +10,11 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
  * Created by peter on 3/22/17.
  */
 public class MouseJointBuilder {
-    private Physics physics;
+    private World world;
     private MouseJointDef mouseJointDef;
 
-    public MouseJointBuilder(Physics physics) {
-        this.physics = physics;
+    public MouseJointBuilder(World world) {
+        this.world = world;
         mouseJointDef = new MouseJointDef();
     }
 
@@ -66,7 +67,7 @@ public class MouseJointBuilder {
     }
 
     public MouseJoint build(Object userData) {
-        MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
+        MouseJoint mouseJoint = (MouseJoint) world.createJoint(mouseJointDef);
         mouseJoint.setUserData(userData);
         return mouseJoint;
     }

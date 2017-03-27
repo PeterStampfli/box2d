@@ -2,6 +2,7 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 
@@ -9,15 +10,15 @@ import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
  * Created by peter on 3/22/17.
  */
 public class DistanceJointBuilder {
-    private Physics physics;
+    private World world;
     private DistanceJointDef distanceJointDef;
 
     /**
      * creates and resets the distanceJointDef
-     * @param physics
+     * @param world
      */
-    public DistanceJointBuilder(Physics physics) {
-        this.physics = physics;
+    public DistanceJointBuilder(World world) {
+        this.world = world;
         distanceJointDef = new DistanceJointDef();
         reset();
     }
@@ -108,7 +109,7 @@ public class DistanceJointBuilder {
 
 
     public DistanceJoint build(Object userData) {
-        DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
+        DistanceJoint distanceJoint = (DistanceJoint) world.createJoint(distanceJointDef);
         distanceJoint.setUserData(userData);
         return distanceJoint;
     }

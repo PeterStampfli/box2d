@@ -46,16 +46,12 @@ public class Physics implements Disposable{
     final int POSITION_ITERATIONS=3;
 
     /**
-     * create all builders, debug renderer only if debug==true
+     * debug renderer only if debug==true
      * initialize box2D
      * @param viewport
      * @param debug
      */
     public Physics(Viewport viewport,boolean debug){
-        bodyBuilder=new BodyBuilder(this);
-        fixtureBuilder=new FixtureBuilder();
-        mouseJointBuilder=new MouseJointBuilder(this);
-        distanceJointBuilder=new DistanceJointBuilder(this);
         bodies=new Array<Body>();
         this.viewport=viewport;
         if (debug) {
@@ -66,6 +62,7 @@ public class Physics implements Disposable{
 
     /**
      * create and return box2D world with given components of gravity and flag for bodies may sleep
+     * create all builders
      * @param gravityX
      * @param gravityY
      * @param maySleep
@@ -77,6 +74,11 @@ public class Physics implements Disposable{
         }
         else {
             world = new World(new Vector2(gravityX, gravityY), maySleep);
+            bodyBuilder=new BodyBuilder(world);
+            fixtureBuilder=new FixtureBuilder();
+            mouseJointBuilder=new MouseJointBuilder(world);
+            distanceJointBuilder=new DistanceJointBuilder(world);
+
         }
         return world;
     }
