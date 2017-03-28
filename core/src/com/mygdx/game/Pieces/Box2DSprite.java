@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
  * Created by peter on 3/24/17.
  */
 
-public class Box2DSprite extends DrawAndTouchableSprite{
+public class Box2DSprite extends TouchableSprite {
 
     private float previousPhysicsAngle, newPhysicsAngle;
     private float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite

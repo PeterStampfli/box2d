@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by peter on 3/28/17.
  */
 
-public interface DrawAndTouchable{
+public interface Touchable {
 
     // object can draw with a batch
     public void draw(Batch batch);

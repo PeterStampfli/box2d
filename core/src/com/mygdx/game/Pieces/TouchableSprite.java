@@ -10,19 +10,19 @@ import com.badlogic.gdx.math.Vector2;
  * Created by peter on 3/28/17.
  */
 
-public class DrawAndTouchableSprite extends Sprite implements DrawAndTouchable {
+public class TouchableSprite extends Sprite implements Touchable {
 
-    public DrawAndTouchableSprite(Texture texture){
+    public TouchableSprite(Texture texture){
         super(texture);
     }
 
-    public DrawAndTouchableSprite(TextureRegion textureRegion){
+    public TouchableSprite(TextureRegion textureRegion){
         super(textureRegion);
     }
 
     // methods to implement drawAndTouchable that do nothing
 
-    // return true if object contians position (aka is selected)
+    // return true if object contains position (aka is selected)
     public boolean contains(Vector2 position){
         return false;
     }
