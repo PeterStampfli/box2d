@@ -208,6 +208,7 @@ public class BodyBuilder {
 
     /**
      * build the body from BodyDef and attach the supplied userData
+     * mark, that the bodies array has to be updated
      * @param userData
      * @return
      */
@@ -215,6 +216,9 @@ public class BodyBuilder {
         Body body = physics.world.createBody(bodyDef);
         physics.bodiesNeedUpdate=true;
         body.setUserData(userData);
+        if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
+            ((com.mygdx.game.Pieces.Box2DSprite)userData).body=body;
+        }
         return body;
     }
 

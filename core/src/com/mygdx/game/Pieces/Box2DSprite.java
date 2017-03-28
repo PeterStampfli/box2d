@@ -1,21 +1,24 @@
-package com.mygdx.game.physics;
+package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 3/24/17.
  */
 
-public class Box2DSprite extends Sprite implements Drawable,Positionable{
+public class Box2DSprite extends DrawAndTouchableSprite{
 
-    float previousPhysicsAngle, newPhysicsAngle;
-    float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
-    float previousPhysicsWorldCenterY, newPhysicsWorldCenterY;
+    private float previousPhysicsAngle, newPhysicsAngle;
+    private float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
+    private float previousPhysicsWorldCenterY, newPhysicsWorldCenterY;
+    public Body body;
+
 
     /**
      * creates a box2DSprite based on a Texture with same size
@@ -42,35 +45,7 @@ public class Box2DSprite extends Sprite implements Drawable,Positionable{
      * @param body
      */
     public void setLocalOrigin(Body body){
-        Vector2 center=body.getLocalCenter();
-        setOrigin(center.x,center.y);
-    }
-
-    /**
-     * reduce the size of the sprite to world dimensions.
-     * Factor is given number of pixels per meter
-     * @param pixelPerMeter
-     */
-    public void adjustSizeToPixelScale(float pixelPerMeter){
-        setSize(getWidth()/pixelPerMeter,getHeight()/pixelPerMeter);
-    }
-
-    /**
-     * set angle of sprite
-     * @param angle in radians
-     */
-    public void setAngle(float angle){
-        setRotation(angle * MathUtils.radiansToDegrees);
-    }
-
-    /**
-     * set the position of the sprite such that the origin (center of rotation)
-     * lies at given position of center of mass
-     * @param massCenterPositionX
-     * @param massCenterPositionY
-     */
-    public void setWorldOrigin(float massCenterPositionX,float massCenterPositionY){
-        setPosition(massCenterPositionX-getOriginX(),massCenterPositionY-getOriginY());
+        setLocalOrigin(body.getLocalCenter());
     }
 
     /**
@@ -134,4 +109,33 @@ public class Box2DSprite extends Sprite implements Drawable,Positionable{
         // repeat to set both previous and new data
         setPhysicsData(body);
     }
+
+    /**
+     * test if its body contains given position
+     * @param positionX
+     * @param positionY
+     * @return
+     */
+    public boolean contains(float positionX, float positionY){
+        if (body!=null) {
+            Array<Fixture> fixtures = body.getFixtureList();
+            for (Fixture fixture : fixtures) {
+                if (fixture.testPoint(positionX, positionY)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * test if its body contains given position
+     * @param position
+     * @return
+     */
+    @Override
+    public boolean contains (Vector2 position){
+        return  contains(position.x,position.y);
+    }
+
 }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.physics.Box2DSprite;
+import com.mygdx.game.Pieces.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.L;
@@ -85,11 +85,10 @@ public class Box2d extends ApplicationAdapter {
 
 		physics.start();
 
-		L.og(physics.bodyContains(ground,0,0.01f));
+		L.og(sprite.contains(3.5f,5.5f));
 		L.og("string");
 		L.og(null);
 		L.og(ground);
-		L.og(physics.findBodyAt(6,9.9f));
 
 
 
@@ -120,7 +119,7 @@ public class Box2d extends ApplicationAdapter {
 		if (debug){
 			physics.updateGraphicsData(1);
 		}
-		physics.draw(batch);
+		sprite.draw(batch);
 		batch.end();
 		physics.debugRender();
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
@@ -138,5 +137,6 @@ public class Box2d extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+		physics.dispose();
 	}
 }

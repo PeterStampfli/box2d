@@ -1,13 +1,11 @@
 package com.mygdx.game.physics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -190,8 +188,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof Positionable){
-                ((Positionable)userData).setPhysicsData(body);
+            if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
+                ((com.mygdx.game.Pieces.Box2DSprite)userData).setPhysicsData(body);
             }
         }
     }
@@ -206,8 +204,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof Positionable){
-                ((Positionable)userData).updateGraphicsData(progress);
+            if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
+                ((com.mygdx.game.Pieces.Box2DSprite)userData).updateGraphicsData(progress);
             }
         }
     }
@@ -235,56 +233,6 @@ public class Physics implements Disposable{
         }
         float progress=1-(physicsTime-graphicsTime)/TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
         updateGraphicsData(progress);
-    }
-
-    /**
-     * Draws all physics bodies with userData that implements the Drawable interface.
-     * @param batch
-     */
-    public void draw(Batch batch){
-        Object userData;
-        updateBodies();
-        for (Body body:bodies){
-            userData=body.getUserData();
-            if (userData instanceof Drawable){
-                ((Drawable)userData).draw(batch);
-            }
-        }
-    }
-
-
-    /**
-     * test if a given body contains a given point
-     * @param body
-     * @param positionX
-     * @param positionY
-     * @return
-     */
-    public boolean bodyContains(Body body, float positionX, float positionY){
-        Array<Fixture> fixtures=body.getFixtureList();
-        for (Fixture fixture:fixtures){
-            if (fixture.testPoint(positionX,positionY)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * get (first) body that contains given position. Assumes that bodies do not overlap.
-     * Returns null if there is no such body.
-     * @param positionX
-     * @param positionY
-     * @return
-     */
-    public Body findBodyAt(float positionX, float positionY){
-        updateBodies();
-        for (Body body:bodies){
-            if (bodyContains(body,positionX,positionY)){
-                return body;
-            }
-        }
-        return  null;
     }
 
     /**
