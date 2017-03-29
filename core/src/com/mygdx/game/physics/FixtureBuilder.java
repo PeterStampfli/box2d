@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.utilities.Basic;
 
 /**
  * Created by peter on 3/22/17.
@@ -193,7 +194,7 @@ public class FixtureBuilder {
      * @return
      */
     public FixtureBuilder polygonShape(Array<Vector2> vertices) {
-        polygonShape(com.mygdx.game.utilities.Basic.toFloats(vertices));
+        polygonShape(Basic.toFloats(vertices));
         return this;
     }
 
@@ -214,21 +215,57 @@ public class FixtureBuilder {
         return this;
     }
 
+    /**
+     * create a rectangular polygon shape for the fixtureDef,axis aligned
+     * this shape will be disposed when other shapes are used
+     * @param width  full width
+     * @param height  full height
+     * @param center
+     * @return
+     */
     public FixtureBuilder boxShape(float width, float height, Vector2 center) {
         boxShape(width, height, center, 0f);
         return this;
     }
 
+    /**
+     * create a rectangular polygon shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * @param width  full width
+     * @param height  full height
+     * @param centerX
+     * @param centerY
+     * @param angle
+     * @return
+     */
     public FixtureBuilder boxShape(float width, float height, float centerX, float centerY, float angle) {
         boxShape(width, height, new Vector2(centerX, centerY), angle);
         return this;
     }
 
+    /**
+     * create a rectangular polygon shape for the fixtureDef, axis aligned
+     * this shape will be disposed when other shapes are used
+     * @param width  full width
+     * @param height  full height
+     * @param centerX
+     * @param centerY
+     * @return
+     */
     public FixtureBuilder boxShape(float width, float height, float centerX, float centerY) {
         boxShape(width, height, new Vector2(centerX, centerY), 0f);
         return this;
     }
 
+    /**
+     * create a rectangular polygon shape for the fixtureDef
+     * centered and rotated
+     * this shape will be disposed when other shapes are used
+     * @param width the full width
+     * @param height the full height
+     * @param angle
+     * @return
+     */
     public FixtureBuilder boxShape(float width, float height, float angle) {
         boxShape(width, height, new Vector2(), angle);
         return this;

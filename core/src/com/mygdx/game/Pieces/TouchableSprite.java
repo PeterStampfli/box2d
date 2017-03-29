@@ -61,6 +61,13 @@ public class TouchableSprite extends Sprite implements Touchable {
         setRotation(angle * MathUtils.radiansToDegrees);
     }
 
+    /**
+     * get angle of sprite
+     * @return  angle in radians
+     */
+    public float getAngle(){
+        return getRotation() / MathUtils.radiansToDegrees;
+    }
 
     /**
      * set the origin (center of rotation and scaling) equal to center of mass of the body

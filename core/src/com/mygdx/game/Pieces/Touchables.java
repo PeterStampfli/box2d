@@ -12,12 +12,28 @@ public class Touchables implements Touchable {
 
     public Array<Touchable> touchables;
 
+    /**
+     * create
+     */
     public Touchables(){
         touchables=new Array<Touchable>();
     }
 
+    /**
+     * add a touchable object
+     * @param touchable
+     */
     public void add(Touchable touchable){
         touchables.add(touchable);
+    }
+
+    /**
+     * remove a given touchable object, using identity
+     * @param touchable
+     * @return true if something has been removed
+     */
+    public boolean remove(Touchable touchable){
+        return touchables.removeValue(touchable,true);
     }
 
     /**
