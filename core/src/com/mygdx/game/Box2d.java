@@ -14,13 +14,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Pieces.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
-import com.mygdx.game.utilities.L;
+import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.Viewports;
 
 public class Box2d extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
 	Texture img;
+	Device device;
 
 	World world;
 	Physics physics;
@@ -41,11 +42,14 @@ public class Box2d extends ApplicationAdapter {
 	@Override
 	public void create () {
 		debug=true;
-		batch = new SpriteBatch();
+		device=new Device();
+		device.createShapeRenderer().createSpriteBatch().setLogging(true);
+		batch = device.spriteBatch;
 		img = new Texture("badlogic.jpg");
 		Basic.linearInterpolation(img);
 		viewport= Viewports.createExtendViewport(10,10);
 		physics=new Physics(viewport,debug);
+		device.disposer.add(physics,"Physics");
 
 		world=physics.createWorld(0,-10,true);
 		//viewport=physics.createFitViewport(10,10);
@@ -85,10 +89,6 @@ public class Box2d extends ApplicationAdapter {
 
 		physics.start();
 
-		L.og(sprite.contains(3.5f,5.5f));
-		L.og("string");
-		L.og(null);
-		L.og(ground);
 
 
 
@@ -135,8 +135,7 @@ public class Box2d extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
+		device.dispose();
 		img.dispose();
-		physics.dispose();
 	}
 }
