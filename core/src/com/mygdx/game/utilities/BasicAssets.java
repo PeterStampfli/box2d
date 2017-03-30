@@ -202,20 +202,25 @@ public class BasicAssets {
         return musicMap.get(name);
     }
 
-
-
-    // more convenient, high level methods
-
-    // load texture atlas
+    /**
+     * load texture atlases by name only, requires png and atlas files of same name
+     * @param names
+     */
     public void loadAtlases(String... names){
         for (String name: names) {
             assetManager.load(name + ".atlas", TextureAtlas.class);
             atlasMap.put(name,null);
         }
     }
-    // get texture atlases and extract the texture regions
-    // simple atlas region or array of atlas regions (animations)
-    // note that atlas region extends texture region
+
+    /**
+     * get texture atlases and extract the texture regions (extends texture region) as
+     * either simple atlas region or array of atlas regions (for animations)
+     *
+     * multiple images format example: animation_01.png gives region_name=animation, region_index=01
+     *    this will give an Array<AtlasRegion> named animation
+     * others: someImage.png give region_name=someImage, region_index=-1
+     */
     public void getAtlases(){
         TextureAtlas atlas;
         Array<TextureAtlas.AtlasRegion>newRegions;
@@ -223,14 +228,15 @@ public class BasicAssets {
         ObjectMap.Keys<String> atlasNames=atlasMap.keys();
         for (String atlasName:atlasNames){
             atlas=assetManager.get(atlasName+".atlas",TextureAtlas.class);
+            // do the regions of each atlas
             newRegions=atlas.getRegions();
             for (TextureAtlas.AtlasRegion newRegion:newRegions){
                 regionName=newRegion.name;
-                if (newRegion.index==-1){                       // a single image of given name
+                if (newRegion.index==-1){  // a single image of given name
                     atlasRegionMap.put(regionName,newRegion);
                 }
-                else{                     // multiple images nameUnderscoreFramenumber.png such as animation_01.png, etc.
-                    if (!atlasRegionArrayMap.containsKey(regionName)){
+                else{                     // multiple images
+                    if (!atlasRegionArrayMap.containsKey(regionName)){  // if not already done, create atlasRegionArray
                         atlasRegionArrayMap.put(regionName,atlas.findRegions(regionName));
                     }
                 }
@@ -238,36 +244,64 @@ public class BasicAssets {
         }
     }
 
+    /**
+     * get the atlas region of given name
+     * @param name
+     * @return
+     */
     public TextureAtlas.AtlasRegion getAtlasRegion(String name){
         return atlasRegionMap.get(name);
     }
 
-    // for animations
+    /**
+     * get atlas region array of given name (for animation)
+     * @param name
+     * @return
+     */
     public Array<TextureAtlas.AtlasRegion> getAtlasRegionArray(String name){
         return atlasRegionArrayMap.get(name);
     }
 
-    public Animation createAnimation(float frameDuration,String name,Animation.PlayMode playMode){
-        return new Animation(frameDuration,getAtlasRegionArray(name),playMode);
+    /**
+     * get atlas region in an array of given name and index (for still images)
+     * @param name
+     * @param index
+     * @return
+     */
+    public TextureAtlas.AtlasRegion getAtlasRegionArrayElement(String name,int index){
+        return atlasRegionArrayMap.get(name).get(index);
     }
 
+    /**
+     * get the entire TextureAtlas of a given name (for particle effects)
+     * @param name
+     * @return
+     */
     // for particle effects
     public TextureAtlas getAtlas(String name){
         return atlasMap.get(name);
     }
 
-    // create particle effect:
-    //  effectPath is path relative to android assets
-    // atlasName is name of atlas that contains images, together with other,
-    //  particleEffect.dispose() not needed because does not own texture
-    //  without atlasprefix ??
-    //  not particleEffectPool !!!
-    public ParticleEffect createParticleEffect(String effectPath, String atlasName){
-        ParticleEffect particleEffect=new ParticleEffect();
-        particleEffect.load(Gdx.files.internal(effectPath),getAtlas(atlasName));
-        return particleEffect;
+    /**
+     * create an animation using an AtlasRegionArray
+     * @param frameDuration
+     * @param name
+     * @param playMode
+     * @return
+     */
+    public Animation createAnimation(float frameDuration,String name,Animation.PlayMode playMode){
+        return new Animation(frameDuration,getAtlasRegionArray(name),playMode);
     }
 
-
-
+    /**
+     * create a particle effect
+     * @param effectName name of the effect file, uses file type extension p
+     * @param atlasName name of atlas with the images
+     * @return
+     */
+    public ParticleEffect createParticleEffect(String effectName, String atlasName){
+        ParticleEffect particleEffect=new ParticleEffect();
+        particleEffect.load(Gdx.files.internal(effectName+".p"),getAtlas(atlasName));
+        return particleEffect;
+    }
 }
