@@ -12,6 +12,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Viewports {
 
     /**
+     * create an extended viewport, centered image
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @param camera
+     * @return
+     */
+    static public Viewport createExtendViewport(float minWidth, float minHeight,OrthographicCamera camera){
+        Viewport viewport=new ExtendViewport(minWidth,minHeight,camera);
+        camera.setToOrtho(false,minWidth,minHeight);
+        return viewport;
+    }
+
+    /**
      * create an extended viewport with its own orthographic camera, centered image
      *  resize: 		viewport.update(width, height);
      * @param minWidth
@@ -19,8 +33,20 @@ public class Viewports {
      * @return
      */
     static public Viewport createExtendViewport(float minWidth, float minHeight){
-        OrthographicCamera camera=new OrthographicCamera();
-        Viewport viewport=new ExtendViewport(minWidth,minHeight,camera);
+
+        return createExtendViewport(minWidth, minHeight, new OrthographicCamera());
+    }
+
+    /**
+     *  create an fit viewport with its own orthographic camera, centered image
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @param camera
+     * @return
+     */
+    static public Viewport createFitViewport(float minWidth, float minHeight, OrthographicCamera camera){
+        Viewport viewport=new FitViewport(minWidth,minHeight,camera);
         camera.setToOrtho(false,minWidth,minHeight);
         return viewport;
     }
@@ -33,10 +59,7 @@ public class Viewports {
      * @return
      */
     static public Viewport createFitViewport(float minWidth, float minHeight){
-        OrthographicCamera camera=new OrthographicCamera();
-        Viewport viewport=new FitViewport(minWidth,minHeight,camera);
-        camera.setToOrtho(false,minWidth,minHeight);
-        return viewport;
+        return createFitViewport(minWidth, minHeight,new OrthographicCamera());
     }
 
 }
