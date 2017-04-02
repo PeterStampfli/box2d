@@ -101,4 +101,12 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
 
+    /**
+     * set the position of the sprite such that the origin (center of rotation)
+     * lies at given position of center of mass
+     * @param worldOriginPosition
+     */
+    public void setWorldOrigin(Vector2 worldOriginPosition){
+        setWorldOrigin(worldOriginPosition.x,worldOriginPosition.y);
+    }
 }

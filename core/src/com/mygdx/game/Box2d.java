@@ -15,6 +15,7 @@ import com.mygdx.game.Pieces.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.FollowCamera;
 import com.mygdx.game.utilities.Viewports;
 
 public class Box2d extends ApplicationAdapter {
@@ -27,7 +28,7 @@ public class Box2d extends ApplicationAdapter {
 	Physics physics;
 
 	Viewport viewport;
-
+	FollowCamera followCamera;
 
 	DistanceJoint joint;
 	MouseJoint mouseJoint;
@@ -47,7 +48,10 @@ public class Box2d extends ApplicationAdapter {
 		batch = device.spriteBatch;
 		img = new Texture("badlogic.jpg");
 		Basic.linearInterpolation(img);
-		viewport= Viewports.createExtendViewport(10,10);
+		followCamera=new FollowCamera();
+
+		viewport= Viewports.createExtendViewport(10,10,followCamera);
+		followCamera.setGameWorldSize(200,15).setDebugAllowed(true);
 		physics=new Physics(viewport,debug);
 		device.disposer.add(physics,"Physics");
 
@@ -67,7 +71,7 @@ public class Box2d extends ApplicationAdapter {
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
 		physics.fixture().circleShape(0.5f,0.5f,0.5f).attach(movingBody);
 
-		sprite.initializePhysics(movingBody);
+		sprite.initializeSprite(movingBody);
 
 		Body top=physics.staticBody().position(6,10).build();
 
@@ -109,7 +113,7 @@ public class Box2d extends ApplicationAdapter {
 
 		Basic.clearBackground(Color.BLUE);
 
-
+		followCamera.follow(sprite);
 
 
 		batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -124,7 +128,7 @@ public class Box2d extends ApplicationAdapter {
 		physics.debugRender();
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.rect(0f,1f,8,8);
+		shapeRenderer.rect(1f,1f,8,8);
 		shapeRenderer.end();
 		//mouseJoint.setTarget(new Vector2(9, 9));
 		//physics.step(1/60f);

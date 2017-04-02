@@ -189,7 +189,7 @@ public class Physics implements Disposable{
         for (Body body:bodies){
             userData=body.getUserData();
             if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
-                ((com.mygdx.game.Pieces.Box2DSprite)userData).setPhysicsData(body);
+                ((com.mygdx.game.Pieces.Box2DSprite)userData).saveBodyPositionAngle(body);
             }
         }
     }
@@ -205,7 +205,7 @@ public class Physics implements Disposable{
         for (Body body:bodies){
             userData=body.getUserData();
             if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
-                ((com.mygdx.game.Pieces.Box2DSprite)userData).updateGraphicsData(progress);
+                ((com.mygdx.game.Pieces.Box2DSprite)userData).updateSpritePositionAngle(progress);
             }
         }
     }

@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class Box2DSprite extends TouchableSprite {
 
-    private float previousPhysicsAngle, newPhysicsAngle;
-    private float previousPhysicsWorldCenterX, newPhysicsWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
-    private float previousPhysicsWorldCenterY, newPhysicsWorldCenterY;
+    private float previousBodyAngle, newBodyAngle;
+    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
+    private float previousBodyWorldCenterY, newBodyWorldCenterY;
     public Body body;
 
 
@@ -49,39 +49,30 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * set the position of the sprite such that the origin (center of rotation)
-     * lies at given position of center of mass
-     * @param massCenterPosition
-     */
-    public void setWorldOrigin(Vector2 massCenterPosition){
-        setWorldOrigin(massCenterPosition.x,massCenterPosition.y);
-    }
-
-    /**
      * without interpolation: set position and angle of the sprite to agree with the box2D body
      * @param body
      */
-    public void setPositionAngle(Body body){
+    public void setSpritePositionAngle(Body body){
         setAngle(body.getAngle());
         setWorldOrigin(body.getWorldCenter());
     }
 
     /**
-     * if new Physics position and angle have data of result of the previous physics step
+     * if new Physics position and angle had data of result of the previous physics step
      * and a new time step has been done then this method results in:
      * -previous position and angle will have result of previous time step
      * -new position and angle will contain result of the new (last) time step
      *
      * @param body
      */
-    public void setPhysicsData(Body body){
-        previousPhysicsAngle = newPhysicsAngle;
-        previousPhysicsWorldCenterX = newPhysicsWorldCenterX;
-        previousPhysicsWorldCenterY = newPhysicsWorldCenterY;
-        newPhysicsAngle =body.getAngle();
+    public void saveBodyPositionAngle(Body body){
+        previousBodyAngle = newBodyAngle;
+        previousBodyWorldCenterX = newBodyWorldCenterX;
+        previousBodyWorldCenterY = newBodyWorldCenterY;
+        newBodyAngle =body.getAngle();
         Vector2 worldCenter=body.getWorldCenter();
-        newPhysicsWorldCenterX =worldCenter.x;
-        newPhysicsWorldCenterY =worldCenter.y;
+        newBodyWorldCenterX =worldCenter.x;
+        newBodyWorldCenterY =worldCenter.y;
     }
 
     /**
@@ -93,25 +84,26 @@ public class Box2DSprite extends TouchableSprite {
      * if (time of new physics step-time of previous physics step)=TIME_STEP
      * @param progress
      */
-    public void updateGraphicsData(float progress){
-        setWorldOrigin(MathUtils.lerp(previousPhysicsWorldCenterX, newPhysicsWorldCenterX,progress),
-                       MathUtils.lerp(previousPhysicsWorldCenterY, newPhysicsWorldCenterY,progress));
-        setAngle(MathUtils.lerpAngle(previousPhysicsAngle, newPhysicsAngle,progress));
+    public void updateSpritePositionAngle(float progress){
+        setWorldOrigin(MathUtils.lerp(previousBodyWorldCenterX, newBodyWorldCenterX,progress),
+                       MathUtils.lerp(previousBodyWorldCenterY, newBodyWorldCenterY,progress));
+        setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));
     }
 
     /**
      * set origin, physics position and angle of sprite according to body
      * @param body
      */
-    public void initializePhysics(Body body){
+    public void initializeSprite(Body body){
         setLocalOrigin(body);
-        setPhysicsData(body);
+        saveBodyPositionAngle(body);
         // repeat to set both previous and new data
-        setPhysicsData(body);
+        saveBodyPositionAngle(body);
     }
 
     /**
      * test if its body contains given position
+     * check only fixtures that are not sensors
      * @param positionX
      * @param positionY
      * @return
@@ -120,7 +112,7 @@ public class Box2DSprite extends TouchableSprite {
         if (body!=null) {
             Array<Fixture> fixtures = body.getFixtureList();
             for (Fixture fixture : fixtures) {
-                if (fixture.testPoint(positionX, positionY)) {
+                if (!fixture.isSensor()&&fixture.testPoint(positionX, positionY)) {
                     return true;
                 }
             }
