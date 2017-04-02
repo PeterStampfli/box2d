@@ -1,19 +1,13 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 3/28/17.
  */
 
-public interface Touchable {
-
-    // object can draw with a batch
-    public void draw(Batch batch);
-
-    // return true if element is selected by given position
-    boolean contains(Vector2 position);
+public interface Touchable extends Drawable,Shape2D {
 
     // begin-touch action, return true if something changed, call requestRendering, this is safer
     boolean touchBegin(Vector2 position);

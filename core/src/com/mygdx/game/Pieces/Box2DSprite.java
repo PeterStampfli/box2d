@@ -10,9 +10,10 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 3/24/17.
+ * Connecting sprite with body
  */
 
-public class Box2DSprite extends TouchableSprite {
+public class Box2DSprite extends DrawableSprite {
 
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyWorldCenterX, newBodyWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
@@ -125,7 +126,6 @@ public class Box2DSprite extends TouchableSprite {
      * @param position
      * @return
      */
-    @Override
     public boolean contains (Vector2 position){
         return  contains(position.x,position.y);
     }

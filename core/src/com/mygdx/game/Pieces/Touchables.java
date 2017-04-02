@@ -20,11 +20,13 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * add a touchable object
-     * @param touchable
+     * add one or more touchable objects
+     * @param touchables
      */
-    public void add(Touchable touchable){
-        touchables.add(touchable);
+    public void add(Touchable... touchables){
+        for (Touchable touchable:touchables) {
+            this.touchables.add(touchable);
+        }
     }
 
     /**
@@ -37,7 +39,7 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * call the draw method of the touchables, going from last to first, back to front
+     * call the draw method of the drawables, going from last to first, back to front
      * @param batch
      */
     @Override
@@ -51,20 +53,33 @@ public class Touchables implements Touchable {
     /**
      * check if a touchable contains the given position
      * going from first to last
-     * the first touchable that contains the ppoint will be put in front of the touchables array
-     * @param position
+     * the first touchable that contains the point will be put in front of the drawables array
+     * @param x
+     * @param y
      * @return
      */
     @Override
-    public boolean contains(Vector2 position) {
+    public boolean contains(float x,float y) {
         int length=touchables.size;
         for (int i=0;i<length;i++){
-            if (touchables.get(i).contains(position)){
+            if (touchables.get(i).contains(x,y)){
                 touchables.insert(0,touchables.removeIndex(i));   // put piece to top
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * check if a touchable contains the given position
+     * going from first to last
+     * the first touchable that contains the point will be put in front of the drawables array
+     * @param position
+     * @return
+     */
+    @Override
+    public boolean contains(Vector2 position) {
+        return contains(position.x,position.y);
     }
 
     /**

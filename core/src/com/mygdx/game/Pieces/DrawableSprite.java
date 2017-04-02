@@ -8,39 +8,20 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 3/28/17.
+ * A sprite that explicitely implements drawable
+ * together with functions to set the scale, the angle and the origin for rotation and scaling
  */
 
-public class TouchableSprite extends Sprite implements Touchable {
+public class DrawableSprite extends Sprite implements Drawable {
 
-    public TouchableSprite(Texture texture){
+    public DrawableSprite(Texture texture){
         super(texture);
     }
 
-    public TouchableSprite(TextureRegion textureRegion){
+    public DrawableSprite(TextureRegion textureRegion){
         super(textureRegion);
     }
 
-    // methods to implement drawAndTouchable that do nothing
-
-    // return true if object contains position (aka is selected)
-    public boolean contains(Vector2 position){
-        return false;
-    }
-
-    // begin-touch action, return true if something changed, call requestRendering, this is safer
-    public boolean touchBegin(Vector2 position){
-        return false;
-    }
-
-    // do drag action, return true if something changed
-    public boolean touchDrag(Vector2 position,Vector2 deltaPosition){
-        return false;
-    }
-
-    // end of touch
-    public boolean touchEnd(){
-        return false;
-    }
 
     //  position and scale the sprite
 
@@ -68,6 +49,15 @@ public class TouchableSprite extends Sprite implements Touchable {
     public float getAngle(){
         return getRotation() / MathUtils.radiansToDegrees;
     }
+
+    /**
+     * make that the sprite orientation has n discrete steps, 4 for a square lattice
+     * @param n
+     */
+    public void quantizeAngle(int n){
+        setRotation(360f/n*Math.round(n*getRotation()/360f));
+    }
+
 
     /**
      * set the origin (center of rotation and scaling) equal to center of mass of the body

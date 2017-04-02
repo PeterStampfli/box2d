@@ -14,7 +14,7 @@ import com.mygdx.game.utilities.Basic;
 //  collect and create shapes to make a new shape
 
 public class Shapes2D implements Shape2D {
-    private Array<Shape2D> shapes2D;
+    public Array<Shape2D> shapes2D;
 
     /**
      * on creation make the array
@@ -50,11 +50,13 @@ public class Shapes2D implements Shape2D {
     }
 
     /**
-     * add a shape to the collection
-     * @param shape2D
+     * add one or more shapes to the collection
+     * @param shapes2D
      */
-    public void add(Shape2D shape2D){
-        shapes2D.add(shape2D);
+    public void add(Shape2D... shapes2D){
+        for (Shape2D shape2D:shapes2D) {
+            this.shapes2D.add(shape2D);
+        }
     }
 
     /**
