@@ -1,13 +1,11 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.utilities.Basic;
@@ -19,14 +17,15 @@ import java.nio.ByteBuffer;
  * a rectangular region of bytes to use as a mask for pixmaps
  * stored in a single byte array
  * the y-axis is flipped to compensate for the inverted y-axis in pixmaps
+ *
+ * draw shapes in its region x=0...width and y=0 ...height
+ * a pixel with indices(i,j) lies at (x,y)=(i+1/2,j+1/2)
  */
-
 
 public class Mask {
     public byte[] alpha;
     public int width;
     public int height;
-    private int iMin, iMax, jMin, jMax;   // outside these limits the mask bytes remain unchanged
 
     /**
      * create a mask of given width and height,
@@ -40,17 +39,6 @@ public class Mask {
         this.height=height;
         alpha=new byte[width*height];
         clear();
-        setLimits();                                            // transparent border
-    }
-
-    /**
-     * flip the y-axis to compensate for the inversion of pixmaps
-     * images will appear upright. Higher y-values are higher up and rotation sense is unchanged
-     * @param y
-     * @return
-     */
-    private int flipY(int y){
-        return height-1-y;
     }
 
     /**
@@ -60,17 +48,18 @@ public class Mask {
      * @return
      */
     private float flipY(float y){
-        return height-1-y;
+        return height-y;
     }
 
     /**
-     * flip the y-axis to compensate for the inversion of pixmaps
-     * images will appear upright. Higher y-values are higher up and rotation sense is unchanged
-     * @param point
+     * transform a byte into a positive integer 0...255
+     * @param b
      * @return
      */
-    private void flipY(Vector2 point){
-        point.y=height-1-point.y;
+    private int toPosInt(byte b) {
+        int iB=b;
+        if (iB<0) iB+=256;
+        return iB;
     }
 
     /**
@@ -78,47 +67,17 @@ public class Mask {
      * @return
      */
     public Mask clear(){
-        int length=alpha.length;
-        for (int i=0;i<length;i++){
-            alpha[i]=0;
+        for (int index=alpha.length-1;index>=0;index--) {
+            alpha[index]=0;
         }
         return this;
     }
 
     /**
-     * set the limits of the active area, with inverted y-axis
-     * @param iMin
-     * @param iMax
-     * @param jMin
-     * @param jMax
-     */
-    public void setLimits(int iMin,int iMax,int jMin,int jMax){
-        jMin=flipY(jMin);
-        jMax=flipY(jMax);
-        this.iMin = MathUtils.clamp(Math.min(iMin,iMax),0,width-1);
-        this.iMax = MathUtils.clamp(Math.max(iMin,iMax),0,width-1);
-        this.jMin = MathUtils.clamp(Math.min(jMin,jMax),0,height-1);
-        this.jMax = MathUtils.clamp(Math.max(jMin,jMax),0,height-1);
-    }
-
-    /**
-     * set limits, leaving an inactive (transparent) border
-     */
-    public void setLimits(){
-        setLimits(Math.min(1,width-2),Math.max(width-2,1),Math.min(1,height-2),Math.max(1,height-2));
-    }
-
-    /**
-     * the full mask is active
-     */
-    public void noLimits(){
-        setLimits(0,width-1,0,height-1);
-    }
-
-    /**
      * make the border bytes transparent
+     * @return this for chaining
      */
-    public void transparentBorder(){
+    public Mask transparentBorder(){
         int index;
         int length=alpha.length;
         for (index=0;index<width;index++){
@@ -129,62 +88,20 @@ public class Mask {
             alpha[index]=0;
             alpha[index+width-1]=0;
         }
+        return this;
     }
 
     /**
-     * invert the mask bytes within the set limits
+     * invert the mask bytes
+     * @return this, for chaining
      */
-    public void invertWithinLimits(){
-        int i,j,jWidth;
-        for (j=jMin;j<=jMax;j++) {
-            jWidth = j * width;
-            for (i = iMin; i <= iMax; i++) {
-                alpha[i + jWidth] = (byte) (255-alpha[i + jWidth]);
-            }
+    public Mask invert(){
+        for (int index=alpha.length-1;index>=0;index--) {
+            alpha[index] = (byte) (255-toPosInt(alpha[index]));
         }
+        return this;
     }
 
-    /**
-     * fill rectangle area (within set limits)
-     * @param ic
-     * @param jc
-     * @param rectWidth
-     * @param rectHeight
-     * @param value
-     */
-    public void fillRect(int ic,int jc,int rectWidth,int rectHeight,int value){
-        int iMx=Math.min(this.iMax,ic+rectWidth-1);
-        int iMn=Math.max(this.iMin,ic);
-        int jMx=Math.min(this.jMax,flipY(jc));
-        int jMn=Math.max(this.jMin,flipY(jc)-rectHeight+1);
-        int i,j,jWidth;
-        for (j=jMn;j<=jMx;j++) {
-            jWidth = j * width;
-            for (i = iMn; i <= iMx; i++) {
-                alpha[i + jWidth] = (byte) value;
-            }
-        }
-    }
-
-    /**
-     * fill rectangle area (within limits), making it opaque
-     * @param ic
-     * @param jc
-     * @param rectWidth
-     * @param rectHeight
-     */
-    public void fillRect(int ic,int jc,int rectWidth,int rectHeight) {
-        fillRect(ic, jc, rectWidth, rectHeight,255);
-    }
-
-    /**
-     * fill rectangle area (within limits), making it opaque
-     * @param rectangle
-     */
-    public void fillRect(Rectangle rectangle){
-        fillRect(Math.round(rectangle.x),Math.round(rectangle.y),
-                Math.round(rectangle.width),Math.round(rectangle.height));
-    }
 
     /**
      * the mask will always be set to the maximum value in case of superposition
@@ -195,55 +112,88 @@ public class Mask {
     public byte maxByteFloat(byte b,float f){
         int iB=b;
         if (iB<0) iB+=256;
-        return (byte) Math.max(iB,MathUtils.clamp(Math.floor(f*256),0,255));
+        return (byte) MathUtils.clamp(Math.floor(f*256),iB,255);
     }
 
     /**
      * fill a circle with opaque bits, smooth border
-     * the center is a continuous coordinate,
-     * (0,0) is at the lower left corner of the lowest leftest pixel
-     * center of pixels are integers plus one half
      * @param centerX
      * @param centerY
      * @param radius
      */
-
-    //   what is the correct position of a pixel (i,j) ????
-    //========================================================================
-    
     public void fillCircle(float centerX, float centerY, float radius){
         centerY=flipY(centerY);
         int iMax,iMin,jMax,jMin;
-        iMax=Math.min(this.iMax,MathUtils.ceil(centerX+radius));
-        iMin=Math.max(this.iMin,MathUtils.floor(centerX-radius));
-        jMax=Math.min(this.jMax,MathUtils.ceil(centerY+radius));
-        jMin=Math.max(this.jMin,MathUtils.floor(centerY-radius));
+        // taking into account the additional smooth region of width 0.5 outside
+        // and that pixel positions are shifted by one half (x=i+0.5)
+        iMax=Math.min(width-1,MathUtils.ceil(centerX+radius));
+        iMin=Math.max(0,MathUtils.floor(centerX-radius-1));
+        jMax=Math.min(height-1,MathUtils.ceil(centerY+radius));
+        jMin=Math.max(0,MathUtils.floor(centerY-radius-1));
         int i,j,jWidth;
-        float dx,dx2,dy,dy2,dx2Plusdy2;
-        float radiusSq=radius*radius;
+        float dx,dy2,dx2Plusdy2;
         float d=0.5f;
         float radiusSqPlus=(radius+d)*(radius+d);
         float radiusSqMinus=(radius-d)*(radius-d);
+        float denom=1f/(radiusSqPlus-radiusSqMinus);
         for (j=jMin;j<=jMax;j++){
             jWidth=j*width;
-            dy=Math.abs(j-centerY);
-            dy2=dy*dy;
+            dy2=j+0.5f-centerY;
+            dy2*=dy2;
             for (i=iMin;i<=iMax;i++){
-                dx=Math.abs(i-centerX);
-                dx2=dx*dx;
-                dx2Plusdy2=dy2+dx2;
+                dx=i+0.5f-centerX;
+                dx2Plusdy2=dy2+dx*dx;
                 if (dx2Plusdy2<radiusSqMinus){
                     alpha[i+jWidth]=(byte) 255;
                 }
                 else if (dx2Plusdy2<radiusSqPlus){
-                    if (dx>dy){
-                        d=(float) Math.sqrt(radiusSq-dy2)-dx+0.5f;
+                    d=(radiusSqPlus-dx2Plusdy2)*denom;
+                    alpha[i+jWidth]=maxByteFloat(alpha[i+jWidth],d);
+                }
+            }
+        }
+    }
+
+    /**
+     * fill a ring with opaque bits, smooth border
+     * @param centerX
+     * @param centerY
+     * @param innerRadius
+     * @param outerRadius
+     */
+    public void fillRing(float centerX, float centerY, float innerRadius,float outerRadius){
+        centerY=flipY(centerY);
+        int iMax,iMin,jMax,jMin;
+        iMax=Math.min(width-1,MathUtils.ceil(centerX+outerRadius));
+        iMin=Math.max(0,MathUtils.floor(centerX-outerRadius-1));
+        jMax=Math.min(height-1,MathUtils.ceil(centerY+outerRadius));
+        jMin=Math.max(0,MathUtils.floor(centerY-outerRadius-1));
+        int i,j,jWidth;
+        float dx,dy2,dx2Plusdy2;
+        float d=0.5f;
+        float outerRadiusSqPlus=(outerRadius+d)*(outerRadius+d);
+        float outerRadiusSqMinus=(outerRadius-d)*(outerRadius-d);
+        float innerRadiusSqPlus=(innerRadius+d)*(innerRadius+d);
+        float innerRadiusSqMinus=(innerRadius-d)*(innerRadius-d);
+        float innerDenom=1f/ (innerRadiusSqPlus - innerRadiusSqMinus);
+        float outerDenom=1f/ (outerRadiusSqPlus - outerRadiusSqMinus);
+        for (j=jMin;j<=jMax;j++){
+            jWidth=j*width;
+            dy2=j+0.5f-centerY;
+            dy2*=dy2;
+            for (i=iMin;i<=iMax;i++){
+                dx=i+0.5f-centerX;
+                dx2Plusdy2=dy2+dx*dx;
+                if (dx2Plusdy2>innerRadiusSqMinus) {
+                    if (dx2Plusdy2 < innerRadiusSqPlus) {
+                        d = (dx2Plusdy2 - innerRadiusSqMinus) *innerDenom;
+                        alpha[i + jWidth] = maxByteFloat(alpha[i + jWidth], d);
                     }
-                    else {
-                        d=(float) Math.sqrt(radiusSq-dx2)-dy+0.5f;
-                    }
-                    if (d>0) {
-                        alpha[i+jWidth]=maxByteFloat(alpha[i+jWidth],d);
+                    else if (dx2Plusdy2 < outerRadiusSqMinus) {
+                        alpha[i + jWidth] = (byte) 255;
+                    } else if (dx2Plusdy2 < outerRadiusSqPlus) {
+                        d = (outerRadiusSqPlus - dx2Plusdy2) *outerDenom;
+                        alpha[i + jWidth] = maxByteFloat(alpha[i + jWidth], d);
                     }
                 }
             }
@@ -279,9 +229,7 @@ public class Mask {
      */
     private class Line{
         float pointX,pointY;
-        float slope;
-        boolean isHorizontal;
-        boolean increasing;
+        float ex,ey;
 
         /**
          * create a line with flipped y-values to match the pixmap
@@ -295,15 +243,11 @@ public class Mask {
             by=flipY(by);
             pointX = ax;
             pointY = ay;
-            isHorizontal = (Math.abs(bx - ax) > Math.abs(by - ay));
-            if (isHorizontal){
-                increasing = (bx > ax);
-                slope = (by - ay) / (bx - ax);
-            }
-            else {
-                increasing=(by > ay);
-                slope=(bx-ax)/(by-ay);
-            }
+            ex=bx-ax;
+            ey=by-ay;
+            float normfactor=1.0f/Vector2.len(ex,ey);
+            ex*=normfactor;
+            ey*=normfactor;
         }
 
         /**
@@ -314,25 +258,35 @@ public class Mask {
          */
         public float distance(int i,int j){
             float linePosition,d;
-            if (isHorizontal){
-                linePosition=pointY+slope*(i-pointX);
-                d=increasing?linePosition-j:j-linePosition;
-            }
-            else {
-                linePosition=pointX+slope*(j-pointY);
-                d=increasing?i-linePosition:linePosition-i;
-            }
-            return d+0.5f;
+            d=ex*(j+0.5f-pointY)-ey*(i+0.5f-pointX);
+            return -d+0.5f;    // taking mirroring into acount
         }
     }
 
+    /**
+     * fill a convex polygon shape. Vertices in counter-clock sense
+     * @param coordinates
+     */
     public void fillPolygon(float... coordinates){
         int length=coordinates.length-2;
         Array<Line> lines=new Array<Line>();
+        float xMin=coordinates[length];
+        float xMax=xMin;
+        float yMin=coordinates[length+1];
+        float yMax=yMin;
         for (int i=0;i<length;i+=2) {
             lines.add(new Line(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3]));
+            xMin=Math.min(xMin,coordinates[i]);
+            xMax=Math.max(xMax,coordinates[i]);
+            yMin=Math.min(yMin,coordinates[i+1]);
+            yMax=Math.max(yMax,coordinates[i+1]);
         }
         lines.add(new Line(coordinates[length],coordinates[length+1],coordinates[0],coordinates[1]));
+        // taking into account smooth border of with 0.5 and shift of pixel positions
+        int iMin=Math.max(0,MathUtils.floor(xMin-1));
+        int iMax=Math.min(width-1,MathUtils.ceil(xMax));
+        int jMin=Math.max(0,MathUtils.floor(yMin-1));
+        int jMax=Math.min(height-1,MathUtils.ceil(yMax));
         int i,j,jWidth;
         float d;
         length=lines.size;
@@ -354,6 +308,10 @@ public class Mask {
 
     }
 
+
+
+
+/*
     public void fillPolygon(Array<Vector2> points){
         fillPolygon(Basic.toFloats(points));
     }
@@ -382,12 +340,55 @@ public class Mask {
             Gdx.app.log(" ******************** mask","unknown shape "+shape.getClass());
         }
     }
+*/
 
+
+    /**
+     * fill rectangle area (within set limits)
+     * @param ic
+     * @param jc
+     * @param rectWidth
+     * @param rectHeight
+     * @param value
+     */
+    public void fillRect(int ic,int jc,int rectWidth,int rectHeight,int value){
+       /* int iMx=Math.min(this.iMax,ic+rectWidth-1);
+        int iMn=Math.max(this.iMin,ic);
+        int jMx=Math.min(this.jMax,flipY(jc));
+        int jMn=Math.max(this.jMin,flipY(jc)-rectHeight+1);
+        int i,j,jWidth;
+        for (j=jMn;j<=jMx;j++) {
+            jWidth = j * width;
+            for (i = iMn; i <= iMx; i++) {
+                alpha[i + jWidth] = (byte) value;
+            }
+        }*/
+    }
+
+    /**
+     * fill rectangle area (within limits), making it opaque
+     * @param ic
+     * @param jc
+     * @param rectWidth
+     * @param rectHeight
+     */
+    public void fillRect(int ic,int jc,int rectWidth,int rectHeight) {
+        fillRect(ic, jc, rectWidth, rectHeight,255);
+    }
+
+    /**
+     * fill rectangle area (within limits), making it opaque
+     * @param rectangle
+     */
+    public void fillRect(Rectangle rectangle){
+        fillRect(Math.round(rectangle.x),Math.round(rectangle.y),
+                Math.round(rectangle.width),Math.round(rectangle.height));
+    }
     public void fillLine(float x1,float y1,float x2,float y2,float halfWidth){
         float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
         float ex=(x2-x1)/length*halfWidth;
         float ey=(y2-y1)/length*halfWidth;
-        fillPolygon(x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex);
+      //  fillPolygon(x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex);
     }
 
     public void fillLine(Vector2 a,Vector2 b,float halfWidth){
@@ -470,7 +471,6 @@ public class Mask {
         }
         pixels.rewind();
         Texture result=new Texture(pixmap);
-        Basic.linearInterpolation(result);
         pixmap.dispose();
         return result;
     }
