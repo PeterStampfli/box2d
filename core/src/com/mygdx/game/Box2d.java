@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Pieces.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
@@ -39,6 +40,8 @@ public class Box2d extends ApplicationAdapter {
 
 	boolean debug;
 
+	Texture maskImage;
+	Texture maskImage2;
 
 	@Override
 	public void create () {
@@ -50,7 +53,8 @@ public class Box2d extends ApplicationAdapter {
 		Basic.linearInterpolation(img);
 		followCamera=new FollowCamera();
 
-		viewport= Viewports.createExtendViewport(10,10,followCamera);
+        int viewportSize=100;
+		viewport= Viewports.createExtendViewport(viewportSize,viewportSize,followCamera);
 		followCamera.setGameWorldSize(200,15).setDebugAllowed(true);
 		physics=new Physics(viewport,debug);
 		device.disposer.add(physics,"Physics");
@@ -69,7 +73,7 @@ public class Box2d extends ApplicationAdapter {
 
 		//bodyDef.gravityScale=-0.1f;
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
-		physics.fixture().circleShape(0.5f,0.5f,0.5f).attach(movingBody);
+		physics.fixture().circleShape(0.5f,0.105f,0.5f).attach(movingBody);
 
 		sprite.initializeSprite(movingBody);
 
@@ -93,7 +97,20 @@ public class Box2d extends ApplicationAdapter {
 
 		physics.start();
 
+		float r=24f;
+		Mask mask=new Mask(50,50);
+		mask.fillCircle(25,25,r);
+		//mask.drawPolygon(5,15,5,45,20,30,45,5,20);
+		//mask.fillPolygon(15,5,20,4,17,10);
+mask.invert().transparentBorder();
+		maskImage=mask.createBlackWhiteTexture();
 
+		Mask mask2=new Mask(50,50);
+		//mask2.betterFillCircle(25,25,r);
+		//mask2.fillPolygon(15,5,45,20,30,45,5,20);
+		mask2.drawRing(26f,25f,22.5f,10);
+
+		maskImage2=mask2.createBlackWhiteTexture();
 
 
 	}
@@ -113,7 +130,7 @@ public class Box2d extends ApplicationAdapter {
 
 		Basic.clearBackground(Color.BLUE);
 
-		followCamera.follow(sprite);
+		//followCamera.follow(sprite);
 
 
 		batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -124,6 +141,8 @@ public class Box2d extends ApplicationAdapter {
 			physics.updateGraphicsData(1);
 		}
 		sprite.draw(batch);
+		batch.draw(maskImage,10,0);
+		batch.draw(maskImage2,65,50);
 		batch.end();
 		physics.debugRender();
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
@@ -133,6 +152,9 @@ public class Box2d extends ApplicationAdapter {
 		//mouseJoint.setTarget(new Vector2(9, 9));
 		//physics.step(1/60f);
 		physics.advance();
+
+
+		Basic.setContinuousRendering(false);
 
 
 	}

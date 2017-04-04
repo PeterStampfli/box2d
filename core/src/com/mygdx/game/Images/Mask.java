@@ -116,52 +116,21 @@ public class Mask {
     }
 
     /**
-     * fill a circle with opaque bits, smooth border
+     * draw a ring with opaque bits, smooth border
+     * outerRadius is the outer radius of the ring shape
+     * a disc if thickness <0
      * @param centerX
      * @param centerY
-     * @param radius
-     */
-    public void fillCircle(float centerX, float centerY, float radius){
-        centerY=flipY(centerY);
-        int iMax,iMin,jMax,jMin;
-        // taking into account the additional smooth region of width 0.5 outside
-        // and that pixel positions are shifted by one half (x=i+0.5)
-        iMax=Math.min(width-1,MathUtils.ceil(centerX+radius));
-        iMin=Math.max(0,MathUtils.floor(centerX-radius-1));
-        jMax=Math.min(height-1,MathUtils.ceil(centerY+radius));
-        jMin=Math.max(0,MathUtils.floor(centerY-radius-1));
-        int i,j,jWidth;
-        float dx,dy2,dx2Plusdy2;
-        float d=0.5f;
-        float radiusSqPlus=(radius+d)*(radius+d);
-        float radiusSqMinus=(radius-d)*(radius-d);
-        float denom=1f/(radiusSqPlus-radiusSqMinus);
-        for (j=jMin;j<=jMax;j++){
-            jWidth=j*width;
-            dy2=j+0.5f-centerY;
-            dy2*=dy2;
-            for (i=iMin;i<=iMax;i++){
-                dx=i+0.5f-centerX;
-                dx2Plusdy2=dy2+dx*dx;
-                if (dx2Plusdy2<radiusSqMinus){
-                    alpha[i+jWidth]=(byte) 255;
-                }
-                else if (dx2Plusdy2<radiusSqPlus){
-                    d=(radiusSqPlus-dx2Plusdy2)*denom;
-                    alpha[i+jWidth]=maxByteFloat(alpha[i+jWidth],d);
-                }
-            }
-        }
-    }
-
-    /**
-     * fill a ring with opaque bits, smooth border
-     * @param centerX
-     * @param centerY
-     * @param innerRadius
+     * @param thickness
      * @param outerRadius
      */
-    public void fillRing(float centerX, float centerY, float innerRadius,float outerRadius){
+    public void drawRing(float centerX, float centerY, float outerRadius, float thickness){
+        float innerRadius;
+        if (thickness>=0){
+            innerRadius=outerRadius-thickness;
+        } else {
+            innerRadius=-10;
+        }
         centerY=flipY(centerY);
         int iMax,iMin,jMax,jMin;
         iMax=Math.min(width-1,MathUtils.ceil(centerX+outerRadius));
@@ -173,10 +142,18 @@ public class Mask {
         float d=0.5f;
         float outerRadiusSqPlus=(outerRadius+d)*(outerRadius+d);
         float outerRadiusSqMinus=(outerRadius-d)*(outerRadius-d);
-        float innerRadiusSqPlus=(innerRadius+d)*(innerRadius+d);
-        float innerRadiusSqMinus=(innerRadius-d)*(innerRadius-d);
-        float innerDenom=1f/ (innerRadiusSqPlus - innerRadiusSqMinus);
         float outerDenom=1f/ (outerRadiusSqPlus - outerRadiusSqMinus);
+        float innerRadiusSqMinus,innerRadiusSqPlus,innerDenom;
+        if (innerRadius>0) {
+            innerRadiusSqPlus = (innerRadius + d) * (innerRadius + d);
+            innerRadiusSqMinus = (innerRadius - d) * (innerRadius - d);
+            innerDenom = 1f / (innerRadiusSqPlus - innerRadiusSqMinus);
+        }
+        else {
+            innerRadiusSqMinus=-100;
+            innerRadiusSqPlus=-90;
+            innerDenom=1;
+        }
         for (j=jMin;j<=jMax;j++){
             jWidth=j*width;
             dy2=j+0.5f-centerY;
@@ -198,6 +175,17 @@ public class Mask {
                 }
             }
         }
+    }
+
+
+    /**
+     * fill a circle with opaque bits, smooth border
+     * @param centerX
+     * @param centerY
+     * @param radius
+     */
+    public void fillCircle(float centerX, float centerY, float radius){
+        drawRing(centerX,centerY,radius,-10);
     }
 
     /**
@@ -264,10 +252,12 @@ public class Mask {
     }
 
     /**
-     * fill a convex polygon shape. Vertices in counter-clock sense
+     * draw a convex polygon shape. Vertices in counter-clock sense
+     * draws the outline with a given thickness inside the border lines
+     * (shape has to be closed)
      * @param coordinates
      */
-    public void fillPolygon(float... coordinates){
+    public void drawPolygon(float thickness,float... coordinates){
         int length=coordinates.length-2;
         Array<Line> lines=new Array<Line>();
         float xMin=coordinates[length];
@@ -293,22 +283,26 @@ public class Mask {
         for (j=jMin;j<=jMax;j++){
             jWidth=j*width;
             for (i=iMin;i<=iMax;i++){
-                d=1f;
+                d=100000f;
                 for (Line line:lines){
                     d=Math.min(d,line.distance(i,j));
                     if (d<0) {
                         break;
                     }
                 }
-                if (d>0) {
+                if (d>0){
+                    if (d>thickness-0.5f){
+                        d=thickness+0.5f-d;
+                    }
                     alpha[i+jWidth]=maxByteFloat(alpha[i+jWidth],d);
                 }
             }
         }
-
     }
 
-
+    public void fillPolygon(float... coordinates){
+        drawPolygon(100000,coordinates);
+    }
 
 
 /*
