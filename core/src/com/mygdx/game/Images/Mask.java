@@ -3,9 +3,7 @@ package com.mygdx.game.Images;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.utilities.Basic;
@@ -125,26 +123,15 @@ public class Mask {
      * @param outerRadius
      */
     public void drawRing(float centerX, float centerY, float outerRadius, float thickness){
-        float innerRadius;
-        if (thickness>=0){
-            innerRadius=outerRadius-thickness;
-        } else {
-            innerRadius=-10;
-        }
-        centerY=flipY(centerY);
-        int iMax,iMin,jMax,jMin;
-        iMax=Math.min(width-1,MathUtils.ceil(centerX+outerRadius));
-        iMin=Math.max(0,MathUtils.floor(centerX-outerRadius-1));
-        jMax=Math.min(height-1,MathUtils.ceil(centerY+outerRadius));
-        jMin=Math.max(0,MathUtils.floor(centerY-outerRadius-1));
-        int i,j,jWidth;
         float dx,dy2,dx2Plusdy2;
+        float innerRadius;
         float d=0.5f;
         float outerRadiusSqPlus=(outerRadius+d)*(outerRadius+d);
         float outerRadiusSqMinus=(outerRadius-d)*(outerRadius-d);
         float outerDenom=1f/ (outerRadiusSqPlus - outerRadiusSqMinus);
         float innerRadiusSqMinus,innerRadiusSqPlus,innerDenom;
-        if (innerRadius>0) {
+        if (thickness>=0) {
+            innerRadius=outerRadius-thickness;
             innerRadiusSqPlus = (innerRadius + d) * (innerRadius + d);
             innerRadiusSqMinus = (innerRadius - d) * (innerRadius - d);
             innerDenom = 1f / (innerRadiusSqPlus - innerRadiusSqMinus);
@@ -154,6 +141,13 @@ public class Mask {
             innerRadiusSqPlus=-90;
             innerDenom=1;
         }
+        centerY=flipY(centerY);
+        int iMax,iMin,jMax,jMin;
+        iMax=Math.min(width-1,MathUtils.ceil(centerX+outerRadius));
+        iMin=Math.max(0,MathUtils.floor(centerX-outerRadius-1));
+        jMax=Math.min(height-1,MathUtils.ceil(centerY+outerRadius));
+        jMin=Math.max(0,MathUtils.floor(centerY-outerRadius-1));
+        int i,j,jWidth;
         for (j=jMin;j<=jMax;j++){
             jWidth=j*width;
             dy2=j+0.5f-centerY;
@@ -200,16 +194,6 @@ public class Mask {
         fillCircle(center.x,center.y,radius);
     }
 
-    /**
-     * fill a circle with opaque bits, smooth border
-     * the center is a continuous coordinate,
-     * (0,0) is at the lower left corner of the lowest leftest pixel
-     * center of pixels are integers plus one half
-     * @param circle
-     */
-    public void fillCircle(Circle circle){
-        fillCircle(circle.x,circle.y,circle.radius);
-    }
 
     /**
      * a line that is part of the border of a convex polygon shape
@@ -255,6 +239,8 @@ public class Mask {
      * draw a convex polygon shape. Vertices in counter-clock sense
      * draws the outline with a given thickness inside the border lines
      * (shape has to be closed)
+     * note that here thickness comes first, it is mainly for diagnstics
+     * @param thickness
      * @param coordinates
      */
     public void drawPolygon(float thickness,float... coordinates){
@@ -262,14 +248,14 @@ public class Mask {
         Array<Line> lines=new Array<Line>();
         float xMin=coordinates[length];
         float xMax=xMin;
-        float yMin=coordinates[length+1];
+        float yMin=flipY(coordinates[length+1]);
         float yMax=yMin;
         for (int i=0;i<length;i+=2) {
             lines.add(new Line(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3]));
             xMin=Math.min(xMin,coordinates[i]);
             xMax=Math.max(xMax,coordinates[i]);
-            yMin=Math.min(yMin,coordinates[i+1]);
-            yMax=Math.max(yMax,coordinates[i+1]);
+            yMin=Math.min(yMin,flipY(coordinates[i+1]));
+            yMax=Math.max(yMax,flipY(coordinates[i+1]));
         }
         lines.add(new Line(coordinates[length],coordinates[length+1],coordinates[0],coordinates[1]));
         // taking into account smooth border of with 0.5 and shift of pixel positions
@@ -300,93 +286,137 @@ public class Mask {
         }
     }
 
+    /**
+     * fill a convex polygon shape. Vertices in counter-clock sense
+     * @param coordinates
+     */
     public void fillPolygon(float... coordinates){
         drawPolygon(100000,coordinates);
     }
 
-
-/*
+    /**
+     * fill a convex polygon shape. Vertices in counter-clock sense
+     * @param points
+     */
     public void fillPolygon(Array<Vector2> points){
         fillPolygon(Basic.toFloats(points));
     }
 
-    public void fillPolygon(Polygon polygon){
-        fillPolygon(polygon.getVertices());
-    }
-
-    public void fill(Shape2D shape){
-        if (shape instanceof Polygon){
-            fillPolygon((Polygon)shape);
-        }
-        else if (shape.getClass()==Circle.class){
-            fillCircle((Circle) shape);
-        }
-        else if(shape.getClass()==Rectangle.class){
-            fillRect((Rectangle) shape);
-        }
-        else if (shape.getClass()==Shapes2D.class){
-            Shapes2D shapes=(Shapes2D) shape;
-            for (Shape2D subShape:shapes.shapes2D){
-                fill(subShape);
-            }
-        }
-        else {
-            Gdx.app.log(" ******************** mask","unknown shape "+shape.getClass());
-        }
-    }
-*/
-
-
     /**
      * fill rectangle area (within set limits)
-     * @param ic
-     * @param jc
-     * @param rectWidth
-     * @param rectHeight
-     * @param value
+     * @param cornerX
+     * @param cornerY
+     * @param width >0
+     * @param height>0
      */
-    public void fillRect(int ic,int jc,int rectWidth,int rectHeight,int value){
-       /* int iMx=Math.min(this.iMax,ic+rectWidth-1);
-        int iMn=Math.max(this.iMin,ic);
-        int jMx=Math.min(this.jMax,flipY(jc));
-        int jMn=Math.max(this.jMin,flipY(jc)-rectHeight+1);
-        int i,j,jWidth;
-        for (j=jMn;j<=jMx;j++) {
-            jWidth = j * width;
-            for (i = iMn; i <= iMx; i++) {
-                alpha[i + jWidth] = (byte) value;
-            }
-        }*/
+    public void fillRect(float cornerX,float cornerY,float width,float height){
+        fillPolygon(cornerX,cornerY,cornerX+width,cornerY,cornerX+width,cornerY+height,cornerX,cornerY+height);
     }
 
-    /**
-     * fill rectangle area (within limits), making it opaque
-     * @param ic
-     * @param jc
-     * @param rectWidth
-     * @param rectHeight
-     */
-    public void fillRect(int ic,int jc,int rectWidth,int rectHeight) {
-        fillRect(ic, jc, rectWidth, rectHeight,255);
-    }
 
     /**
-     * fill rectangle area (within limits), making it opaque
-     * @param rectangle
+     * draw a line between two points with a given width/thickness
+     * sharp cutoff at end points
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param thickness
      */
-    public void fillRect(Rectangle rectangle){
-        fillRect(Math.round(rectangle.x),Math.round(rectangle.y),
-                Math.round(rectangle.width),Math.round(rectangle.height));
-    }
-    public void fillLine(float x1,float y1,float x2,float y2,float halfWidth){
+    public void drawLine(float x1, float y1, float x2, float y2, float thickness){
+        float halfWidth=0.5f*thickness;
         float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
         float ex=(x2-x1)/length*halfWidth;
         float ey=(y2-y1)/length*halfWidth;
-      //  fillPolygon(x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex);
+        fillPolygon(x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex);
     }
 
-    public void fillLine(Vector2 a,Vector2 b,float halfWidth){
-        fillLine(a.x,a.y,b.x,b.y,halfWidth);
+    /**
+     * draw a line between two points with a given width/thickness
+     * sharp cutoff at end points
+     * @param a
+     * @param b
+     * @param thickness
+     */
+    public void drawLine(Vector2 a, Vector2 b, float thickness){
+        drawLine(a.x,a.y,b.x,b.y,thickness);
+    }
+
+    /**
+     * draw a line with many segments, terminated and connected with circles
+     * note that this is more for diagnostics, thickness parameter has to be first
+     * @param thickness
+     * @param coordinates
+     */
+    public void drawPolyline(float thickness,float... coordinates){
+        float radius=0.5f*thickness;
+        int lenght=coordinates.length-2;
+        for (int i=0;i<lenght;i+=2){
+            drawLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
+            fillCircle(coordinates[i],coordinates[i+1],radius);
+        }
+        fillCircle(coordinates[lenght],coordinates[lenght+1],radius);
+    }
+
+    /**
+     * draw a line with many segments, terminated and connected with circles
+     * note that this is more for diagnostics, thickness parameter has to be first
+     * @param points
+     * @param thickness
+     */
+
+    public void drawPolyline(Array<Vector2> points,float thickness){
+        drawPolyline(thickness,Basic.toFloats(points));
+    }
+
+    /**
+     * calculate the center of mass of the mask
+     * with respect to lower left corner
+     * @return
+     */
+    public Vector2 getCenter(){
+        int surface=0;
+        int centerX=0;
+        int centerY=0;
+        int a;
+        int i,j;
+        int index=0;
+        for (j=0;j<height;j++){
+            for (i  = 0; i < width; i++) {
+                a = alpha[index];
+                index++;
+                if (a<0) a+=256;
+                surface += a;
+                centerX += a * i;
+                centerY += a * j;
+            }
+        }
+        surface=Math.max(surface,1);
+        return new Vector2((float)centerX/(float)surface,(float)centerY/(float)surface);
+    }
+
+    /**
+     * combine the mask with another one using "AND" (mathematical min)
+     * changes the mask data
+     * @return
+     */
+    public Mask and(Mask mask2){
+        for (int index=alpha.length-1;index>=0;index--) {
+            alpha[index]=(byte)Math.min(toPosInt(alpha[index]),toPosInt(mask2.alpha[index]));
+        }
+        return this;
+    }
+
+    /**
+     * combine the mask with another one using "OR" (mathematical max)
+     * changes the mask data
+     * @return
+     */
+    public Mask or(Mask mask2){
+        for (int index=alpha.length-1;index>=0;index--) {
+            alpha[index]=(byte)Math.max(toPosInt(alpha[index]),toPosInt(mask2.alpha[index]));
+        }
+        return this;
     }
 
 
@@ -431,7 +461,7 @@ public class Mask {
     }
 
     /**
-     * for diagnostics create a texture of given color
+     * for diagnostics create a white texture
      * cut out by the mask
      * @return
      */
@@ -448,6 +478,7 @@ public class Mask {
 
     /**
      * for diagnostics create a black and white texture
+     * white is 255, black is 0
      * @return
      */
     public Texture createBlackWhiteTexture(){
@@ -468,36 +499,6 @@ public class Mask {
         pixmap.dispose();
         return result;
     }
-
-
-
-    /**
-     * calculate the center of mass of the mask
-     * with respect to lower left corner
-     * @return
-     */
-    public Vector2 getCenter(){
-        int surface=0;
-        int centerX=0;
-        int centerY=0;
-        int a;
-        int i,j;
-        int index=0;
-        for (j=0;j<height;j++){
-            for (i  = 0; i < width; i++) {
-                a = alpha[index];
-                index++;
-                if (a<0) a+=256;
-                surface += a;
-                centerX += a * i;
-                centerY += a * j;
-            }
-        }
-        surface=Math.max(surface,1);
-        return new Vector2((float)centerX/(float)surface,(float)centerY/(float)surface);
-    }
-
-
 }
 
 
