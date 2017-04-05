@@ -343,12 +343,12 @@ public class Mask {
     }
 
     /**
-     * draw a line with many segments, terminated and connected with circles
+     * draw a chain/line with many segments, terminated and connected with circles
      * note that this is more for diagnostics, thickness parameter has to be first
      * @param thickness
      * @param coordinates
      */
-    public void drawPolyline(float thickness,float... coordinates){
+    public void drawChain(float thickness, float... coordinates){
         float radius=0.5f*thickness;
         int lenght=coordinates.length-2;
         for (int i=0;i<lenght;i+=2){
@@ -361,12 +361,12 @@ public class Mask {
     /**
      * draw a line with many segments, terminated and connected with circles
      * note that this is more for diagnostics, thickness parameter has to be first
-     * @param points
      * @param thickness
+     * @param points
      */
 
-    public void drawPolyline(Array<Vector2> points,float thickness){
-        drawPolyline(thickness,Basic.toFloats(points));
+    public void drawChain( float thickness,Array<Vector2> points){
+        drawChain(thickness,Basic.toFloats(points));
     }
 
     /**
