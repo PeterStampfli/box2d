@@ -1,14 +1,13 @@
 package com.mygdx.game.Images;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.math.*;
 
 /**
  * Created by peter on 4/4/17.
  * Static methods to use Shape2D shapes for masks, including collections of shapes
+ *
+ * a bridge between masks and shapes
  */
 
 public class MaskOfShape2D {
@@ -42,6 +41,14 @@ public class MaskOfShape2D {
     }
 
     /**
+     * draw chain on a mask
+     * @param mask
+     */
+    static public void drawChain(Chain chain,Mask mask){
+        mask.drawChain(chain.thickness,chain.coordinates.toArray());
+    }
+
+    /**
      * fill a Shape2D shape on the mask
      * including Shapes2D collections
      * @param shape
@@ -54,8 +61,11 @@ public class MaskOfShape2D {
         else if (shape instanceof Circle){
             fillCircle((Circle) shape,mask);
         }
-        else if(shape instanceof Rectangle){
+        else if (shape instanceof Rectangle){
             fillRect((Rectangle) shape,mask);
+        }
+        else if (shape instanceof Chain){
+            drawChain((Chain)shape,mask);
         }
         else if (shape instanceof Shapes2D){
             Shapes2D shapes=(Shapes2D) shape;
