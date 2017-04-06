@@ -29,7 +29,7 @@ public class Device implements Disposable{
     public AssetManager assetManager;
 
     /**
-     * Always create an assetManager
+     * Always create an assetManager and basic assets
      */
     public Device(){
         disposer=new Disposer("Device");
