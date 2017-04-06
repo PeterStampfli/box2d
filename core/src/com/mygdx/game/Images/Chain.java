@@ -187,4 +187,69 @@ public class Chain implements Shape2D {
     public void addArcABSomeCenter(Vector2 a,Vector2 b,Vector2 someCenter,boolean counterclockwise) {
         addArcABSomeCenter(a.x,a.y,b.x,b.y,someCenter.x,someCenter.y,counterclockwise);
     }
+
+    /**
+     * creat points on an arc from a to b
+     * the tangentPoint defines a tangent going from point a
+     * use only for joining a straight line
+     * @param aX
+     * @param aY
+     * @param bX
+     * @param bY
+     * @param tangentPointX
+     * @param tangentPointY
+     * @param counterclockwise
+     */
+    public void addArcABTangent(float aX,float aY,float bX,float bY,
+                                float tangentPointX,float tangentPointY,boolean counterclockwise){
+        float someCenterX=aX+(tangentPointY-aY);
+        float someCenterY=aY-(tangentPointX-aX);
+        addArcABSomeCenter(aX,aY,bX,bY,someCenterX,someCenterY,counterclockwise);
+    }
+
+    /**
+     * creat points on an arc from a to b
+     * the tangentPoint defines a tangent going from point a
+     * use only for joining a straight line
+     * @param a
+     * @param b
+     * @param tangentPoint
+     * @param counterclockwise
+     */
+    public void addArcABTangent(Vector2 a,Vector2 b,Vector2 tangentPoint,boolean counterclockwise){
+        addArcABTangent(a.x,a.y,b.x,b.y,tangentPoint.x,tangentPoint.y,counterclockwise);
+    }
+
+    /**
+     * add an arc going from point a to b to c
+     * @param aX
+     * @param aY
+     * @param bX
+     * @param bY
+     * @param cX
+     * @param cY
+     */
+    public void addArcABC(float aX,float aY,float bX,float bY,float cX,float cY){
+        float a2mb2=(aX-bX)*(aX+bX)+(aY-bY)*(aY+bY);
+        float a2mc2=(a.x-c.x)*(a.x+c.x)+(a.y-c.y)*(a.y+c.y);
+        Gdx.app.log("a2mb2",""+a2mb2);
+        Gdx.app.log("a2mc2",""+a2mc2);
+        float den=2*((b.y-a.y)*(c.x-a.x)-(c.y-a.y)*(b.x-a.x));
+        Gdx.app.log("",""+den);
+        Vector2 center=new Vector2(((c.y-a.y)*a2mb2-(b.y-a.y)*a2mc2)/den,
+                -((c.x-a.x)*a2mb2-(b.x-a.x)*a2mc2)/den);
+        Gdx.app.log("center",center+" ");
+        float alpha=MathUtils.atan2(a.y-center.y,a.x-center.x);
+        float beta=MathUtils.atan2(b.y-center.y,b.x-center.x);
+        float gamma=MathUtils.atan2(c.y-center.y,c.x-center.x);
+        Gdx.app.log("alpha",""+alpha);
+        Gdx.app.log("beta",""+beta);
+        Gdx.app.log("gamma",""+gamma);
+        float radius=a.dst(center);
+        boolean counterClockwise=((alpha<beta)&&(beta<gamma))||((beta<gamma)&&(gamma<alpha))||((gamma<alpha)&&(alpha<beta));
+
+        addBasicArc(center,radius,alpha,gamma,counterClockwise);
+    }
+
+
 }
