@@ -8,30 +8,57 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.game.utilities.Basic;
 
 /**
  * Created by peter on 3/22/17.
+ * creating sclaed fixture shapes without modifying vector2 or array parameter
  */
-public class FixtureBuilder {
+public class FixtureBuilder implements Disposable {
     public FixtureDef fixtureDef;
+    public float scale;
     private boolean needToDisposeShape;
 
+    /**
+     * create fixturebuilder with scale=1 as default
+     */
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();
+        scale=1;
         reset();
+    }
+
+    /**
+     * create fixturebuilder with nontrivial scale for shapes
+     * typically: scale=1f/pixels_per_meter
+     * @param scale
+     */
+    public FixtureBuilder(float scale){
+        this();
+        this.scale=scale;
     }
 
     /**
      * dispose the shape only if it has been created by the fixture builder
      * external shapes have to be disposed extra
-     * @param disposeNext
+     * @param disposeNext true if fixturebuilder has to dispose the shape that will be created next
      */
-    public void disposeShape(boolean disposeNext) {
+    private void disposeShape(boolean disposeNext) {
         if (needToDisposeShape) {
             fixtureDef.shape.dispose();
             needToDisposeShape = disposeNext;
         }
+    }
+
+    /**
+     * sets the scale of the fixtureBuilder (eg. created by physics
+     * @param scale
+     * @return
+     */
+    public FixtureBuilder setScale(float scale){
+        this.scale=scale;
+        return this;
     }
 
     /**
@@ -303,5 +330,10 @@ public class FixtureBuilder {
     public Fixture attach(Body body) {
         Fixture fixture = body.createFixture(fixtureDef);
         return attach(body,null);
+    }
+
+    @Override
+    public void dispose(){
+        disposeShape(false);
     }
 }

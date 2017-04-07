@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by peter on 4/2/17.
  */
 
-public class TouchableShapeSprite extends DrawableSprite implements Touchable {
+public class TouchableSprite extends DrawableSprite implements Touchable {
     public Shape2D shape;
 
     /**
@@ -18,7 +18,7 @@ public class TouchableShapeSprite extends DrawableSprite implements Touchable {
      * @param texture
      * @param shape
      */
-    public TouchableShapeSprite(Texture texture, Shape2D shape){
+    public TouchableSprite(Texture texture, Shape2D shape){
         super(texture);
         this.shape=shape;
     }
@@ -29,7 +29,7 @@ public class TouchableShapeSprite extends DrawableSprite implements Touchable {
      * @param shape
      */
 
-    public TouchableShapeSprite(TextureRegion textureRegion, Shape2D shape){
+    public TouchableSprite(TextureRegion textureRegion, Shape2D shape){
         super(textureRegion);
         this.shape=shape;
     }

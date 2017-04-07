@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -81,6 +82,15 @@ public class Basic {
      */
     public static void linearInterpolation(Texture texture) {
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    }
+
+    /**
+     * set texture of a textureregion to linear interpolation
+     *
+     * @param textureRegion for linear interpolation
+     */
+    public static void linearInterpolation(TextureRegion textureRegion) {
+        textureRegion.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /**

@@ -1,9 +1,14 @@
 package com.mygdx.game.Images;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.utilities.Basic;
@@ -368,6 +373,72 @@ public class Mask {
     public void drawChain( float thickness,Array<Vector2> points){
         drawChain(thickness,Basic.toFloats(points));
     }
+
+    /**
+     * fill a circle with opaque bits, smooth border
+     * the center is a continuous coordinate,
+     * (0,0) is at the lower left corner of the lowest leftest pixel
+     * center of pixels are integers plus one half
+     * @param circle
+     */
+    public void fillCircle(Circle circle){
+        fillCircle(circle.x,circle.y,circle.radius);
+    }
+
+    /**
+     * fill a convex polygon shape. Vertices in counter-clock sense
+     * @param polygon
+     */
+    public void fillPolygon(Polygon polygon){
+        fillPolygon(polygon.getVertices());
+    }
+
+    /**
+     * fill rectangle area (within limits), making it opaque
+     * @param rectangle
+     */
+    public void fillRect(Rectangle rectangle){
+        fillRect(Math.round(rectangle.x),Math.round(rectangle.y),
+                Math.round(rectangle.width),Math.round(rectangle.height));
+    }
+
+    /**
+     * draw chain on a mask
+     * @param chain
+     */
+    public void drawChain(Chain chain){
+        drawChain(chain.thickness,chain.coordinates.toArray());
+    }
+
+    /**
+     * fill a Shape2D shape on the mask
+     * including Shapes2D collections
+     * @param shape
+     */
+    public void fill(Shape2D shape){
+        if (shape instanceof Polygon){
+            fillPolygon((Polygon)shape);
+        }
+        else if (shape instanceof Circle){
+            fillCircle((Circle) shape);
+        }
+        else if (shape instanceof Rectangle){
+            fillRect((Rectangle) shape);
+        }
+        else if (shape instanceof Chain){
+            drawChain((Chain)shape);
+        }
+        else if (shape instanceof Shapes2D){
+            Shapes2D shapes=(Shapes2D) shape;
+            for (Shape2D subShape:shapes.shapes2D){
+                fill(subShape);
+            }
+        }
+        else {
+            Gdx.app.log(" ******************** mask","unknown shape "+shape.getClass());
+        }
+    }
+
 
     /**
      * calculate the center of mass of the mask

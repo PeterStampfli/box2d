@@ -231,24 +231,26 @@ public class Chain implements Shape2D {
      */
     public void addArcABC(float aX,float aY,float bX,float bY,float cX,float cY){
         float a2mb2=(aX-bX)*(aX+bX)+(aY-bY)*(aY+bY);
-        float a2mc2=(a.x-c.x)*(a.x+c.x)+(a.y-c.y)*(a.y+c.y);
-        Gdx.app.log("a2mb2",""+a2mb2);
-        Gdx.app.log("a2mc2",""+a2mc2);
-        float den=2*((b.y-a.y)*(c.x-a.x)-(c.y-a.y)*(b.x-a.x));
-        Gdx.app.log("",""+den);
-        Vector2 center=new Vector2(((c.y-a.y)*a2mb2-(b.y-a.y)*a2mc2)/den,
-                -((c.x-a.x)*a2mb2-(b.x-a.x)*a2mc2)/den);
-        Gdx.app.log("center",center+" ");
-        float alpha=MathUtils.atan2(a.y-center.y,a.x-center.x);
-        float beta=MathUtils.atan2(b.y-center.y,b.x-center.x);
-        float gamma=MathUtils.atan2(c.y-center.y,c.x-center.x);
-        Gdx.app.log("alpha",""+alpha);
-        Gdx.app.log("beta",""+beta);
-        Gdx.app.log("gamma",""+gamma);
-        float radius=a.dst(center);
+        float a2mc2=(aX-cX)*(aX+cX)+(aY-cY)*(aY+cY);
+        float den=2*((bY-aY)*(cX-aX)-(cY-aY)*(bX-aX));
+        float centerX=((cY-aY)*a2mb2-(bY-aY)*a2mc2)/den;
+        float centerY= -((cX-aX)*a2mb2-(bX-aX)*a2mc2)/den;
+        float alpha=MathUtils.atan2(aY-centerY,aX-centerX);
+        float beta=MathUtils.atan2(bY-centerY,bX-centerX);
+        float gamma=MathUtils.atan2(cY-centerY,cX-centerX);
+        float radius=Vector2.dst(aX,aY,centerX,centerY);
         boolean counterClockwise=((alpha<beta)&&(beta<gamma))||((beta<gamma)&&(gamma<alpha))||((gamma<alpha)&&(alpha<beta));
+        addBasicArc(centerX,centerY,radius,alpha,gamma,counterClockwise);
+    }
 
-        addBasicArc(center,radius,alpha,gamma,counterClockwise);
+    /**
+     * add an arc going from point a to b to c
+     * @param a
+     * @param b
+     * @param c
+     */
+    public void addArcABC(Vector2 a,Vector2 b, Vector2 c){
+        addArcABC(a.x,a.y,b.x,b.y,c.x,c.y);
     }
 
 

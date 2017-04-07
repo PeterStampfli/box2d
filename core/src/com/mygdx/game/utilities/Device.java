@@ -27,6 +27,7 @@ public class Device implements Disposable{
     public ShapeRenderer shapeRenderer;
     public OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     public AssetManager assetManager;
+    public BasicAssets basicAssets;
 
     /**
      * Always create an assetManager and basic assets
@@ -35,6 +36,7 @@ public class Device implements Disposable{
         disposer=new Disposer("Device");
         assetManager=new AssetManager();
         disposer.add(assetManager,"assetManager");
+        basicAssets=new BasicAssets(this);
     }
 
     /**

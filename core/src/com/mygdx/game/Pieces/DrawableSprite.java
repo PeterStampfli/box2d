@@ -27,11 +27,11 @@ public class DrawableSprite extends Sprite implements Drawable {
 
     /**
      * reduce the size of the sprite to world dimensions.
-     * Factor is given number of pixels per meter (world unit)
-     * @param pixelPerMeter
+     * Factor is given number of pixels per unit (meter, physics world unit)
+     * @param pixelPerUnit
      */
-    public void adjustSizeToPixelScale(float pixelPerMeter){
-        setSize(getWidth()/pixelPerMeter,getHeight()/pixelPerMeter);
+    public void adjustSizeToPixelScale(float pixelPerUnit){
+        setSize(getWidth()/pixelPerUnit,getHeight()/pixelPerUnit);
     }
 
     /**

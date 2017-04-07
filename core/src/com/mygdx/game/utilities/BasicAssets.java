@@ -5,11 +5,13 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +22,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  */
 
 public class BasicAssets {
+    public Device device;
     public AssetManager assetManager;
     public String soundFileType="wav";
     public String musicFileType="mp3";
@@ -34,11 +37,12 @@ public class BasicAssets {
     // general
 
     /**
-     * Use the assetManager instance from device object
-     * @param assetManager
+     * create basic assets, using the assetManager and disposer of device
+     * @param device
      */
-    public void setAssetManager(AssetManager assetManager){
-        this.assetManager=assetManager;
+    public BasicAssets(Device device){
+        this.device=device;
+        this.assetManager=device.assetManager;
     }
 
     /**
@@ -245,12 +249,41 @@ public class BasicAssets {
     }
 
     /**
-     * get the atlas region of given name
+     * get the atlas region of given name, extends textureRegion, has more info than textureRegion
      * @param name
      * @return
      */
     public TextureAtlas.AtlasRegion getAtlasRegion(String name){
         return atlasRegionMap.get(name);
+    }
+
+    /**
+     * To simplify debugging and production:
+     * first tries to find an image *.png or *.jpg and makes it a textureregion
+     * if not found gets a textureRegion as part of an atlas,
+     * Thus I do not need to have made the atlas already in debugging, can use instead simple images
+     * later I can use an atlas without changing code details
+     * I can override the image in the atlas region with a simple image
+     * @param name
+     * @return
+     */
+    public TextureRegion getTextureRegion(String name){
+        TextureRegion result;
+        FileHandle fileHandle;
+        fileHandle=Gdx.files.internal(name+".png");                    // try to find as a png
+        if (!fileHandle.exists()) {
+            fileHandle = Gdx.files.internal(name + ".jpg");           // if not found try jpg
+        }
+        if (fileHandle.exists()) {
+            Texture texture=new Texture(fileHandle);
+            device.disposer.add(texture,name+" texture");
+            result=new TextureRegion(texture);        // if found load the image as texture->textureRegion
+        }
+        else
+        {
+            result=getAtlasRegion(name);                        // if not found look for atlas region
+        }
+        return result;
     }
 
     /**
