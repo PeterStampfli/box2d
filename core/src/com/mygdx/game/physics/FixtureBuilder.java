@@ -1,5 +1,8 @@
 package com.mygdx.game.physics;
 
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -10,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 3/22/17.
@@ -17,8 +21,9 @@ import com.mygdx.game.utilities.Basic;
  */
 public class FixtureBuilder implements Disposable {
     public FixtureDef fixtureDef;
+    public Body body;
     public float scale;
-    private boolean needToDisposeShape;
+    private Shape internalShape;
 
     /**
      * create fixturebuilder with scale=1 as default
@@ -40,19 +45,7 @@ public class FixtureBuilder implements Disposable {
     }
 
     /**
-     * dispose the shape only if it has been created by the fixture builder
-     * external shapes have to be disposed extra
-     * @param disposeNext true if fixturebuilder has to dispose the shape that will be created next
-     */
-    private void disposeShape(boolean disposeNext) {
-        if (needToDisposeShape) {
-            fixtureDef.shape.dispose();
-            needToDisposeShape = disposeNext;
-        }
-    }
-
-    /**
-     * sets the scale of the fixtureBuilder (eg. created by physics
+     * sets the scale of the fixtureBuilder (eg. created by physics)
      * @param scale
      * @return
      */
@@ -62,11 +55,21 @@ public class FixtureBuilder implements Disposable {
     }
 
     /**
+     * set the body for the next fixtures
+     * @param body
+     * @return
+     */
+    public FixtureBuilder setBody(Body body){
+        this.body=body;
+        return this;
+    }
+
+    /**
      * reset the fixtureDef with defaults
+     * except the scale, shape and body
      * @return
      */
     public FixtureBuilder reset() {
-        disposeShape(false);
         fixtureDef.density = 1;
         fixtureDef.filter.groupIndex = 0;
         fixtureDef.filter.maskBits = 1;
@@ -149,14 +152,34 @@ public class FixtureBuilder implements Disposable {
 
     /**
      * provide an external shape for the fixture
-     * dispose this shape explicitely outside
+     * dispose this shape explicitly outside
+     * No scaling
      * Disposes any shape created by the fixtureBuilder
      * @param shape
      * @return
      */
     public FixtureBuilder shape(Shape shape) {
-        disposeShape(false);
+        dispose();
         fixtureDef.shape = shape;
+        return this;
+    }
+
+    /**
+     * create a circle shape for the fixtureDef
+     * this shape will be disposed when other shapes are used
+     * with scaling
+     * @param x
+     * @param y
+     * @param radius
+     * @return
+     */
+    public FixtureBuilder circleShape(float x,float y, float radius) {
+        dispose();
+        CircleShape circle = new CircleShape();
+        circle.setRadius(radius*scale);
+        circle.setPosition(new Vector2(x*scale,y*scale));
+        fixtureDef.shape = circle;
+        internalShape=circle;
         return this;
     }
 
@@ -168,35 +191,7 @@ public class FixtureBuilder implements Disposable {
      * @return
      */
     public FixtureBuilder circleShape(Vector2 position, float radius) {
-        disposeShape(true);
-        CircleShape circle = new CircleShape();
-        circle.setRadius(radius);
-        if (position != null) circle.setPosition(position);
-        shape(circle);
-        return this;
-    }
-
-    /**
-     * create a circle shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * @param radius
-     * @return
-     */
-    public FixtureBuilder circleShape(float radius) {
-        circleShape(null, radius);
-        return this;
-    }
-
-    /**
-     * create a circle shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * @param positionX
-     * @param positionY
-     * @param radius
-     * @return
-     */
-    public FixtureBuilder circleShape(float positionX, float positionY, float radius) {
-        circleShape(new Vector2(positionX, positionY), radius);
+        circleShape(position.x,position.y, radius);
         return this;
     }
 
@@ -207,10 +202,16 @@ public class FixtureBuilder implements Disposable {
      * @return
      */
     public FixtureBuilder polygonShape(float[] vertices) {
-        disposeShape(true);
+        dispose();
+        int length=vertices.length;
+        float[] scaledVertices=new float[length];
+        for (int i=0;i<length;i++){
+            scaledVertices[i]=scale*vertices[i];
+        }
         PolygonShape polygon = new PolygonShape();
-        polygon.set(vertices);
-        shape(polygon);
+        polygon.set(scaledVertices);
+        fixtureDef.shape=polygon;
+        internalShape=polygon;
         return this;
     }
 
@@ -230,15 +231,17 @@ public class FixtureBuilder implements Disposable {
      * this shape will be disposed when other shapes are used
      * @param width  full width
      * @param height  full height
-     * @param center
+     * @param centerX
+     * @param centerY
      * @param angle
      * @return
      */
-    public FixtureBuilder boxShape(float width, float height, Vector2 center, float angle) {
-        disposeShape(true);
+    public FixtureBuilder boxShape(float width, float height, float centerX,float centerY, float angle) {
+        dispose();
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.5f * width, 0.5f * height, center, angle);
-        shape(polygon);
+        polygon.setAsBox(0.5f * width*scale, 0.5f * height*scale, new Vector2(centerX*scale,centerY*scale), angle);
+        fixtureDef.shape=polygon;
+        internalShape=polygon;
         return this;
     }
 
@@ -260,13 +263,12 @@ public class FixtureBuilder implements Disposable {
      * this shape will be disposed when other shapes are used
      * @param width  full width
      * @param height  full height
-     * @param centerX
-     * @param centerY
+     * @param center
      * @param angle
      * @return
      */
-    public FixtureBuilder boxShape(float width, float height, float centerX, float centerY, float angle) {
-        boxShape(width, height, new Vector2(centerX, centerY), angle);
+    public FixtureBuilder boxShape(float width, float height, Vector2 center, float angle) {
+        boxShape(width, height, center.x, center.y, angle);
         return this;
     }
 
@@ -280,40 +282,14 @@ public class FixtureBuilder implements Disposable {
      * @return
      */
     public FixtureBuilder boxShape(float width, float height, float centerX, float centerY) {
-        boxShape(width, height, new Vector2(centerX, centerY), 0f);
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef
-     * centered and rotated
-     * this shape will be disposed when other shapes are used
-     * @param width the full width
-     * @param height the full height
-     * @param angle
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height, float angle) {
-        boxShape(width, height, new Vector2(), angle);
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef
-     * centered and axis aligned
-     * this shape will be disposed when other shapes are used
-     * @param width the full width
-     * @param height the full height
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height) {
-        boxShape(width, height,0,0,0);
+        boxShape(width, height, centerX, centerY, 0f);
         return this;
     }
 
     /**
      * create the fixture, attach it to the body and set the user data of the fixture
      * @param body
+     * @param userData  (can be null)
      * @return the fixture
      */
     public Fixture attach(Body body,Object userData) {
@@ -328,12 +304,89 @@ public class FixtureBuilder implements Disposable {
      * @return the fixture
      */
     public Fixture attach(Body body) {
-        Fixture fixture = body.createFixture(fixtureDef);
         return attach(body,null);
+    }
+
+    /**
+     * create the fixture, attach it to the previously set body, no user data
+     * @return the fixture
+     */
+    public Fixture attach() {
+        return attach(body,null);
+    }
+
+    /**
+     * a circleShape based on a shape2D circle
+     * @param circle
+     * @return
+     */
+    public FixtureBuilder circleShape(Circle circle){
+        circleShape(circle.x,circle.y,circle.radius);
+        return this;
+    }
+
+    /**
+     * a polygonShape based on a shape2D polygon
+     * @param polygon
+     * @return
+     */
+    public FixtureBuilder polygonShape(Polygon polygon){
+        polygonShape(polygon.getVertices());
+        return this;
+    }
+
+    /**
+     * an axis aligned boxShape based on a shape2 rectangle
+     * @param rectangle
+     * @return
+     */
+    public FixtureBuilder boxShape(Rectangle rectangle){
+        boxShape(rectangle.width,rectangle.height,rectangle.x+0.5f*rectangle.width,rectangle.y+0.5f*rectangle.height);
+        return this;
+    }
+
+    /**
+     * a boxShape as a line between points (x1,y1) and (x2,y2) of given thickness
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param thickness
+     * @return
+     */
+    public FixtureBuilder boxShapeLine(float x1,float y1,float x2,float y2,float thickness){
+        boxShape(Vector2.dst(x1,y1,x2,y2),thickness,0.5f*(x1+x2),0.5f*(y1+y2));
+        return this;
+    }
+
+    /**
+     * make a chain/line with many line fixtures, terminated and connected with circlefixtures
+     * note that this is more for diagnostics, thickness parameter has to be first
+     * @param thickness
+     * @param coordinates
+     */
+    public void makeChain(float thickness, float... coordinates){
+        float radius=0.5f*thickness;
+        int lenght=coordinates.length-2;
+        for (int i=0;i<lenght;i+=2){
+            boxShapeLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
+            attach();
+            circleShape(coordinates[i],coordinates[i+1],radius);
+            attach();
+        }
+        circleShape(coordinates[lenght],coordinates[lenght+1],radius);
+        attach();
     }
 
     @Override
     public void dispose(){
-        disposeShape(false);
+        if (internalShape!=null){
+            L.og("dispose shape");
+            internalShape.dispose();
+            internalShape=null;
+        }
+        else {
+            L.og("nix to dispose");
+        }
     }
 }
