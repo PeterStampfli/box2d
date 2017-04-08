@@ -1,8 +1,10 @@
 package com.mygdx.game.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.mygdx.game.Images.Chain;
+import com.mygdx.game.Images.Shapes2D;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.L;
 
@@ -376,6 +380,51 @@ public class FixtureBuilder implements Disposable {
         }
         circleShape(coordinates[lenght],coordinates[lenght+1],radius);
         attach();
+    }
+
+    /**
+     * make a chain/line with many line fixtures, terminated and connected with circlefixtures
+     * note that this is more for diagnostics, thickness parameter has to be first
+     * @param chain
+     */
+    public void makeChain(Chain chain) {
+        makeChain(chain.thickness, chain.coordinates.toArray());
+    }
+
+    /**
+     * make a fixture collection from a Shape2D shape
+     * including Shapes2D collections
+     * @param shape
+     */
+    public void makeShape(Shape2D shape){
+        if (shape instanceof Polygon){
+            polygonShape((Polygon)shape);
+            attach();
+        }
+        else if (shape instanceof Circle){
+            circleShape((Circle) shape);
+            attach();
+        }
+        else if (shape instanceof Rectangle){
+            boxShape((Rectangle) shape);
+            attach();
+        }
+        else if (shape instanceof Chain){
+            Chain chain=(Chain)shape;
+            if (chain.thickness>0.1f){
+                makeChain(chain);
+
+            }
+        }
+        else if (shape instanceof Shapes2D){
+            Shapes2D shapes=(Shapes2D) shape;
+            for (Shape2D subShape:shapes.shapes2D){
+                makeShape(subShape);
+            }
+        }
+        else {
+            Gdx.app.log(" ******************** fixtureBuilder","unknown shape "+shape.getClass());
+        }
     }
 
     @Override

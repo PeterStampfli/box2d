@@ -1,10 +1,14 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -15,6 +19,7 @@ import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Pieces.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
 import com.mygdx.game.utilities.Viewports;
@@ -22,7 +27,7 @@ import com.mygdx.game.utilities.Viewports;
 public class Box2d extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
-	Texture img;
+	TextureRegion img;
 	Device device;
 
 	World world;
@@ -49,11 +54,24 @@ public class Box2d extends ApplicationAdapter {
 		device=new Device();
 		device.createShapeRenderer().createSpriteBatch().setLogging(true);
 		batch = device.spriteBatch;
-		img = new Texture("badlogic.jpg");
+		BasicAssets basicAssets=device.basicAssets;
+
+		img = basicAssets.getTextureRegion("badlogic");
 		Basic.linearInterpolation(img);
+		Mask mask=new Mask(256,256);
+		Circle circle=new Circle(128,128,127);
+		mask.fill(circle);
+
+		Pixmap bad=new Pixmap(Gdx.files.internal("badlogic.jpg"));
+
+
+		img=new TextureRegion(new Texture(mask.cutFromPixmap(bad,0,0)));
+
+		Basic.linearInterpolation(img);
+
 		followCamera=new FollowCamera();
 
-        int viewportSize=100;
+        int viewportSize=10;
 		viewport= Viewports.createExtendViewport(viewportSize,viewportSize,followCamera);
 		followCamera.setGameWorldSize(200,15).setDebugAllowed(true);
 		physics=new Physics(viewport,debug);
@@ -69,11 +87,11 @@ public class Box2d extends ApplicationAdapter {
 		sprite=new Box2DSprite(img);
 
 		sprite.setPosition(0,0);
-		sprite.adjustSizeToPixelScale(256);
+		sprite.adjustSizeToPixelScale(pixelsPerMeter);
 
 		//bodyDef.gravityScale=-0.1f;
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
-		physics.fixture().circleShape(0.5f,0.105f,0.5f).attach(movingBody);
+		physics.fixture().setScale(1f/pixelsPerMeter).setBody(movingBody).makeShape(circle);
 
 		sprite.initializeSprite(movingBody);
 
@@ -81,7 +99,7 @@ public class Box2d extends ApplicationAdapter {
 
 
 
-		physics.fixture().boxShape(0.5f,1,0.6f).attach(top);
+		physics.fixture().boxShape(0.5f,1,0,0,0.6f).attach(top);
 		//physics.fixture().polygonShape(triangle).attach(body);
 
 
@@ -89,7 +107,7 @@ public class Box2d extends ApplicationAdapter {
 		PolygonShape groundBox=new PolygonShape();
 		groundBox.setAsBox(20,0.2f);
 
-		physics.fixture().boxShape(20,0.2f).attach(ground);
+		physics.fixture().boxShape(20,0.2f,0,0).attach(ground);
 		groundBox.dispose();
 
 		//mouseJoint=physics.mouseJoint().dummyBody(ground).body(bottom).maxForce(12).target(5,4.7f).build();
@@ -98,19 +116,6 @@ public class Box2d extends ApplicationAdapter {
 		physics.start();
 
 		float r=24f;
-		Mask mask=new Mask(50,50);
-		mask.fillCircle(25,25,r);
-		//mask.drawPolygon(5,15,5,45,20,30,45,5,20);
-		//mask.fillPolygon(15,5,20,4,17,10);
-mask.invert().transparentBorder();
-		maskImage=mask.createBlackWhiteTexture();
-
-		Mask mask2=new Mask(50,50);
-		//mask2.betterFillCircle(25,25,r);
-		//mask2.fillPolygon(15,5,45,20,30,45,5,20);
-		mask2.drawRing(26f,25f,22.5f,10);
-
-		maskImage2=mask2.createBlackWhiteTexture();
 
 
 	}
@@ -141,8 +146,7 @@ mask.invert().transparentBorder();
 			physics.updateGraphicsData(1);
 		}
 		sprite.draw(batch);
-		batch.draw(maskImage,10,0);
-		batch.draw(maskImage2,65,50);
+	//	batch.draw(maskImage,10,0);
 		batch.end();
 		physics.debugRender();
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
@@ -162,6 +166,5 @@ mask.invert().transparentBorder();
 	@Override
 	public void dispose () {
 		device.dispose();
-		img.dispose();
 	}
 }
