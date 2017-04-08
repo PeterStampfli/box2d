@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
  * Connecting sprite with body
  */
 
-public class Box2DSprite extends DrawableSprite {
+public class Box2DSprite extends TouchableSprite {
 
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyWorldCenterX, newBodyWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite

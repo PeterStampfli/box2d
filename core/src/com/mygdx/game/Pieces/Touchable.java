@@ -1,13 +1,19 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 3/28/17.
+ *
+ * Objects that can draw themselves, tell if they contain a point and can be touched
  */
 
-public interface Touchable extends Drawable,Shape2D {
+public interface Touchable extends Shape2D {
+
+    // object can draw with a batch
+    void draw(Batch batch);
 
     // begin-touch action, return true if something changed, call requestRendering, this is safer
     boolean touchBegin(Vector2 position);
