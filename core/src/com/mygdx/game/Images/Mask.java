@@ -365,7 +365,6 @@ public class Mask {
 
     /**
      * draw a line with many segments, terminated and connected with circles
-     * note that this is more for diagnostics, thickness parameter has to be first
      * @param thickness
      * @param points
      */

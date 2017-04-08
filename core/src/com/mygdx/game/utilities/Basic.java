@@ -159,4 +159,19 @@ public class Basic {
         }
         return result;
     }
+
+    /**
+     * create a float array that is a scaled copy of another float array
+     * @param vertices
+     * @param scale
+     * @return
+     */
+    static public float[] scaled(float[] vertices,float scale){
+        int length=vertices.length;
+        float[] scaledVertices=new float[length];
+        for (int i=0;i<length;i++){
+            scaledVertices[i]=scale*vertices[i];
+        }
+        return scaledVertices;
+    }
 }

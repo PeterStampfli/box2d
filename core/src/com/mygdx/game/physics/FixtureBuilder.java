@@ -2,11 +2,13 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -207,13 +209,8 @@ public class FixtureBuilder implements Disposable {
      */
     public FixtureBuilder polygonShape(float[] vertices) {
         dispose();
-        int length=vertices.length;
-        float[] scaledVertices=new float[length];
-        for (int i=0;i<length;i++){
-            scaledVertices[i]=scale*vertices[i];
-        }
         PolygonShape polygon = new PolygonShape();
-        polygon.set(scaledVertices);
+        polygon.set(Basic.scaled(vertices,scale));
         fixtureDef.shape=polygon;
         internalShape=polygon;
         return this;
@@ -287,6 +284,31 @@ public class FixtureBuilder implements Disposable {
      */
     public FixtureBuilder boxShape(float width, float height, float centerX, float centerY) {
         boxShape(width, height, centerX, centerY, 0f);
+        return this;
+    }
+
+    /**
+     * create a chainShape with scaled points
+     * as a loop if last point (coordinate pair) equals first, eliminating last point
+     * as a chain if endpoints are different
+     * @param coordinates
+     * @return
+     */
+    public FixtureBuilder chainShape(float... coordinates){
+        ChainShape chainShape=new ChainShape();
+        int length=coordinates.length;
+        if (MathUtils.isEqual(coordinates[0],coordinates[length-2],0.1f)
+                &&(MathUtils.isEqual(coordinates[1],coordinates[length-1],0.1f))){
+            length-=2;                                        // equal endpoints - make a loop
+            float[] scaledCoordinates=new float[length];
+            for (int i=0;i<length;i++){                      // copy and scale without last point
+                scaledCoordinates[i]=coordinates[i]*scale;
+            }
+            chainShape.createLoop(scaledCoordinates);
+        }
+        else {
+            chainShape.createChain(Basic.scaled(coordinates,scale));
+        }
         return this;
     }
 
@@ -366,6 +388,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * make a chain/line with many line fixtures, terminated and connected with circlefixtures
      * note that this is more for diagnostics, thickness parameter has to be first
+     * finite thickness
      * @param thickness
      * @param coordinates
      */
@@ -383,17 +406,23 @@ public class FixtureBuilder implements Disposable {
     }
 
     /**
+     * for finite thickness:
      * make a chain/line with many line fixtures, terminated and connected with circlefixtures
-     * note that this is more for diagnostics, thickness parameter has to be first
+     * for zero thickness:
+     * make a ChainShape fixture
      * @param chain
      */
     public void makeChain(Chain chain) {
-        makeChain(chain.thickness, chain.coordinates.toArray());
+        if (!MathUtils.isZero(chain.thickness,0.1f)){
+            makeChain(chain.thickness, chain.coordinates.toArray());
+        }
+        else{}
+
     }
 
     /**
      * make a fixture collection from a Shape2D shape
-     * including Shapes2D collections
+     * including Shapes2D collections, and attack to the set body
      * @param shape
      */
     public void makeShape(Shape2D shape){
@@ -410,11 +439,7 @@ public class FixtureBuilder implements Disposable {
             attach();
         }
         else if (shape instanceof Chain){
-            Chain chain=(Chain)shape;
-            if (chain.thickness>0.1f){
-                makeChain(chain);
-
-            }
+            makeChain((Chain)shape);
         }
         else if (shape instanceof Shapes2D){
             Shapes2D shapes=(Shapes2D) shape;
