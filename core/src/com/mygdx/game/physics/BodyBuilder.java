@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 
 /**
  * Created by peter on 3/22/17.
+ *
+ * input data is in grphical world units (virtual pixels)
  */
 public class BodyBuilder {
 
@@ -114,17 +116,18 @@ public class BodyBuilder {
 
     /**
      * set body position
+     * as scaled from graphics position
      * @param positionX
      * @param positionY
      * @return
      */
     public BodyBuilder position(float positionX, float positionY) {
-        bodyDef.position.set(positionX, positionY);
+        bodyDef.position.set(positionX/Physics.PIXELS_PER_METER, positionY/Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * set body position
+     * set body position (graphics world units)
      * @param position
      * @return
      */
@@ -177,12 +180,13 @@ public class BodyBuilder {
 
     /**
      * set initial velocity (default=0)
+     * scaled from graphics world units
      * @param velocityX
      * @param velocityY
      * @return
      */
     public BodyBuilder linearVelocity(float velocityX, float velocityY) {
-        bodyDef.linearVelocity.set(velocityX, velocityY);
+        bodyDef.linearVelocity.set(velocityX/Physics.PIXELS_PER_METER, velocityY/Physics.PIXELS_PER_METER);
         return this;
     }
 
@@ -216,8 +220,8 @@ public class BodyBuilder {
         Body body = physics.world.createBody(bodyDef);
         physics.bodiesNeedUpdate=true;
         body.setUserData(userData);
-        if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
-            ((com.mygdx.game.Pieces.Box2DSprite)userData).body=body;
+        if (userData instanceof Box2DSprite){
+            ((Box2DSprite)userData).body=body;
         }
         return body;
     }

@@ -53,17 +53,6 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
 
-    //  position and scale the sprite
-
-    /**
-     * reduce the size of the sprite to world dimensions.
-     * Factor is given number of pixels per unit (meter, physics world unit)
-     * @param pixelPerUnit
-     */
-    public void adjustSizeToPixelScale(float pixelPerUnit){
-        setSize(getWidth()/pixelPerUnit,getHeight()/pixelPerUnit);
-    }
-
     /**
      * set angle of sprite
      * @param angle in radians
@@ -131,13 +120,14 @@ public class TouchableSprite extends Sprite implements Touchable {
 
 
     /**
-     * check if both the texture region and the shape contains a point, take into account rotation and scaling
+     * check if both the texture region AND the shape contain a point,
+     * take into account rotation and scaling
+     * thus contains agrees with visible image, use for box2DSprites?
      * @param x
      * @param y
      * @return
      */
-    @Override
-    public boolean contains(float x, float y){
+    public boolean shapeContains(float x, float y){
         if (shape==null||!getBoundingRectangle().contains(x,y)) return false;
         // shift that "origin" is at (0,0)
         x-=getX()+getOriginX();
@@ -152,8 +142,29 @@ public class TouchableSprite extends Sprite implements Touchable {
         // limit to texture/pixmap region and check the shape
         boolean isInside=(unrotatedX>=0)&&(unrotatedX<=getHeight())
                        &&(unrotatedY>=0)&&(unrotatedY<=getHeight())
-                       &&shape.contains(unrotatedX,unrotatedY);     // do we have to scale ??
+                       &&shape.contains(unrotatedX,unrotatedY);
         return isInside;
+    }
+
+    /**
+     * test if sprite contains the point, using both the texture region and the shape
+     * @param x
+     * @param y
+     * @return
+     */
+    @Override
+    public boolean contains(float x, float y) {
+        return shapeContains(x, y);
+    }
+
+    /**
+     * test if sprite contains the point, using both the texture region and the shape
+     * @param point
+     * @return
+     */
+    @Override
+    public boolean contains(Vector2 point) {
+        return contains(point.x,point.y);
     }
 
     /**
@@ -183,12 +194,6 @@ public class TouchableSprite extends Sprite implements Touchable {
         float cosDeltaAngle=MathUtils.cos(deltaAngle);
         translateX(deltaTouchPosition.x-((cosDeltaAngle-1)*centerTouchX-sinDeltaAngle*centerTouchY));
         translateY(deltaTouchPosition.y-(sinDeltaAngle*centerTouchX+(cosDeltaAngle-1)*centerTouchY));
-    }
-
-
-    @Override
-    public boolean contains(Vector2 point) {
-        return contains(point.x,point.y);
     }
 
     @Override

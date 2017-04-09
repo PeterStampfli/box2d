@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.physics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,10 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Pieces.TouchableSprite;
 
 /**
  * Created by peter on 3/24/17.
  * Connecting sprite with body
+ * scaling body data to match graphics
  */
 
 public class Box2DSprite extends TouchableSprite {
@@ -40,22 +42,36 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * set the origin (center of rotation and scaling) equal to center of mass of the body
-     * In local coordinates. Zero is left bottom corner of the Textureregion.
-     * Uses world dimensions. (Not pixel numbers)
+     * set origin of the sprite, position and angle of sprite according to body
      * @param body
      */
-    public void setLocalOrigin(Body body){
-        setLocalOrigin(body.getLocalCenter());
+    public void initializeSprite(Body body){
+        this.body=body;
+        setLocalOrigin();
+        saveBodyPositionAngle();
+        // repeat to set both previous and new data
+        saveBodyPositionAngle();
+        updateSpritePositionAngle(1f);
+    }
+
+    /**
+     * set the origin (center of rotation and scaling) equal to center of mass of the body
+     * In local coordinates. Zero is left bottom corner of the Textureregion.
+     * Scales from physics dimensions to graphics
+     */
+    public void setLocalOrigin(){
+        Vector2 bodyCenter=body.getLocalCenter();
+        setOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
     }
 
     /**
      * without interpolation: set position and angle of the sprite to agree with the box2D body
-     * @param body
+     * scale from physics position to graphics
      */
-    public void setSpritePositionAngle(Body body){
+    public void setSpritePositionAngle(){
         setAngle(body.getAngle());
-        setWorldOrigin(body.getWorldCenter());
+        Vector2 bodyCenter=body.getLocalCenter();
+        setWorldOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
     }
 
     /**
@@ -64,16 +80,16 @@ public class Box2DSprite extends TouchableSprite {
      * -previous position and angle will have result of previous time step
      * -new position and angle will contain result of the new (last) time step
      *
-     * @param body
+     * scale from physics dimensions to graphics
      */
-    public void saveBodyPositionAngle(Body body){
+    public void saveBodyPositionAngle(){
         previousBodyAngle = newBodyAngle;
         previousBodyWorldCenterX = newBodyWorldCenterX;
         previousBodyWorldCenterY = newBodyWorldCenterY;
         newBodyAngle =body.getAngle();
-        Vector2 worldCenter=body.getWorldCenter();
-        newBodyWorldCenterX =worldCenter.x;
-        newBodyWorldCenterY =worldCenter.y;
+        Vector2 bodyCenter=body.getWorldCenter();
+        newBodyWorldCenterX =bodyCenter.x*Physics.PIXELS_PER_METER;
+        newBodyWorldCenterY =bodyCenter.y*Physics.PIXELS_PER_METER;
     }
 
     /**
@@ -92,25 +108,19 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * set origin, physics position and angle of sprite according to body
-     * @param body
-     */
-    public void initializeSprite(Body body){
-        setLocalOrigin(body);
-        saveBodyPositionAngle(body);
-        // repeat to set both previous and new data
-        saveBodyPositionAngle(body);
-    }
-
-    /**
-     * test if its body contains given position
+     * test if its body fixtures contains given position
      * check only fixtures that are not sensors
+     * does not check the image region,
+     * thus use only shapes/fixtures that do not go outside the image
+     *
+     * scale from graphics position to physics
      * @param positionX
      * @param positionY
      * @return
      */
-    @Override
-    public boolean contains(float positionX, float positionY){
+    public boolean bodyContains(float positionX, float positionY){
+        positionX/=Physics.PIXELS_PER_METER;
+        positionY/=Physics.PIXELS_PER_METER;
         if (body!=null) {
             Array<Fixture> fixtures = body.getFixtureList();
             for (Fixture fixture : fixtures) {
@@ -124,12 +134,13 @@ public class Box2DSprite extends TouchableSprite {
 
     /**
      * test if its body contains given position
-     * @param position
+     * @param x
+     * @param y
      * @return
      */
     @Override
-    public boolean contains (Vector2 position){
-        return  contains(position.x,position.y);
+    public boolean contains (float x,float y){
+        return  bodyContains(x, y);
     }
 
 }

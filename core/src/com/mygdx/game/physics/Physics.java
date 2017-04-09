@@ -157,20 +157,22 @@ public class Physics implements Disposable{
 
     /**
      * get the reaction torque of a joint, using the fixed physics time step
+     * scaled to graphics units: kg pixels² /sec² instead of Nm
      * @param joint
      * @return
      */
     public float getReactionTorque(Joint joint){
-        return joint.getReactionTorque(1.0f/TIME_STEP);
+        return joint.getReactionTorque(1.0f/TIME_STEP)*PIXELS_PER_METER*PIXELS_PER_METER;
     }
 
     /**
      * get the reaction force of a joint, using the fixed physics time step
+     * scaled to graphics units, in kg pixels/sec² from N
      * @param joint
-     * @return
+     * @return  reaction force as Vector2, will be overwritten at next call
      */
     public Vector2 getReactionForce(Joint joint){
-        return joint.getReactionForce(1.0f/TIME_STEP);
+        return joint.getReactionForce(1.0f/TIME_STEP).scl(PIXELS_PER_METER);
     }
 
     /**
@@ -198,8 +200,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
-                ((com.mygdx.game.Pieces.Box2DSprite)userData).saveBodyPositionAngle(body);
+            if (userData instanceof Box2DSprite){
+                ((Box2DSprite)userData).saveBodyPositionAngle();
             }
         }
     }
@@ -214,8 +216,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof com.mygdx.game.Pieces.Box2DSprite){
-                ((com.mygdx.game.Pieces.Box2DSprite)userData).updateSpritePositionAngle(progress);
+            if (userData instanceof Box2DSprite){
+                ((Box2DSprite)userData).updateSpritePositionAngle(progress);
             }
         }
     }

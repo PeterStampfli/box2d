@@ -18,7 +18,7 @@ public class Basic {
 
     private static int numberOfRenderCalls;
 
-    private static float timeOfLastFrame=0;
+    private static float timeOfLastFrame=10;
 
 
     /**

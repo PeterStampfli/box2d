@@ -9,19 +9,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
-import com.mygdx.game.Pieces.Box2DSprite;
+import com.mygdx.game.physics.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
+import com.mygdx.game.utilities.TouchReader;
 import com.mygdx.game.utilities.Viewports;
 
 public class Box2d extends ApplicationAdapter {
@@ -47,9 +50,13 @@ public class Box2d extends ApplicationAdapter {
 
 	Texture maskImage;
 	Texture maskImage2;
+	TouchReader touchReader;
 
 	@Override
 	public void create () {
+
+		Physics.PIXELS_PER_METER=1; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 		debug=true;
 		device=new Device();
 		device.createShapeRenderer().createSpriteBatch().setLogging(true);
@@ -71,10 +78,12 @@ public class Box2d extends ApplicationAdapter {
 
 		followCamera=new FollowCamera();
 
-        int viewportSize=10;
+		touchReader=new TouchReader(followCamera);
+
+		int viewportSize=500;
 		viewport= Viewports.createExtendViewport(viewportSize,viewportSize,followCamera);
 		followCamera.setGameWorldSize(200,15).setDebugAllowed(true);
-		physics=new Physics(viewport,debug);
+		physics=new Physics(debug);
 		device.disposer.add(physics,"Physics");
 
 		world=physics.createWorld(0,-10,true);
@@ -87,11 +96,10 @@ public class Box2d extends ApplicationAdapter {
 		sprite=new Box2DSprite(img);
 
 		sprite.setPosition(0,0);
-		sprite.adjustSizeToPixelScale(pixelsPerMeter);
 
 		//bodyDef.gravityScale=-0.1f;
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
-		physics.fixture().setScale(1f/pixelsPerMeter).setBody(movingBody).makeShape(circle);
+		physics.fixture().setBody(movingBody).makeShape(circle);
 
 		sprite.initializeSprite(movingBody);
 
@@ -118,6 +126,7 @@ public class Box2d extends ApplicationAdapter {
 		float r=24f;
 
 
+
 	}
 
 	@Override
@@ -131,6 +140,7 @@ public class Box2d extends ApplicationAdapter {
 	@Override
 	public void render () {
 		if (Basic.timeSinceLastFrameIsSmallerThan(0.03f)) return;
+
 		viewport.apply();
 
 		Basic.clearBackground(Color.BLUE);
@@ -148,7 +158,7 @@ public class Box2d extends ApplicationAdapter {
 		sprite.draw(batch);
 	//	batch.draw(maskImage,10,0);
 		batch.end();
-		physics.debugRender();
+		physics.debugRender(viewport);
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.rect(1f,1f,8,8);
@@ -158,8 +168,11 @@ public class Box2d extends ApplicationAdapter {
 		physics.advance();
 
 
-		Basic.setContinuousRendering(false);
-
+		//Basic.setContinuousRendering(false);
+		ChainShape chainShape;
+		Vector2 mousePosition=new Vector2();
+		touchReader.getPosition(mousePosition);
+	//	L.og("sprite "+sprite.contains(mousePosition));
 
 	}
 	

@@ -28,7 +28,6 @@ import com.mygdx.game.utilities.L;
 public class FixtureBuilder implements Disposable {
     public FixtureDef fixtureDef;
     public Body body;
-    public float scale;
     private Shape internalShape;
 
     /**
@@ -36,28 +35,7 @@ public class FixtureBuilder implements Disposable {
      */
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();
-        scale=1;
         reset();
-    }
-
-    /**
-     * create fixturebuilder with nontrivial scale for shapes
-     * typically: scale=1f/pixels_per_meter
-     * @param scale
-     */
-    public FixtureBuilder(float scale){
-        this();
-        this.scale=scale;
-    }
-
-    /**
-     * sets the scale of the fixtureBuilder (eg. created by physics)
-     * @param scale
-     * @return
-     */
-    public FixtureBuilder setScale(float scale){
-        this.scale=scale;
-        return this;
     }
 
     /**
@@ -159,7 +137,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * provide an external shape for the fixture
      * dispose this shape explicitly outside
-     * No scaling
+     * No scaling, has to be in physics units
      * Disposes any shape created by the fixtureBuilder
      * @param shape
      * @return
@@ -173,7 +151,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * create a circle shape for the fixtureDef
      * this shape will be disposed when other shapes are used
-     * with scaling
+     * with scaling from graphics to physics
      * @param x
      * @param y
      * @param radius
@@ -182,8 +160,8 @@ public class FixtureBuilder implements Disposable {
     public FixtureBuilder circleShape(float x,float y, float radius) {
         dispose();
         CircleShape circle = new CircleShape();
-        circle.setRadius(radius*scale);
-        circle.setPosition(new Vector2(x*scale,y*scale));
+        circle.setRadius(radius/Physics.PIXELS_PER_METER);
+        circle.setPosition(new Vector2(x/Physics.PIXELS_PER_METER,y/Physics.PIXELS_PER_METER));
         fixtureDef.shape = circle;
         internalShape=circle;
         return this;
@@ -192,6 +170,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * create a circle shape for the fixtureDef
      * this shape will be disposed when other shapes are used
+     * with scaling from graphics to physics
      * @param position
      * @param radius
      * @return
@@ -204,13 +183,14 @@ public class FixtureBuilder implements Disposable {
     /**
      * create a polygon shape for the fixtureDef
      * this shape will be disposed when other shapes are used
+     * with scaling from graphics to physics
      * @param vertices
      * @return
      */
     public FixtureBuilder polygonShape(float[] vertices) {
         dispose();
         PolygonShape polygon = new PolygonShape();
-        polygon.set(Basic.scaled(vertices,scale));
+        polygon.set(Basic.scaled(vertices,1f/Physics.PIXELS_PER_METER));
         fixtureDef.shape=polygon;
         internalShape=polygon;
         return this;
@@ -219,6 +199,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * create a polygon shape for the fixtureDef
      * this shape will be disposed when other shapes are used
+     * with scaling from graphics to physics
      * @param vertices
      * @return
      */
@@ -230,6 +211,7 @@ public class FixtureBuilder implements Disposable {
     /**
      * create a rectangular polygon shape for the fixtureDef
      * this shape will be disposed when other shapes are used
+     * with scaling from graphics to physics
      * @param width  full width
      * @param height  full height
      * @param centerX
@@ -240,7 +222,8 @@ public class FixtureBuilder implements Disposable {
     public FixtureBuilder boxShape(float width, float height, float centerX,float centerY, float angle) {
         dispose();
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.5f * width*scale, 0.5f * height*scale, new Vector2(centerX*scale,centerY*scale), angle);
+        polygon.setAsBox(0.5f * width/Physics.PIXELS_PER_METER, 0.5f * height/Physics.PIXELS_PER_METER,
+                         new Vector2(centerX/Physics.PIXELS_PER_METER,centerY/Physics.PIXELS_PER_METER), angle);
         fixtureDef.shape=polygon;
         internalShape=polygon;
         return this;
@@ -302,12 +285,12 @@ public class FixtureBuilder implements Disposable {
             length-=2;                                        // equal endpoints - make a loop
             float[] scaledCoordinates=new float[length];
             for (int i=0;i<length;i++){                      // copy and scale without last point
-                scaledCoordinates[i]=coordinates[i]*scale;
+                scaledCoordinates[i]=coordinates[i]/Physics.PIXELS_PER_METER;
             }
             chainShape.createLoop(scaledCoordinates);
         }
         else {
-            chainShape.createChain(Basic.scaled(coordinates,scale));
+            chainShape.createChain(Basic.scaled(coordinates,1f/Physics.PIXELS_PER_METER));
         }
         return this;
     }
