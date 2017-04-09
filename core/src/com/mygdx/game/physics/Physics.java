@@ -1,6 +1,8 @@
 package com.mygdx.game.physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -17,19 +19,22 @@ import com.mygdx.game.utilities.Basic;
  * Created by peter on 3/18/17.
  */
 
-// we want to use the same units for physics and graphics
-// we use the same viewport for both
-// a special scale is needed for drawing sprites, textures and textureregions:
+// the basic viewport and camera are for the graphics
+// the physics uses its own scaled units
 //  relates the size in pixels to the size in meters: pixels per meter
 
+//  the scaling is done here
+
 public class Physics implements Disposable{
+
+    static public float PIXELS_PER_METER=100;       // default
 
     BodyBuilder bodyBuilder;
     FixtureBuilder fixtureBuilder;
     MouseJointBuilder mouseJointBuilder;
     DistanceJointBuilder distanceJointBuilder;
 
-    Viewport viewport;
+    OrthographicCamera debugCamera;
 
     World world;
     Box2DDebugRenderer debugRenderer;
@@ -48,14 +53,13 @@ public class Physics implements Disposable{
     /**
      * debug renderer only if debug==true
      * initialize box2D
-     * @param viewport
      * @param debug
      */
-    public Physics(Viewport viewport,boolean debug){
+    public Physics(boolean debug){
         bodies=new Array<Body>();
-        this.viewport=viewport;
         if (debug) {
             debugRenderer =new Box2DDebugRenderer();
+            debugCamera=new OrthographicCamera();
         }
         Box2D.init();
     }
@@ -137,11 +141,17 @@ public class Physics implements Disposable{
 
     /**
      * if debug==true at physics creation then do a debug rendering of result of last physics step
-     * note that for interpolation the graphics and physics positions are different
+     * note that for interpolation the graphics and physics positions are different for fast movement
+     * @param graphicsViewport the viewport of the graphics world, its camera data is scaled to set the camera for the debugRenderer
      */
-    public void debugRender(){
+    public void debugRender(Viewport graphicsViewport){
         if (debugRenderer !=null) {
-            debugRenderer.render(world,viewport.getCamera().combined);
+            Camera graphicsCamera=graphicsViewport.getCamera();
+            debugCamera.position.set(graphicsCamera.position).scl(1f/PIXELS_PER_METER);
+            debugCamera.viewportWidth=graphicsCamera.viewportWidth/PIXELS_PER_METER;
+            debugCamera.viewportHeight=graphicsCamera.viewportHeight/PIXELS_PER_METER;
+            debugCamera.update();
+            debugRenderer.render(world,debugCamera.combined);
         }
     }
 

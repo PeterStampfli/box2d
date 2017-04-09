@@ -109,6 +109,7 @@ public class Box2DSprite extends TouchableSprite {
      * @param positionY
      * @return
      */
+    @Override
     public boolean contains(float positionX, float positionY){
         if (body!=null) {
             Array<Fixture> fixtures = body.getFixtureList();
@@ -126,6 +127,7 @@ public class Box2DSprite extends TouchableSprite {
      * @param position
      * @return
      */
+    @Override
     public boolean contains (Vector2 position){
         return  contains(position.x,position.y);
     }
