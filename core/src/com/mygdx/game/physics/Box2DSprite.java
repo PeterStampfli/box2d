@@ -45,7 +45,7 @@ public class Box2DSprite extends TouchableSprite {
      * set origin of the sprite, position and angle of sprite according to body
      * @param body
      */
-    public void initializeSprite(Body body){
+    public void setBody(Body body){
         this.body=body;
         setLocalOrigin();
         saveBodyPositionAngle();

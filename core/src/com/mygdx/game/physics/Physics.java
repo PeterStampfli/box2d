@@ -254,6 +254,5 @@ public class Physics implements Disposable{
     public void dispose(){
         world.dispose();
         if (debugRenderer !=null) debugRenderer.dispose();
-        fixtureBuilder.dispose();
     }
 }

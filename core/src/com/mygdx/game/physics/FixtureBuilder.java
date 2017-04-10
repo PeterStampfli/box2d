@@ -1,34 +1,17 @@
 package com.mygdx.game.physics;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
-import com.mygdx.game.Images.Chain;
-import com.mygdx.game.Images.Shapes2D;
-import com.mygdx.game.utilities.Basic;
-import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 3/22/17.
- * creating sclaed fixture shapes without modifying vector2 or array parameter
+ * setting fixture parameters
+ * attaching fixture to a body with given shape or collection of shapes and user data
  */
-public class FixtureBuilder implements Disposable {
+public class FixtureBuilder {
     public FixtureDef fixtureDef;
-    public Body body;
-    private Shape internalShape;
 
     /**
      * create fixturebuilder with scale=1 as default
@@ -36,16 +19,6 @@ public class FixtureBuilder implements Disposable {
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();
         reset();
-    }
-
-    /**
-     * set the body for the next fixtures
-     * @param body
-     * @return
-     */
-    public FixtureBuilder setBody(Body body){
-        this.body=body;
-        return this;
     }
 
     /**
@@ -135,315 +108,52 @@ public class FixtureBuilder implements Disposable {
     }
 
     /**
-     * provide an external shape for the fixture
-     * dispose this shape explicitly outside
-     * No scaling, has to be in physics units
-     * Disposes any shape created by the fixtureBuilder
-     * @param shape
-     * @return
-     */
-    public FixtureBuilder shape(Shape shape) {
-        dispose();
-        fixtureDef.shape = shape;
-        return this;
-    }
-
-    /**
-     * create a circle shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * with scaling from graphics to physics
-     * @param x
-     * @param y
-     * @param radius
-     * @return
-     */
-    public FixtureBuilder circleShape(float x,float y, float radius) {
-        dispose();
-        CircleShape circle = new CircleShape();
-        circle.setRadius(radius/Physics.PIXELS_PER_METER);
-        circle.setPosition(new Vector2(x/Physics.PIXELS_PER_METER,y/Physics.PIXELS_PER_METER));
-        fixtureDef.shape = circle;
-        internalShape=circle;
-        return this;
-    }
-
-    /**
-     * create a circle shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * with scaling from graphics to physics
-     * @param position
-     * @param radius
-     * @return
-     */
-    public FixtureBuilder circleShape(Vector2 position, float radius) {
-        circleShape(position.x,position.y, radius);
-        return this;
-    }
-
-    /**
-     * create a polygon shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * with scaling from graphics to physics
-     * @param vertices
-     * @return
-     */
-    public FixtureBuilder polygonShape(float[] vertices) {
-        dispose();
-        PolygonShape polygon = new PolygonShape();
-        polygon.set(Basic.scaled(vertices,1f/Physics.PIXELS_PER_METER));
-        fixtureDef.shape=polygon;
-        internalShape=polygon;
-        return this;
-    }
-
-    /**
-     * create a polygon shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * with scaling from graphics to physics
-     * @param vertices
-     * @return
-     */
-    public FixtureBuilder polygonShape(Array<Vector2> vertices) {
-        polygonShape(Basic.toFloats(vertices));
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * with scaling from graphics to physics
-     * @param width  full width
-     * @param height  full height
-     * @param centerX
-     * @param centerY
-     * @param angle
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height, float centerX,float centerY, float angle) {
-        dispose();
-        PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(0.5f * width/Physics.PIXELS_PER_METER, 0.5f * height/Physics.PIXELS_PER_METER,
-                         new Vector2(centerX/Physics.PIXELS_PER_METER,centerY/Physics.PIXELS_PER_METER), angle);
-        fixtureDef.shape=polygon;
-        internalShape=polygon;
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef,axis aligned
-     * this shape will be disposed when other shapes are used
-     * @param width  full width
-     * @param height  full height
-     * @param center
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height, Vector2 center) {
-        boxShape(width, height, center, 0f);
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef
-     * this shape will be disposed when other shapes are used
-     * @param width  full width
-     * @param height  full height
-     * @param center
-     * @param angle
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height, Vector2 center, float angle) {
-        boxShape(width, height, center.x, center.y, angle);
-        return this;
-    }
-
-    /**
-     * create a rectangular polygon shape for the fixtureDef, axis aligned
-     * this shape will be disposed when other shapes are used
-     * @param width  full width
-     * @param height  full height
-     * @param centerX
-     * @param centerY
-     * @return
-     */
-    public FixtureBuilder boxShape(float width, float height, float centerX, float centerY) {
-        boxShape(width, height, centerX, centerY, 0f);
-        return this;
-    }
-
-    /**
-     * create a chainShape with scaled points
-     * as a loop if last point (coordinate pair) equals first, eliminating last point
-     * as a chain if endpoints are different
-     * @param coordinates
-     * @return
-     */
-    public FixtureBuilder chainShape(float... coordinates){
-        ChainShape chainShape=new ChainShape();
-        int length=coordinates.length;
-        if (MathUtils.isEqual(coordinates[0],coordinates[length-2],0.1f)
-                &&(MathUtils.isEqual(coordinates[1],coordinates[length-1],0.1f))){
-            length-=2;                                        // equal endpoints - make a loop
-            float[] scaledCoordinates=new float[length];
-            for (int i=0;i<length;i++){                      // copy and scale without last point
-                scaledCoordinates[i]=coordinates[i]/Physics.PIXELS_PER_METER;
-            }
-            chainShape.createLoop(scaledCoordinates);
-        }
-        else {
-            chainShape.createChain(Basic.scaled(coordinates,1f/Physics.PIXELS_PER_METER));
-        }
-        return this;
-    }
-
-    /**
-     * create the fixture, attach it to the body and set the user data of the fixture
+     * build and return a fixture, attached to given body with given shape and userData
+     * dispose the shape later
      * @param body
-     * @param userData  (can be null)
-     * @return the fixture
+     * @param shape
+     * @param userData
+     * @return
      */
-    public Fixture attach(Body body,Object userData) {
+    public Fixture build(Body body, Shape shape, Object userData){
+        fixtureDef.shape=shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(userData);
         return fixture;
     }
 
     /**
-     * create the fixture, attach it to the body, no user data
+     * build and return a fixture, attached to given body with given shape, no userData
+     * dispose the shape later
      * @param body
-     * @return the fixture
-     */
-    public Fixture attach(Body body) {
-        return attach(body,null);
-    }
-
-    /**
-     * create the fixture, attach it to the previously set body, no user data
-     * @return the fixture
-     */
-    public Fixture attach() {
-        return attach(body,null);
-    }
-
-    /**
-     * a circleShape based on a shape2D circle
-     * @param circle
-     * @return
-     */
-    public FixtureBuilder circleShape(Circle circle){
-        circleShape(circle.x,circle.y,circle.radius);
-        return this;
-    }
-
-    /**
-     * a polygonShape based on a shape2D polygon
-     * @param polygon
-     * @return
-     */
-    public FixtureBuilder polygonShape(Polygon polygon){
-        polygonShape(polygon.getVertices());
-        return this;
-    }
-
-    /**
-     * an axis aligned boxShape based on a shape2 rectangle
-     * @param rectangle
-     * @return
-     */
-    public FixtureBuilder boxShape(Rectangle rectangle){
-        boxShape(rectangle.width,rectangle.height,rectangle.x+0.5f*rectangle.width,rectangle.y+0.5f*rectangle.height);
-        return this;
-    }
-
-    /**
-     * a boxShape as a line between points (x1,y1) and (x2,y2) of given thickness
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param thickness
-     * @return
-     */
-    public FixtureBuilder boxShapeLine(float x1,float y1,float x2,float y2,float thickness){
-        boxShape(Vector2.dst(x1,y1,x2,y2),thickness,0.5f*(x1+x2),0.5f*(y1+y2));
-        return this;
-    }
-
-    /**
-     * make a chain/line with many line fixtures, terminated and connected with circlefixtures
-     * note that this is more for diagnostics, thickness parameter has to be first
-     * finite thickness
-     * @param thickness
-     * @param coordinates
-     */
-    public void makeChain(float thickness, float... coordinates){
-        float radius=0.5f*thickness;
-        int lenght=coordinates.length-2;
-        for (int i=0;i<lenght;i+=2){
-            boxShapeLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
-            attach();
-            circleShape(coordinates[i],coordinates[i+1],radius);
-            attach();
-        }
-        circleShape(coordinates[lenght],coordinates[lenght+1],radius);
-        attach();
-    }
-
-    /**
-     * for finite thickness:
-     * make a chain/line with many line fixtures, terminated and connected with circlefixtures
-     * for zero thickness:
-     * make a ChainShape fixture
-     * @param chain
-     */
-    public void makeChain(Chain chain) {
-        if (!MathUtils.isZero(chain.thickness,0.1f)){
-            makeChain(chain.thickness, chain.coordinates.toArray());
-        }
-        else{}
-
-    }
-
-    /**
-     * make a fixture collection from a Shape2D shape
-     * including Shapes2D collections, and attack to the set body
      * @param shape
+     * @return
      */
-    public void makeShape(Shape2D shape){
-        if (shape instanceof Polygon){
-            polygonShape((Polygon)shape);
-            attach();
+    public Fixture build(Body body, Shape shape){
+        return build(body, shape, null);
+    }
+
+    /**
+     * build and attach to a body all shapes in a given shapesBox2D object, with userData
+     * @param body
+     * @param shapesBox2D
+     * @param userData
+     */
+    public void build(Body body,ShapesBox2D shapesBox2D,Object userData){
+        for (Shape shape:shapesBox2D.shapes) {
+            build(body,shape,userData);
         }
-        else if (shape instanceof Circle){
-            circleShape((Circle) shape);
-            attach();
-        }
-        else if (shape instanceof Rectangle){
-            boxShape((Rectangle) shape);
-            attach();
-        }
-        else if (shape instanceof Chain){
-            makeChain((Chain)shape);
-        }
-        else if (shape instanceof Shapes2D){
-            Shapes2D shapes=(Shapes2D) shape;
-            for (Shape2D subShape:shapes.shapes2D){
-                makeShape(subShape);
-            }
-        }
-        else {
-            Gdx.app.log(" ******************** fixtureBuilder","unknown shape "+shape.getClass());
+        for (ShapesBox2D shapeCollection:shapesBox2D.shapeCollections) {
+            build(body,shapeCollection,userData);
         }
     }
 
-    @Override
-    public void dispose(){
-        if (internalShape!=null){
-            L.og("dispose shape");
-            internalShape.dispose();
-            internalShape=null;
-        }
-        else {
-            L.og("nix to dispose");
-        }
+    /**
+     * build and attach to a body all shapes in a given shapesBox2D object, no userData
+     * @param body
+     * @param shapesBox2D
+     */
+    public void build(Body body,ShapesBox2D shapesBox2D){
+        build(body,shapesBox2D,null);
     }
 }

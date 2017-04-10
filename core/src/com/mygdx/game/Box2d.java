@@ -101,7 +101,7 @@ public class Box2d extends ApplicationAdapter {
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
 		physics.fixture().setBody(movingBody).makeShape(circle);
 
-		sprite.initializeSprite(movingBody);
+		sprite.setBody(movingBody);
 
 		Body top=physics.staticBody().position(6,10).build();
 
