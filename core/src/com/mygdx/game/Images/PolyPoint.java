@@ -2,48 +2,26 @@ package com.mygdx.game.Images;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * Created by peter on 4/5/17.
- * joining straight lines with circles (dots) to make a chain
- * related to box2D ChainShape
+ * points at end of line segments, may be on arcs, to connect by straight lines
+ * can create different shape2 shapes
  */
 
-public class Chain implements Shape2D {
+public class PolyPoint{
 
-    public FloatArray coordinates;
-    public float thickness=0;
+    public FloatArray coordinates=new FloatArray();
     private float epsilon=0.1f;                   // on the basis of a pixel scale, 1=pixelsize
     public float maxDeltaAngle=0.1f;
 
     /**
-     * chain of thickness zero, as a pure chainShape for box2D ??
+     * clear coordinates for reuse
      */
-    public Chain(){
-        coordinates=new FloatArray();
-    }
-
-    /**
-     * chain of finite thickness for graphics
-     * @param thickness
-     */
-    public Chain(float thickness){
-        coordinates=new FloatArray();
-        this.thickness=thickness;
-    }
-
-    // default Shape2D methods ???
-    @Override
-    public boolean contains(Vector2 point) {
-        return false;
-    }
-
-    @Override
-    public boolean contains(float x, float y) {
-        return false;
+    public void clear(){
+        coordinates.clear();
     }
 
     /**
@@ -252,6 +230,5 @@ public class Chain implements Shape2D {
     public void addArcABC(Vector2 a,Vector2 b, Vector2 c){
         addArcABC(a.x,a.y,b.x,b.y,c.x,c.y);
     }
-
 
 }

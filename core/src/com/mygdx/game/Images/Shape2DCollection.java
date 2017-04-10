@@ -13,13 +13,13 @@ import com.mygdx.game.utilities.Basic;
  */
 //  collect and create shapes to make a new shape
 
-public class Shapes2D implements Shape2D {
+public class Shape2DCollection implements Shape2D {
     public Array<Shape2D> shapes2D;
 
     /**
      * on creation make the array
      */
-    public Shapes2D(){
+    public Shape2DCollection(){
         shapes2D=new Array<Shape2D>();
     }
 

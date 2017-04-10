@@ -319,33 +319,6 @@ public class Mask {
     }
 
 
-    /**
-     * draw a line between two points with a given width/thickness
-     * sharp cutoff at end points
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param thickness
-     */
-    public void drawLine(float x1, float y1, float x2, float y2, float thickness){
-        float halfWidth=0.5f*thickness;
-        float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-        float ex=(x2-x1)/length*halfWidth;
-        float ey=(y2-y1)/length*halfWidth;
-        fillPolygon(x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex);
-    }
-
-    /**
-     * draw a line between two points with a given width/thickness
-     * sharp cutoff at end points
-     * @param a
-     * @param b
-     * @param thickness
-     */
-    public void drawLine(Vector2 a, Vector2 b, float thickness){
-        drawLine(a.x,a.y,b.x,b.y,thickness);
-    }
 
     /**
      * draw a chain/line with many segments, terminated and connected with circles
@@ -405,13 +378,13 @@ public class Mask {
      * draw chain on a mask
      * @param chain
      */
-    public void drawChain(Chain chain){
+    public void drawChain(PolyPoint chain){
         drawChain(chain.thickness,chain.coordinates.toArray());
     }
 
     /**
      * fill a Shape2D shape on the mask
-     * including Shapes2D collections
+     * including Shape2DCollection collections
      * @param shape
      */
     public void fill(Shape2D shape){
@@ -424,11 +397,11 @@ public class Mask {
         else if (shape instanceof Rectangle){
             fillRect((Rectangle) shape);
         }
-        else if (shape instanceof Chain){
-            drawChain((Chain)shape);
+        else if (shape instanceof PolyPoint){
+            drawChain((PolyPoint)shape);
         }
-        else if (shape instanceof Shapes2D){
-            Shapes2D shapes=(Shapes2D) shape;
+        else if (shape instanceof Shape2DCollection){
+            Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
                 fill(subShape);
             }

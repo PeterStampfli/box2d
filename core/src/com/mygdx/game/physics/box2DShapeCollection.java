@@ -10,13 +10,13 @@ import com.badlogic.gdx.utils.Disposable;
  * conversion from Shape2D
  */
 
-public class ShapesBox2D implements Disposable{
+public class box2DShapeCollection implements Disposable{
     public Array<Shape> shapes;
-    public Array<ShapesBox2D>shapeCollections;
+    public Array<box2DShapeCollection>shapeCollections;
 
-    public ShapesBox2D(){
+    public box2DShapeCollection(){
         shapes=new Array<Shape>();
-        shapeCollections=new Array<ShapesBox2D>();
+        shapeCollections=new Array<box2DShapeCollection>();
     }
 
     /**
@@ -26,7 +26,7 @@ public class ShapesBox2D implements Disposable{
         for (Shape shape:shapes) {
             shape.dispose();
         }
-        for (ShapesBox2D shapeCollection:shapeCollections) {
+        for (box2DShapeCollection shapeCollection:shapeCollections) {
             shapeCollection.dispose();
         }
         shapes.clear();
@@ -45,7 +45,7 @@ public class ShapesBox2D implements Disposable{
      * add a collection of shapes to the collection
      * @param shapesBox2D
      */
-    public void add(ShapesBox2D shapesBox2D){
+    public void add(box2DShapeCollection shapesBox2D){
         shapeCollections.add(shapesBox2D);
     }
 

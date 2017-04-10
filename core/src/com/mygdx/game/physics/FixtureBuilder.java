@@ -134,16 +134,16 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and attach to a body all shapes in a given shapesBox2D object, with userData
+     * build and attach to a body all shapes in a given box2DShapeCollection object, with userData
      * @param body
-     * @param shapesBox2D
+     * @param box2DShapeCollection
      * @param userData
      */
-    public void build(Body body,ShapesBox2D shapesBox2D,Object userData){
-        for (Shape shape:shapesBox2D.shapes) {
+    public void build(Body body, box2DShapeCollection box2DShapeCollection, Object userData){
+        for (Shape shape:box2DShapeCollection.shapes) {
             build(body,shape,userData);
         }
-        for (ShapesBox2D shapeCollection:shapesBox2D.shapeCollections) {
+        for (box2DShapeCollection shapeCollection:box2DShapeCollection.shapeCollections) {
             build(body,shapeCollection,userData);
         }
     }
@@ -153,7 +153,7 @@ public class FixtureBuilder {
      * @param body
      * @param shapesBox2D
      */
-    public void build(Body body,ShapesBox2D shapesBox2D){
+    public void build(Body body,box2DShapeCollection shapesBox2D){
         build(body,shapesBox2D,null);
     }
 }
