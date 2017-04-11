@@ -45,9 +45,7 @@ public class Edge implements Shape2D {
      * @param ghostB
      */
     public Edge(Vector2 ghostA,Vector2 a,Vector2 b,Vector2 ghostB){
-        setGhostA(ghostA);
-        set(a,b);
-        setGhostB(ghostB);
+        this(ghostA.x,ghostA.y,a.x,a.y,b.x,b.y,ghostB.x,ghostB.y);
     }
 
     /**

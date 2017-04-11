@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Images.Shape2DRenderer;
 
 /**
  * Created by peter on 11/26/16.
@@ -24,7 +24,7 @@ public class Device implements Disposable{
     public Disposer disposer;
     public SpriteBatch spriteBatch;
     public BitmapFont bitmapFont;
-    public ShapeRenderer shapeRenderer;
+    public Shape2DRenderer shape2DRenderer;
     public OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     public AssetManager assetManager;
     public BasicAssets basicAssets;
@@ -75,10 +75,10 @@ public class Device implements Disposable{
      * shaperenderer for debugging
      * @return
      */
-    public Device createShapeRenderer(){
-        if (shapeRenderer==null) {
-            shapeRenderer=new ShapeRenderer();
-            disposer.add(shapeRenderer,"shapeRenderer");
+    public Device createShape2DRenderer(){
+        if (shape2DRenderer==null) {
+            shape2DRenderer=new Shape2DRenderer();
+            disposer.add(shape2DRenderer,"shapeRenderer");
         }
         return  this;
     }
