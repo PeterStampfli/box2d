@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polyline;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.ChainShape;
@@ -17,7 +19,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Images.DrawShape2D;
+import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
+import com.mygdx.game.Images.Polypoint;
 import com.mygdx.game.physics.Box2DSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
@@ -51,6 +56,7 @@ public class Box2d extends ApplicationAdapter {
 	Texture maskImage;
 	Texture maskImage2;
 	TouchReader touchReader;
+	DrawShape2D drawShape2D;
 
 	@Override
 	public void create () {
@@ -61,6 +67,7 @@ public class Box2d extends ApplicationAdapter {
 		device=new Device();
 		device.createShapeRenderer().createSpriteBatch().setLogging(true);
 		batch = device.spriteBatch;
+		drawShape2D=new DrawShape2D(device.shapeRenderer,10);
 		BasicAssets basicAssets=device.basicAssets;
 
 		img = basicAssets.getTextureRegion("badlogic");
@@ -89,7 +96,7 @@ public class Box2d extends ApplicationAdapter {
 		world=physics.createWorld(0,-10,true);
 		//viewport=physics.createFitViewport(10,10);
 
-		shapeRenderer=new ShapeRenderer();
+		shapeRenderer=device.shapeRenderer;
 
 
 
@@ -99,7 +106,7 @@ public class Box2d extends ApplicationAdapter {
 
 		//bodyDef.gravityScale=-0.1f;
 		movingBody=physics.dynamicBody().position(3,5).build(sprite);
-		physics.fixture().setBody(movingBody).makeShape(circle);
+	//	physics.fixture().setBody(movingBody).makeShape(circle);
 
 		sprite.setBody(movingBody);
 
@@ -107,7 +114,7 @@ public class Box2d extends ApplicationAdapter {
 
 
 
-		physics.fixture().boxShape(0.5f,1,0,0,0.6f).attach(top);
+	//	physics.fixture().boxShape(0.5f,1,0,0,0.6f).attach(top);
 		//physics.fixture().polygonShape(triangle).attach(body);
 
 
@@ -115,7 +122,7 @@ public class Box2d extends ApplicationAdapter {
 		PolygonShape groundBox=new PolygonShape();
 		groundBox.setAsBox(20,0.2f);
 
-		physics.fixture().boxShape(20,0.2f,0,0).attach(ground);
+	//	physics.fixture().boxShape(20,0.2f,0,0).attach(ground);
 		groundBox.dispose();
 
 		//mouseJoint=physics.mouseJoint().dummyBody(ground).body(bottom).maxForce(12).target(5,4.7f).build();
@@ -157,11 +164,20 @@ public class Box2d extends ApplicationAdapter {
 		}
 		sprite.draw(batch);
 	//	batch.draw(maskImage,10,0);
+
 		batch.end();
 		physics.debugRender(viewport);
+		float[] v={10,10,400,10,200,400};
+		Polyline polygon=new Polyline(v);
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		shapeRenderer.rect(1f,1f,8,8);
+		drawShape2D.draw(polygon);
+		drawShape2D.draw(new Circle(100,100,70));
+		drawShape2D.draw(new Rectangle(100,100,200,50));
+		drawShape2D.draw(new Edge(10,200,100,250,200,300,250,350));
+		
+		drawShape2D.draw(new Polypoint().add(400,400,450,450,490,480));
 		shapeRenderer.end();
 		//mouseJoint.setTarget(new Vector2(9, 9));
 		//physics.step(1/60f);

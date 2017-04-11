@@ -330,7 +330,7 @@ public class Mask {
         float radius=0.5f*thickness;
         int lenght=coordinates.length-2;
         for (int i=0;i<lenght;i+=2){
-            drawLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
+         //   drawLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
             fillCircle(coordinates[i],coordinates[i+1],radius);
         }
         fillCircle(coordinates[lenght],coordinates[lenght+1],radius);
@@ -378,8 +378,8 @@ public class Mask {
      * draw chain on a mask
      * @param chain
      */
-    public void drawChain(PolyPoint chain){
-        drawChain(chain.thickness,chain.coordinates.toArray());
+    public void drawChain(Polypoint chain){
+   //     drawChain(chain.thickness,chain.coordinates.toArray());
     }
 
     /**
@@ -397,8 +397,8 @@ public class Mask {
         else if (shape instanceof Rectangle){
             fillRect((Rectangle) shape);
         }
-        else if (shape instanceof PolyPoint){
-            drawChain((PolyPoint)shape);
+        else if (shape instanceof Polypoint){
+            drawChain((Polypoint)shape);
         }
         else if (shape instanceof Shape2DCollection){
             Shape2DCollection shapes=(Shape2DCollection) shape;

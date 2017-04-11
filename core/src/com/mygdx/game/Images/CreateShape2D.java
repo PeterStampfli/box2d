@@ -6,24 +6,25 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 4/10/17.
+ * static methods for creating shape2D shapes from polypoint
  */
 
 public class CreateShape2D {
 
     /**
-     * create a polygon with the points of a PolyPointas vertices
+     * create a polygon with the points of a Polypoint as vertices
      * @return
      */
-    static public Polygon polygon(PolyPoint polyPoint){
-        return new Polygon(polyPoint.coordinates.toArray());
+    static public Polygon polygon(Polypoint polypoint){
+        return new Polygon(polypoint.coordinates.toArray());
     }
 
     /**
-     * create a polyline with the points of a PolyPoint as vertices
+     * create a polyline with the points of a Polypoint as vertices
      * @return
      */
-    static public Polyline polyline(PolyPoint polyPoint){
-        return new Polyline(polyPoint.coordinates.toArray());
+    static public Polyline polyline(Polypoint polypoint){
+        return new Polyline(polypoint.coordinates.toArray());
     }
 
     /**
