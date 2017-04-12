@@ -137,7 +137,7 @@ public class Shape2DCollection implements Shape2D {
      * @param y2
      */
     public Shape2DCollection addLine(float thickness, float x1, float y1, float x2, float y2){
-        return add(CreateShape2D.line(thickness,x1,y1,x2,y2));
+        return add(Shape2DCreator.line(thickness,x1,y1,x2,y2));
     }
 
     /**
@@ -148,6 +148,6 @@ public class Shape2DCollection implements Shape2D {
      * @param b
      */
     public Shape2DCollection addLine(float thickness,Vector2 a,Vector2 b){
-        return add(CreateShape2D.line(thickness,a,b));
+        return add(Shape2DCreator.line(thickness,a,b));
     }
 }

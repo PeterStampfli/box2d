@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 4/10/17.
- * static methods for creating shape2D shapes from polypoint
+ * static methods for creating shape2D polygon/polyline shapes from polypoint
+ *
+ * chain has its own creator using polypoint input
  */
 
-public class CreateShape2D {
+public class Shape2DCreator {
 
     /**
      * create a polygon with the points of a Polypoint as vertices

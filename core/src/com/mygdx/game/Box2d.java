@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.utilities.Basic;
@@ -52,9 +53,10 @@ public class Box2d extends ApplicationAdapter {
 
 		float[] v={10,10,400,10,200,400};
 		Polyline polygon=new Polyline(v);
+		Chain chain=new Chain(v).addGhostA(10,10).addGhostB(490,490).isLoop();
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.draw(shape2DCollection);
+		shapeRenderer.draw(chain);
 		shapeRenderer.end();
 
 	}

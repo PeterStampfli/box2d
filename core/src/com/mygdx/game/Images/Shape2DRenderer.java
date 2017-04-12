@@ -105,6 +105,29 @@ public class Shape2DRenderer extends ShapeRenderer{
         }
     }
 
+    /**
+     * draw an chain with ghosts, if they exist
+     * close the loop if it is a loop
+     * @param chain
+     */
+    public void draw(Chain chain){
+        int length=chain.coordinates.length;
+        for (int i=0;i<length-3;i+=2){
+            line(chain.coordinates[i],chain.coordinates[i+1],
+                    chain.coordinates[i+2],chain.coordinates[i+3]);
+        }
+        if (chain.isLoop){
+            line(chain.coordinates[0],chain.coordinates[1],
+                    chain.coordinates[length-2],chain.coordinates[length-1]);
+        }
+        if (chain.ghostAExists){
+            point(chain.ghostAX,chain.ghostAY);
+        }
+        if (chain.ghostBExists){
+            point(chain.ghostBX,chain.ghostBY);
+        }
+    }
+
 
     public void draw(Shape2D shape){
         if (shape instanceof Polygon){
@@ -118,6 +141,12 @@ public class Shape2DRenderer extends ShapeRenderer{
         }
         else if (shape instanceof Polypoint){
             draw((Polypoint)shape);
+        }
+        else if (shape instanceof Edge){
+            draw((Edge) shape);
+        }
+        else if (shape instanceof Chain){
+            draw((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){
             Shape2DCollection shapes=(Shape2DCollection) shape;

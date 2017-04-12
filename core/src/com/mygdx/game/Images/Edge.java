@@ -32,9 +32,21 @@ public class Edge implements Shape2D {
      */
     public Edge(float ghostAX,float ghostAY,float aX,float aY,
                 float bX, float bY,float ghostBX,float ghostBY){
-        setGhostA(ghostAX,ghostAY);
+        addGhostA(ghostAX,ghostAY);
         set(aX,aY,bX,bY);
-        setGhostB(ghostBX,ghostBY);
+        addGhostB(ghostBX,ghostBY);
+    }
+
+    /**
+     * create an edge without ghost vertices
+     * @param aX
+     * @param aY
+     * @param bX
+     * @param bY
+     */
+    public Edge(float aX,float aY,float bX, float bY){
+        deleteGhosts();
+        set(aX,aY,bX,bY);
     }
 
     /**
@@ -49,9 +61,18 @@ public class Edge implements Shape2D {
     }
 
     /**
+     * create an edge without ghost vertices
+     * @param a
+     * @param b
+     */
+    public Edge(Vector2 a,Vector2 b){
+        this(a.x,a.y,b.x,b.y);
+    }
+
+    /**
      * null ghosts for reuse
      */
-    public Edge clearGhosts(){
+    public Edge deleteGhosts(){
         ghostAExists=false;
         ghostBExists=false;
         return this;
@@ -63,7 +84,7 @@ public class Edge implements Shape2D {
      * @param y
      * @return
      */
-    public Edge setGhostA(float x,float y){
+    public Edge addGhostA(float x, float y){
         ghostAExists=true;
         ghostAX=x;
         ghostAY=y;
@@ -75,8 +96,8 @@ public class Edge implements Shape2D {
      * @param position
      * @return
      */
-    public Edge setGhostA(Vector2 position){
-        return setGhostA(position.x,position.y);
+    public Edge addGhostA(Vector2 position){
+        return addGhostA(position.x,position.y);
     }
 
     /**
@@ -85,7 +106,7 @@ public class Edge implements Shape2D {
      * @param y
      * @return
      */
-    public Edge setGhostB(float x,float y){
+    public Edge addGhostB(float x, float y){
         ghostBExists=true;
         ghostBX=x;
         ghostBY=y;
@@ -97,8 +118,8 @@ public class Edge implements Shape2D {
      * @param position
      * @return
      */
-    public Edge setGhostB(Vector2 position){
-        return setGhostB(position.x,position.y);
+    public Edge addGhostB(Vector2 position){
+        return addGhostB(position.x,position.y);
     }
 
     /**

@@ -14,7 +14,7 @@ import com.mygdx.game.utilities.Basic;
  * static methods to create box2d shapes
  */
 
-public class CreateShapeBox2D {
+public class Box2DShapeCreator {
 
     /**
      * create scaled circle shape based on graphics world input data
