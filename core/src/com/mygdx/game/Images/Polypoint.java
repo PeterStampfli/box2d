@@ -30,7 +30,7 @@ public class Polypoint {
     /**
      * set if it is meant to be a loop
      * @param isLoop
-     * @return
+     * @return this
      */
     public Polypoint isLoop(boolean isLoop){
         this.isLoop=isLoop;
@@ -51,13 +51,15 @@ public class Polypoint {
      * (important for joining arcs)
      * @param x
      * @param y
+     * @return this
      */
-    public void add(float x,float y){
+    public Polypoint add(float x,float y){
         int length=coordinates.size;
         if ((length==0)||(Math.abs(x-coordinates.get(length-2))>epsilon)
                 ||(Math.abs(y-coordinates.get(length-1))>epsilon)){
             coordinates.addAll(x,y);
         }
+        return this;
     }
 
     /**
@@ -65,15 +67,16 @@ public class Polypoint {
      * if it is same as last point it will not be added
      * (important for joining arcs)
      * @param point
+     * @return this
      */
-    public void add(Vector2 point){
-        add(point.x,point.y);
+    public Polypoint add(Vector2 point){
+        return add(point.x,point.y);
     }
 
     /**
      * add points (and corresponding line segments)
      * @param coordinates
-     * @return
+     * @return this
      */
     public Polypoint add(float... coordinates){
         int length=coordinates.length;
@@ -86,11 +89,13 @@ public class Polypoint {
     /**
      * add points (and corresponding line segments)
      * @param points
+     * @return this
      */
-    public void add(Vector2... points){
+    public Polypoint add(Vector2... points){
         for (Vector2 point:points){
             add(point);
         }
+        return  this;
     }
 
     /**
@@ -103,8 +108,9 @@ public class Polypoint {
      * @param alpha
      * @param beta
      * @param counterClockwise
+     * @return this
      */
-    public void addBasicArc(float centerX,float centerY, float radius,
+    public Polypoint addBasicArc(float centerX,float centerY, float radius,
                             float alpha, float beta, boolean counterClockwise) {
         if (counterClockwise) {
             if (beta < alpha) {
@@ -123,6 +129,7 @@ public class Polypoint {
             add(centerX+radius*MathUtils.cos(angle),centerY+radius*MathUtils.sin(angle));
             angle+=deltaAngle;
         }
+        return this;
     }
 
 
@@ -135,10 +142,11 @@ public class Polypoint {
      * @param alpha
      * @param beta
      * @param counterClockwise
+     * @return this
      */
-    public void addBasicArc(Vector2 center, float radius,
+    public Polypoint addBasicArc(Vector2 center, float radius,
                             float alpha, float beta, boolean counterClockwise) {
-        addBasicArc(center.x,center.y,radius,alpha,beta,counterClockwise);
+        return addBasicArc(center.x,center.y,radius,alpha,beta,counterClockwise);
     }
 
     /**
@@ -153,8 +161,9 @@ public class Polypoint {
      * @param someCenterX
      * @param someCenterY
      * @param counterclockwise
+     * @return this
      */
-    public void addArcABSomeCenter(float aX,float aY,float bX,float bY,
+    public Polypoint addArcABSomeCenter(float aX,float aY,float bX,float bY,
                                    float someCenterX,float someCenterY,boolean counterclockwise){
         // unit vector pointing from a to someCenter
         float unitAToCenterX=someCenterX-aX;
@@ -172,6 +181,7 @@ public class Polypoint {
         float alpha=MathUtils.atan2(aY-centerY,aX-centerX);
         float beta=MathUtils.atan2(bY-centerY,bX-centerX);
         addBasicArc(centerX,centerY,Math.abs(radius),alpha,beta,counterclockwise);
+        return this;
     }
 
     /**
@@ -183,9 +193,10 @@ public class Polypoint {
      * @param b
      * @param someCenter
      * @param counterclockwise
+     * @return this
      */
-    public void addArcABSomeCenter(Vector2 a,Vector2 b,Vector2 someCenter,boolean counterclockwise) {
-        addArcABSomeCenter(a.x,a.y,b.x,b.y,someCenter.x,someCenter.y,counterclockwise);
+    public Polypoint addArcABSomeCenter(Vector2 a,Vector2 b,Vector2 someCenter,boolean counterclockwise) {
+        return addArcABSomeCenter(a.x,a.y,b.x,b.y,someCenter.x,someCenter.y,counterclockwise);
     }
 
     /**
@@ -199,12 +210,14 @@ public class Polypoint {
      * @param tangentPointX
      * @param tangentPointY
      * @param counterclockwise
+     * @return this
      */
-    public void addArcABTangent(float aX,float aY,float bX,float bY,
+    public Polypoint addArcABTangent(float aX,float aY,float bX,float bY,
                                 float tangentPointX,float tangentPointY,boolean counterclockwise){
         float someCenterX=aX+(tangentPointY-aY);
         float someCenterY=aY-(tangentPointX-aX);
         addArcABSomeCenter(aX,aY,bX,bY,someCenterX,someCenterY,counterclockwise);
+        return this;
     }
 
     /**
@@ -215,9 +228,10 @@ public class Polypoint {
      * @param b
      * @param tangentPoint
      * @param counterclockwise
+     * @return this
      */
-    public void addArcABTangent(Vector2 a,Vector2 b,Vector2 tangentPoint,boolean counterclockwise){
-        addArcABTangent(a.x,a.y,b.x,b.y,tangentPoint.x,tangentPoint.y,counterclockwise);
+    public Polypoint addArcABTangent(Vector2 a,Vector2 b,Vector2 tangentPoint,boolean counterclockwise){
+        return addArcABTangent(a.x,a.y,b.x,b.y,tangentPoint.x,tangentPoint.y,counterclockwise);
     }
 
     /**
@@ -228,8 +242,9 @@ public class Polypoint {
      * @param bY
      * @param cX
      * @param cY
+     * @return this
      */
-    public void addArcABC(float aX,float aY,float bX,float bY,float cX,float cY){
+    public Polypoint addArcABC(float aX,float aY,float bX,float bY,float cX,float cY){
         float a2mb2=(aX-bX)*(aX+bX)+(aY-bY)*(aY+bY);
         float a2mc2=(aX-cX)*(aX+cX)+(aY-cY)*(aY+cY);
         float den=2*((bY-aY)*(cX-aX)-(cY-aY)*(bX-aX));
@@ -241,6 +256,7 @@ public class Polypoint {
         float radius=Vector2.dst(aX,aY,centerX,centerY);
         boolean counterClockwise=((alpha<beta)&&(beta<gamma))||((beta<gamma)&&(gamma<alpha))||((gamma<alpha)&&(alpha<beta));
         addBasicArc(centerX,centerY,radius,alpha,gamma,counterClockwise);
+        return this;
     }
 
     /**
@@ -248,9 +264,10 @@ public class Polypoint {
      * @param a
      * @param b
      * @param c
+     * @return this
      */
-    public void addArcABC(Vector2 a,Vector2 b, Vector2 c){
-        addArcABC(a.x,a.y,b.x,b.y,c.x,c.y);
+    public Polypoint addArcABC(Vector2 a,Vector2 b, Vector2 c){
+        return addArcABC(a.x,a.y,b.x,b.y,c.x,c.y);
     }
 
 }

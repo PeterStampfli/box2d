@@ -17,7 +17,7 @@ public class Chain implements Shape2D {
 
     /**
      * create chain with point coordinates
-     * st ghosts or isLoop separately
+     * set ghosts or isLoop separately
      * @param coordinates
      */
     public Chain(float... coordinates){
@@ -31,6 +31,7 @@ public class Chain implements Shape2D {
      */
     public Chain(Polypoint polypoint){
         this.coordinates=polypoint.coordinates.toArray();
+        this.isLoop=polypoint.isLoop;
     }
 
     /**
@@ -50,6 +51,12 @@ public class Chain implements Shape2D {
      */
     public Chain set(Polypoint polypoint){
         this.coordinates=polypoint.coordinates.toArray();
+        if (polypoint.isLoop){
+            isLoop();
+        }
+        else{
+            this.isLoop=false;
+        }
         return this;
     }
 

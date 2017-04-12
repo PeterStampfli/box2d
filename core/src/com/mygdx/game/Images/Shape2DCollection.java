@@ -50,14 +50,27 @@ public class Shape2DCollection implements Shape2D {
     }
 
     /**
-     * add one or more shapes to the collection
+     * add one shape to the collection (if not null)
+     * returns the collection for chaining
+     * @param shape2D
+     * @return this
+     */
+    public Shape2DCollection add(Shape2D shape2D){
+        if (shape2D!=null){
+            this.shapes2D.add(shape2D);
+        }
+        return this;
+    }
+
+    /**
+     * add several shapes to the collection
      * returns the collection for chaining
      * @param shapes2D
      * @return this
      */
     public Shape2DCollection add(Shape2D... shapes2D){
         for (Shape2D shape2D:shapes2D) {
-            this.shapes2D.add(shape2D);
+            add(shape2D);
         }
         return this;
     }

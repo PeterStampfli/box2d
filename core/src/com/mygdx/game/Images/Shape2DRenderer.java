@@ -50,19 +50,19 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws the polygon with original vertices
+     * draws the polygon with tranformed world vertices
      * @param polygon
      */
     public void draw(Polygon polygon){
-        polygon(polygon.getVertices());
+        polygon(polygon.getTransformedVertices());
     }
 
     /**
-     * draws the polyline with original vertices
+     * draws the polyline with transformed world vertices
      * @param polyline
      */
     public void draw(Polyline polyline){
-        polyline(polyline.getVertices());
+        polyline(polyline.getTransformedVertices());
     }
 
     /**
