@@ -16,12 +16,33 @@ public class Polypoint {
     public FloatArray coordinates=new FloatArray();
     private float epsilon=0.1f;                   // on the basis of a pixel scale, 1=pixelsize
     public float maxDeltaAngle=0.1f;
+    public boolean isLoop=false;
 
     /**
      * clear coordinates for reuse
+     * @ return this
      */
-    public void clear(){
+    public Polypoint clear(){
         coordinates.clear();
+        return this;
+    }
+
+    /**
+     * set if it is meant to be a loop
+     * @param isLoop
+     * @return
+     */
+    public Polypoint isLoop(boolean isLoop){
+        this.isLoop=isLoop;
+        return this;
+    }
+
+    /**
+     * set that it is meant to be a loop
+     * @return
+     */
+    public Polypoint isLoop(){
+        return isLoop(true);
     }
 
     /**

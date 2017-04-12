@@ -40,7 +40,7 @@ public class Shape2DCreator {
      */
     static public Polygon line(float thickness, float x1, float y1, float x2, float y2){
         float halfWidth=0.5f*thickness;
-        float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+        float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+0.1f);
         float ex=(x2-x1)/length*halfWidth;
         float ey=(y2-y1)/length*halfWidth;
         float[] coordinates={x1+ey,y1-ex,x2+ey,y2-ex,x2-ey,y2+ex,x1-ey,y1+ex};
@@ -57,4 +57,47 @@ public class Shape2DCreator {
     static public Polygon line( float thickness,Vector2 a, Vector2 b){
         return line(thickness,a.x,a.y,b.x,b.y);
     }
-}
+
+    /**
+     * make lines of given thickness between points as defined by coordinates
+     * line joints and ends are circles
+     * choins first and last point if it is a loop
+     * @param thickness
+     * @param isLoop
+     * @param coordinates
+     * @return
+     */
+    static public Shape2DCollection dotsAndLines(float thickness,boolean isLoop, float... coordinates){
+        Shape2DCollection shapes=new Shape2DCollection();
+        float radius=0.5f*thickness;
+        int length=coordinates.length;
+        for (int i=0;i<length-1;i+=2){
+            shapes.addCircle(coordinates[i],coordinates[i+1],radius);
+        }
+        for (int i=0;i<length-3;i+=2){
+            shapes.addLine(thickness,coordinates[i],coordinates[i+1],
+                            coordinates[i+2],coordinates[i+3]);
+        }
+        if (isLoop){
+            shapes.addLine(thickness,coordinates[0],coordinates[1],
+                           coordinates[length-2],coordinates[length-1]);
+        }
+        return shapes;
+    }
+
+
+    /**
+     * make lines of given thickness between points as defined by coordinates
+     * line joints and ends are circles
+     *
+     * @param thickness
+     * @param polypoint
+     * @param
+     * @return
+     */
+   // static public Shape2DCollection dotsAndLines(float thickness,Polypoint polypoint){
+
+   // }
+
+
+    }
