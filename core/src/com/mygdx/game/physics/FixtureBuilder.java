@@ -1,9 +1,11 @@
 package com.mygdx.game.physics;
 
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.mygdx.game.Images.Shape2DCollection;
 
 /**
  * Created by peter on 3/22/17.
@@ -124,7 +126,7 @@ public class FixtureBuilder {
 
     /**
      * build and return a fixture, attached to given body with given shape, no userData
-     * dispose the shape later
+     * you have to dispose the shape later
      * @param body
      * @param shape
      * @return
@@ -134,26 +136,41 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and attach to a body all shapes in a given box2DShapeCollection object, with userData
+     * build and attach shapes from shape2D objects, including shape2DCollections,
+     * to given body and userData object
+     * the generated shape is disposed automatically
      * @param body
-     * @param box2DShapeCollection
+     * @param shape2D
      * @param userData
+     * @return
      */
-    public void build(Body body, box2DShapeCollection box2DShapeCollection, Object userData){
-        for (Shape shape:box2DShapeCollection.shapes) {
-            build(body,shape,userData);
+    public Fixture build(Body body, Shape2D shape2D,Object userData){
+        Fixture fixture=null;
+        if (shape2D instanceof Shape2DCollection){
+            Shape2DCollection shape2DCollection=(Shape2DCollection) shape2D;
+            for (Shape2D subShape2D:shape2DCollection.shapes2D){
+                fixture=build(body,subShape2D,userData);
+            }
         }
-        for (box2DShapeCollection shapeCollection:box2DShapeCollection.shapeCollections) {
-            build(body,shapeCollection,userData);
+        else {
+            Shape shape = Box2DShape.ofShape2D(shape2D);
+            fixture = build(body, shape, userData);
+            shape.dispose();
         }
+        return fixture;
     }
 
     /**
-     * build and attach to a body all shapes in a given shapesBox2D object, no userData
+     * build and attach shapes from shape2D objects, including shape2DCollections,
+     * to given body
+     * the generated shape is disposed automatically
+     * no user data
      * @param body
-     * @param shapesBox2D
+     * @param shape2D
+     * @return
      */
-    public void build(Body body,box2DShapeCollection shapesBox2D){
-        build(body,shapesBox2D,null);
+    public Fixture build(Body body, Shape2D shape2D){
+        return build(body, shape2D,null);
     }
+
 }

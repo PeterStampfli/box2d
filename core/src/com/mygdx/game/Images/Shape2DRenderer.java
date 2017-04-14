@@ -1,6 +1,7 @@
 package com.mygdx.game.Images;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
@@ -16,6 +17,9 @@ import com.badlogic.gdx.math.Shape2D;
 
 public class Shape2DRenderer extends ShapeRenderer{
     public float nullRadius;
+    public Color pointColor=Color.RED;
+    public Color lineColor=Color.GREEN;
+    public Color polygonColor=Color.YELLOW;
 
     /**
      * create with shaperenderer to simplify further work
@@ -46,6 +50,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param y
      */
     public void point(float x,float y){
+        setColor(pointColor);
         circle(x,y,nullRadius);
     }
 
@@ -54,6 +59,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param polygon
      */
     public void draw(Polygon polygon){
+        setColor(polygonColor);
         polygon(polygon.getTransformedVertices());
     }
 
@@ -62,6 +68,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param polyline
      */
     public void draw(Polyline polyline){
+        setColor(lineColor);
         polyline(polyline.getTransformedVertices());
     }
 
@@ -76,10 +83,11 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws the polygon with original vertices
+     * draws circle shape
      * @param circle
      */
     public void draw(Circle circle){
+        setColor(polygonColor);
         circle(circle.x,circle.y,circle.radius);
     }
 
@@ -88,6 +96,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param rectangle
      */
     public void draw(Rectangle rectangle){
+        setColor(polygonColor);
         rect(rectangle.x,rectangle.y, rectangle.width,rectangle.height);
     }
 
@@ -112,6 +121,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      */
     public void draw(Chain chain){
         int length=chain.coordinates.length;
+        setColor(lineColor);
         for (int i=0;i<length-3;i+=2){
             line(chain.coordinates[i],chain.coordinates[i+1],
                     chain.coordinates[i+2],chain.coordinates[i+3]);

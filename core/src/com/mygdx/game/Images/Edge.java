@@ -10,9 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Edge implements Shape2D {
 
-    float ghostAX,ghostAY,aX,aY,bX,bY,ghostBX,ghostBY;
-    boolean ghostAExists=false;
-    boolean ghostBExists=false;
+    public float ghostAX,ghostAY,aX,aY,bX,bY,ghostBX,ghostBY;
+    public boolean ghostAExists=false;
+    public boolean ghostBExists=false;
 
     /**
      * edge without data to create for reuse

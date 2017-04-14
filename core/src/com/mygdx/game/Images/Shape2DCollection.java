@@ -2,6 +2,7 @@ package com.mygdx.game.Images;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +15,7 @@ import com.mygdx.game.utilities.Basic;
 //  collect and create shapes to make a new shape
 
 public class Shape2DCollection implements Shape2D {
+    final private static float epsilon=0.01f;
     public Array<Shape2D> shapes2D;
 
     /**
@@ -150,7 +152,15 @@ public class Shape2DCollection implements Shape2D {
      * @param y2
      */
     public Shape2DCollection addLine(float thickness, float x1, float y1, float x2, float y2){
-        return add(Shape2DCreator.line(thickness,x1,y1,x2,y2));
+        float halfWidth=0.5f*thickness;
+        float length=(float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+        if (length>epsilon) {
+            float ex = (x2 - x1) / length * halfWidth;
+            float ey = (y2 - y1) / length * halfWidth;
+            float[] coordinates = {x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex, x1 - ey, y1 + ex};
+            addPolygon(coordinates);
+        }
+        return this;
     }
 
     /**
@@ -161,6 +171,118 @@ public class Shape2DCollection implements Shape2D {
      * @param b
      */
     public Shape2DCollection addLine(float thickness,Vector2 a,Vector2 b){
-        return add(Shape2DCreator.line(thickness,a,b));
+        return addLine(thickness,a.x,a.y,b.x,b.y);
     }
+
+    /**
+     * add lines of given thickness between points as defined by coordinates
+     * line joints and ends are circles
+     * joins first and last point if it is a loop
+     * @param thickness
+     * @param isLoop
+     * @param coordinates
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,boolean isLoop, float... coordinates){
+        float radius=0.5f*thickness;
+        int length=coordinates.length;
+        for (int i=0;i<length-1;i+=2){
+            addCircle(coordinates[i],coordinates[i+1],radius);
+        }
+        for (int i=0;i<length-3;i+=2){
+            addLine(thickness,coordinates[i],coordinates[i+1],
+                    coordinates[i+2],coordinates[i+3]);
+        }
+        if (isLoop){
+            addLine(thickness,coordinates[0],coordinates[1],
+                    coordinates[length-2],coordinates[length-1]);
+        }
+        return this;
+    }
+
+    /**
+     * add lines of given thickness between points as defined by coordinates
+     * line joints and ends are circles
+     * no loop
+     * @param thickness
+     * @param coordinates
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness, float... coordinates){
+        addDotsAndLines(thickness,false,coordinates);
+        return this;
+    }
+
+    /**
+     * add lines of given thickness between points as defined by coordinates
+     * line joints and ends are circles
+     * loop is closed if polypoint isLoop=true
+     *
+     * @param thickness
+     * @param polypoint
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,Polypoint polypoint){
+        addDotsAndLines(thickness,polypoint.isLoop,polypoint.coordinates.toArray());
+        return this;
+    }
+
+    /**
+     * make lines of given thickness between world points of a polygon
+     * may be rotated translated and scaled (around origin)
+     * line joints and ends are circles
+     * endpoints are joined as for any real polygon
+     *
+     * @param thickness
+     * @param polygon
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,Polygon polygon){
+        addDotsAndLines(thickness,true,polygon.getTransformedVertices());
+        return this;
+    }
+
+    /**
+     * make lines of given thickness between world points of a polyline
+     * may be rotated translated and scaled (around origin)
+     * line joints and ends are circles
+     * endpoints are not joined
+     *
+     * @param thickness
+     * @param polyline
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,Polyline polyline){
+        addDotsAndLines(thickness,false,polyline.getTransformedVertices());
+        return this;
+    }
+
+    /**
+     * make lines of given thickness between points of a chain
+     * line joints and ends are circles
+     * ghosts are not included (use this to make a chain substantial
+     * @param thickness
+     * @param chain
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,Chain chain){
+        addDotsAndLines(thickness,chain.isLoop,chain.coordinates);
+        return this;
+    }
+
+    /**
+     * make lines of given thickness between  points of an edge
+     * line joints and ends are circles
+     * ghosts are not included (use this to make an edge substantial
+     * @param thickness
+     * @param edge
+     * @param
+     * @return
+     */
+    public Shape2DCollection addDotsAndLines(float thickness,Edge edge){
+        addDotsAndLines(thickness,false,edge.aX,edge.aY,edge.bX,edge.bY);
+        return this;
+    }
+
+
 }

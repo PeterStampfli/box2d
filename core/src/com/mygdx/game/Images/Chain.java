@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public class Chain implements Shape2D {
-    float[] coordinates;
-    float ghostAX,ghostAY,ghostBX,ghostBY;
-    boolean ghostAExists=false;
-    boolean ghostBExists=false;
-    boolean isLoop=false;
+    public float[] coordinates;
+    public float ghostAX,ghostAY,ghostBX,ghostBY;
+    public boolean ghostAExists=false;
+    public boolean ghostBExists=false;
+    public boolean isLoop=false;
 
     /**
      * create chain with point coordinates

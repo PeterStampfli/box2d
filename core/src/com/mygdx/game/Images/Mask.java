@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
  * stored in a single byte array
  * the y-axis is flipped to compensate for the inverted y-axis in pixmaps
  *
- * draw shapes in its region x=0...width and y=0 ...height
+ * draw shape2D shapes in its region x=0...width and y=0 ...height
  * a pixel with indices(i,j) lies at (x,y)=(i+1/2,j+1/2)
  */
 
@@ -108,8 +108,8 @@ public class Mask {
 
     /**
      * the mask will always be set to the maximum value in case of superposition
-     * @param b   present mask value
-     * @param f   opacity, from 0 to 1
+     * @param b   present mask value, >=0 (in range 0...255, as integer)
+     * @param f   opacity, will be clamped to region b to 1
      * @return
      */
     public byte maxByteFloat(byte b,float f){
@@ -318,34 +318,6 @@ public class Mask {
         fillPolygon(cornerX,cornerY,cornerX+width,cornerY,cornerX+width,cornerY+height,cornerX,cornerY+height);
     }
 
-
-
-    /**
-     * draw a chain/line with many segments, terminated and connected with circles
-     * note that this is more for diagnostics, thickness parameter has to be first
-     * @param thickness
-     * @param coordinates
-     */
-    public void drawChain(float thickness, float... coordinates){
-        float radius=0.5f*thickness;
-        int lenght=coordinates.length-2;
-        for (int i=0;i<lenght;i+=2){
-         //   drawLine(coordinates[i],coordinates[i+1],coordinates[i+2],coordinates[i+3],thickness);
-            fillCircle(coordinates[i],coordinates[i+1],radius);
-        }
-        fillCircle(coordinates[lenght],coordinates[lenght+1],radius);
-    }
-
-    /**
-     * draw a line with many segments, terminated and connected with circles
-     * @param thickness
-     * @param points
-     */
-
-    public void drawChain( float thickness,Array<Vector2> points){
-        drawChain(thickness,Basic.toFloats(points));
-    }
-
     /**
      * fill a circle with opaque bits, smooth border
      * the center is a continuous coordinate,
@@ -375,14 +347,6 @@ public class Mask {
     }
 
     /**
-     * draw chain on a mask
-     * @param chain
-     */
-    public void drawChain(Polypoint chain){
-   //     drawChain(chain.thickness,chain.coordinates.toArray());
-    }
-
-    /**
      * fill a Shape2D shape on the mask
      * including Shape2DCollection collections
      * @param shape
@@ -397,9 +361,6 @@ public class Mask {
         else if (shape instanceof Rectangle){
             fillRect((Rectangle) shape);
         }
-        else if (shape instanceof Polypoint){
-            drawChain((Polypoint)shape);
-        }
         else if (shape instanceof Shape2DCollection){
             Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
@@ -410,7 +371,6 @@ public class Mask {
             Gdx.app.log(" ******************** mask","unknown shape "+shape.getClass());
         }
     }
-
 
     /**
      * calculate the center of mass of the mask
