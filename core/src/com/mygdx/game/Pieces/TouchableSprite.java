@@ -1,11 +1,13 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by peter on 4/2/17.
@@ -13,11 +15,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TouchableSprite extends Sprite implements Touchable {
     public Shape2D shape;
+    public Camera camera;
 
     /**
-     * create with a texture (debug) and a shape
+     * create with a texture (debug) a shape and the camera
      * @param texture
      * @param shape
+     *
      */
     public TouchableSprite(Texture texture, Shape2D shape){
         super(texture);
@@ -33,6 +37,25 @@ public class TouchableSprite extends Sprite implements Touchable {
     public TouchableSprite(TextureRegion textureRegion, Shape2D shape){
         super(textureRegion);
         this.shape=shape;
+    }
+
+    /**
+     * set the camera of the sprite if needed
+     * @param camera
+     * @return
+     */
+    public TouchableSprite setCamera(Camera camera){
+        this.camera=camera;
+        return this;
+    }
+
+    /**
+     * set the camera of the sprite if needed
+     * @param viewport
+     * @return
+     */
+    public TouchableSprite setCamera(Viewport viewport){
+        return setCamera(viewport.getCamera());
     }
 
     /**
@@ -118,6 +141,21 @@ public class TouchableSprite extends Sprite implements Touchable {
         setWorldOrigin(worldOriginPosition.x,worldOriginPosition.y);
     }
 
+    /**
+     * get x coordinate of the sprite center
+     * @return
+     */
+    public float getWorldOriginX(){
+        return getX()+getOriginX();
+    }
+
+    /**
+     * get y coordinate of the sprite center
+     * @return
+     */
+    public float getWorldOriginY(){
+        return getY()+getOriginY();
+    }
 
     /**
      * check if both the texture region AND the shape contain a point,
@@ -130,8 +168,8 @@ public class TouchableSprite extends Sprite implements Touchable {
     public boolean shapeContains(float x, float y){
         if (shape==null||!getBoundingRectangle().contains(x,y)) return false;
         // shift that "origin" is at (0,0)
-        x-=getX()+getOriginX();
-        y-=getY()+getOriginY();
+        x-=getWorldOriginX();
+        y-=getWorldOriginY();
         float angleDeg=getRotation();
         float sinAngle= MathUtils.sinDeg(angleDeg);
         float cosAngle=MathUtils.cosDeg(angleDeg);
@@ -175,6 +213,14 @@ public class TouchableSprite extends Sprite implements Touchable {
         translate(delta.x,delta.y);
     }
 
+
+    /**
+     * make that the origin of the sprite can be seen by the camera
+     */
+    public void keepOriginVisible(){
+
+    }
+
     /**
      * move the sprite by rotation and translation
      * thus we can change the orientation of the sprite
@@ -182,8 +228,8 @@ public class TouchableSprite extends Sprite implements Touchable {
      * @param deltaTouchPosition
      */
     public void transRotate(Vector2 touchPosition,Vector2 deltaTouchPosition){
-        float centerTouchX=touchPosition.x-getX()-getOriginX();
-        float centerTouchY=touchPosition.y-getY()-getOriginY();
+        float centerTouchX=touchPosition.x-getWorldOriginX();
+        float centerTouchY=touchPosition.y-getWorldOriginY();
         float centerTouchLength=Vector2.len(centerTouchX,centerTouchY);
         float centerTouchCrossDeltaTouch=centerTouchX*deltaTouchPosition.y-centerTouchY*deltaTouchPosition.x;
         float deltaAngle=MathUtils.atan2(centerTouchCrossDeltaTouch,centerTouchLength*centerTouchLength);
