@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by peter on 4/2/17.
@@ -15,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class TouchableSprite extends Sprite implements Touchable {
     public Shape2D shape;
-    public Camera camera;
 
     /**
      * create with a texture (debug) a shape and the camera
@@ -37,25 +35,6 @@ public class TouchableSprite extends Sprite implements Touchable {
     public TouchableSprite(TextureRegion textureRegion, Shape2D shape){
         super(textureRegion);
         this.shape=shape;
-    }
-
-    /**
-     * set the camera of the sprite if needed
-     * @param camera
-     * @return
-     */
-    public TouchableSprite setCamera(Camera camera){
-        this.camera=camera;
-        return this;
-    }
-
-    /**
-     * set the camera of the sprite if needed
-     * @param viewport
-     * @return
-     */
-    public TouchableSprite setCamera(Viewport viewport){
-        return setCamera(viewport.getCamera());
     }
 
     /**
@@ -119,6 +98,22 @@ public class TouchableSprite extends Sprite implements Touchable {
      */
     public void setLocalOrigin(Vector2 center){
         setLocalOrigin(center.x,center.y);
+    }
+
+    /**
+     * set the x-coordinate of center of mass (origin)
+     * @param x
+     */
+    public void setWorldOriginX(float x){
+        setX(x-getOriginX());
+    }
+
+    /**
+     * set the y-coordinate of center of mass (origin)
+     * @param y
+     */
+    public void setWorldOriginY(float y){
+        setY(y-getOriginY());
     }
 
     /**
@@ -213,12 +208,19 @@ public class TouchableSprite extends Sprite implements Touchable {
         translate(delta.x,delta.y);
     }
 
-
     /**
      * make that the origin of the sprite can be seen by the camera
+     * avoid unneeded function calls
+     * @param camera
      */
-    public void keepOriginVisible(){
+    public void keepVisible(Camera camera){
+        float diff=getWorldOriginX()-camera.position.x;
+        float halfWidth=0.5f*camera.viewportWidth;
+        if (diff<-halfWidth){
+            setWorldOriginX(camera.position.x-halfWidth);
+        }
 
+        
     }
 
     /**
