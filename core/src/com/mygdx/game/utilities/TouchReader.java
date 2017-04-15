@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -12,36 +13,19 @@ import static com.badlogic.gdx.Gdx.input;
  * Created by peter on 3/29/17.
  */
 
-public class TouchReader {
+public class TouchReader implements Resizable{
 
-    private Camera camera;
     private Vector3 spacePositionOfTouch=new Vector3();    // x,y-components give touch position
     private int screenWidth,screenHeight;
+    private Vector2 position=new Vector2();
 
     /**
-     * creation with a camera for unprojection of touch
-     * @param theCamera
-     */
-    public TouchReader(Camera theCamera){
-        camera=theCamera;
-    }
-
-    /**
-     * set the camera for unprojecting touch position
-     * @param theCamera Camera object
-     */
-    public  void setCamera(Camera theCamera){
-        camera=theCamera;
-    }
-
-    /**
-     * update orientation and mouse accelerometer scales at resize
+     * update screen size (for limiting raw position)
      */
     public void resize(int width,int height){
         screenWidth=width;
         screenHeight=height;
     }
-
 
     /**
      * touch position on screen, limited to screen (for mouse)
@@ -55,12 +39,24 @@ public class TouchReader {
     }
 
     /**
-     * read touch position,limit to screen if its a mouse and unproject
+     * read touch position,limit to screen if its a mouse and unproject to current viewport
+     * @param camera current, for pieces
+     * @return position, unprojected according to viewport, will be overwritten at next call
      */
-    public void getPosition(Vector2 position){
+    public Vector2 getPosition(Camera camera){
         spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
         camera.unproject(spacePositionOfTouch);
         position.set(spacePositionOfTouch.x,spacePositionOfTouch.y);
+        return position;
+    }
+
+    /**
+     * read touch position,limit to screen if its a mouse and unproject to current viewport
+     * @param viewport current, for pieces
+     * @return position, unprojected according to viewport, will be overwritten at next call
+     */
+    public Vector2 getPosition(Viewport viewport){
+        return getPosition(viewport.getCamera());
     }
 
     /**

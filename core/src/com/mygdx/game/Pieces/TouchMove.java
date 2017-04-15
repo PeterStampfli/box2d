@@ -1,6 +1,8 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.TouchReader;
 
 /**
@@ -9,8 +11,9 @@ import com.mygdx.game.utilities.TouchReader;
 
 public class TouchMove {
 
-    private Touchable piece;
-    private TouchReader touchReader;
+    public Touchable piece;
+    public TouchReader touchReader;
+    public Camera camera;
     private boolean pieceIsSelected=false;                                 // piece is really selected
     // if there was touch in previous call, we need this because we do polling
     private boolean wasTouching=false;
@@ -27,14 +30,27 @@ public class TouchMove {
      *
      * @param piece       or collection of pieces,its rendering, selection and moving methods get called,
      * @param touchReader  for reading touch touchPosition, depends on camera
+     * @param camera
      */
-    public TouchMove(Touchable piece, TouchReader touchReader) {
+    public TouchMove(Touchable piece, TouchReader touchReader, Camera camera) {
         this.piece = piece;
         this.touchReader = touchReader;
+        this.camera=camera;
         oldTouchPosition = new Vector2();
         newTouchPosition = new Vector2();
         touchPosition = new Vector2();
         deltaTouchPosition = new Vector2();
+    }
+
+    /**
+     * create
+     *
+     * @param piece       or collection of pieces,its rendering, selection and moving methods get called,
+     * @param touchReader  for reading touch touchPosition, depends on camera of viewport
+     * @param viewport
+     */
+    public TouchMove(Touchable piece, TouchReader touchReader, Viewport viewport) {
+        this(piece,touchReader,viewport.getCamera());
     }
 
     /**
@@ -57,12 +73,12 @@ public class TouchMove {
         }
         // update touch positions
         if (isTouching&&!wasTouching){                                     // new touch - oldPosition is invalid
-            touchReader.getPosition(newTouchPosition);
+            newTouchPosition.set(touchReader.getPosition(camera));
             oldTouchPosition.set(newTouchPosition);
         }
         else if (isTouching&&wasTouching){                         // continue touching
             oldTouchPosition.set(newTouchPosition);
-            touchReader.getPosition(newTouchPosition);
+            newTouchPosition.set(touchReader.getPosition(camera));
         }
         else {                     // !isTouching&&wasTouching   - end of touch, position undefined
             oldTouchPosition.set(newTouchPosition);

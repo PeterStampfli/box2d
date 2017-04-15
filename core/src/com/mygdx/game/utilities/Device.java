@@ -9,14 +9,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
 
 /**
  * Created by peter on 11/26/16.
  *
- * Standard resources: disposer and assetManager. Renderers, framebuffer and default font on demand
+ * Standard resources: disposer and assetManager. Viewports,Renderers, framebuffer and default font on demand
+ * collecting objects that need to be resized
  */
 
 public class Device implements Disposable{
@@ -28,6 +32,10 @@ public class Device implements Disposable{
     public OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     public AssetManager assetManager;
     public BasicAssets basicAssets;
+    public TouchReader touchReader;
+
+    public Array<Resizable> resizables=new Array<Resizable>();
+    public Array<Viewport> viewports=new Array<Viewport>();
 
     /**
      * Always create an assetManager and basic assets
@@ -37,6 +45,9 @@ public class Device implements Disposable{
         assetManager=new AssetManager();
         disposer.add(assetManager,"assetManager");
         basicAssets=new BasicAssets(this);
+        touchReader=new TouchReader();
+        addResizable(touchReader);
+
     }
 
     /**
@@ -46,6 +57,95 @@ public class Device implements Disposable{
     public void setLogging(boolean logging){
         disposer.setLogging(logging);
     }
+
+    // keep track of everything to resize, and do resize on demand
+
+    /**
+     * add a resizable to the list of resizables
+     * @param resizable
+     */
+    public void addResizable(Resizable resizable){
+        resizables.add(resizable);
+    }
+
+    /**
+     * add a viewport to the list of viewports to update
+     * @param viewport
+     */
+    public void addViewport(Viewport viewport){
+        viewports.add(viewport);
+    }
+
+    /**
+     * resize the resizables and update viewports
+     * call in resize
+     * @param width
+     * @param height
+     */
+    public void resize(int width,int height){
+        for (Resizable resizable:resizables){
+            resizable.resize(width, height);
+        }
+        for (Viewport viewport:viewports){
+            viewport.update(width, height);
+        }
+    }
+
+    // create viewports with their cameras
+
+    /**
+     * create an extended viewport, centered image
+     * with a supplied OrthographicCamera (followCamera ...)
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @param camera
+     * @return
+     */
+    public Viewport createExtendViewport(float minWidth, float minHeight,OrthographicCamera camera){
+        camera.setToOrtho(false,minWidth,minHeight);
+        Viewport viewport=new ExtendViewport(minWidth,minHeight,camera);
+        addViewport(viewport);
+        return viewport;
+    }
+
+    /**
+     * create an extended viewport with its own orthographic camera, centered image
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @return
+     */
+    public Viewport createExtendViewport(float minWidth, float minHeight){
+        return createExtendViewport(minWidth, minHeight, new OrthographicCamera());
+    }
+
+    /**
+     *  create an fit viewport with a supplied camera, centered image
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @param camera
+     * @return
+     */
+    public Viewport createFitViewport(float minWidth, float minHeight, OrthographicCamera camera){
+        camera.setToOrtho(false,minWidth,minHeight);
+        Viewport viewport=new FitViewport(minWidth,minHeight,camera);
+        addViewport(viewport);
+        return viewport;
+    }
+
+    /**
+     *  create an fit viewport with its own orthographic camera, centered image
+     *  resize: 		viewport.update(width, height);
+     * @param minWidth
+     * @param minHeight
+     * @return
+     */
+    public Viewport createFitViewport(float minWidth, float minHeight){
+        return createFitViewport(minWidth, minHeight,new OrthographicCamera());
+    }
+    // create renderer and related things
 
     /**
      * make spritebatch and add to disposer

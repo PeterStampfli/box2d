@@ -4,19 +4,19 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Polyline;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.Images.Chain;
+import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
-import com.mygdx.game.Images.Shape2DCreator;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.TouchableSprite;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
-import com.mygdx.game.utilities.Viewports;
+import com.mygdx.game.utilities.L;
 
 public class Box2d extends ApplicationAdapter {
 	Shape2DRenderer shapeRenderer;
@@ -27,7 +27,10 @@ public class Box2d extends ApplicationAdapter {
 
 	Pixmap pixmap;
 	Texture img;
-	PolygonSpriteBatch polygonSpriteBatch;
+
+	SpriteBatch spriteBatch;
+	Shape2DCollection shape2DCollection;
+	TouchableSprite touchableSprite;
 
 	@Override
 	public void create () {
@@ -38,22 +41,27 @@ public class Box2d extends ApplicationAdapter {
 		followCamera=new FollowCamera();
 
 		int viewportSize=500;
-		viewport= Viewports.createExtendViewport(viewportSize,viewportSize,followCamera);
+		viewport= device.createExtendViewport(viewportSize,viewportSize,followCamera);
 
 		shapeRenderer=device.shape2DRenderer;
+		spriteBatch=device.spriteBatch;
 		shapeRenderer.setNullRadius(5);
+		shape2DCollection=new Shape2DCollection();
+		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
+		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
+		shape2DCollection.addCircle(150,150,149);
+		Mask mask=new Mask(300,300);
 
-		polygonSpriteBatch=new PolygonSpriteBatch();
-		int size=10;
-		pixmap=new Pixmap(size,size, Pixmap.Format.RGBA8888);
-		pixmap.setColor(Color.CORAL);
-		pixmap.fill();
-		img=new Texture(pixmap);
+		mask.fill(shape2DCollection);
+
+		img=mask.createTransparentWhiteTexture();
+
+		touchableSprite=new TouchableSprite(img,shape2DCollection);
 	}
 
 	@Override
 	public void resize(int w,int h){
-		viewport.update(w, h);
+		device.resize(w, h);
 	}
 
 	@Override
@@ -61,25 +69,23 @@ public class Box2d extends ApplicationAdapter {
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
 
-		Shape2DCollection shape2DCollection=new Shape2DCollection();
-		shape2DCollection.addPolygon(10,10,400,10,200,400).addCircle(100,100,50);
+		Vector2 position=device.touchReader.getPosition(viewport);
+
+		touchableSprite.setColor(Color.ORANGE);
+		if (touchableSprite.contains(position)){
+			touchableSprite.setColor(Color.GREEN);
+		}
+
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+		spriteBatch.begin();
+		touchableSprite.draw(spriteBatch);
+		spriteBatch.end();
 
 
-
-		float[] v={10,10,400,10,200,400};
-		Polyline polygon=new Polyline(v);
-		Chain chain=new Chain(v).addGhostA(10,10).addGhostB(490,490).isLoop();
-		Shape2DCollection shape2DCollection1= Shape2DCreator.dotsAndLines(20,true,v);
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.draw(shape2DCollection1);
+		shapeRenderer.draw(shape2DCollection);
 		shapeRenderer.end();
-
-		polygonSpriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-		polygonSpriteBatch.begin();
-		polygonSpriteBatch.draw(img,10,10);
-		polygonSpriteBatch.draw(img,new float[]{100,100,200,200,150,300},0,3);
-		polygonSpriteBatch.end();
 	}
 	
 	@Override
