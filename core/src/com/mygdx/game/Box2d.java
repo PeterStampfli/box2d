@@ -6,15 +6,18 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.TextSprite;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Pieces.TouchableSprite;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
+import com.mygdx.game.utilities.Clipper;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
 import com.mygdx.game.utilities.L;
@@ -31,13 +34,14 @@ public class Box2d extends ApplicationAdapter {
 
 	SpriteBatch spriteBatch;
 	Shape2DCollection shape2DCollection;
-	TouchableSprite touchableSprite;
+	TextSprite touchableSprite;
 	TouchMove touchMove;
+	Clipper clipper;
 
 	@Override
 	public void create () {
 		device=new Device();
-		device.createShape2DRenderer().createSpriteBatch().setLogging(true);
+		device.createShape2DRenderer().createSpriteBatch().setLogging(true).createDefaultBitmapFont();
 		BasicAssets basicAssets=device.basicAssets;
 
 		followCamera=new FollowCamera();
@@ -52,13 +56,14 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		shape2DCollection.addPolygon(0,0,290,0,150,290);
-		Mask mask=new Mask(300,300);
+		Mask mask=new Mask(300,100);
 
-		mask.fill(shape2DCollection);
+		//mask.fill(shape2DCollection);
+		mask.invert();
 
 		img=mask.createTransparentWhiteTexture();
 
-		touchableSprite=new TouchableSprite(img,shape2DCollection);
+		touchableSprite=new TextSprite(img);
 		TouchableSprite.setCamera(viewport.getCamera());
 
 		L.og(touchableSprite.getOriginX());
@@ -66,6 +71,10 @@ public class Box2d extends ApplicationAdapter {
 
 		touchMove=new TouchMove(touchableSprite,device.touchReader,viewport);
 		TouchableSprite.setCamera(viewport);
+		device.bitmapFont.getData().scale(3);
+		TextSprite.setBitmapFont(device.bitmapFont);
+		touchableSprite.setText("blagyjtA");
+		clipper=new Clipper(device.spriteBatch);
 	}
 
 	@Override
@@ -88,7 +97,10 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
+		clipper.start(viewport.getCamera(),new Rectangle(10,10,300,200));
 		touchableSprite.draw(spriteBatch);
+		clipper.end();
+
 		spriteBatch.end();
 
 

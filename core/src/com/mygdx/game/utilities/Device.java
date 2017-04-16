@@ -54,8 +54,9 @@ public class Device implements Disposable{
      * set disposer logging on or off (default is off)
      * @param logging
      */
-    public void setLogging(boolean logging){
+    public Device setLogging(boolean logging){
         disposer.setLogging(logging);
+        return  this;
     }
 
     // keep track of everything to resize, and do resize on demand
