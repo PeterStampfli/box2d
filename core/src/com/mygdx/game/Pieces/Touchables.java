@@ -1,6 +1,5 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -53,13 +52,12 @@ public class Touchables implements Touchable {
 
     /**
      * call the keep visible method, going from last to first, back to front
-     * @param camera
      */
     @Override
-    public void keepVisible(Camera camera) {
+    public void keepVisible() {
         int length=touchables.size;
         for (int i=length-1;i>=0;i--){
-            touchables.get(i).keepVisible(camera);                  // rendering from bottom to top
+            touchables.get(i).keepVisible();                  // rendering from bottom to top
         }
     }
 

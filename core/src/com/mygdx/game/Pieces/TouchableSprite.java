@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by peter on 4/2/17.
  */
 
 public class TouchableSprite extends Sprite implements Touchable {
+    static public Camera camera;
     public Shape2D shape;
 
     /**
@@ -49,11 +51,25 @@ public class TouchableSprite extends Sprite implements Touchable {
      * create with a textureRegion/atlasRegion, without shape (contains==false always)
      * @param textureRegion
      */
-
     public TouchableSprite(TextureRegion textureRegion){
         super(textureRegion);
     }
 
+    /**
+     * set the camera for checking visibility
+     * @param camera
+     */
+    static public void setCamera(Camera camera){
+        TouchableSprite.camera=camera;
+    }
+
+    /**
+     * set the camera for checking visibility
+     * @param viewport
+     */
+    static public void setCamera(Viewport viewport){
+        setCamera(viewport.getCamera());
+    }
 
     /**
      * set angle of sprite
@@ -125,7 +141,6 @@ public class TouchableSprite extends Sprite implements Touchable {
     public void setWorldOrigin(float worldOriginPositionX,float worldOriginPositionY){
         setPosition(worldOriginPositionX-getOriginX(),worldOriginPositionY-getOriginY());
     }
-
 
     /**
      * set the position of the sprite such that the origin (center of rotation)
@@ -211,16 +226,24 @@ public class TouchableSprite extends Sprite implements Touchable {
     /**
      * make that the origin of the sprite can be seen by the camera
      * avoid unneeded function calls
-     * @param camera
      */
-    public void keepVisible(Camera camera){
+    public void keepVisible(){
         float diff=getWorldOriginX()-camera.position.x;
-        float halfWidth=0.5f*camera.viewportWidth;
-        if (diff<-halfWidth){
-            setWorldOriginX(camera.position.x-halfWidth);
+        float half=0.5f*camera.viewportWidth;
+        if (diff<-half){
+            setWorldOriginX(camera.position.x-half);
         }
-
-        
+        else if (diff>half){
+            setWorldOriginX(camera.position.x+half);
+        }
+        diff=getWorldOriginY()-camera.position.y;
+        half=0.5f*camera.viewportHeight;
+        if (diff<-half){
+            setWorldOriginY(camera.position.y-half);
+        }
+        else if (diff>half){
+            setWorldOriginY(camera.position.y+half);
+        }
     }
 
     /**
@@ -252,6 +275,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
         transRotate(position,deltaPosition);
+        keepVisible();
         return true;
     }
 

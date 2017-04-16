@@ -1,6 +1,5 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -17,7 +16,7 @@ public class TouchableAdapter implements Touchable {
     }
 
     @Override
-    public void keepVisible(Camera camera) {
+    public void keepVisible() {
 
     }
 
