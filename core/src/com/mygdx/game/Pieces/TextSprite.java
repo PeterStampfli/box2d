@@ -12,10 +12,17 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public class TextSprite extends TouchableSprite {
-    static public GlyphLayout glyphLayout = new GlyphLayout();
+    public GlyphLayout glyphLayout = new GlyphLayout();
     static public BitmapFont bitmapFont;
-
-    public String text = "";
+    
+    /**
+     * set the bitmap font to use, do this first !!!!
+     *
+     * @param bitmapFont
+     */
+    static public void setBitmapFont(BitmapFont bitmapFont) {
+        TextSprite.bitmapFont = bitmapFont;
+    }
 
     /**
      * creates a box2DSprite based on a Texture with same size
@@ -24,6 +31,7 @@ public class TextSprite extends TouchableSprite {
      */
     public TextSprite(Texture texture) {
         super(texture);
+        setText("");
     }
 
     /**
@@ -34,25 +42,17 @@ public class TextSprite extends TouchableSprite {
      */
     public TextSprite(TextureRegion textureRegion) {
         super(textureRegion);
+        setText("");
     }
 
     /**
-     * set the bitmap font to use
-     *
-     * @param bitmapFont
-     */
-    static public void setBitmapFont(BitmapFont bitmapFont) {
-        TextSprite.bitmapFont = bitmapFont;
-    }
-
-    /**
-     * set the text of the sprite, was initialized to an empty string
+     * set the text of the sprite using its glyphLayout
      *
      * @param text
      * @return
      */
     public TextSprite setText(String text) {
-        this.text = text;
+        glyphLayout.setText(bitmapFont, text);
         return this;
     }
 
@@ -64,7 +64,6 @@ public class TextSprite extends TouchableSprite {
     @Override
     public void draw(Batch batch) {
         super.draw(batch);
-        glyphLayout.setText(bitmapFont, text);
         bitmapFont.draw(batch, glyphLayout, getWorldOriginX() - glyphLayout.width * 0.5f,
                                             getWorldOriginY() + glyphLayout.height * 0.5f);
     }

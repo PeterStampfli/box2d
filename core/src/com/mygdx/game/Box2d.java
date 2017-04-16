@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
@@ -36,7 +35,6 @@ public class Box2d extends ApplicationAdapter {
 	Shape2DCollection shape2DCollection;
 	TextSprite touchableSprite;
 	TouchMove touchMove;
-	Clipper clipper;
 
 	@Override
 	public void create () {
@@ -62,6 +60,7 @@ public class Box2d extends ApplicationAdapter {
 		mask.invert();
 
 		img=mask.createTransparentWhiteTexture();
+		TextSprite.setBitmapFont(device.bitmapFont);
 
 		touchableSprite=new TextSprite(img);
 		TouchableSprite.setCamera(viewport.getCamera());
@@ -72,9 +71,9 @@ public class Box2d extends ApplicationAdapter {
 		touchMove=new TouchMove(touchableSprite,device.touchReader,viewport);
 		TouchableSprite.setCamera(viewport);
 		device.bitmapFont.getData().scale(3);
-		TextSprite.setBitmapFont(device.bitmapFont);
 		touchableSprite.setText("blagyjtA");
-		clipper=new Clipper(device.spriteBatch);
+		Clipper.spriteBatch=device.spriteBatch;
+		Clipper.setCamera(viewport);
 	}
 
 	@Override
@@ -97,9 +96,9 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
-		clipper.start(viewport.getCamera(),new Rectangle(10,10,300,200));
+		Clipper.start(10,10,300,200);
 		touchableSprite.draw(spriteBatch);
-		clipper.end();
+		Clipper.end();
 
 		spriteBatch.end();
 

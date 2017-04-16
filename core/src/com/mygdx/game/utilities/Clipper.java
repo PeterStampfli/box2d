@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by peter on 4/16/17.
@@ -11,25 +12,59 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
  */
 
 public class Clipper {
-    SpriteBatch spriteBatch;
+    static public SpriteBatch spriteBatch;
+    static public Camera camera;
 
     /**
      * give it the spritebatch
      * @param spriteBatch
      */
-    public Clipper(SpriteBatch spriteBatch){
-        this.spriteBatch=spriteBatch;
+    static public void setSpritebatch(SpriteBatch spriteBatch){
+        Clipper.spriteBatch=spriteBatch;
     }
 
+    /**
+     * set the camera
+     * @param camera
+     */
+    static public void setCamera(Camera camera){
+        Clipper.camera=camera;
+    }
 
-    public void start(Camera camera,Rectangle bounds){
+    /**
+     * set the camera from a viewport
+     * @param viewport
+     */
+    static public void setCamera(Viewport viewport){
+        Clipper.camera=viewport.getCamera();
+    }
+
+    /**
+     * limit the drawing region to the inside of the rectangle
+     * @param bounds
+     */
+    static public void start(Rectangle bounds){
         spriteBatch.flush();
         Rectangle scissors=new Rectangle();
         ScissorStack.calculateScissors(camera,spriteBatch.getTransformMatrix(),bounds,scissors);
         ScissorStack.pushScissors(scissors);
     }
 
-    public void end(){
+    /**
+     * limit the drawing region to the inside of a rectangle region
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    static public void start(float x,float y,float width,float height){
+        start(new Rectangle(x, y, width, height));
+    }
+
+    /**
+     * end the clipping
+     */
+    static public void end(){
         spriteBatch.flush();
         ScissorStack.popScissors();
     }
