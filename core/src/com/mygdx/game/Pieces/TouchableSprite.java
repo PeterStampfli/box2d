@@ -170,13 +170,14 @@ public class TouchableSprite extends Sprite implements Touchable {
     /**
      * check if both the texture region AND the shape contain a point,
      * take into account rotation and scaling
-     * thus contains agrees with visible image, use for box2DSprites?
+     * thus contains agrees with visible image
+     * for box2DSprites use fixture shapes
      * @param x
      * @param y
      * @return
      */
     public boolean shapeContains(float x, float y){
-        if (shape==null||!getBoundingRectangle().contains(x,y)) return false;
+        if (!getBoundingRectangle().contains(x,y)) return false;
         // shift that "origin" is at (0,0)
         x-=getWorldOriginX();
         y-=getWorldOriginY();
@@ -187,10 +188,10 @@ public class TouchableSprite extends Sprite implements Touchable {
         // and shift to put lower left corner at (0,0)
         float unrotatedX=(cosAngle*x+sinAngle*y)/getScaleX()+getOriginX();
         float unrotatedY=(-sinAngle*x+cosAngle*y)/getScaleY()+getOriginY();
-        // limit to texture/pixmap region and check the shape
-        boolean isInside=(unrotatedX>=0)&&(unrotatedX<=getHeight())
+        // limit to texture/pixmap region and check the shape, if there is one
+        boolean isInside=(unrotatedX>=0)&&(unrotatedX<=getWidth())
                        &&(unrotatedY>=0)&&(unrotatedY<=getHeight())
-                       &&shape.contains(unrotatedX,unrotatedY);
+                       &&(shape==null||shape.contains(unrotatedX,unrotatedY));
         return isInside;
     }
 
