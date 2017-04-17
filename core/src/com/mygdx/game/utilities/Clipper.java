@@ -9,11 +9,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by peter on 4/16/17.
  * clipping the sprite batch with scissorstack
+ * avoid creation of new Rectangles at each call!
  */
 
 public class Clipper {
     static public SpriteBatch spriteBatch;
     static public Camera camera;
+    static private Rectangle scissors=new Rectangle();
+    static private Rectangle bounds=new Rectangle();
 
     /**
      * give it the spritebatch
@@ -45,7 +48,6 @@ public class Clipper {
      */
     static public void start(Rectangle bounds){
         spriteBatch.flush();
-        Rectangle scissors=new Rectangle();
         ScissorStack.calculateScissors(camera,spriteBatch.getTransformMatrix(),bounds,scissors);
         ScissorStack.pushScissors(scissors);
     }
@@ -58,7 +60,8 @@ public class Clipper {
      * @param height
      */
     static public void start(float x,float y,float width,float height){
-        start(new Rectangle(x, y, width, height));
+        bounds.set(x, y, width, height);
+        start(bounds);
     }
 
     /**

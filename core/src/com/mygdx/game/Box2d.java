@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.BigTextSprite;
 import com.mygdx.game.Pieces.TextSprite;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Pieces.TouchableSprite;
@@ -33,7 +34,7 @@ public class Box2d extends ApplicationAdapter {
 
 	SpriteBatch spriteBatch;
 	Shape2DCollection shape2DCollection;
-	TextSprite touchableSprite;
+	BigTextSprite touchableSprite;
 	TouchMove touchMove;
 
 	@Override
@@ -41,6 +42,7 @@ public class Box2d extends ApplicationAdapter {
 		device=new Device();
 		device.createShape2DRenderer().createSpriteBatch().setLogging(true).createDefaultBitmapFont();
 		BasicAssets basicAssets=device.basicAssets;
+
 
 		followCamera=new FollowCamera();
 
@@ -54,7 +56,7 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		shape2DCollection.addPolygon(0,0,290,0,150,290);
-		Mask mask=new Mask(300,100);
+		Mask mask=new Mask(300,400);
 
 		//mask.fill(shape2DCollection);
 		mask.invert();
@@ -62,18 +64,23 @@ public class Box2d extends ApplicationAdapter {
 		img=mask.createTransparentWhiteTexture();
 		TextSprite.setBitmapFont(device.bitmapFont);
 
-		touchableSprite=new TextSprite(img);
+		touchableSprite=new BigTextSprite(img);
 		TouchableSprite.setCamera(viewport.getCamera());
 
 		L.og(touchableSprite.getOriginX());
 		L.og(touchableSprite.getOriginY());
 
 		touchMove=new TouchMove(touchableSprite,device.touchReader,viewport);
+		touchMove.asInputProcessor();
 		TouchableSprite.setCamera(viewport);
-		device.bitmapFont.getData().scale(3);
-		touchableSprite.setText("blagyjtA");
+		device.bitmapFont.getData().scale(2);
+		touchableSprite.setMargin(10).setTextColor(Color.CORAL);
+		touchableSprite.setText("tblÄÜagyjtA nbmbmb dfdfdf ggdgd [gggbnbnbn "
+		+"blagyjtA nbmbmb dfdfdf ggdgd \nbnbnbn"+"blagyjtA nbmbmb dfdfdf ggdgd [ngdbnbnbn");
+		touchableSprite.setY(50);
 		Clipper.spriteBatch=device.spriteBatch;
 		Clipper.setCamera(viewport);
+
 	}
 
 	@Override
@@ -96,16 +103,15 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
-		Clipper.start(10,10,300,200);
 		touchableSprite.draw(spriteBatch);
-		Clipper.end();
 
 		spriteBatch.end();
 
 
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.draw(shape2DCollection);
+		//shapeRenderer.draw(shape2DCollection);
+		//shapeRenderer.rect(0,0,100,300);
 		shapeRenderer.end();
 	}
 	

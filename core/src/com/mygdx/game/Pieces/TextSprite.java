@@ -57,6 +57,15 @@ public class TextSprite extends TouchableSprite {
     }
 
     /**
+     * draw the text - easy to override
+     * @param batch
+     */
+    public void drawText(Batch batch){
+    bitmapFont.draw(batch, glyphLayout, getWorldOriginX() - glyphLayout.width * 0.5f,
+            getWorldOriginY() + glyphLayout.height * 0.5f);
+    }
+
+    /**
      * draw the sprite shape and the text (without rotation)
      *
      * @param batch
@@ -64,8 +73,7 @@ public class TextSprite extends TouchableSprite {
     @Override
     public void draw(Batch batch) {
         super.draw(batch);
-        bitmapFont.draw(batch, glyphLayout, getWorldOriginX() - glyphLayout.width * 0.5f,
-                                            getWorldOriginY() + glyphLayout.height * 0.5f);
+        drawText(batch);
     }
 
     /**
