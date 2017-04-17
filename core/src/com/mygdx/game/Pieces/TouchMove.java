@@ -1,5 +1,7 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -9,7 +11,7 @@ import com.mygdx.game.utilities.TouchReader;
  * Created by peter on 3/29/17.
  */
 
-public class TouchMove {
+public class TouchMove extends InputAdapter{
 
     public Touchable piece;
     public TouchReader touchReader;
@@ -80,7 +82,7 @@ public class TouchMove {
             oldTouchPosition.set(newTouchPosition);
             newTouchPosition.set(touchReader.getPosition(camera));
         }
-        else {                     // !isTouching&&wasTouching   - end of touch, position undefined
+        else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
             oldTouchPosition.set(newTouchPosition);
         }
         // relevant position is average, and get change in position
@@ -99,11 +101,31 @@ public class TouchMove {
                 somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
             }
             else {                     // !isTouching&&wasTouching
-                somethingChanged = piece.touchEnd();
+                somethingChanged = piece.touchEnd(touchPosition);
                 pieceIsSelected = false;
             }
         }
         wasTouching = isTouching;
+    }
+
+    /**
+     * set this as inputprocessor (or part of multiplexer) to be able to use scroll wheel
+     */
+    public void asInputProcessor(){
+        Gdx.input.setInputProcessor(this);
+    }
+
+    /**
+     * scroll action only by event handling
+     * call scroll action on the piece, together with mouse position
+     * Note: scroll occurs only on PC, where mouse position is always defined
+     * @param amount
+     * @return
+     */
+    @Override
+    public boolean scrolled (int amount) {
+        piece.scroll(touchReader.getPosition(camera),amount);
+        return false;
     }
 
 }

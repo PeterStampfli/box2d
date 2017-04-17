@@ -41,7 +41,19 @@ public class TouchableAdapter implements Touchable {
     }
 
     @Override
-    public boolean touchEnd() {
+    public boolean touchEnd(Vector2 position) {
+        return false;
+    }
+
+    // default: do nothing for scrolling
+    public void scrollAction(int amount){}
+
+    @Override
+    public boolean scroll(Vector2 position, int amount) {
+        if (contains(position.x,position.y)){
+            scrollAction(amount);
+            return true;
+        }
         return false;
     }
 

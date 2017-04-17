@@ -273,6 +273,12 @@ public class TouchableSprite extends Sprite implements Touchable {
         return false;
     }
 
+    /**
+     * touch drag with rotation
+     * @param position
+     * @param deltaPosition
+     * @return
+     */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
         transRotate(position,deltaPosition);
@@ -281,7 +287,29 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     @Override
-    public boolean touchEnd() {
+    public boolean touchEnd(Vector2 position) {
+        return false;
+    }
+
+
+    /**
+     * default: do nothing for scrolling, overwrite this
+     * @param amount
+     */
+    public void scrollAction(int amount){}
+
+    /**
+     * default touch scroll
+     * @param position
+     * @param amount
+     * @return
+     */
+    @Override
+    public boolean scroll(Vector2 position, int amount) {
+        if (contains(position.x,position.y)){
+            scrollAction(amount);
+            return true;
+        }
         return false;
     }
 

@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 public class TextSprite extends TouchableSprite {
     public GlyphLayout glyphLayout = new GlyphLayout();
     static public BitmapFont bitmapFont;
-    
+
     /**
      * set the bitmap font to use, do this first !!!!
      *

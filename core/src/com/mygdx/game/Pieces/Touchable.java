@@ -15,7 +15,7 @@ public interface Touchable extends Shape2D {
     // object can draw with a batch
     void draw(Batch batch);
 
-    // has to be able to remain visible (knows its camera
+    // has to be able to remain visible (knows its camera)
     void keepVisible();
 
     // begin-touch action, return true if something changed, call requestRendering, this is safer
@@ -25,5 +25,8 @@ public interface Touchable extends Shape2D {
     boolean touchDrag(Vector2 position,Vector2 deltaPosition);
 
     // end of touch
-    boolean touchEnd();
+    boolean touchEnd(Vector2 position);
+
+    // scrolling, for pc
+    boolean scroll(Vector2 position, int amount);
 }

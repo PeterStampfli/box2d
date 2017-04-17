@@ -126,11 +126,31 @@ public class Touchables implements Touchable {
      * call the touchEnd method on the first touchable
      * returns false if there is no touchable
      * @return
+     * @param position
      */
     @Override
-    public boolean touchEnd() {
+    public boolean touchEnd(Vector2 position) {
         if (touchables.size>0){
-            return touchables.get(0).touchEnd();
+            return touchables.get(0).touchEnd(position);
+        }
+        return false;
+    }
+
+    /**
+     * call the scroll method on the touchables from front to end
+     * until some piece does something and returns true
+     * the a piece contains the position, it does something and returns true
+     * @param position
+     * @param amount
+     * @return
+     */
+    @Override
+    public boolean scroll(Vector2 position, int amount){
+        int length=touchables.size;
+        for (int i=0;i<length;i++){
+            if (touchables.get(i).scroll(position, amount)){
+                return true;
+            }
         }
         return false;
     }
