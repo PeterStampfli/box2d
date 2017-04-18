@@ -39,6 +39,7 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+
 		device=new Device();
 		device.createShape2DRenderer().createSpriteBatch().setLogging(true).createDefaultBitmapFont();
 		BasicAssets basicAssets=device.basicAssets;
