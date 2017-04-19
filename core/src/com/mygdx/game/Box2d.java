@@ -12,6 +12,7 @@ import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.BigTextSprite;
+import com.mygdx.game.Pieces.ExtensibleSprite;
 import com.mygdx.game.Pieces.TextSprite;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Pieces.TouchableSprite;
@@ -37,6 +38,8 @@ public class Box2d extends ApplicationAdapter {
 	BigTextSprite touchableSprite;
 	TouchMove touchMove;
 
+	ExtensibleSprite extensibleSprite;
+
 	@Override
 	public void create () {
 
@@ -57,7 +60,7 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		shape2DCollection.addPolygon(0,0,290,0,150,290);
-		Mask mask=new Mask(300,400);
+		Mask mask=new Mask(300,300);
 
 		//mask.fill(shape2DCollection);
 		mask.invert();
@@ -71,7 +74,11 @@ public class Box2d extends ApplicationAdapter {
 		L.og(touchableSprite.getOriginX());
 		L.og(touchableSprite.getOriginY());
 
-		touchMove=new TouchMove(touchableSprite,device.touchReader,viewport);
+		extensibleSprite=new ExtensibleSprite(img);
+		extensibleSprite.setPosition(200,100);
+
+
+		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
 		TouchableSprite.setCamera(viewport);
 		device.bitmapFont.getData().scale(2);
@@ -98,13 +105,14 @@ public class Box2d extends ApplicationAdapter {
 		Vector2 position=device.touchReader.getPosition(viewport);
 
 		touchableSprite.setColor(Color.ORANGE);
-		if (touchableSprite.contains(position)){
+		if (extensibleSprite.contains(position)){
 			touchableSprite.setColor(Color.GREEN);
 		}
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
 		touchableSprite.draw(spriteBatch);
+		extensibleSprite.draw(spriteBatch);
 
 		spriteBatch.end();
 

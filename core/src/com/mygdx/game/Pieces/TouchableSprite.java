@@ -40,7 +40,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a texture (debug), without shape (contains==false always)
+     * create with a texture (debug), without shape (test==false always)
      * @param texture
      */
     public TouchableSprite(Texture texture){
@@ -48,7 +48,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a textureRegion/atlasRegion, without shape (contains==false always)
+     * create with a textureRegion/atlasRegion, without shape (test==false always)
      * @param textureRegion
      */
     public TouchableSprite(TextureRegion textureRegion){
@@ -170,7 +170,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     /**
      * check if both the texture region AND the shape contain a point,
      * take into account rotation and scaling
-     * thus contains agrees with visible image
+     * thus test agrees with visible image
      * for box2DSprites use fixture shapes
      * @param x
      * @param y
@@ -196,7 +196,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * test if sprite contains the point, using both the texture region and the shape
+     * test if sprite test the point, using both the texture region and the shape
      * @param x
      * @param y
      * @return
@@ -207,7 +207,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * test if sprite contains the point, using both the texture region and the shape
+     * test if sprite test the point, using both the texture region and the shape
      * @param point
      * @return
      */

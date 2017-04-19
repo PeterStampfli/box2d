@@ -26,7 +26,7 @@ public class Shape2DCollection implements Shape2D {
     }
 
     /**
-     * check if the collection of shapes contains a given point
+     * check if the collection of shapes test a given point
      * @param x
      * @param y
      * @return
@@ -42,7 +42,7 @@ public class Shape2DCollection implements Shape2D {
     }
 
     /**
-     * check if the collection of shapes contains a given point
+     * check if the collection of shapes test a given point
      * @param point
      * @return
      */

@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.utilities.L;
 import com.mygdx.game.utilities.TouchReader;
 
 /**
@@ -66,12 +67,14 @@ public class TouchMove extends InputAdapter{
     /**
      * update touch data and call events
      * make sure all touchPosition data is well defined, even when not used
+     *
+     * returns true if something changed and redraw needed
      */
-    public void update() {
+    public boolean update() {
         boolean isTouching = touchReader.isTouching();
         somethingChanged=false;
         if (!isTouching&&!wasTouching){
-            return;                                     // totally out of touch
+            return false;                                     // totally out of touch
         }
         // update touch positions
         if (isTouching&&!wasTouching){                                     // new touch - oldPosition is invalid
@@ -98,7 +101,10 @@ public class TouchMove extends InputAdapter{
                     somethingChanged = piece.touchBegin(touchPosition);
             }
             else if (isTouching&&wasTouching){
-                somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
+                if (!deltaTouchPosition.isZero()) {
+                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
+                }
+                L.og(touchPosition);
             }
             else {                     // !isTouching&&wasTouching
                 somethingChanged = piece.touchEnd(touchPosition);
@@ -106,6 +112,7 @@ public class TouchMove extends InputAdapter{
             }
         }
         wasTouching = isTouching;
+        return somethingChanged;
     }
 
     /**

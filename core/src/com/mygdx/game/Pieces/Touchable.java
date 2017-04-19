@@ -19,14 +19,18 @@ public interface Touchable extends Shape2D {
     void keepVisible();
 
     // begin-touch action, return true if something changed, call requestRendering, this is safer
+    // return true if something happened
     boolean touchBegin(Vector2 position);
 
     // do drag action, return true if something changed
+    // return true if something happened
     boolean touchDrag(Vector2 position,Vector2 deltaPosition);
 
     // end of touch
+    // return true if something happened
     boolean touchEnd(Vector2 position);
 
     // scrolling, for pc
+    // return true if test point and do scroll (presumably something happened ...)
     boolean scroll(Vector2 position, int amount);
 }

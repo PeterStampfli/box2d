@@ -17,7 +17,6 @@ public class TouchableAdapter implements Touchable {
 
     @Override
     public void keepVisible() {
-
     }
 
     @Override
@@ -45,13 +44,9 @@ public class TouchableAdapter implements Touchable {
         return false;
     }
 
-    // default: do nothing for scrolling
-    public void scrollAction(int amount){}
-
     @Override
     public boolean scroll(Vector2 position, int amount) {
         if (contains(position.x,position.y)){
-            scrollAction(amount);
             return true;
         }
         return false;
