@@ -228,7 +228,7 @@ public class TouchableSprite extends Sprite implements Touchable {
      * make that the origin of the sprite can be seen by the camera
      * avoid unneeded function calls
      */
-    public void keepVisible(){
+    public boolean keepVisible(){
         float diff=getWorldOriginX()-camera.position.x;
         float half=0.5f*camera.viewportWidth;
         if (diff<-half){
@@ -245,6 +245,7 @@ public class TouchableSprite extends Sprite implements Touchable {
         else if (diff>half){
             setWorldOriginY(camera.position.y+half);
         }
+        return true;                       // we can do better ....
     }
 
     /**

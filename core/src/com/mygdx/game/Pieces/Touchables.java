@@ -51,17 +51,6 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * call the keep visible method, going from last to first, back to front
-     */
-    @Override
-    public void keepVisible() {
-        int length=touchables.size;
-        for (int i=length-1;i>=0;i--){
-            touchables.get(i).keepVisible();                  // rendering from bottom to top
-        }
-    }
-
-    /**
      * check if a touchable test the given position
      * going from first to last
      * the first touchable that test the point will be put in front of the drawables array
@@ -154,4 +143,20 @@ public class Touchables implements Touchable {
         }
         return false;
     }
+
+    /**
+     * call the keep visible method, going from last to first, back to front
+     */
+    @Override
+    public boolean keepVisible() {
+        boolean somethingChanged=false;
+        int length=touchables.size;
+        for (int i=length-1;i>=0;i--){
+            if (touchables.get(i).keepVisible()){
+                somethingChanged=true;
+            }
+        }
+        return somethingChanged;
+    }
+
 }

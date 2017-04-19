@@ -11,12 +11,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TouchableAdapter implements Touchable {
     @Override
-    public void draw(Batch batch) {
-
-    }
+    public void draw(Batch batch) {}
 
     @Override
-    public void keepVisible() {
+    public boolean keepVisible() { return false;
     }
 
     @Override
