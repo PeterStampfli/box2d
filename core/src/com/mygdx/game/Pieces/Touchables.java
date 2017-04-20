@@ -51,9 +51,9 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * check if a touchable test the given position
+     * check if a touchable contains the given position
      * going from first to last
-     * the first touchable that test the point will be put in front of the drawables array
+     * the first touchable that contains the point will be put in front of the drawables array
      * @param x
      * @param y
      * @return
@@ -71,9 +71,9 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * check if a touchable test the given position
+     * check if a touchable contains the given position
      * going from first to last
-     * the first touchable that test the point will be put in front of the drawables array
+     * the first touchable that contains the point will be put in front of the drawables array
      * @param position
      * @return
      */
@@ -128,7 +128,7 @@ public class Touchables implements Touchable {
     /**
      * call the scroll method on the touchables from front to end
      * until some piece does something and returns true
-     * the a piece test the position, it does something and returns true
+     * the a piece contains the position, it does something and returns true
      * @param position
      * @param amount
      * @return

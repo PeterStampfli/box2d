@@ -34,11 +34,11 @@ public class SpriteActions {
     // takes less than defining a named static class and then creating a static instance of the class
 
     /**
-     * test if the sprite rectangle contains the position and its shape (if exists)
+     * contains if the sprite rectangle contains the position and its shape (if exists)
      */
     static public SpriteContains shapeContains=new SpriteContains() {
         @Override
-        public boolean test(ExtensibleSprite sprite, float x, float y) {
+        public boolean contains(ExtensibleSprite sprite, float x, float y) {
             if (!sprite.getBoundingRectangle().contains(x,y)) return false;
             // shift that "origin" is at (0,0)
             x-=sprite.getWorldOriginX();
@@ -63,7 +63,7 @@ public class SpriteActions {
      */
     static public SpriteDraw simpleDraw=new SpriteDraw() {
         @Override
-        public void action(ExtensibleSprite sprite,Batch batch) {
+        public void draw(ExtensibleSprite sprite, Batch batch) {
             sprite.superDraw(batch);
         }
     };
@@ -74,7 +74,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible nullKeepVisible=new SpriteKeepVisible() {
         @Override
-        public boolean action(ExtensibleSprite sprite) {
+        public boolean keepVisible(ExtensibleSprite sprite) {
             L.og("keep visible");
             return false;
         }
@@ -86,7 +86,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible keepOriginVisible=new SpriteKeepVisible() {
         @Override
-        public boolean action(ExtensibleSprite sprite) {
+        public boolean keepVisible(ExtensibleSprite sprite) {
             float diff=sprite.getWorldOriginX()-camera.position.x;
             float half=0.5f*camera.viewportWidth;
             boolean somethingChanged=false;
@@ -117,7 +117,7 @@ public class SpriteActions {
      */
     static public SpriteTouchBegin nullTouchBegin=new SpriteTouchBegin() {
         @Override
-        public boolean action(ExtensibleSprite sprite, Vector2 position) {
+        public boolean touchBegin(ExtensibleSprite sprite, Vector2 position) {
             L.og("touchbegin");
             return false;
         }
@@ -128,7 +128,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag nullTouchDrag=new SpriteTouchDrag() {
         @Override
-        public boolean action(ExtensibleSprite sprite, Vector2 position,Vector2 deltaPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             L.og("touchdrag");
             return false;
         }
@@ -140,7 +140,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTranslate=new SpriteTouchDrag() {
         @Override
-        public boolean action(ExtensibleSprite sprite, Vector2 position,Vector2 deltaPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             L.og("touchdrag translate");
             sprite.translate(deltaPosition.x,deltaPosition.y);
             sprite.keepVisible();
@@ -155,7 +155,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTransRotate=new SpriteTouchDrag() {
         @Override
-        public boolean action(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
             float centerTouchX=touchPosition.x-sprite.getWorldOriginX();
             float centerTouchY=touchPosition.y-sprite.getWorldOriginY();
             float centerTouchLength=Vector2.len(centerTouchX,centerTouchY);
@@ -179,7 +179,7 @@ public class SpriteActions {
      */
     static public SpriteTouchEnd nullTouchEnd=new SpriteTouchEnd() {
         @Override
-        public boolean action(ExtensibleSprite sprite, Vector2 position) {
+        public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
             L.og("touchend");
             return false;
         }
@@ -192,7 +192,7 @@ public class SpriteActions {
      */
     static public SpriteScroll nullScroll=new SpriteScroll() {
         @Override
-        public boolean action(ExtensibleSprite sprite,Vector2 position, int amount) {
+        public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
             if (sprite.contains(position.x,position.y)){
                 L.og("scroll");
                 return true;

@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 public interface SpriteTouchEnd {
 
     /**
-     * do the touch end action on the sprite for touch at given position
+     * do the touch end draw on the sprite for touch at given position
      * return true if something changed
      * @param sprite
      * @param position
      * @return
      */
-    boolean action(ExtensibleSprite sprite, Vector2 position);
+    boolean touchEnd(ExtensibleSprite sprite, Vector2 position);
 }

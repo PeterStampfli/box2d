@@ -2,7 +2,7 @@ package com.mygdx.game.Pieces;
 
 /**
  * Created by peter on 4/18/17.
- * test if a supplied Extensible Sprite contains a point
+ * contains if a supplied Extensible Sprite contains a point
  */
 
 public interface SpriteContains {
@@ -13,5 +13,5 @@ public interface SpriteContains {
      * @param y
      * @return
      */
-    boolean test(ExtensibleSprite sprite, float x, float y);
+    boolean contains(ExtensibleSprite sprite, float x, float y);
 }

@@ -121,8 +121,8 @@ public class TouchMove extends InputAdapter{
     }
 
     /**
-     * scroll action only by event handling
-     * call scroll action on the piece, together with mouse position
+     * scroll draw only by event handling
+     * call scroll draw on the piece, together with mouse position
      * Note: scroll occurs only on PC, where mouse position is always defined
      * @param amount
      * @return

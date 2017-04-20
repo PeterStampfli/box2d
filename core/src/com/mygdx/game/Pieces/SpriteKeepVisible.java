@@ -11,5 +11,5 @@ public interface SpriteKeepVisible {
      * to do something needs camera
      * @param sprite
      */
-    boolean action(ExtensibleSprite sprite);
+    boolean keepVisible(ExtensibleSprite sprite);
 }

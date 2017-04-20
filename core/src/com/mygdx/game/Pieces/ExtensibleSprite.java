@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class ExtensibleSprite extends Sprite implements Touchable {
     public Shape2D shape;
+    public Object extension;                    // have access to the extension
 
     /**
      * create with a texture (debug) a shape and the camera
@@ -38,7 +39,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a texture (debug), without shape (test==false always)
+     * create with a texture (debug), without shape (contains==false always)
      * @param texture
      */
     public ExtensibleSprite(Texture texture){
@@ -46,11 +47,21 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a textureRegion/atlasRegion, without shape (test==false always)
+     * create with a textureRegion/atlasRegion, without shape (contains==false always)
      * @param textureRegion
      */
     public ExtensibleSprite(TextureRegion textureRegion){
         super(textureRegion);
+    }
+
+    /**
+     * set the extension
+     * @param extension
+     * @return
+     */
+    public ExtensibleSprite setExtension(Object extension){
+        this.extension=extension;
+        return this;
     }
 
     /**
@@ -151,12 +162,12 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     // the composable actions
 
-    // test if sprite contains a point
+    // contains if sprite contains a point
 
     public SpriteContains spriteContains = SpriteActions.shapeContains;
 
     /**
-     * set the test for shape test the point
+     * set the contains for shape contains the point
      * @param spriteContains
      * @return
      */
@@ -166,18 +177,18 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     /**
-     * test if sprite test the point, using both the texture region and the shape
+     * contains if sprite contains the point, using both the texture region and the shape
      * @param x
      * @param y
      * @return
      */
     @Override
     public boolean contains(float x, float y) {
-        return spriteContains.test(this, x, y);
+        return spriteContains.contains(this, x, y);
     }
 
     /**
-     * test if sprite contains the point
+     * contains if sprite contains the point
      * @param point
      * @return
      */
@@ -214,7 +225,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      * @param batch
      */
     @Override
-    public void draw(Batch batch){ spriteDraw.action(this,batch); }
+    public void draw(Batch batch){ spriteDraw.draw(this,batch); }
 
 
     // what to do to keep sprite visible
@@ -227,14 +238,14 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     @Override
-    public boolean keepVisible(){return spriteKeepVisible.action(this);};
+    public boolean keepVisible(){return spriteKeepVisible.keepVisible(this);};
 
     // what to do at begin of touch
 
     public SpriteTouchBegin spriteTouchBegin= SpriteActions.nullTouchBegin;
 
     /**
-     * select the action for touch begin
+     * select the draw for touch begin
      * @param spriteTouchBegin
      * @return
      */
@@ -250,7 +261,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean touchBegin(Vector2 position) {
-        return spriteTouchBegin.action(this,position);
+        return spriteTouchBegin.touchBegin(this,position);
     }
 
     // what to do for touch dragging around
@@ -258,7 +269,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public SpriteTouchDrag spriteTouchDrag= SpriteActions.nullTouchDrag;
 
     /**
-     * select the action for touch drag
+     * select the draw for touch drag
      * @param spriteTouchDrag
      * @return
      */
@@ -275,7 +286,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
-        return spriteTouchDrag.action(this,position,deltaPosition);
+        return spriteTouchDrag.touchDrag(this,position,deltaPosition);
     }
 
     // what to do at end of touch
@@ -283,7 +294,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public SpriteTouchEnd spriteTouchEnd= SpriteActions.nullTouchEnd;
 
     /**
-     * select the action for touch begin
+     * select the draw for touch begin
      * @param spriteTouchEnd
      * @return
      */
@@ -299,7 +310,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean touchEnd(Vector2 position) {
-        return spriteTouchEnd.action(this,position);
+        return spriteTouchEnd.touchEnd(this,position);
     }
 
     // waht to do at scroll event
@@ -307,7 +318,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public SpriteScroll spriteScroll=SpriteActions.nullScroll;
 
     /**
-     * set the scroll action
+     * set the scroll draw
      * @param spriteScroll
      * @return
      */
@@ -324,7 +335,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        return spriteScroll.action(this,position,amount);
+        return spriteScroll.scroll(this,position,amount);
     }
 
 }

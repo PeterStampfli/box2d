@@ -8,5 +8,5 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public interface SpriteScroll {
-     boolean action(ExtensibleSprite sprite,Vector2 position, int amount);
+     boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount);
 }

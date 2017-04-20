@@ -18,11 +18,11 @@ public interface Touchable extends Shape2D {
     // has to be able to remain visible (knows its camera), return true if something changes (and redraw needed)
     boolean keepVisible();
 
-    // begin-touch action, return true if something changed, call requestRendering, this is safer
+    // begin-touch draw, return true if something changed, call requestRendering, this is safer
     // return true if something happened
     boolean touchBegin(Vector2 position);
 
-    // do drag action, return true if something changed
+    // do drag draw, return true if something changed
     // return true if something happened
     boolean touchDrag(Vector2 position,Vector2 deltaPosition);
 

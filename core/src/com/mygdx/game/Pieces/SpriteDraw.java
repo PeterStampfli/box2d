@@ -12,5 +12,5 @@ public interface SpriteDraw {
      * draw the sprite, with extras
      * @param sprite
      */
-    public void action(ExtensibleSprite sprite, Batch batch);
+    public void draw(ExtensibleSprite sprite, Batch batch);
 }
