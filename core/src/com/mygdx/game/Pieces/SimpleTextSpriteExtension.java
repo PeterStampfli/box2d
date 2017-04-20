@@ -18,6 +18,7 @@ public class SimpleTextSpriteExtension implements SpriteDraw{
 
     /**
      * set the font for the objects that will be created
+     * note that you can use font.setColor()
      * @param bitmapFont
      */
     static public void setFont(BitmapFont bitmapFont){

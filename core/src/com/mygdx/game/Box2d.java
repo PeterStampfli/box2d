@@ -3,15 +3,17 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.BigTextSpriteExtension;
 import com.mygdx.game.Pieces.ExtensibleSprite;
+import com.mygdx.game.Pieces.SimpleTextSpriteExtension;
 import com.mygdx.game.Pieces.SpriteActions;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.utilities.Basic;
@@ -28,7 +30,8 @@ public class Box2d extends ApplicationAdapter {
 	FollowCamera followCamera;
 
 	Pixmap pixmap;
-	Texture img;
+	TextureRegion img;
+	TextureRegion textureRegion;
 
 	SpriteBatch spriteBatch;
 	Shape2DCollection shape2DCollection;
@@ -42,8 +45,10 @@ public class Box2d extends ApplicationAdapter {
 		device=new Device();
 		device.createShape2DRenderer().createSpriteBatch().setLogging(true).createDefaultBitmapFont();
 		BasicAssets basicAssets=device.basicAssets;
+		device.bitmapFont.getData().scale(2);
+		device.bitmapFont.setColor(Color.BROWN);
 
-
+		SimpleTextSpriteExtension.setFont(device.bitmapFont);
 		followCamera=new FollowCamera();
 
 		int viewportSize=500;
@@ -62,18 +67,30 @@ public class Box2d extends ApplicationAdapter {
 		//mask.fill(shape2DCollection);
 		mask.invert();
 
-		img=mask.createTransparentWhiteTexture();
+		img=mask.createTransparentWhiteTextureRegion();
 
-		extensibleSprite=new ExtensibleSprite(img);
+
+		extensibleSprite=ExtensibleSprite.obtain(img);
+		extensibleSprite=extensibleSprite.free();
+		extensibleSprite=ExtensibleSprite.obtain(img);
+
+
 		extensibleSprite.setPosition(200,100);
+		//extensibleSprite.setColor(Color.GREEN);
 		extensibleSprite.setTouchDrag(SpriteActions.touchDragTransRotate);
 		extensibleSprite.setKeepVisible(SpriteActions.keepOriginVisible);
 
+		SimpleTextSpriteExtension text=new SimpleTextSpriteExtension("blabla");
+		extensibleSprite.setDraw(text);
+
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
-		device.bitmapFont.getData().scale(2);
 		Clipper.spriteBatch=device.spriteBatch;
 		Clipper.setCamera(viewport);
+		BigTextSpriteExtension.setFont(device.bitmapFont);
+		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
+				"mehr ist auch noch drin aber alles hat eine nede";
+		BigTextSpriteExtension bigText=new BigTextSpriteExtension(langerText,extensibleSprite);
 
 	}
 

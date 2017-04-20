@@ -110,7 +110,7 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * test if its body fixtures test given position
+     * contains if its body fixtures contains given position
      * check only fixtures that are not sensors
      * does not check the image region,
      * thus use only shapes/fixtures that do not go outside the image
@@ -135,7 +135,7 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * test if its body test given position
+     * contains if its body contains given position
      * @param x
      * @param y
      * @return

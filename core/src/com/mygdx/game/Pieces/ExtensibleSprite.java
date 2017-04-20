@@ -1,57 +1,58 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 /**
  * Created by peter on 4/18/17.
+ * uses the built-in pool
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable {
+public class ExtensibleSprite extends Sprite implements Touchable{
+    static public final Pool<ExtensibleSprite> pool=Pools.get(ExtensibleSprite.class);
+
     public Shape2D shape;
     public Object extension;                    // have access to the extension
 
     /**
-     * create with a texture (debug) a shape and the camera
-     * @param texture
-     * @param shape
-     *
-     */
-    public ExtensibleSprite(Texture texture, Shape2D shape){
-        super(texture);
-        this.shape=shape;
-    }
-
-    /**
-     * create with a textureRegion/atlasRegion and a shape
+     * obtain an extensible sprite from its pool, with given texture region and shape2d shape
      * @param textureRegion
      * @param shape
+     * @return
      */
+    static public ExtensibleSprite obtain(TextureRegion textureRegion, Shape2D shape){
+        ExtensibleSprite sprite=pool.obtain();
+        sprite.setRegion(textureRegion);
+        sprite.setColor(Color.WHITE);
+        sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+        sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
+        sprite.shape=shape;
+        sprite.spriteContains=masterSpriteContains;
+        return sprite;
+    }
 
-    public ExtensibleSprite(TextureRegion textureRegion, Shape2D shape){
-        super(textureRegion);
-        this.shape=shape;
+    static public ExtensibleSprite obtain(TextureRegion textureRegion){
+        return obtain(textureRegion,null);
     }
 
     /**
-     * create with a texture (debug), without shape (contains==false always)
-     * @param texture
+     * free, reset and put back in the pool an ExtensibleSprite object.
+     * together with reset and set local reference null ???
+     * as an interface ???
      */
-    public ExtensibleSprite(Texture texture){
-        super(texture);
-    }
-
-    /**
-     * create with a textureRegion/atlasRegion, without shape (contains==false always)
-     * @param textureRegion
-     */
-    public ExtensibleSprite(TextureRegion textureRegion){
-        super(textureRegion);
+    public ExtensibleSprite free(){
+        shape=null;
+        extension=null;
+        setTexture(null);
+        pool.free(this);
+        return null;
     }
 
     /**
@@ -164,7 +165,8 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     // contains if sprite contains a point
 
-    public SpriteContains spriteContains = SpriteActions.shapeContains;
+    static public SpriteContains masterSpriteContains = SpriteActions.shapeContains;
+    public SpriteContains spriteContains;
 
     /**
      * set the contains for shape contains the point
@@ -172,7 +174,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      * @return
      */
     public ExtensibleSprite setSpriteContains(SpriteContains spriteContains){
-        this.spriteContains = spriteContains;
+        masterSpriteContains = spriteContains;
         return this;
     }
 
@@ -184,7 +186,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean contains(float x, float y) {
-        return spriteContains.contains(this, x, y);
+        return this.spriteContains.contains(this, x, y);
     }
 
     /**

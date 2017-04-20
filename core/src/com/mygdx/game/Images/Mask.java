@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
@@ -468,7 +469,7 @@ public class Mask {
      * cut out by the mask
      * @return
      */
-    public Texture createTransparentWhiteTexture(){
+    public TextureRegion createTransparentWhiteTextureRegion(){
         Pixmap pixmap=createPixmap();
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -476,7 +477,7 @@ public class Mask {
         Texture result=new Texture(pixmap);
         Basic.linearInterpolation(result);
         pixmap.dispose();
-        return result;
+        return new TextureRegion(result);
     }
 
     /**
@@ -484,7 +485,7 @@ public class Mask {
      * white is 255, black is 0
      * @return
      */
-    public Texture createBlackWhiteTexture(){
+    public TextureRegion createBlackWhiteTextureRegion(){
         Pixmap pixmap=createPixmap();
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -500,7 +501,7 @@ public class Mask {
         pixels.rewind();
         Texture result=new Texture(pixmap);
         pixmap.dispose();
-        return result;
+        return new TextureRegion(result);
     }
 }
 
