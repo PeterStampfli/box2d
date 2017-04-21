@@ -59,7 +59,15 @@ public class SpriteActions {
     };
 
     /**
-     * draw the sprite wthout extras
+     * do not draw anything
+     */
+    static public SpriteDraw nullDraw=new SpriteDraw() {
+        @Override
+        public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch) {}
+    };
+
+    /**
+     * draw the sprite without extras
      */
     static public SpriteDraw simpleDraw=new SpriteDraw() {
         @Override

@@ -17,12 +17,13 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.SimpleTextSpriteExtension;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Created by peter on 11/26/16.
  *
- * Standard resources: disposer and assetManager. Viewports,Renderers, framebuffer and default font on demand
+ * Standard resources: disposer and assetManager. Viewports,Renderers, framebuffer and default masterFont on demand
  * collecting objects that need to be resized
  */
 
@@ -36,7 +37,8 @@ public class Device implements Disposable{
     public AssetManager assetManager;
     public BasicAssets basicAssets;
     public TouchReader touchReader;
-    public final Pool<ExtensibleSprite> extensibleSpritePool= Pools.get(ExtensibleSprite.class);
+    public final Pool<ExtensibleSprite> extensibleSpritePool;
+    public final Pool<SimpleTextSpriteExtension> simpleTextSpriteExtensionPool;
 
     public Array<Resizable> resizables=new Array<Resizable>();
     public Array<Viewport> viewports=new Array<Viewport>();
@@ -51,7 +53,8 @@ public class Device implements Disposable{
         basicAssets=new BasicAssets(this);
         touchReader=new TouchReader();
         addResizable(touchReader);
-
+        extensibleSpritePool= Pools.get(ExtensibleSprite.class);
+        simpleTextSpriteExtensionPool=Pools.get(SimpleTextSpriteExtension.class);
     }
 
     /**
@@ -165,7 +168,7 @@ public class Device implements Disposable{
     }
 
     /**
-     * default bitmap font for debugging
+     * default bitmap masterFont for debugging
      * @return
      */
     public Device createDefaultBitmapFont(){

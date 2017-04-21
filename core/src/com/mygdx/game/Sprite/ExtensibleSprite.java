@@ -33,11 +33,10 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      * together with reset and set local reference null ???
      * as an interface ???
      */
-    public ExtensibleSprite free(){
+    public void free(){
         shape=null;
         setTexture(null);
         extensibleSpritePool.free(this);
-        return null;
     }
 
     /**

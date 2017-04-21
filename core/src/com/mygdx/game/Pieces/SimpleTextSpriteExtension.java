@@ -10,47 +10,16 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
  */
 
 public class SimpleTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDraw {
-    static BitmapFont masterFont;
     public GlyphLayout glyphLayout = new GlyphLayout();
     public BitmapFont font;
     public com.mygdx.game.Sprite.ExtensibleSprite sprite;
 
     /**
-     * set the font for the objects that will be created
-     * note that you can use font.setColor()
-     * @param bitmapFont
+     * create a simple text extension with masterFont
+     * @param font
      */
-    static public void setFont(BitmapFont bitmapFont){
-        masterFont=bitmapFont;
-    }
-
-    /**
-     * create a simple text extension with given text
-     * @param text
-     */
-    public SimpleTextSpriteExtension(String text){
-        font=masterFont;
-        setText(text);
-    }
-
-    /**
-     * create a simple text extension with empty text
-     */
-    public SimpleTextSpriteExtension(){
-        this("");
-    }
-
-    /**
-     * set the given sprite to this extension
-     * sets its spriteDraw and the extension
-     * sets this sprite
-     * @param sprite
-     * @return
-     */
-    public SimpleTextSpriteExtension applyTo(com.mygdx.game.Sprite.ExtensibleSprite sprite){
-        this.sprite=sprite;
-        sprite.setDraw(this);
-        return this;
+    public SimpleTextSpriteExtension(BitmapFont font){
+        this.font=font;
     }
 
     /**

@@ -25,6 +25,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * to create we need to know the pool (device)
      * set defaults for the actions...
+     * basic drawing only, else nothing
      * @param extensibleSpritePool
      */
     public ExtensibleSpriteBuilder(Pool<ExtensibleSprite> extensibleSpritePool){

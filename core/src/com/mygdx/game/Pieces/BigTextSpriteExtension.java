@@ -24,8 +24,8 @@ public class BigTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDraw,
     public float textShiftMax;
 
     /**
-     * set the font for the objects that will be created
-     * note that you can use font.setColor()
+     * set the masterFont for the objects that will be created
+     * note that you can use masterFont.setColor()
      * @param bitmapFont
      */
     static public void setFont(BitmapFont bitmapFont){
