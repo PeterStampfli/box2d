@@ -112,8 +112,8 @@ public class Box2DSprite extends TouchableSprite {
     /**
      * contains if its body fixtures contains given position
      * check only fixtures that are not sensors
-     * does not check the image region,
-     * thus use only shapes/fixtures that do not go outside the image
+     * does not check the masterTextureRegion region,
+     * thus use only shapes/fixtures that do not go outside the masterTextureRegion
      *
      * scale from graphics position to physics
      * @param positionX

@@ -236,7 +236,7 @@ public class BasicAssets {
             newRegions=atlas.getRegions();
             for (TextureAtlas.AtlasRegion newRegion:newRegions){
                 regionName=newRegion.name;
-                if (newRegion.index==-1){  // a single image of given name
+                if (newRegion.index==-1){  // a single masterTextureRegion of given name
                     atlasRegionMap.put(regionName,newRegion);
                 }
                 else{                     // multiple images
@@ -259,11 +259,11 @@ public class BasicAssets {
 
     /**
      * To simplify debugging and production:
-     * first tries to find an image *.png or *.jpg and makes it a textureregion
+     * first tries to find an masterTextureRegion *.png or *.jpg and makes it a textureregion
      * if not found gets a textureRegion as part of an atlas,
      * Thus I do not need to have made the atlas already in debugging, can use instead simple images
      * later I can use an atlas without changing code details
-     * I can override the image in the atlas region with a simple image
+     * I can override the masterTextureRegion in the atlas region with a simple masterTextureRegion
      * @param name
      * @return
      */
@@ -277,7 +277,7 @@ public class BasicAssets {
         if (fileHandle.exists()) {
             Texture texture=new Texture(fileHandle);
             device.disposer.add(texture,name+" texture");
-            result=new TextureRegion(texture);        // if found load the image as texture->textureRegion
+            result=new TextureRegion(texture);        // if found load the masterTextureRegion as texture->textureRegion
         }
         else
         {

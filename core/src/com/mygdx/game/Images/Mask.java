@@ -121,7 +121,7 @@ public class Mask {
 
     /**
      * draw a ring with opaque bits, smooth border
-     * outerRadius is the outer radius of the ring shape
+     * outerRadius is the outer radius of the ring masterShape
      * a disc if thickness <0
      * @param centerX
      * @param centerY
@@ -202,7 +202,7 @@ public class Mask {
 
 
     /**
-     * a line that is part of the border of a convex polygon shape
+     * a line that is part of the border of a convex polygon masterShape
      * going around counterclockwise
      */
     private class Line{
@@ -242,9 +242,9 @@ public class Mask {
     }
 
     /**
-     * draw a convex polygon shape. Vertices in counter-clock sense
+     * draw a convex polygon masterShape. Vertices in counter-clock sense
      * draws the outline with a given thickness inside the border lines
-     * (shape has to be closed)
+     * (masterShape has to be closed)
      * note that here thickness comes first, it is mainly for diagnstics
      * @param thickness
      * @param coordinates
@@ -293,7 +293,7 @@ public class Mask {
     }
 
     /**
-     * fill a convex polygon shape. Vertices in counter-clock sense
+     * fill a convex polygon masterShape. Vertices in counter-clock sense
      * @param coordinates
      */
     public void fillPolygon(float... coordinates){
@@ -301,7 +301,7 @@ public class Mask {
     }
 
     /**
-     * fill a convex polygon shape. Vertices in counter-clock sense
+     * fill a convex polygon masterShape. Vertices in counter-clock sense
      * @param points
      */
     public void fillPolygon(Array<Vector2> points){
@@ -331,7 +331,7 @@ public class Mask {
     }
 
     /**
-     * fill a convex polygon shape. Vertices in counter-clock sense
+     * fill a convex polygon masterShape. Vertices in counter-clock sense
      * @param polygon
      */
     public void fillPolygon(Polygon polygon){
@@ -348,7 +348,7 @@ public class Mask {
     }
 
     /**
-     * fill a Shape2D shape on the mask
+     * fill a Shape2D masterShape on the mask
      * including Shape2DCollection collections
      * @param shape
      */
@@ -369,7 +369,7 @@ public class Mask {
             }
         }
         else {
-            Gdx.app.log(" ******************** mask","unknown shape "+shape.getClass());
+            Gdx.app.log(" ******************** mask","unknown masterShape "+shape.getClass());
         }
     }
 

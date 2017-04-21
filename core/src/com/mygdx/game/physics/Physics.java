@@ -249,7 +249,7 @@ public class Physics implements Disposable{
 
     /**
      * do not forget to dispose the world and
-     * maybe the debugRenderer and a shape left in the fixture builder
+     * maybe the debugRenderer and a masterShape left in the fixture builder
      */
     public void dispose(){
         world.dispose();

@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
 /**
  * Created by peter on 4/18/17.
@@ -13,5 +13,5 @@ public interface SpriteContains {
      * @param y
      * @return
      */
-    boolean contains(ExtensibleSprite sprite, float x, float y);
+    boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y);
 }

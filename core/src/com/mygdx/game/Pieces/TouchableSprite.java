@@ -18,7 +18,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     public Shape2D shape;
 
     /**
-     * create with a texture (debug) a shape and the camera
+     * create with a texture (debug) a masterShape and the camera
      * @param texture
      * @param shape
      *
@@ -29,7 +29,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a textureRegion/atlasRegion and a shape
+     * create with a textureRegion/atlasRegion and a masterShape
      * @param textureRegion
      * @param shape
      */
@@ -40,7 +40,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a texture (debug), without shape (contains==false always)
+     * create with a texture (debug), without masterShape (contains==false always)
      * @param texture
      */
     public TouchableSprite(Texture texture){
@@ -48,7 +48,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * create with a textureRegion/atlasRegion, without shape (contains==false always)
+     * create with a textureRegion/atlasRegion, without masterShape (contains==false always)
      * @param textureRegion
      */
     public TouchableSprite(TextureRegion textureRegion){
@@ -168,9 +168,9 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * check if both the texture region AND the shape contain a point,
+     * check if both the texture region AND the masterShape contain a point,
      * take into account rotation and scaling
-     * thus contains agrees with visible image
+     * thus contains agrees with visible masterTextureRegion
      * for box2DSprites use fixture shapes
      * @param x
      * @param y
@@ -188,7 +188,7 @@ public class TouchableSprite extends Sprite implements Touchable {
         // and shift to put lower left corner at (0,0)
         float unrotatedX=(cosAngle*x+sinAngle*y)/getScaleX()+getOriginX();
         float unrotatedY=(-sinAngle*x+cosAngle*y)/getScaleY()+getOriginY();
-        // limit to texture/pixmap region and check the shape, if there is one
+        // limit to texture/pixmap region and check the masterShape, if there is one
         boolean isInside=(unrotatedX>=0)&&(unrotatedX<=getWidth())
                        &&(unrotatedY>=0)&&(unrotatedY<=getHeight())
                        &&(shape==null||shape.contains(unrotatedX,unrotatedY));
@@ -196,7 +196,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * contains if sprite contains the point, using both the texture region and the shape
+     * contains if sprite contains the point, using both the texture region and the masterShape
      * @param x
      * @param y
      * @return
@@ -207,7 +207,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * contains if sprite contains the point, using both the texture region and the shape
+     * contains if sprite contains the point, using both the texture region and the masterShape
      * @param point
      * @return
      */

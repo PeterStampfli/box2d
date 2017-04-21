@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -8,5 +8,5 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public interface SpriteScroll {
-     boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount);
+     boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount);
 }

@@ -1,46 +1,32 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
+import com.mygdx.game.Pieces.Touchable;
+
+
 
 /**
  * Created by peter on 4/18/17.
  * uses the built-in pool
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable{
-    static public final Pool<ExtensibleSprite> pool=Pools.get(ExtensibleSprite.class);
+public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
-    public Object extension;                    // have access to the extension
-
-    /**
-     * obtain an extensible sprite from its pool, with given texture region and shape2d shape
-     * @param textureRegion
-     * @param shape
-     * @return
-     */
-    static public ExtensibleSprite obtain(TextureRegion textureRegion, Shape2D shape){
-        ExtensibleSprite sprite=pool.obtain();
-        sprite.setRegion(textureRegion);
-        sprite.setColor(Color.WHITE);
-        sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-        sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
-        sprite.shape=shape;
-        sprite.spriteContains=masterSpriteContains;
-        return sprite;
-    }
-
-    static public ExtensibleSprite obtain(TextureRegion textureRegion){
-        return obtain(textureRegion,null);
-    }
+    public Pool<ExtensibleSprite> extensibleSpritePool;
+    // the composable actions
+    public SpriteContains spriteContains;
+    public SpriteDraw spriteDraw;
+    public SpriteKeepVisible spriteKeepVisible;
+    public SpriteTouchBegin spriteTouchBegin;
+    public SpriteTouchDrag spriteTouchDrag;
+    public SpriteTouchEnd spriteTouchEnd;
+    public SpriteScroll spriteScroll;
 
     /**
      * free, reset and put back in the pool an ExtensibleSprite object.
@@ -49,20 +35,9 @@ public class ExtensibleSprite extends Sprite implements Touchable{
      */
     public ExtensibleSprite free(){
         shape=null;
-        extension=null;
         setTexture(null);
-        pool.free(this);
+        extensibleSpritePool.free(this);
         return null;
-    }
-
-    /**
-     * set the extension
-     * @param extension
-     * @return
-     */
-    public ExtensibleSprite setExtension(Object extension){
-        this.extension=extension;
-        return this;
     }
 
     /**
@@ -163,23 +138,18 @@ public class ExtensibleSprite extends Sprite implements Touchable{
 
     // the composable actions
 
-    // contains if sprite contains a point
-
-    static public SpriteContains masterSpriteContains = SpriteActions.shapeContains;
-    public SpriteContains spriteContains;
-
     /**
-     * set the contains for shape contains the point
+     * set the instance method for contains the point
      * @param spriteContains
      * @return
      */
-    public ExtensibleSprite setSpriteContains(SpriteContains spriteContains){
-        masterSpriteContains = spriteContains;
+    public ExtensibleSprite setContains(SpriteContains spriteContains){
+        this.spriteContains = spriteContains;
         return this;
     }
 
     /**
-     * contains if sprite contains the point, using both the texture region and the shape
+     * contains if sprite contains the point, using both the texture region and the masterShape
      * @param x
      * @param y
      * @return
@@ -201,7 +171,6 @@ public class ExtensibleSprite extends Sprite implements Touchable{
 
     // draw the sprite, with extras ???
 
-    public SpriteDraw spriteDraw=SpriteActions.simpleDraw;
 
     /**
      * set the method for sprite draw
@@ -232,8 +201,11 @@ public class ExtensibleSprite extends Sprite implements Touchable{
 
     // what to do to keep sprite visible
 
-    public SpriteKeepVisible spriteKeepVisible=SpriteActions.nullKeepVisible;
-
+    /**
+     * set instance method for keep visible
+     * @param spriteKeepVisible
+     * @return
+     */
     public ExtensibleSprite setKeepVisible(SpriteKeepVisible spriteKeepVisible){
         this.spriteKeepVisible=spriteKeepVisible;
         return this;
@@ -244,14 +216,13 @@ public class ExtensibleSprite extends Sprite implements Touchable{
 
     // what to do at begin of touch
 
-    public SpriteTouchBegin spriteTouchBegin= SpriteActions.nullTouchBegin;
 
     /**
      * select the draw for touch begin
      * @param spriteTouchBegin
      * @return
      */
-    ExtensibleSprite setTouchBegin(SpriteTouchBegin spriteTouchBegin){
+    public ExtensibleSprite setTouchBegin(SpriteTouchBegin spriteTouchBegin){
         this.spriteTouchBegin=spriteTouchBegin;
         return this;
     }
@@ -267,8 +238,6 @@ public class ExtensibleSprite extends Sprite implements Touchable{
     }
 
     // what to do for touch dragging around
-
-    public SpriteTouchDrag spriteTouchDrag= SpriteActions.nullTouchDrag;
 
     /**
      * select the draw for touch drag
@@ -293,14 +262,12 @@ public class ExtensibleSprite extends Sprite implements Touchable{
 
     // what to do at end of touch
 
-    public SpriteTouchEnd spriteTouchEnd= SpriteActions.nullTouchEnd;
-
     /**
      * select the draw for touch begin
      * @param spriteTouchEnd
      * @return
      */
-    ExtensibleSprite setTouchEnd(SpriteTouchEnd spriteTouchEnd){
+    public ExtensibleSprite setTouchEnd(SpriteTouchEnd spriteTouchEnd){
         this.spriteTouchEnd=spriteTouchEnd;
         return this;
     }
@@ -316,8 +283,6 @@ public class ExtensibleSprite extends Sprite implements Touchable{
     }
 
     // waht to do at scroll event
-
-    public SpriteScroll spriteScroll=SpriteActions.nullScroll;
 
     /**
      * set the scroll draw

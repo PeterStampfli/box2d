@@ -27,7 +27,7 @@ import com.mygdx.game.utilities.L;
 public class Box2DShape {
 
     /**
-     * create scaled circle shape based on shape2D circle
+     * create scaled circle masterShape based on shape2D circle
      * @param circle
      * @return
      */
@@ -50,7 +50,7 @@ public class Box2DShape {
     }
 
     /**
-     * create a rectangular polygon shape with scaling from Shape2D Rectangle
+     * create a rectangular polygon masterShape with scaling from Shape2D Rectangle
      * @param rectangle
      * @return
      */
@@ -109,7 +109,7 @@ public class Box2DShape {
     }
 
     /**
-     * create a scaled (Box2D) Shape from a Shape2D shape
+     * create a scaled (Box2D) Shape from a Shape2D masterShape
      * @param shape2D
      * @return
      */

@@ -11,10 +11,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Created by peter on 11/26/16.
@@ -33,6 +36,7 @@ public class Device implements Disposable{
     public AssetManager assetManager;
     public BasicAssets basicAssets;
     public TouchReader touchReader;
+    public final Pool<ExtensibleSprite> extensibleSpritePool= Pools.get(ExtensibleSprite.class);
 
     public Array<Resizable> resizables=new Array<Resizable>();
     public Array<Viewport> viewports=new Array<Viewport>();
@@ -95,7 +99,7 @@ public class Device implements Disposable{
     // create viewports with their cameras
 
     /**
-     * create an extended viewport, centered image
+     * create an extended viewport, centered masterTextureRegion
      * with a supplied OrthographicCamera (followCamera ...)
      *  resize: 		viewport.update(width, height);
      * @param minWidth
@@ -111,7 +115,7 @@ public class Device implements Disposable{
     }
 
     /**
-     * create an extended viewport with its own orthographic camera, centered image
+     * create an extended viewport with its own orthographic camera, centered masterTextureRegion
      *  resize: 		viewport.update(width, height);
      * @param minWidth
      * @param minHeight
@@ -122,7 +126,7 @@ public class Device implements Disposable{
     }
 
     /**
-     *  create an fit viewport with a supplied camera, centered image
+     *  create an fit viewport with a supplied camera, centered masterTextureRegion
      *  resize: 		viewport.update(width, height);
      * @param minWidth
      * @param minHeight
@@ -137,7 +141,7 @@ public class Device implements Disposable{
     }
 
     /**
-     *  create an fit viewport with its own orthographic camera, centered image
+     *  create an fit viewport with its own orthographic camera, centered masterTextureRegion
      *  resize: 		viewport.update(width, height);
      * @param minWidth
      * @param minHeight

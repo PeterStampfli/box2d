@@ -6,17 +6,19 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.game.Sprite.SpriteScroll;
+import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.utilities.Clipper;
 
 /**
  * Created by peter on 4/20/17.
  */
 
-public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,SpriteScroll {
+public class BigTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDraw, SpriteTouchDrag,SpriteScroll {
     static BitmapFont masterFont;
     public GlyphLayout glyphLayout = new GlyphLayout();
     public BitmapFont font;
-    public ExtensibleSprite sprite;
+    public com.mygdx.game.Sprite.ExtensibleSprite sprite;
     public float margin=10;
     public float textShift;                            // shift the text upwards
     public float textShiftMax;
@@ -34,12 +36,11 @@ public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,Sprit
      * create a big text extension with given text
      * @param text
      */
-    public BigTextSpriteExtension(String text,ExtensibleSprite sprite){
+    public BigTextSpriteExtension(String text, com.mygdx.game.Sprite.ExtensibleSprite sprite){
         this.sprite=sprite;
         sprite.setDraw(this);
         sprite.setTouchDrag(this);
         sprite.setScroll(this);
-        sprite.extension=this;
         font=masterFont;
         setText(text);
     }
@@ -47,7 +48,7 @@ public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,Sprit
     /**
      * create a big text extension with empty text
      */
-    public BigTextSpriteExtension(ExtensibleSprite sprite){
+    public BigTextSpriteExtension(com.mygdx.game.Sprite.ExtensibleSprite sprite){
         this("",sprite);
     }
 
@@ -80,7 +81,7 @@ public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,Sprit
      * @param batch
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch) {
+    public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch) {
         sprite.superDraw(batch);
         textShift= MathUtils.clamp(textShift,0,textShiftMax);
         Clipper.start(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
@@ -97,7 +98,7 @@ public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,Sprit
      * @return
      */
     @Override
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+    public boolean touchDrag(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
         textShift+=deltaPosition.y;
         return true;
     }
@@ -110,7 +111,7 @@ public class BigTextSpriteExtension implements SpriteDraw, SpriteTouchDrag,Sprit
      * @return
      */
     @Override
-    public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
+    public boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount) {
         if(sprite.contains(position)){
             textShift+=0.4f*amount*font.getLineHeight();
             return true;

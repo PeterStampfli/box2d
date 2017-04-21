@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
@@ -12,5 +12,5 @@ public interface SpriteDraw {
      * draw the sprite, with extras
      * @param sprite
      */
-    public void draw(ExtensibleSprite sprite, Batch batch);
+    public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch);
 }

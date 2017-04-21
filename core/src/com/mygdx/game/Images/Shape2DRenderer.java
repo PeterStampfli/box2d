@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Shape2D;
 
 /**
  * Created by peter on 4/11/17.
- * drawing the shape2D's and Polypoint with a shape renderer
+ * drawing the shape2D's and Polypoint with a masterShape renderer
  * start shaperenderer, set color and type (ShapeType.Line) outside
  */
 
@@ -83,7 +83,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws circle shape
+     * draws circle masterShape
      * @param circle
      */
     public void draw(Circle circle){
@@ -92,7 +92,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draw a rectangle shape
+     * draw a rectangle masterShape
      * @param rectangle
      */
     public void draw(Rectangle rectangle){
@@ -165,7 +165,7 @@ public class Shape2DRenderer extends ShapeRenderer{
             }
         }
         else {
-            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
+            Gdx.app.log(" ******************** draw","unknown masterShape "+shape.getClass());
         }
     }
 }

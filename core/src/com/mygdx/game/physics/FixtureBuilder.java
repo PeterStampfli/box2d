@@ -10,7 +10,7 @@ import com.mygdx.game.Images.Shape2DCollection;
 /**
  * Created by peter on 3/22/17.
  * setting fixture parameters
- * attaching fixture to a body with given shape or collection of shapes and user data
+ * attaching fixture to a body with given masterShape or collection of shapes and user data
  */
 public class FixtureBuilder {
     public FixtureDef fixtureDef;
@@ -25,7 +25,7 @@ public class FixtureBuilder {
 
     /**
      * reset the fixtureDef with defaults
-     * except the scale, shape and body
+     * except the scale, masterShape and body
      * @return
      */
     public FixtureBuilder reset() {
@@ -110,8 +110,8 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and return a fixture, attached to given body with given shape and userData
-     * dispose the shape later
+     * build and return a fixture, attached to given body with given masterShape and userData
+     * dispose the masterShape later
      * @param body
      * @param shape
      * @param userData
@@ -125,8 +125,8 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and return a fixture, attached to given body with given shape, no userData
-     * you have to dispose the shape later
+     * build and return a fixture, attached to given body with given masterShape, no userData
+     * you have to dispose the masterShape later
      * @param body
      * @param shape
      * @return
@@ -138,7 +138,7 @@ public class FixtureBuilder {
     /**
      * build and attach shapes from shape2D objects, including shape2DCollections,
      * to given body and userData object
-     * the generated shape is disposed automatically
+     * the generated masterShape is disposed automatically
      * @param body
      * @param shape2D
      * @param userData
@@ -163,7 +163,7 @@ public class FixtureBuilder {
     /**
      * build and attach shapes from shape2D objects, including shape2DCollections,
      * to given body
-     * the generated shape is disposed automatically
+     * the generated masterShape is disposed automatically
      * no user data
      * @param body
      * @param shape2D

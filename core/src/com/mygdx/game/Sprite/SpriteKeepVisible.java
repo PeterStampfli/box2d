@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
 /**
  * Created by peter on 4/19/17.
@@ -11,5 +11,5 @@ public interface SpriteKeepVisible {
      * to do something needs camera
      * @param sprite
      */
-    boolean keepVisible(ExtensibleSprite sprite);
+    boolean keepVisible(com.mygdx.game.Sprite.ExtensibleSprite sprite);
 }

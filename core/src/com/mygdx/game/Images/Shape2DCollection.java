@@ -12,7 +12,7 @@ import com.mygdx.game.utilities.Basic;
 /**
  * Created by peter on 3/29/17.
  */
-//  collect and create shapes to make a new shape
+//  collect and create shapes to make a new masterShape
 
 public class Shape2DCollection implements Shape2D {
     final private static float epsilon=0.01f;
@@ -52,7 +52,7 @@ public class Shape2DCollection implements Shape2D {
     }
 
     /**
-     * add one shape to the collection (if not null)
+     * add one masterShape to the collection (if not null)
      * returns the collection for chaining
      * @param shape2D
      * @return this

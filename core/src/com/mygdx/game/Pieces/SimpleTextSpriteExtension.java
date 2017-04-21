@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 /**
  * Created by peter on 4/20/17.
  * extend a sprite to draw a simple short centered text
- * use setter of sprite as a SpriteDraw object or use its applyTo method
  */
 
-public class SimpleTextSpriteExtension implements SpriteDraw{
+public class SimpleTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDraw {
     static BitmapFont masterFont;
     public GlyphLayout glyphLayout = new GlyphLayout();
     public BitmapFont font;
-    public ExtensibleSprite sprite;
+    public com.mygdx.game.Sprite.ExtensibleSprite sprite;
 
     /**
      * set the font for the objects that will be created
@@ -48,10 +47,9 @@ public class SimpleTextSpriteExtension implements SpriteDraw{
      * @param sprite
      * @return
      */
-    public SimpleTextSpriteExtension applyTo(ExtensibleSprite sprite){
+    public SimpleTextSpriteExtension applyTo(com.mygdx.game.Sprite.ExtensibleSprite sprite){
         this.sprite=sprite;
         sprite.setDraw(this);
-        sprite.extension=this;
         return this;
     }
 
@@ -70,7 +68,7 @@ public class SimpleTextSpriteExtension implements SpriteDraw{
      * @param batch
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch){
+    public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch){
         sprite.superDraw(batch);
         font.draw(batch, glyphLayout, sprite.getWorldOriginX() - glyphLayout.width * 0.5f,
                 sprite.getWorldOriginY() + glyphLayout.height * 0.5f);

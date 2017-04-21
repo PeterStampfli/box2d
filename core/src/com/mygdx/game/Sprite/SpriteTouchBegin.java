@@ -1,4 +1,4 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,5 +15,5 @@ public interface SpriteTouchBegin {
      * @param position
      * @return
      */
-    boolean touchBegin(ExtensibleSprite sprite, Vector2 position);
+    boolean touchBegin(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position);
 }
