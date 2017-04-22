@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
-import com.mygdx.game.Pieces.SimpleTextSpriteExtension;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
@@ -38,7 +38,7 @@ public class Device implements Disposable{
     public BasicAssets basicAssets;
     public TouchReader touchReader;
     public final Pool<ExtensibleSprite> extensibleSpritePool;
-    public final Pool<SimpleTextSpriteExtension> simpleTextSpriteExtensionPool;
+    public final Pool<GlyphLayout> glyphLayoutPool;
 
     public Array<Resizable> resizables=new Array<Resizable>();
     public Array<Viewport> viewports=new Array<Viewport>();
@@ -54,7 +54,7 @@ public class Device implements Disposable{
         touchReader=new TouchReader();
         addResizable(touchReader);
         extensibleSpritePool= Pools.get(ExtensibleSprite.class);
-        simpleTextSpriteExtensionPool=Pools.get(SimpleTextSpriteExtension.class);
+        glyphLayoutPool=Pools.get(GlyphLayout.class);
     }
 
     /**

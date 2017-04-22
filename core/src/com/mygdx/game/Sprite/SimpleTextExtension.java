@@ -1,33 +1,36 @@
-package com.mygdx.game.Pieces;
+package com.mygdx.game.Sprite;
+
+/**
+ * Created by peter on 4/22/17.
+ */
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * Created by peter on 4/20/17.
  * extend a sprite to draw a simple short centered text
  */
 
-public class SimpleTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDraw {
-    public GlyphLayout glyphLayout = new GlyphLayout();
-    public BitmapFont font;
-    public com.mygdx.game.Sprite.ExtensibleSprite sprite;
+public class SimpleTextExtension extends TextExtension {
 
     /**
-     * create a simple text extension with masterFont
+     * to create we need glyphlayout pool and font
+     * @param glyphLayoutPool
      * @param font
      */
-    public SimpleTextSpriteExtension(BitmapFont font){
-        this.font=font;
+    public SimpleTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font) {
+        super(glyphLayoutPool, font);
     }
-
     /**
      * set the text of the sprite using its glyphLayout
      *
      * @param text
      */
-    public void setText(String text) {
+    @Override
+    public void setText(String text,ExtensibleSprite sprite) {
         glyphLayout.setText(font, text);
     }
 
@@ -37,10 +40,9 @@ public class SimpleTextSpriteExtension implements com.mygdx.game.Sprite.SpriteDr
      * @param batch
      */
     @Override
-    public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch){
+    public void draw(ExtensibleSprite sprite, Batch batch){
         sprite.superDraw(batch);
         font.draw(batch, glyphLayout, sprite.getWorldOriginX() - glyphLayout.width * 0.5f,
                 sprite.getWorldOriginY() + glyphLayout.height * 0.5f);
     }
 }
-

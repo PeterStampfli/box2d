@@ -1,9 +1,12 @@
 package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utilities.Device;
 
 /**
  * Created by peter on 4/21/17.
@@ -11,8 +14,11 @@ import com.badlogic.gdx.utils.Pool;
 
 public class ExtensibleSpriteBuilder {
     public Pool<ExtensibleSprite> extensibleSpritePool;
+    public Pool<GlyphLayout> glyphLayoutPool;
+    public BitmapFont font;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
+    public TextExtensionType masterTextExtension;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -21,15 +27,23 @@ public class ExtensibleSpriteBuilder {
     public SpriteTouchEnd masterTouchEnd;
     public SpriteScroll masterScroll;
 
+    public enum TextExtensionType{
+        NONE,SIMPLE,BIG
+    }
 
     /**
-     * to create we need to know the pool (device)
+     * to create we need to know the pools (device)
+     * font is independent
      * set defaults for the actions...
      * basic drawing only, else nothing
-     * @param extensibleSpritePool
+     * @param device
+     * @param font
      */
-    public ExtensibleSpriteBuilder(Pool<ExtensibleSprite> extensibleSpritePool){
-        this.extensibleSpritePool=extensibleSpritePool;
+    public ExtensibleSpriteBuilder(Device device,BitmapFont font){
+        this.extensibleSpritePool=device.extensibleSpritePool;
+        this.glyphLayoutPool=device.glyphLayoutPool;
+        this.font=font;
+        setMasterTextExtension(TextExtensionType.NONE);
         setMasterContains(SpriteActions.shapeContains);
         setMasterDraw(SpriteActions.simpleDraw);
         setMasterKeepVisible(SpriteActions.nullKeepVisible);
@@ -37,49 +51,6 @@ public class ExtensibleSpriteBuilder {
         setMasterTouchEnd(SpriteActions.nullTouchEnd);
         setMasterTouchDrag(SpriteActions.nullTouchDrag);
         setMasterScroll(SpriteActions.nullScroll);
-    }
-
-    /**
-     * obtain an extensible sprite from its pool, with given texture region and shape2d masterShape
-     * use master methods
-     * @param textureRegion
-     * @param shape
-     * @return
-     */
-    public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
-        ExtensibleSprite sprite=extensibleSpritePool.obtain();
-        sprite.setRegion(textureRegion);
-        sprite.setColor(Color.WHITE);
-        sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-        sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
-        sprite.shape=shape;
-        sprite.extensibleSpritePool=extensibleSpritePool;
-        sprite.setContains(masterContains);
-        sprite.setKeepVisible(masterKeepVisible);
-        sprite.setDraw(masterDraw);
-        sprite.setTouchBegin(masterTouchBegin);
-        sprite.setTouchDrag(masterTouchDrag);
-        sprite.setTouchEnd(masterTouchEnd);
-        return sprite;
-    }
-
-
-    /**
-     * sprite with given texture regio, but no masterShape
-     * @param textureRegion
-     * @return
-     */
-    public ExtensibleSprite build(TextureRegion textureRegion){
-        return build(textureRegion,null);
-    }
-
-    /**
-     * sprite with set textur region masterTextureRegion and set masterShape
-     * @return
-     */
-    public ExtensibleSprite build(){
-        return build(masterTextureRegion, masterShape);
-
     }
 
     /**
@@ -99,6 +70,16 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSpriteBuilder setMasterShape(Shape2D shape){
         masterShape=shape;
+        return this;
+    }
+
+    /**
+     * set the master type for text extension
+     * @param type
+     * @return
+     */
+    public ExtensibleSpriteBuilder setMasterTextExtension(TextExtensionType type){
+        masterTextExtension=type;
         return this;
     }
 
@@ -170,5 +151,59 @@ public class ExtensibleSpriteBuilder {
     public ExtensibleSpriteBuilder setMasterScroll(SpriteScroll spriteScroll){
         masterScroll =spriteScroll;
         return this;
+    }
+
+    /**
+     * obtain an extensible sprite from its pool, with given texture region and shape2d masterShape
+     * use master methods
+     * @param textureRegion
+     * @param shape
+     * @return
+     */
+    public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
+        ExtensibleSprite sprite=extensibleSpritePool.obtain();
+        sprite.setRegion(textureRegion);
+        sprite.setColor(Color.WHITE);
+        sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+        sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
+        sprite.shape=shape;
+        sprite.extensibleSpritePool=extensibleSpritePool;
+        sprite.setContains(masterContains);
+        sprite.setKeepVisible(masterKeepVisible);
+        sprite.setDraw(masterDraw);
+        sprite.setTouchBegin(masterTouchBegin);
+        sprite.setTouchDrag(masterTouchDrag);
+        sprite.setTouchEnd(masterTouchEnd);
+        switch (masterTextExtension){
+            case NONE:
+                sprite.textExtension=null;                          // say it again to be safe
+                break;
+            case SIMPLE:
+                sprite.textExtension=new SimpleTextExtension(glyphLayoutPool,font);
+                sprite.setDraw(sprite.textExtension);
+                break;
+            case BIG:
+                break;
+        }
+
+        return sprite;
+    }
+
+
+    /**
+     * sprite with given texture regio, but no masterShape
+     * @param textureRegion
+     * @return
+     */
+    public ExtensibleSprite build(TextureRegion textureRegion){
+        return build(textureRegion,null);
+    }
+
+    /**
+     * sprite with set textur region masterTextureRegion and set masterShape
+     * @return
+     */
+    public ExtensibleSprite build(){
+        return build(masterTextureRegion, masterShape);
     }
 }

@@ -19,6 +19,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
     public Pool<ExtensibleSprite> extensibleSpritePool;
+    public TextExtension textExtension;
     // the composable actions
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
@@ -36,7 +37,19 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public void free(){
         shape=null;
         setTexture(null);
+        if (textExtension!=null){
+            textExtension.free();
+            textExtension=null;
+        }
         extensibleSpritePool.free(this);
+    }
+
+    /**
+     * set the text of the sprite if there is a text extension
+     * @param text
+     */
+    public void setText(String text){
+        textExtension.setText(text,this);
     }
 
     /**
@@ -303,5 +316,4 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public boolean scroll(Vector2 position, int amount) {
         return spriteScroll.scroll(this,position,amount);
     }
-
 }
