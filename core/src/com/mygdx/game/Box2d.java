@@ -80,10 +80,10 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.asInputProcessor();
 		Clipper.spriteBatch=device.spriteBatch;
 		Clipper.setCamera(viewport);
-	//	BigTextSpriteExtension.setFont(device.bitmapFont);
+	//	BigTextExtension.setFont(device.bitmapFont);
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-	//	BigTextSpriteExtension bigText=new BigTextSpriteExtension(langerText,extensibleSprite);
+	//	BigTextExtension bigText=new BigTextExtension(langerText,extensibleSprite);
 
 	}
 

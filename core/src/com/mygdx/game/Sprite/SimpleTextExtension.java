@@ -21,12 +21,12 @@ public class SimpleTextExtension extends TextExtension {
      * @param glyphLayoutPool
      * @param font
      */
-    public SimpleTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font) {
-        super(glyphLayoutPool, font);
+    public SimpleTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font,ExtensibleSprite sprite) {
+        super(glyphLayoutPool, font, sprite);
     }
+
     /**
      * set the text of the sprite using its glyphLayout
-     *
      * @param text
      */
     @Override

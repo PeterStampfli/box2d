@@ -18,10 +18,34 @@ public abstract class TextExtension implements SpriteDraw {
      * @param glyphLayoutPool
      * @param font
      */
-    public TextExtension(Pool<GlyphLayout> glyphLayoutPool,BitmapFont font){
+    public TextExtension(Pool<GlyphLayout> glyphLayoutPool,BitmapFont font,ExtensibleSprite sprite){
         this.glyphLayoutPool=glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();
         this.font=font;
+        applyTo(sprite);
+    }
+
+    /**
+     * overwrite the draw method of the sprite
+     * maybe other methods have to be overwritten too
+     * to implement the decorator pattern do:
+     * in declarations:
+     * ...................
+     * SpriteDraw previousDraw;
+     * .................
+     * in applyTo():
+     * .......
+     * previousDraw=sprite.spriteDraw;
+     * sprite.setDraw(this);
+     * .........
+     * in draw(sprite, batch):
+     * .......
+     * previousDraw.draw(sprite,batch);
+     * ......
+     * @param sprite
+     */
+    public void applyTo(ExtensibleSprite sprite){
+        sprite.setDraw(this);
     }
 
     /**

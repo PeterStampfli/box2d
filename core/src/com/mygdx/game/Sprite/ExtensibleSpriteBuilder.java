@@ -179,8 +179,7 @@ public class ExtensibleSpriteBuilder {
                 sprite.textExtension=null;                          // say it again to be safe
                 break;
             case SIMPLE:
-                sprite.textExtension=new SimpleTextExtension(glyphLayoutPool,font);
-                sprite.setDraw(sprite.textExtension);
+                sprite.textExtension=new SimpleTextExtension(glyphLayoutPool,font,sprite);
                 break;
             case BIG:
                 break;
