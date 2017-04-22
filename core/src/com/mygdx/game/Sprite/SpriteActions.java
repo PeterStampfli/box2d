@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 4/19/17.
@@ -63,7 +62,7 @@ public class SpriteActions {
      */
     static public SpriteDraw nullDraw=new SpriteDraw() {
         @Override
-        public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch) {}
+        public void draw(ExtensibleSprite sprite, Batch batch) {}
     };
 
     /**
@@ -71,7 +70,7 @@ public class SpriteActions {
      */
     static public SpriteDraw simpleDraw=new SpriteDraw() {
         @Override
-        public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch) {
+        public void draw(ExtensibleSprite sprite, Batch batch) {
             sprite.superDraw(batch);
         }
     };
@@ -82,8 +81,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible nullKeepVisible=new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(com.mygdx.game.Sprite.ExtensibleSprite sprite) {
-            L.og("keep visible");
+        public boolean keepVisible(ExtensibleSprite sprite) {
             return false;
         }
     };
@@ -94,7 +92,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible keepOriginVisible=new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(com.mygdx.game.Sprite.ExtensibleSprite sprite) {
+        public boolean keepVisible(ExtensibleSprite sprite) {
             float diff=sprite.getWorldOriginX()-camera.position.x;
             float half=0.5f*camera.viewportWidth;
             boolean somethingChanged=false;
@@ -125,8 +123,7 @@ public class SpriteActions {
      */
     static public SpriteTouchBegin nullTouchBegin=new SpriteTouchBegin() {
         @Override
-        public boolean touchBegin(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position) {
-            L.og("touchbegin");
+        public boolean touchBegin(ExtensibleSprite sprite, Vector2 position) {
             return false;
         }
     };
@@ -136,8 +133,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag nullTouchDrag=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
-            L.og("touchdrag");
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             return false;
         }
     };
@@ -148,8 +144,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTranslate=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
-            L.og("touchdrag translate");
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             sprite.translate(deltaPosition.x,deltaPosition.y);
             sprite.keepVisible();
             return false;
@@ -163,7 +158,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTransRotate=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
             float centerTouchX=touchPosition.x-sprite.getWorldOriginX();
             float centerTouchY=touchPosition.y-sprite.getWorldOriginY();
             float centerTouchLength=Vector2.len(centerTouchX,centerTouchY);
@@ -187,8 +182,7 @@ public class SpriteActions {
      */
     static public SpriteTouchEnd nullTouchEnd=new SpriteTouchEnd() {
         @Override
-        public boolean touchEnd(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position) {
-            L.og("touchend");
+        public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
             return false;
         }
     };
@@ -200,9 +194,8 @@ public class SpriteActions {
      */
     static public SpriteScroll nullScroll=new SpriteScroll() {
         @Override
-        public boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount) {
+        public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
             if (sprite.contains(position.x,position.y)){
-                L.og("scroll");
                 return true;
             }
             return false;
