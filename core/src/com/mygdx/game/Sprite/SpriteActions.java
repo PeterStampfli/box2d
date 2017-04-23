@@ -4,36 +4,18 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by peter on 4/19/17.
  */
 
 public class SpriteActions {
-    static public Camera camera;
-
-    /**
-     * set the camera for checking visibility
-     * @param camera
-     */
-    static public void setCamera(Camera camera){
-        SpriteActions.camera=camera;
-    }
-
-    /**
-     * set the camera for checking visibility
-     * @param viewport
-     */
-    static public void setCamera(Viewport viewport){
-        setCamera(viewport.getCamera());
-    }
 
     // create a single static instance of an anonymous class
     // takes less than defining a named static class and then creating a static instance of the class
 
     /**
-     * contains if the sprite rectangle contains the position and its masterShape (if exists)
+     * contains if the sprite rectangle contains the setPosition and its masterShape (if exists)
      */
     static public SpriteContains shapeContains=new SpriteContains() {
         @Override
@@ -81,7 +63,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible nullKeepVisible=new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite) {
+        public boolean keepVisible(ExtensibleSprite sprite,Camera camera) {
             return false;
         }
     };
@@ -92,7 +74,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible keepOriginVisible=new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite) {
+        public boolean keepVisible(ExtensibleSprite sprite,Camera camera) {
             float diff=sprite.getWorldOriginX()-camera.position.x;
             float half=0.5f*camera.viewportWidth;
             boolean somethingChanged=false;
@@ -188,7 +170,7 @@ public class SpriteActions {
     };
 
     /**
-     * returns true if sprite contains mouse position, but does nothing
+     * returns true if sprite contains mouse setPosition, but does nothing
      * this prevents scroll on sprites lying behind this sprite
      * after scroll always update masterTextureRegion
      */

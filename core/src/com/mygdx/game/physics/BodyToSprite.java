@@ -18,7 +18,7 @@ import com.mygdx.game.Sprite.SpriteContains;
 
 public class BodyToSprite implements SpriteContains{
     private float previousBodyAngle, newBodyAngle;
-    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
+    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // setPosition of the worldCenter of the body = worldOrigin of sprite
     private float previousBodyWorldCenterY, newBodyWorldCenterY;
     public ExtensibleSprite sprite;
     public Body body;
@@ -51,7 +51,7 @@ public class BodyToSprite implements SpriteContains{
     }
 
     /**
-     * without interpolation: set position and angle of the sprite to agree with the box2D body
+     * without interpolation: set setPosition and setAngle of the sprite to agree with the box2D body
      * scale from physics position to graphics
      */
     public void setSpritePositionAngle(){
@@ -61,10 +61,10 @@ public class BodyToSprite implements SpriteContains{
     }
 
     /**
-     * if new Physics position and angle had data of result of the previous physics step
+     * if new Physics setPosition and setAngle had data of result of the previous physics step
      * and a new time step has been done then this method results in:
-     * -previous position and angle will have result of previous time step
-     * -new position and angle will contain result of the new (last) time step
+     * -previous setPosition and setAngle will have result of previous time step
+     * -new setPosition and setAngle will contain result of the new (last) time step
      *
      * scale from physics dimensions to graphics
      */
@@ -79,7 +79,7 @@ public class BodyToSprite implements SpriteContains{
     }
 
     /**
-     * angle and position of sprite from linear interpolation between previous and new physics data
+     * set angle and position of sprite from linear interpolation between previous and new physics data
      *
      * progress=1 for graphics time equal to time of new physics data
      * progress=0 for graphics time equal to time of previous physics data

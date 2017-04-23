@@ -51,7 +51,7 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * check if a touchable contains the given position
+     * check if a touchable contains the given setPosition
      * going from first to last
      * the first touchable that contains the point will be put in front of the drawables array
      * @param x
@@ -71,7 +71,7 @@ public class Touchables implements Touchable {
     }
 
     /**
-     * check if a touchable contains the given position
+     * check if a touchable contains the given setPosition
      * going from first to last
      * the first touchable that contains the point will be put in front of the drawables array
      * @param position
@@ -128,7 +128,7 @@ public class Touchables implements Touchable {
     /**
      * call the scroll method on the touchables from front to end
      * until some piece does something and returns true
-     * the a piece contains the position, it does something and returns true
+     * the a piece contains the setPosition, it does something and returns true
      * @param position
      * @param amount
      * @return

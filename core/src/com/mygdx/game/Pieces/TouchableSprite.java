@@ -72,7 +72,7 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * set angle of sprite
+     * set setAngle of sprite
      * @param angle in radians
      */
     public void setAngle(float angle){
@@ -80,8 +80,8 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * get angle of sprite
-     * @return  angle in radians
+     * get setAngle of sprite
+     * @return  setAngle in radians
      */
     public float getAngle(){
         return getRotation() / MathUtils.radiansToDegrees;
@@ -133,8 +133,8 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * set the position of the sprite such that the origin (center of rotation)
-     * lies at given world position (of center of mass)
+     * set the setPosition of the sprite such that the origin (center of rotation)
+     * lies at given world setPosition (of center of mass)
      * @param worldOriginPositionX
      * @param worldOriginPositionY
      */
@@ -143,8 +143,8 @@ public class TouchableSprite extends Sprite implements Touchable {
     }
 
     /**
-     * set the position of the sprite such that the origin (center of rotation)
-     * lies at given position of center of mass
+     * set the setPosition of the sprite such that the origin (center of rotation)
+     * lies at given setPosition of center of mass
      * @param worldOriginPosition
      */
     public void setWorldOrigin(Vector2 worldOriginPosition){

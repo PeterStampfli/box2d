@@ -2,7 +2,7 @@ package com.mygdx.game.Sprite;
 
 /**
  * Created by peter on 4/18/17.
- * contains if a supplied Extensible Sprite contains a point
+ * tests if a supplied Extensible Sprite contains a point
  */
 
 public interface SpriteContains {

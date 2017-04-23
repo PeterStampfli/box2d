@@ -18,7 +18,7 @@ import com.mygdx.game.Pieces.TouchableSprite;
 public class Box2DSprite extends TouchableSprite {
 
     private float previousBodyAngle, newBodyAngle;
-    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // position of the worldCenter of the body = worldOrigin of sprite
+    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // setPosition of the worldCenter of the body = worldOrigin of sprite
     private float previousBodyWorldCenterY, newBodyWorldCenterY;
     public Body body;
 
@@ -42,7 +42,7 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * set origin of the sprite, position and angle of sprite according to body
+     * set origin of the sprite, setPosition and setAngle of sprite according to body
      * set the user data of the body to this sprite
      * @param body
      */
@@ -67,8 +67,8 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * without interpolation: set position and angle of the sprite to agree with the box2D body
-     * scale from physics position to graphics
+     * without interpolation: set setPosition and setAngle of the sprite to agree with the box2D body
+     * scale from physics setPosition to graphics
      */
     public void setSpritePositionAngle(){
         setAngle(body.getAngle());
@@ -77,10 +77,10 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * if new Physics position and angle had data of result of the previous physics step
+     * if new Physics setPosition and setAngle had data of result of the previous physics step
      * and a new time step has been done then this method results in:
-     * -previous position and angle will have result of previous time step
-     * -new position and angle will contain result of the new (last) time step
+     * -previous setPosition and setAngle will have result of previous time step
+     * -new setPosition and setAngle will contain result of the new (last) time step
      *
      * scale from physics dimensions to graphics
      */
@@ -95,7 +95,7 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * angle and position of sprite from linear interpolation between previous and new physics data
+     * setAngle and setPosition of sprite from linear interpolation between previous and new physics data
      *
      * progress=1 for graphics time equal to time of new physics data
      * progress=0 for graphics time equal to time of previous physics data
@@ -110,12 +110,12 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * contains if its body fixtures contains given position
+     * contains if its body fixtures contains given setPosition
      * check only fixtures that are not sensors
      * does not check the masterTextureRegion region,
      * thus use only shapes/fixtures that do not go outside the masterTextureRegion
      *
-     * scale from graphics position to physics
+     * scale from graphics setPosition to physics
      * @param positionX
      * @param positionY
      * @return
@@ -135,7 +135,7 @@ public class Box2DSprite extends TouchableSprite {
     }
 
     /**
-     * contains if its body contains given position
+     * contains if its body contains given setPosition
      * @param x
      * @param y
      * @return

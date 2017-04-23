@@ -26,7 +26,7 @@ public class Chain implements Shape2D {
 
     /**
      * create chain with point coordinates
-     * st ghosts or isLoop separately
+     * set ghosts or isLoop separately
      * @param polypoint
      */
     public Chain(Polypoint polypoint){

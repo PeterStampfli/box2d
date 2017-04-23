@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprite;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -16,6 +17,7 @@ public class ExtensibleSpriteBuilder {
     public Pool<ExtensibleSprite> extensibleSpritePool;
     public Pool<GlyphLayout> glyphLayoutPool;
     public BitmapFont font;
+    public Camera camera;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
     public TextExtensionType masterTextExtension;
@@ -39,18 +41,19 @@ public class ExtensibleSpriteBuilder {
      * @param device
      * @param font
      */
-    public ExtensibleSpriteBuilder(Device device,BitmapFont font){
+    public ExtensibleSpriteBuilder(Device device,BitmapFont font,Camera camera){
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        textExtension(TextExtensionType.NONE);
-        spriteContains(SpriteActions.shapeContains);
-        spriteDraw(SpriteActions.simpleDraw);
-        spriteKeepVisible(SpriteActions.nullKeepVisible);
-        spriteTouchBegin(SpriteActions.nullTouchBegin);
-        spriteTouchEnd(SpriteActions.nullTouchEnd);
-        spriteTouchDrag(SpriteActions.nullTouchDrag);
-        spriteScroll(SpriteActions.nullScroll);
+        this.camera=camera;
+        setTextExtension(TextExtensionType.NONE);
+        setContains(SpriteActions.shapeContains);
+        setDraw(SpriteActions.simpleDraw);
+        setKeepVisible(SpriteActions.nullKeepVisible);
+        setTouchBegin(SpriteActions.nullTouchBegin);
+        setTouchEnd(SpriteActions.nullTouchEnd);
+        setTouchDrag(SpriteActions.nullTouchDrag);
+        setScroll(SpriteActions.nullScroll);
     }
 
     /**
@@ -58,7 +61,7 @@ public class ExtensibleSpriteBuilder {
      * @param textureRegion
      * @return
      */
-    public ExtensibleSpriteBuilder textureRegion(TextureRegion textureRegion){
+    public ExtensibleSpriteBuilder setTextureRegion(TextureRegion textureRegion){
         masterTextureRegion =textureRegion;
         return this;
     }
@@ -68,7 +71,7 @@ public class ExtensibleSpriteBuilder {
      * @param shape
      * @return
      */
-    public ExtensibleSpriteBuilder shape(Shape2D shape){
+    public ExtensibleSpriteBuilder setShape(Shape2D shape){
         masterShape=shape;
         return this;
     }
@@ -78,7 +81,7 @@ public class ExtensibleSpriteBuilder {
      * @param type
      * @return
      */
-    public ExtensibleSpriteBuilder textExtension(TextExtensionType type){
+    public ExtensibleSpriteBuilder setTextExtension(TextExtensionType type){
         masterTextExtension=type;
         return this;
     }
@@ -88,7 +91,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteContains
      * @return
      */
-    public ExtensibleSpriteBuilder spriteContains(SpriteContains spriteContains){
+    public ExtensibleSpriteBuilder setContains(SpriteContains spriteContains){
         masterContains = spriteContains;
         return this;
     }
@@ -98,7 +101,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteDraw
      * @return
      */
-    public ExtensibleSpriteBuilder spriteDraw(SpriteDraw spriteDraw){
+    public ExtensibleSpriteBuilder setDraw(SpriteDraw spriteDraw){
         masterDraw =spriteDraw;
         return  this;
     }
@@ -108,7 +111,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteKeepVisible
      * @return
      */
-    public ExtensibleSpriteBuilder spriteKeepVisible(SpriteKeepVisible spriteKeepVisible){
+    public ExtensibleSpriteBuilder setKeepVisible(SpriteKeepVisible spriteKeepVisible){
         masterKeepVisible =spriteKeepVisible;
         return this;
     }
@@ -118,7 +121,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchBegin
      * @return
      */
-    public ExtensibleSpriteBuilder spriteTouchBegin(SpriteTouchBegin spriteTouchBegin){
+    public ExtensibleSpriteBuilder setTouchBegin(SpriteTouchBegin spriteTouchBegin){
         masterTouchBegin =spriteTouchBegin;
         return this;
     }
@@ -128,7 +131,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchDrag
      * @return
      */
-    public ExtensibleSpriteBuilder spriteTouchDrag(SpriteTouchDrag spriteTouchDrag){
+    public ExtensibleSpriteBuilder setTouchDrag(SpriteTouchDrag spriteTouchDrag){
         masterTouchDrag =spriteTouchDrag;
         return this;
     }
@@ -138,7 +141,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchEnd
      * @return
      */
-    public ExtensibleSpriteBuilder spriteTouchEnd(SpriteTouchEnd spriteTouchEnd){
+    public ExtensibleSpriteBuilder setTouchEnd(SpriteTouchEnd spriteTouchEnd){
         masterTouchEnd =spriteTouchEnd;
         return this;
     }
@@ -148,7 +151,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteScroll
      * @return
      */
-    public ExtensibleSpriteBuilder spriteScroll(SpriteScroll spriteScroll){
+    public ExtensibleSpriteBuilder setScroll(SpriteScroll spriteScroll){
         masterScroll =spriteScroll;
         return this;
     }
@@ -168,6 +171,7 @@ public class ExtensibleSpriteBuilder {
         sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
         sprite.shape=shape;
         sprite.extensibleSpritePool=extensibleSpritePool;
+        sprite.camera=camera;
         sprite.setContains(masterContains);
         sprite.setKeepVisible(masterKeepVisible);
         sprite.setDraw(masterDraw);

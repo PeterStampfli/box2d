@@ -2,7 +2,6 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
@@ -26,42 +25,42 @@ public class MouseJointBuilder {
         return this;
     }
 
-    public MouseJointBuilder dummyBody(Body body) {
+    public MouseJointBuilder setDummyBody(Body body) {
         mouseJointDef.bodyA = body;
         return this;
     }
 
-    public MouseJointBuilder body(Body body) {
+    public MouseJointBuilder setBody(Body body) {
         mouseJointDef.bodyB = body;
         return this;
     }
 
-    public MouseJointBuilder collideConnected(Boolean b) {
+    public MouseJointBuilder setCollideConnected(Boolean b) {
         mouseJointDef.collideConnected = b;
         return this;
     }
 
-    public MouseJointBuilder dampingRatio(float d) {
+    public MouseJointBuilder setDampingRatio(float d) {
         mouseJointDef.dampingRatio = d;
         return this;
     }
 
-    public MouseJointBuilder frequencyHz(float d) {
+    public MouseJointBuilder setFrequencyHz(float d) {
         mouseJointDef.frequencyHz = d;
         return this;
     }
 
-    public MouseJointBuilder maxForce(float d) {
+    public MouseJointBuilder setMaxForce(float d) {
         mouseJointDef.maxForce = d;
         return this;
     }
 
-    public MouseJointBuilder target(Vector2 p) {
+    public MouseJointBuilder setTarget(Vector2 p) {
         mouseJointDef.target.set(p);
         return this;
     }
 
-    public MouseJointBuilder target(float x, float y) {
+    public MouseJointBuilder setTarget(float x, float y) {
         mouseJointDef.target.set(x, y);
         return this;
     }

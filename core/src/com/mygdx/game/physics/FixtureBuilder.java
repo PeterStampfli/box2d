@@ -44,7 +44,7 @@ public class FixtureBuilder {
      * @param density
      * @return
      */
-    public FixtureBuilder density(float density) {
+    public FixtureBuilder setDensity(float density) {
         fixtureDef.density = density;
         return this;
     }
@@ -54,7 +54,7 @@ public class FixtureBuilder {
      * @param index
      * @return
      */
-    public FixtureBuilder groupIndex(short index) {
+    public FixtureBuilder setGroupIndex(short index) {
         fixtureDef.filter.groupIndex = index;
         return this;
     }
@@ -64,7 +64,7 @@ public class FixtureBuilder {
      * @param bits
      * @return
      */
-    public FixtureBuilder categoryBits(short bits) {
+    public FixtureBuilder setCategoryBits(short bits) {
         fixtureDef.filter.categoryBits = bits;
         return this;
     }
@@ -74,7 +74,7 @@ public class FixtureBuilder {
      * @param bits
      * @return
      */
-    public FixtureBuilder maskBits(short bits) {
+    public FixtureBuilder setMaskBits(short bits) {
         fixtureDef.filter.maskBits = bits;
         return this;
     }
@@ -84,7 +84,7 @@ public class FixtureBuilder {
      * @param friction
      * @return
      */
-    public FixtureBuilder friction(float friction) {
+    public FixtureBuilder setFriction(float friction) {
         fixtureDef.friction = friction;
         return this;
     }
@@ -94,7 +94,7 @@ public class FixtureBuilder {
      * @param isSensor
      * @return
      */
-    public FixtureBuilder isSensor(boolean isSensor) {
+    public FixtureBuilder setIsSensor(boolean isSensor) {
         fixtureDef.isSensor = isSensor;
         return this;
     }
@@ -104,7 +104,7 @@ public class FixtureBuilder {
      * @param restitition
      * @return
      */
-    public FixtureBuilder restitution(float restitition) {
+    public FixtureBuilder setRestitution(float restitition) {
         fixtureDef.restitution = restitition;
         return this;
     }

@@ -225,7 +225,7 @@ public class Physics implements Disposable{
     /**
      * the graphics time is the time at call of this method.
      * advance the physics time past the graphics time.
-     * Update physics data (eg. world center position and angle) of userData objects.
+     * Update physics data (eg. world center setPosition and setAngle) of userData objects.
      * Let userData objects ionterpolate physics data to get data at graphics time.
      */
     public void advance(){

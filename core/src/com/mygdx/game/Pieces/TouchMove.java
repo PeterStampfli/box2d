@@ -56,7 +56,7 @@ public class TouchMove extends InputAdapter{
     }
 
     /**
-     * set average touch position and change in touch
+     * set average touch setPosition and change in touch
      */
     private void updateTouchPosition() {
         touchPosition.set(oldTouchPosition).add(newTouchPosition).scl(0.5f);
@@ -87,7 +87,7 @@ public class TouchMove extends InputAdapter{
         else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
             oldTouchPosition.set(newTouchPosition);
         }
-        // relevant position is average, and get change in position
+        // relevant setPosition is average, and get change in setPosition
         touchPosition.set(oldTouchPosition).add(newTouchPosition).scl(0.5f);
         deltaTouchPosition.set(newTouchPosition).sub(oldTouchPosition);
         // for new touch see if a touchable piece has been selected
@@ -122,8 +122,8 @@ public class TouchMove extends InputAdapter{
 
     /**
      * scroll draw only by event handling
-     * call scroll draw on the piece, together with mouse position
-     * Note: scroll occurs only on PC, where mouse position is always defined
+     * call scroll draw on the piece, together with mouse setPosition
+     * Note: scroll occurs only on PC, where mouse setPosition is always defined
      * @param amount
      * @return
      */

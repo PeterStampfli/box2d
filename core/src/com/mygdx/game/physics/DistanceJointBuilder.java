@@ -37,72 +37,72 @@ public class DistanceJointBuilder {
         return this;
     }
 
-    public DistanceJointBuilder dampingRatio(float d) {
+    public DistanceJointBuilder setDampingRatio(float d) {
         distanceJointDef.dampingRatio = d;
         return this;
     }
 
-    public DistanceJointBuilder frequencyHz(float d) {
+    public DistanceJointBuilder setFrequencyHz(float d) {
         distanceJointDef.frequencyHz = d;
         return this;
     }
 
-    public DistanceJointBuilder collideConnected(boolean c) {
+    public DistanceJointBuilder setCollideConnected(boolean c) {
         distanceJointDef.collideConnected = c;
         return this;
     }
 
-    public DistanceJointBuilder bodyA(Body body) {
+    public DistanceJointBuilder setBodyA(Body body) {
         distanceJointDef.bodyA = body;
         return this;
     }
 
-    public DistanceJointBuilder bodyB(Body body) {
+    public DistanceJointBuilder setBodyB(Body body) {
         distanceJointDef.bodyB = body;
         return this;
     }
 
-    public DistanceJointBuilder localAnchorA(Vector2 p) {
+    public DistanceJointBuilder setLocalAnchorA(Vector2 p) {
         distanceJointDef.localAnchorA.set(p);
         return this;
     }
 
-    public DistanceJointBuilder localAnchorA(float x, float y) {
+    public DistanceJointBuilder setLocalAnchorA(float x, float y) {
         distanceJointDef.localAnchorA.set(x, y);
         return this;
     }
 
-    public DistanceJointBuilder localAnchorAIsLocalCenter() {
+    public DistanceJointBuilder setLocalAnchorAIsLocalCenter() {
         distanceJointDef.localAnchorA.set(distanceJointDef.bodyA.getLocalCenter());
         return this;
     }
 
-    public DistanceJointBuilder localAnchorB(Vector2 p) {
+    public DistanceJointBuilder setLocalAnchorB(Vector2 p) {
         distanceJointDef.localAnchorB.set(p);
         return this;
     }
 
-    public DistanceJointBuilder localAnchorB(float x, float y) {
+    public DistanceJointBuilder setLocalAnchorB(float x, float y) {
         distanceJointDef.localAnchorB.set(x, y);
         return this;
     }
 
-    public DistanceJointBuilder localAnchorBIsLocalCenter() {
+    public DistanceJointBuilder setLocalAnchorBIsLocalCenter() {
         distanceJointDef.localAnchorB.set(distanceJointDef.bodyB.getLocalCenter());
         return this;
     }
 
-    public DistanceJointBuilder length(float d) {
+    public DistanceJointBuilder setLength(float d) {
         distanceJointDef.length = d;
         return this;
     }
 
-    public DistanceJointBuilder length() {
+    public DistanceJointBuilder setLength() {
         Vector2 anchorDistance = new Vector2(distanceJointDef.bodyA.getPosition())
                 .add(distanceJointDef.localAnchorA)
                 .sub(distanceJointDef.bodyB.getPosition())
                 .sub(distanceJointDef.localAnchorB);
-        length(anchorDistance.len());
+        setLength(anchorDistance.len());
         return this;
     }
 

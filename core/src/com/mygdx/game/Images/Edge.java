@@ -101,7 +101,7 @@ public class Edge implements Shape2D {
     }
 
     /**
-     * set ghost a position and that it exists
+     * set ghost b position and that it exists
      * @param x
      * @param y
      * @return

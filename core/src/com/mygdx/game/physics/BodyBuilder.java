@@ -80,7 +80,7 @@ public class BodyBuilder {
      * @param isActive
      * @return
      */
-    public BodyBuilder active(boolean isActive) {
+    public BodyBuilder setIsActive(boolean isActive) {
         bodyDef.active = isActive;
         return this;
     }
@@ -90,7 +90,7 @@ public class BodyBuilder {
      * @param isAwake
      * @return
      */
-    public BodyBuilder awake(boolean isAwake) {
+    public BodyBuilder setIsAwake(boolean isAwake) {
         bodyDef.awake = isAwake;
         return this;
     }
@@ -100,7 +100,7 @@ public class BodyBuilder {
      * @param allowed
      * @return
      */
-    public BodyBuilder allowSleep(boolean allowed) {
+    public BodyBuilder setAllowSleep(boolean allowed) {
         bodyDef.allowSleep = allowed;
         return this;
     }
@@ -110,29 +110,29 @@ public class BodyBuilder {
      * @param isBullet
      * @return
      */
-    public BodyBuilder bullet(boolean isBullet) {
+    public BodyBuilder setIsBullet(boolean isBullet) {
         bodyDef.bullet = isBullet;
         return this;
     }
 
     /**
-     * set body position
-     * as scaled from graphics position
+     * set body setPosition
+     * as scaled from graphics setPosition
      * @param positionX
      * @param positionY
      * @return
      */
-    public BodyBuilder position(float positionX, float positionY) {
+    public BodyBuilder setPosition(float positionX, float positionY) {
         bodyDef.position.set(positionX/Physics.PIXELS_PER_METER, positionY/Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * set body position (graphics world units)
+     * set body setPosition (graphics world units)
      * @param position
      * @return
      */
-    public BodyBuilder position(Vector2 position) {
+    public BodyBuilder setPosition(Vector2 position) {
         bodyDef.position.set(position);
         return this;
     }
@@ -142,7 +142,7 @@ public class BodyBuilder {
      * @param angle
      * @return
      */
-    public BodyBuilder angle(float angle) {
+    public BodyBuilder setAngle(float angle) {
         bodyDef.angle = angle;
         return this;
     }
@@ -153,7 +153,7 @@ public class BodyBuilder {
      * @param damping
      * @return
      */
-    public BodyBuilder angularDamping(float damping) {
+    public BodyBuilder setAngularDamping(float damping) {
         bodyDef.angularDamping = damping;
         return this;
     }
@@ -163,7 +163,7 @@ public class BodyBuilder {
      * @param velocity
      * @return
      */
-    public BodyBuilder angularVelocity(float velocity) {
+    public BodyBuilder setAngularVelocity(float velocity) {
         bodyDef.angularVelocity = velocity;
         return this;
     }
@@ -174,7 +174,7 @@ public class BodyBuilder {
      * @param damping
      * @return
      */
-    public BodyBuilder linearDamping(float damping) {
+    public BodyBuilder setLinearDamping(float damping) {
         bodyDef.linearDamping = damping;
         return this;
     }
@@ -186,7 +186,7 @@ public class BodyBuilder {
      * @param velocityY
      * @return
      */
-    public BodyBuilder linearVelocity(float velocityX, float velocityY) {
+    public BodyBuilder setLinearVelocity(float velocityX, float velocityY) {
         bodyDef.linearVelocity.set(velocityX/Physics.PIXELS_PER_METER, velocityY/Physics.PIXELS_PER_METER);
         return this;
     }
@@ -196,7 +196,7 @@ public class BodyBuilder {
      * @param velocity
      * @return
      */
-    public BodyBuilder linearVelocity(Vector2 velocity) {
+    public BodyBuilder setLinearVelocity(Vector2 velocity) {
         bodyDef.linearVelocity.set(velocity);
         return this;
     }
@@ -206,7 +206,7 @@ public class BodyBuilder {
      * @param scale
      * @return
      */
-    public BodyBuilder gravityScale(float scale) {
+    public BodyBuilder setGravityScale(float scale) {
         bodyDef.gravityScale = scale;
         return this;
     }
