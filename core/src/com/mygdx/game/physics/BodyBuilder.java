@@ -3,6 +3,7 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Created by peter on 3/22/17.
@@ -220,9 +221,6 @@ public class BodyBuilder {
         Body body = physics.world.createBody(bodyDef);
         physics.bodiesNeedUpdate=true;
         body.setUserData(userData);
-        if (userData instanceof Box2DSprite){
-            ((Box2DSprite)userData).body=body;
-        }
         return body;
     }
 
@@ -234,4 +232,17 @@ public class BodyBuilder {
         return build(null);
     }
 
+    /**
+     * build a body with a sprite (created extra with its image ...)
+     * creates a bodyToSprite object for the new body and given sprite and sets it as user data
+     * get bodyToSprite from body.userData if needed (why?)
+     * @param sprite
+     * @return
+     */
+    public Body build(ExtensibleSprite sprite){
+        Body body=build();
+        physics.bodiesNeedUpdate=true;
+        body.setUserData(new BodyToSprite(body,sprite));
+        return body;
+    }
 }

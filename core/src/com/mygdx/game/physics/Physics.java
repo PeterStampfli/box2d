@@ -200,8 +200,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof Box2DSprite){
-                ((Box2DSprite)userData).saveBodyPositionAngle();
+            if (userData instanceof BodyToSprite){
+                ((BodyToSprite)userData).saveBodyPositionAngle();
             }
         }
     }
@@ -216,8 +216,8 @@ public class Physics implements Disposable{
         updateBodies();
         for (Body body:bodies){
             userData=body.getUserData();
-            if (userData instanceof Box2DSprite){
-                ((Box2DSprite)userData).updateSpritePositionAngle(progress);
+            if (userData instanceof BodyToSprite){
+                ((BodyToSprite)userData).updateSpritePositionAngle(progress);
             }
         }
     }

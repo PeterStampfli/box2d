@@ -13,5 +13,5 @@ public interface SpriteContains {
      * @param y
      * @return
      */
-    boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y);
+    boolean contains(ExtensibleSprite sprite, float x, float y);
 }

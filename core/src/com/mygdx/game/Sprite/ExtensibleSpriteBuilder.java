@@ -43,14 +43,14 @@ public class ExtensibleSpriteBuilder {
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        setMasterTextExtension(TextExtensionType.NONE);
-        setMasterContains(SpriteActions.shapeContains);
-        setMasterDraw(SpriteActions.simpleDraw);
-        setMasterKeepVisible(SpriteActions.nullKeepVisible);
-        setMasterTouchBegin(SpriteActions.nullTouchBegin);
-        setMasterTouchEnd(SpriteActions.nullTouchEnd);
-        setMasterTouchDrag(SpriteActions.nullTouchDrag);
-        setMasterScroll(SpriteActions.nullScroll);
+        textExtension(TextExtensionType.NONE);
+        spriteContains(SpriteActions.shapeContains);
+        spriteDraw(SpriteActions.simpleDraw);
+        spriteKeepVisible(SpriteActions.nullKeepVisible);
+        spriteTouchBegin(SpriteActions.nullTouchBegin);
+        spriteTouchEnd(SpriteActions.nullTouchEnd);
+        spriteTouchDrag(SpriteActions.nullTouchDrag);
+        spriteScroll(SpriteActions.nullScroll);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ExtensibleSpriteBuilder {
      * @param textureRegion
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterTextureRegion(TextureRegion textureRegion){
+    public ExtensibleSpriteBuilder textureRegion(TextureRegion textureRegion){
         masterTextureRegion =textureRegion;
         return this;
     }
@@ -68,7 +68,7 @@ public class ExtensibleSpriteBuilder {
      * @param shape
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterShape(Shape2D shape){
+    public ExtensibleSpriteBuilder shape(Shape2D shape){
         masterShape=shape;
         return this;
     }
@@ -78,7 +78,7 @@ public class ExtensibleSpriteBuilder {
      * @param type
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterTextExtension(TextExtensionType type){
+    public ExtensibleSpriteBuilder textExtension(TextExtensionType type){
         masterTextExtension=type;
         return this;
     }
@@ -88,7 +88,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteContains
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterContains(SpriteContains spriteContains){
+    public ExtensibleSpriteBuilder spriteContains(SpriteContains spriteContains){
         masterContains = spriteContains;
         return this;
     }
@@ -98,7 +98,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteDraw
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterDraw(SpriteDraw spriteDraw){
+    public ExtensibleSpriteBuilder spriteDraw(SpriteDraw spriteDraw){
         masterDraw =spriteDraw;
         return  this;
     }
@@ -108,7 +108,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteKeepVisible
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterKeepVisible(SpriteKeepVisible spriteKeepVisible){
+    public ExtensibleSpriteBuilder spriteKeepVisible(SpriteKeepVisible spriteKeepVisible){
         masterKeepVisible =spriteKeepVisible;
         return this;
     }
@@ -118,7 +118,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchBegin
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterTouchBegin(SpriteTouchBegin spriteTouchBegin){
+    public ExtensibleSpriteBuilder spriteTouchBegin(SpriteTouchBegin spriteTouchBegin){
         masterTouchBegin =spriteTouchBegin;
         return this;
     }
@@ -128,7 +128,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchDrag
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterTouchDrag(SpriteTouchDrag spriteTouchDrag){
+    public ExtensibleSpriteBuilder spriteTouchDrag(SpriteTouchDrag spriteTouchDrag){
         masterTouchDrag =spriteTouchDrag;
         return this;
     }
@@ -138,7 +138,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteTouchEnd
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterTouchEnd(SpriteTouchEnd spriteTouchEnd){
+    public ExtensibleSpriteBuilder spriteTouchEnd(SpriteTouchEnd spriteTouchEnd){
         masterTouchEnd =spriteTouchEnd;
         return this;
     }
@@ -148,7 +148,7 @@ public class ExtensibleSpriteBuilder {
      * @param spriteScroll
      * @return
      */
-    public ExtensibleSpriteBuilder setMasterScroll(SpriteScroll spriteScroll){
+    public ExtensibleSpriteBuilder spriteScroll(SpriteScroll spriteScroll){
         masterScroll =spriteScroll;
         return this;
     }
@@ -182,9 +182,9 @@ public class ExtensibleSpriteBuilder {
                 sprite.textExtension=new SimpleTextExtension(glyphLayoutPool,font,sprite);
                 break;
             case BIG:
+                sprite.textExtension=new BigTextExtension(glyphLayoutPool,font,sprite);
                 break;
         }
-
         return sprite;
     }
 
