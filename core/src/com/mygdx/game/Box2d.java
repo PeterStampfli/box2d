@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
@@ -52,29 +53,29 @@ public class Box2d extends ApplicationAdapter {
 		int viewportSize=500;
 		viewport= device.createExtendViewport(viewportSize,viewportSize,followCamera);
 
-		SpriteActions.setCamera(viewport);
 		shapeRenderer=device.shape2DRenderer;
 		spriteBatch=device.spriteBatch;
 		shapeRenderer.setNullRadius(5);
 		shape2DCollection=new Shape2DCollection();
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
-		shape2DCollection.addPolygon(0,0,290,0,150,290);
-		Mask mask=new Mask(300,30);
+		//shape2DCollection.add();
+		Circle circle=new Circle(150,150,149);
+		Mask mask=new Mask(300,300);
 
-		//mask.fill(shape2DCollection);
-		mask.invert();
+		mask.fill(circle);
 
 		img=mask.createTransparentWhiteTextureRegion();
 
 		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device,
 				                                                                    device.bitmapFont);
 
-		extensibleSpriteBuilder.setMasterTextExtension(ExtensibleSpriteBuilder.TextExtensionType.SIMPLE);
+		//extensibleSpriteBuilder.spriteTouchBegin();
+		extensibleSpriteBuilder.setTouchDrag(SpriteActions.touchDragTransRotate).setKeepVisible(SpriteActions.keepOriginVisible);
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 
 		extensibleSprite.setPosition(40,40);
-		extensibleSprite.setText("ÄtestfgjÂ");
+		//extensibleSprite.setText("ÄtestfgjÂ");
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
@@ -83,14 +84,14 @@ public class Box2d extends ApplicationAdapter {
 	//	BigTextExtension.setFont(device.bitmapFont);
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-	//	BigTextExtension bigText=new BigTextExtension(langerText,extensibleSprite);
+		//extensibleSprite.setText(langerText);
 
 	}
 
 	@Override
 	public void resize(int w,int h){
 		device.resize(w, h);
-		extensibleSprite.keepVisible();
+		extensibleSprite.keepVisible(viewport.getCamera());
 	}
 
 	@Override
