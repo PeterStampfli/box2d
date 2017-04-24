@@ -32,7 +32,7 @@ public class Polypoint {
      * @param isLoop
      * @return this
      */
-    public Polypoint isLoop(boolean isLoop){
+    public Polypoint setIsLoop(boolean isLoop){
         this.isLoop=isLoop;
         return this;
     }
@@ -41,8 +41,8 @@ public class Polypoint {
      * set that it is meant to be a loop
      * @return
      */
-    public Polypoint isLoop(){
-        return isLoop(true);
+    public Polypoint setIsLoop(){
+        return setIsLoop(true);
     }
 
     /**

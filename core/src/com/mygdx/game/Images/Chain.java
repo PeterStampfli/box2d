@@ -17,21 +17,20 @@ public class Chain implements Shape2D {
 
     /**
      * create chain with point coordinates
-     * set ghosts or isLoop separately
+     * set ghosts or set isLoop separately
      * @param coordinates
      */
     public Chain(float... coordinates){
-        this.coordinates=coordinates;
+        set(coordinates);
     }
 
     /**
-     * create chain with point coordinates
-     * set ghosts or isLoop separately
+     * create chain with points from Polypoint, including isLoooüp
+     * set ghosts separately
      * @param polypoint
      */
     public Chain(Polypoint polypoint){
-        this.coordinates=polypoint.coordinates.toArray();
-        this.isLoop=polypoint.isLoop;
+        set(polypoint);
     }
 
     /**
@@ -45,18 +44,27 @@ public class Chain implements Shape2D {
     }
 
     /**
-     * set internal vertices of the chain
+     * set internal vertices of the chain from polypoint
+     * if polypoint is a loop delete ghosts and set is loop
      * @param polypoint
      * @return
      */
     public Chain set(Polypoint polypoint){
         this.coordinates=polypoint.coordinates.toArray();
-        if (polypoint.isLoop){
-            isLoop();
+        setIsLoop(polypoint.isLoop);
+        return this;
+    }
+
+    /**
+     * set that chain is a loop
+     * if it is a loop delete ghosts
+     * @return
+     */
+    public Chain setIsLoop(boolean isLoop){
+        if (isLoop){
+            deleteGhosts();
         }
-        else{
-            this.isLoop=false;
-        }
+        this.isLoop=isLoop;
         return this;
     }
 
@@ -66,13 +74,12 @@ public class Chain implements Shape2D {
     public Chain deleteGhosts(){
         ghostAExists=false;
         ghostBExists=false;
-        isLoop=false;
         return this;
     }
 
     /**
      * set ghost A position and that it exists,
-     * isLoop =false
+     * setIsLoop =false
      * @param x
      * @param y
      * @return
@@ -86,7 +93,7 @@ public class Chain implements Shape2D {
     }
 
     /**
-     * set ghost A position and that it exists
+     * set ghost A position and that it exists and that this is not a loop
      * @param position
      * @return
      */
@@ -95,7 +102,7 @@ public class Chain implements Shape2D {
     }
 
     /**
-     * set ghost a position and that it exists
+     * set ghost a position and that it exists, set that it is not a loop
      * @param x
      * @param y
      * @return
@@ -115,16 +122,6 @@ public class Chain implements Shape2D {
      */
     public Chain addGhostB(Vector2 position){
         return addGhostB(position.x,position.y);
-    }
-
-    /**
-     * set that chain is a loop without ghosts
-     * @return
-     */
-    public Chain isLoop(){
-        deleteGhosts();
-        isLoop=true;
-        return this;
     }
 
     @Override
