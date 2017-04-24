@@ -1,6 +1,5 @@
 package com.mygdx.game.Sprite;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -17,7 +16,6 @@ public class ExtensibleSpriteBuilder {
     public Pool<ExtensibleSprite> extensibleSpritePool;
     public Pool<GlyphLayout> glyphLayoutPool;
     public BitmapFont font;
-    public Camera camera;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
     public TextExtensionType masterTextExtension;
@@ -41,11 +39,10 @@ public class ExtensibleSpriteBuilder {
      * @param device
      * @param font
      */
-    public ExtensibleSpriteBuilder(Device device,BitmapFont font,Camera camera){
+    public ExtensibleSpriteBuilder(Device device,BitmapFont font){
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        this.camera=camera;
         setTextExtension(TextExtensionType.NONE);
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
@@ -171,7 +168,6 @@ public class ExtensibleSpriteBuilder {
         sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
         sprite.shape=shape;
         sprite.extensibleSpritePool=extensibleSpritePool;
-        sprite.camera=camera;
         sprite.setContains(masterContains);
         sprite.setKeepVisible(masterKeepVisible);
         sprite.setDraw(masterDraw);

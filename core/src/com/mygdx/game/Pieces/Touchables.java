@@ -1,5 +1,6 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -101,12 +102,13 @@ public class Touchables implements Touchable {
      * returns false if there is no touchable
      * @param position
      * @param deltaPosition
+     * @param camera
      * @return
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
+    public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
         if (touchables.size>0){
-            return touchables.get(0).touchDrag(position,deltaPosition);
+            return touchables.get(0).touchDrag(position,deltaPosition,camera );
         }
         return false;
     }
@@ -146,13 +148,14 @@ public class Touchables implements Touchable {
 
     /**
      * call the keep visible method, going from last to first, back to front
+     * @param camera
      */
     @Override
-    public boolean keepVisible() {
+    public boolean keepVisible(Camera camera) {
         boolean somethingChanged=false;
         int length=touchables.size;
         for (int i=length-1;i>=0;i--){
-            if (touchables.get(i).keepVisible()){
+            if (touchables.get(i).keepVisible(camera)){
                 somethingChanged=true;
             }
         }

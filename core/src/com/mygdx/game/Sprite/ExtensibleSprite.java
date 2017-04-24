@@ -18,7 +18,6 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
     public Pool<ExtensibleSprite> extensibleSpritePool;
-    public Camera camera;
     public TextExtension textExtension;
     // the composable actions
     public SpriteContains spriteContains;
@@ -224,7 +223,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     @Override
-    public boolean keepVisible(){return spriteKeepVisible.keepVisible(this,camera);};
+    public boolean keepVisible(Camera camera){return spriteKeepVisible.keepVisible(this,camera);};
 
     // what to do at begin of touch
 
@@ -265,11 +264,12 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      * touch drag
      * @param position
      * @param deltaPosition
+     * @param camera
      * @return
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
-        return spriteTouchDrag.touchDrag(this,position,deltaPosition);
+    public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
+        return spriteTouchDrag.touchDrag(this,position,deltaPosition, camera);
     }
 
     // what to do at end of touch

@@ -115,7 +115,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag nullTouchDrag=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
             return false;
         }
     };
@@ -126,9 +126,9 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTranslate=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
             sprite.translate(deltaPosition.x,deltaPosition.y);
-            sprite.keepVisible();
+            sprite.keepVisible(camera);
             return false;
         }
     };
@@ -140,7 +140,7 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTransRotate=new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition, Camera camera) {
             float centerTouchX=touchPosition.x-sprite.getWorldOriginX();
             float centerTouchY=touchPosition.y-sprite.getWorldOriginY();
             float centerTouchLength=Vector2.len(centerTouchX,centerTouchY);
@@ -154,7 +154,7 @@ public class SpriteActions {
             sprite.translate(deltaTouchPosition.x-((cosDeltaAngle-1)*centerTouchX-sinDeltaAngle*centerTouchY),
                              deltaTouchPosition.y-(sinDeltaAngle*centerTouchX+(cosDeltaAngle-1)*centerTouchY));
 
-            sprite.keepVisible();
+            sprite.keepVisible(camera);
             return true;
         }
     };

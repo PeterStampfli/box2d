@@ -1,5 +1,6 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
@@ -15,8 +16,8 @@ public interface Touchable extends Shape2D {
     // object can draw with a batch
     void draw(Batch batch);
 
-    // has to be able to remain visible (knows its camera), return true if something changes (and redraw needed)
-    boolean keepVisible();
+    // has to be able to remain visible (depends on camera), return true if something changes (and redraw needed)
+    boolean keepVisible(Camera camera);
 
     // begin-touch draw, return true if something changed, call requestRendering, this is safer
     // return true if something happened
@@ -24,7 +25,7 @@ public interface Touchable extends Shape2D {
 
     // do drag draw, return true if something changed
     // return true if something happened
-    boolean touchDrag(Vector2 position,Vector2 deltaPosition);
+    boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera);
 
     // end of touch
     // return true if something happened

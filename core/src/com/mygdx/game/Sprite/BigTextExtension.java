@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprite;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -80,10 +81,11 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag,S
      * @param sprite
      * @param position
      * @param deltaPosition
+     * @param camera
      * @return
      */
     @Override
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
         textShift+=deltaPosition.y;
         return true;
     }

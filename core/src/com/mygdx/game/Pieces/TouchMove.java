@@ -101,7 +101,7 @@ public class TouchMove extends InputAdapter{
             }
             else if (isTouching&&wasTouching){
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
+                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition,camera);
                 }
             }
             else {                     // !isTouching&&wasTouching
