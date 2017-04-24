@@ -20,10 +20,16 @@ public class SpriteActions {
     static public SpriteContains shapeContains=new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
-            if (!sprite.getBoundingRectangle().contains(x,y)) return false;
             // shift that "origin" is at (0,0)
+            float maxOffset=sprite.getWidth()+sprite.getHeight();
             x-=sprite.getWorldOriginX();
+            if (Math.abs(x)>maxOffset){      // very safe, local origin inside sprite rectangle
+                return false;
+            }
             y-=sprite.getWorldOriginY();
+            if (Math.abs(y)>maxOffset){      // very safe, local origin inside sprite rectangle
+                return false;
+            }
             float angleDeg=sprite.getRotation();
             float sinAngle= MathUtils.sinDeg(angleDeg);
             float cosAngle=MathUtils.cosDeg(angleDeg);
@@ -38,6 +44,8 @@ public class SpriteActions {
             return isInside;
         }
     };
+
+    // faster sprite contains for sprites that do not rotate
 
     /**
      * do not draw anything
