@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 public interface Touchable extends Shape2D {
 
     // object can draw with a batch
-    void draw(Batch batch);
+    void draw(Batch batch, Camera camera);
 
     // has to be able to remain visible (depends on camera), return true if something changes (and redraw needed)
     boolean keepVisible(Camera camera);

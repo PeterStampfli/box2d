@@ -5,10 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool;
-import com.mygdx.game.utilities.Clipper;
 
 /**
  * Created by peter on 4/20/17.
@@ -18,6 +19,8 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag,S
     public float margin=10;
     public float textShift;                            // shift the text upwards
     public float textShiftMax;
+    static private Rectangle scissors=new Rectangle();
+    static private Rectangle bounds=new Rectangle();
 
     /**
      * to create we need glyphlayout pool and font
@@ -65,15 +68,21 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag,S
      * draw the sprite, and then the text,clipped to the sprite rectangle
      * @param sprite
      * @param batch
+     * @param camera
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch) {
+    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
         sprite.superDraw(batch);
         textShift= MathUtils.clamp(textShift,0,textShiftMax);
-        Clipper.start(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        bounds.set(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        batch.flush();
+        ScissorStack.calculateScissors(camera,batch.getTransformMatrix(),bounds,scissors);
+        ScissorStack.pushScissors(scissors);
+
         font.draw(batch, glyphLayout, sprite.getX()+margin,
                 sprite.getY()+sprite.getHeight()-margin-margin+textShift);
-        Clipper.end();
+        batch.flush();
+        ScissorStack.popScissors();
     }
 
     /**

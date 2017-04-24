@@ -18,7 +18,6 @@ import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
-import com.mygdx.game.utilities.Clipper;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
 
@@ -71,7 +70,8 @@ public class Box2d extends ApplicationAdapter {
 				                                                                    device.bitmapFont);
 
 		//extensibleSpriteBuilder.spriteTouchBegin();
-		extensibleSpriteBuilder.setTouchDrag(SpriteActions.touchDragTransRotate).setKeepVisible(SpriteActions.keepOriginVisible);
+		extensibleSpriteBuilder.setTouchDrag(SpriteActions.touchDragTransRotate).
+                setKeepVisible(SpriteActions.keepOriginVisible).setTextExtension(ExtensibleSpriteBuilder.TextExtensionType.BIG);
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 
 		extensibleSprite.setPosition(40,40);
@@ -79,12 +79,11 @@ public class Box2d extends ApplicationAdapter {
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
-		Clipper.spriteBatch=device.spriteBatch;
-		Clipper.setCamera(viewport);
+
 	//	BigTextExtension.setFont(device.bitmapFont);
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-		//extensibleSprite.setText(langerText);
+		extensibleSprite.setText(langerText);
 
 	}
 
@@ -104,7 +103,7 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
-		extensibleSprite.draw(spriteBatch);
+		extensibleSprite.draw(spriteBatch, viewport.getCamera());
 
 		spriteBatch.end();
 

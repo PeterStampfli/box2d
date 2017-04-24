@@ -205,9 +205,10 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * draw the sprite, with decos ? text!
      * @param batch
+     * @param camera
      */
     @Override
-    public void draw(Batch batch){ spriteDraw.draw(this,batch); }
+    public void draw(Batch batch, Camera camera){ spriteDraw.draw(this,batch, camera); }
 
 
     // what to do to keep sprite visible

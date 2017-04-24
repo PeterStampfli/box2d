@@ -44,7 +44,7 @@ public class SpriteActions {
      */
     static public SpriteDraw nullDraw=new SpriteDraw() {
         @Override
-        public void draw(ExtensibleSprite sprite, Batch batch) {}
+        public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {}
     };
 
     /**
@@ -52,7 +52,7 @@ public class SpriteActions {
      */
     static public SpriteDraw simpleDraw=new SpriteDraw() {
         @Override
-        public void draw(ExtensibleSprite sprite, Batch batch) {
+        public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
             sprite.superDraw(batch);
         }
     };

@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprite;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 /**
@@ -11,6 +12,7 @@ public interface SpriteDraw {
     /**
      * draw the sprite, with extras
      * @param sprite
+     * @param camera
      */
-    public void draw(com.mygdx.game.Sprite.ExtensibleSprite sprite, Batch batch);
+    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera);
 }

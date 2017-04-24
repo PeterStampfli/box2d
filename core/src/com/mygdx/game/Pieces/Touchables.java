@@ -42,12 +42,13 @@ public class Touchables implements Touchable {
     /**
      * call the draw method, going from last to first, back to front
      * @param batch
+     * @param camera
      */
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch, Camera camera) {
         int length=touchables.size;
         for (int i=length-1;i>=0;i--){
-            touchables.get(i).draw(batch);                  // rendering from bottom to top
+            touchables.get(i).draw(batch, camera);                  // rendering from bottom to top
         }
     }
 
