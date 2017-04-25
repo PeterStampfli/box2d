@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -29,15 +28,10 @@ public class Physics implements Disposable{
 
     static public float PIXELS_PER_METER=100;       // default
 
-    BodyBuilder bodyBuilder;
-    FixtureBuilder fixtureBuilder;
-    MouseJointBuilder mouseJointBuilder;
-    DistanceJointBuilder distanceJointBuilder;
-
-    OrthographicCamera debugCamera;
 
     World world;
     Box2DDebugRenderer debugRenderer;
+    OrthographicCamera debugCamera;
 
     float physicsTime;
     float graphicsTime;
@@ -58,7 +52,7 @@ public class Physics implements Disposable{
     public Physics(boolean debug){
         bodies=new Array<Body>();
         if (debug) {
-            debugRenderer =new Box2DDebugRenderer();
+            debugRenderer=new Box2DDebugRenderer();
             debugCamera=new OrthographicCamera();
         }
         Box2D.init();
@@ -78,10 +72,6 @@ public class Physics implements Disposable{
         }
         else {
             world = new World(new Vector2(gravityX, gravityY), maySleep);
-            bodyBuilder=new BodyBuilder(this);
-            fixtureBuilder=new FixtureBuilder();
-            mouseJointBuilder=new MouseJointBuilder(this);
-            distanceJointBuilder=new DistanceJointBuilder(this);
         }
         return world;
     }
@@ -95,49 +85,6 @@ public class Physics implements Disposable{
             bodiesNeedUpdate=false;
         }
     }
-    /**
-     * set the body type to dynamic body and return the bodybuilder
-     * @return
-     */
-    public BodyBuilder dynamicBody(){
-        return bodyBuilder.type(BodyDef.BodyType.DynamicBody);
-    }
-
-    /**
-     *set the body type to static body and return the bodybuilder
-     * @return
-     */
-    public BodyBuilder staticBody(){
-        return bodyBuilder.type(BodyDef.BodyType.StaticBody);
-    }
-
-    /**
-     * get the bodyBuilder
-     * @return
-     */
-    public BodyBuilder body(){
-        return bodyBuilder;
-    }
-
-    /**
-     * get the fixture builder
-     * @return
-     */
-    public FixtureBuilder fixture(){
-        return fixtureBuilder;
-    }
-
-    /**
-     * get the mouse joint builder
-     * @return
-     */
-    public MouseJointBuilder mouseJoint(){return mouseJointBuilder;}
-
-    /**
-     * get the distance joint builder
-     * @return
-     */
-    public DistanceJointBuilder distanceJoint(){return distanceJointBuilder;}
 
     /**
      * if debug==true at physics creation then do a debug rendering of result of last physics step

@@ -26,20 +26,12 @@ public class BodyBuilder {
     }
 
     /**
-     * define the body type
-     * @param bodyType
-     * @return this
-     */
-    public BodyBuilder type(BodyDef.BodyType bodyType) {
-        bodyDef.type = bodyType;
-        return this;
-    }
-
-    /**
      * reset the BodyDef data to defaults, userData=null
+     * dynamic body
      * @return this
      */
     public BodyBuilder reset() {
+        bodyDef.type= BodyDef.BodyType.DynamicBody;
         bodyDef.angle = 0;
         bodyDef.bullet = false;
         bodyDef.fixedRotation = false;
@@ -72,6 +64,17 @@ public class BodyBuilder {
         bodyDef.linearVelocity.set(body.getLinearVelocity());
         bodyDef.angularDamping = body.getAngularDamping();
         bodyDef.linearDamping = body.getLinearDamping();
+        return this;
+    }
+
+
+    /**
+     * set the body type
+     * @param bodyType
+     * @return this
+     */
+    public BodyBuilder setBodyType(BodyDef.BodyType bodyType) {
+        bodyDef.type = bodyType;
         return this;
     }
 
@@ -212,24 +215,25 @@ public class BodyBuilder {
     }
 
     /**
+     * build the body without user data
+     * set that bodies list needs update
+     * @return
+     */
+    public Body build(){
+        physics.bodiesNeedUpdate=true;
+        return physics.world.createBody(bodyDef);
+    }
+
+    /**
      * build the body from BodyDef and attach the supplied userData
      * mark, that the bodies array has to be updated
      * @param userData
      * @return
      */
     public Body build(Object userData) {
-        Body body = physics.world.createBody(bodyDef);
-        physics.bodiesNeedUpdate=true;
+        Body body = build();
         body.setUserData(userData);
         return body;
-    }
-
-    /**
-     * build the body from BodyDef without userData
-     * @return
-     */
-    public Body build() {
-        return build(null);
     }
 
     /**
@@ -241,7 +245,6 @@ public class BodyBuilder {
      */
     public Body build(ExtensibleSprite sprite){
         Body body=build();
-        physics.bodiesNeedUpdate=true;
         body.setUserData(new BodyToSprite(body,sprite));
         return body;
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
@@ -16,6 +17,9 @@ import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.Sprite.SpriteActions;
+import com.mygdx.game.physics.BodyBuilder;
+import com.mygdx.game.physics.FixtureBuilder;
+import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
@@ -37,6 +41,8 @@ public class Box2d extends ApplicationAdapter {
 	TouchMove touchMove;
 
 	ExtensibleSprite extensibleSprite;
+
+	Physics physics;
 
 	@Override
 	public void create () {
@@ -74,7 +80,7 @@ public class Box2d extends ApplicationAdapter {
                 setKeepVisible(SpriteActions.keepOriginVisible).setTextExtension(ExtensibleSpriteBuilder.TextExtensionType.BIG);
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 
-		extensibleSprite.setPosition(40,40);
+		extensibleSprite.setPosition(100,300);
 		//extensibleSprite.setText("ÄtestfgjÂ");
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
@@ -84,7 +90,14 @@ public class Box2d extends ApplicationAdapter {
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
 		extensibleSprite.setText(langerText);
+		physics=new Physics(true);
+		physics.createWorld(0,-0,true);
+		physics.start();
+		BodyBuilder bodyBuilder=new BodyBuilder(physics);
+		FixtureBuilder fixtureBuilder=new FixtureBuilder();
 
+		Body dynamicBody=bodyBuilder.setPosition(100,300).build();
+		fixtureBuilder.build(dynamicBody,circle);
 	}
 
 	@Override
@@ -113,6 +126,8 @@ public class Box2d extends ApplicationAdapter {
 		//shapeRenderer.draw(shape2DCollection);
 		//shapeRenderer.rect(0,0,100,300);
 		shapeRenderer.end();
+
+		physics.debugRender(viewport);
 	}
 	
 	@Override
