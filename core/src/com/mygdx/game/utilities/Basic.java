@@ -11,29 +11,27 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 /**
- * simple static routines, mnemonic simple meaningful interfaces to obscure libgdx calls
+ * Simple static routines with mnemonic simple meaningful interfaces for obscure libgdx calls.
  */
 
 public class Basic {
 
     private static int numberOfRenderCalls;
 
-    private static float timeOfLastFrame=10;
+    private static float timeOfLastFrame = 10;
 
 
     /**
-     * switch continuous rendering
-     *    input events trigger rendering!
+     * Switch continuous rendering on or off. (Input events always trigger rendering!)
      *
-     * @param on true for continuous rendering
+     * @param on boolean, use true for continuous rendering
      */
     public static void setContinuousRendering(boolean on) {
         Gdx.graphics.setContinuousRendering(on);
     }
 
     /**
-     * demand call to renderFrame
-     *   maybe not needed if input event already triggers rendering
+     * Demand a call of renderFrame. Not needed if input event already triggers rendering.
      */
     public static void requestRendering() {
         Gdx.graphics.requestRendering();
@@ -47,7 +45,7 @@ public class Basic {
     }
 
     /**
-     * log number of renderFrame calls to check discontinuous rendering
+     * Log the number of renderFrame calls to check the frequency of discontinuous rendering.
      */
     public static void logNumberOfRenderCalls() {
         numberOfRenderCalls++;
@@ -55,7 +53,7 @@ public class Basic {
     }
 
     /**
-     * clear the screen with a solid color
+     * Clear the screen with a solid color
      *
      * @param r 0...1, red component
      * @param g 0...1, green component
@@ -67,9 +65,9 @@ public class Basic {
     }
 
     /**
-     * clear the screen with a solid color
+     * Clear the screen with a solid color.
      *
-     * @param color libGdx Color, alpha component is ignored
+     * @param color a libGdx Color, the alpha component is ignored
      */
     public static void clearBackground(Color color) {
         clearBackground(color.r, color.g, color.b);
@@ -78,99 +76,103 @@ public class Basic {
     /**
      * set texture to linear interpolation
      *
-     * @param texture for linear interpolation
+     * @param texture
      */
     public static void linearInterpolation(Texture texture) {
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /**
-     * set texture of a textureregion to linear interpolation
+     * Set the texture of a TextureRegion to linear interpolation.
      *
-     * @param textureRegion for linear interpolation
+     * @param textureRegion
      */
     public static void linearInterpolation(TextureRegion textureRegion) {
         textureRegion.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /**
-     * get absolute time
+     * Get the absolute time in seconds
      *
-     * @return time in seconds
+     * @return float, time in seconds
      */
     public static float getTime() {
         return MathUtils.nanoToSec * TimeUtils.nanoTime();
     }
 
     /**
-     * get time passed since earlier moment
+     * Get time passed since an earlier moment.
      *
-     * @param time (start) in seconds
-     * @return time in seconds
+     * @param time of earlier moment in seconds
+     * @return float, time passed in seconds
      */
     public static float getTimeSince(float time) {
         return MathUtils.nanoToSec * TimeUtils.nanoTime() - time;
     }
 
     /**
-     * get smoothed time since last render call
+     * Get the smoothed time intervall between render calls
      *
-     * @return time interval in seconds
+     * @return float, time interval in seconds
      */
     public static float getAverageDeltaTime() {
         return Gdx.graphics.getDeltaTime();
     }
 
     /**
-     * get true measured time since last render call
+     * Get true measured time intervall between current render call and previous render call.
      *
-     * @return time interval in seconds
+     * @return float, time interval in seconds
      */
     public static float getTrueDeltaTime() {
         return Gdx.graphics.getRawDeltaTime();
     }
 
     /**
-     * check if time passed since last frame is smaller than given value
-     * for debugging, reducing the frame rate
-     * @param t
-     * @return
+     * Check if a time passed is smaller than a given value in seconds. Adds up the time between
+     * render calls. If the total is larger than a limit, then returns true and resets the accumulated time to zero.
+     * Use for debugging and for reducing the frame drawing rate.
+     *
+     * @param timeLimit in seconds
+     * @return boolean, false if accumulated time is smaller than the time limit.
      */
-    public static boolean timeSinceLastFrameIsSmallerThan(float t){
-        timeOfLastFrame+=getTrueDeltaTime();
-        if (timeOfLastFrame>=t){
-            timeOfLastFrame=0;
-            return false;
+    public static boolean timeSinceLastFrameIsLargerThan(float timeLimit) {
+        timeOfLastFrame += getTrueDeltaTime();
+        if (timeOfLastFrame >= timeLimit) {
+            timeOfLastFrame = 0;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
-     * get a float[] array from an Array of Vector2
+     * Get a float[] array from an Array of Vector2 objects.
+     *
      * @param vectors
-     * @return a float[] with the vectors as float x,y pairs
+     * @return float[], with the vectors as float x,y pairs.
      */
-    static public float[] toFloats(Array<Vector2> vectors){
-        float[] result=new float[2*vectors.size];
-        int i=0;
-        for (Vector2 vector:vectors){
-            result[i++]=vector.x;
-            result[i++]=vector.y;
+    static public float[] toFloats(Array<Vector2> vectors) {
+        float[] result = new float[2 * vectors.size];
+        int i = 0;
+        for (Vector2 vector : vectors) {
+            result[i++] = vector.x;
+            result[i++] = vector.y;
         }
         return result;
     }
 
     /**
-     * create a float array that is a scaled copy of another float array
+     * Create a float array that is a scaled copy of another float array.
+     *
      * @param vertices
      * @param scale
-     * @return
+     * @return float[], a scaled copy
      */
-    static public float[] scaled(float[] vertices,float scale){
-        int length=vertices.length;
-        float[] scaledVertices=new float[length];
-        for (int i=0;i<length;i++){
-            scaledVertices[i]=scale*vertices[i];
+    static public float[] scaled(float[] vertices, float scale) {
+        int length = vertices.length;
+        float[] scaledVertices = new float[length];
+        for (int i = 0; i < length; i++) {
+            scaledVertices[i] = scale * vertices[i];
         }
         return scaledVertices;
     }
