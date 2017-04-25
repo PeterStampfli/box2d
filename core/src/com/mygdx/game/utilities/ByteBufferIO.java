@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Created by peter on 3/10/17.
- * Reading and writing Bytebuffers on th filesystem.
+ * Reading and writing Bytebuffers on the filesystem.
  * Bytebuffer can contain any primitive datatype.
  */
 

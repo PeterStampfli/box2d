@@ -100,6 +100,7 @@ public class Accelerometer {
      * <p>
      * If there is no accelerometer and the right mouse button is pressed,
      * then read the touch position and use it to simulate an accelerometer.
+     *
      * @return Vector2, acceleration read from the accelerometer or mouse substitute. (Reuses a single Vector2 instance.)
      */
     public Vector2 readAccelerometer() {

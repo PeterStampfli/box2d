@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import static com.badlogic.gdx.Gdx.input;
 
 /**
- * Created by peter on 3/29/17.
+ * Simplifies reading touch or mouse. Unprojects the position.
+ * Limits the mouse position to the application window.
  */
 
 public class TouchReader implements Resizable{
@@ -20,7 +21,7 @@ public class TouchReader implements Resizable{
     private Vector2 position=new Vector2();
 
     /**
-     * update screen size (for limiting raw position)
+     * Update screen/window size for limiting the mouse position.
      */
     public void resize(int width,int height){
         screenWidth=width;
@@ -28,21 +29,30 @@ public class TouchReader implements Resizable{
     }
 
     /**
-     * touch position on screen, limited to screen (for mouse)
+     * Get the x-coordinate of the touch position on the screen. Limited to the window for mouse.
+     *
+     * @return float, x-coordinate
      */
     public int getXLimited(){
         return MathUtils.clamp(input.getX(),0,screenWidth);
     }
 
+    /**
+     * Get the y-coordinate of the touch position on the screen. Limited to the window for mouse.
+     *
+     * @return float, y-coordinate
+     */
     public int getYLimited(){
         return MathUtils.clamp(input.getY(),0,screenHeight);
     }
 
     /**
-     * read touch position,limit to screen if its a mouse and unproject to current viewport
-     * @param camera current, for pieces
-     * @return position, unprojected according to viewport, will be overwritten at next call
+     * Get the touch position. Unprojected to the world seen by the camera.
+     *
+     * @param camera for unprojecting into the graphics world
+     * @return Vector2 position, unprojected. Same Vector2 instance for every call
      */
+
     public Vector2 getPosition(Camera camera){
         spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
         camera.unproject(spacePositionOfTouch);
@@ -51,8 +61,9 @@ public class TouchReader implements Resizable{
     }
 
     /**
-     * read touch position,limit to screen if its a mouse and unproject to current viewport
-     * @param viewport current, for pieces
+     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
+     *
+     * @param viewport with the camera for unprojecting
      * @return position, unprojected according to viewport, will be overwritten at next call
      */
     public Vector2 getPosition(Viewport viewport){
@@ -60,7 +71,9 @@ public class TouchReader implements Resizable{
     }
 
     /**
-     * get touch event, for mouse only if the left button is pressed
+     * Get touch event. Using a mouse you have to press the left button to get a touch event.
+     *
+     * @return boolean, true if the screen/window has been touched
      */
     public boolean isTouching(){
         return input.isTouched() && input.isButtonPressed(Input.Buttons.LEFT);

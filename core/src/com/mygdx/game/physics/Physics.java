@@ -77,16 +77,6 @@ public class Physics implements Disposable{
     }
 
     /**
-     * update the bodies array if needed
-     */
-    public void updateBodies(){
-        if (bodiesNeedUpdate){
-            world.getBodies(bodies);
-            bodiesNeedUpdate=false;
-        }
-    }
-
-    /**
      * if debug==true at physics creation then do a debug rendering of result of last physics step
      * note that for interpolation the graphics and physics positions are different for fast movement
      * @param graphicsViewport the viewport of the graphics world, its camera data is scaled to set the camera for the debugRenderer
@@ -136,6 +126,16 @@ public class Physics implements Disposable{
     public void step(){
         world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS);
         physicsTime+=TIME_STEP;
+    }
+
+    /**
+     * update the bodies array if needed
+     */
+    public void updateBodies(){
+        if (bodiesNeedUpdate){
+            world.getBodies(bodies);
+            bodiesNeedUpdate=false;
+        }
     }
 
     /**

@@ -9,7 +9,8 @@ import java.util.List;
 /**
  * Created by peter on 11/2/16.
  *
- * Collects and disposes items, print log message upon disposal
+ * Collects and disposes items, prints a logging message upon disposal for debugging.
+ * We might need different disposers for items that are used and disposed at different times.
  */
 
 public class Disposer implements Disposable {
@@ -20,8 +21,7 @@ public class Disposer implements Disposable {
     private boolean logging;
 
     /**
-     * we might need different disposers for items that are used and disposed at different times
-     * default: logging off
+     * Create a disposer with a tag. The logging is switched off.
      *
      * @param tag for disposal message
      */
@@ -33,26 +33,26 @@ public class Disposer implements Disposable {
     }
 
     /**
-     * disposer without message (empty string)
+     * Create a disposer without tag and logging switched off.
      */
     public Disposer(){
         this("");
     }
 
     /**
-     * switch logging on or off (default is off)
+     * Switches logging on or off (default is off).
      *
-     * @param logging set on/off
+     * @param logging boolean, true to switch logging on.
      */
     public void setLogging(boolean logging){
         this.logging=logging;
     }
 
     /**
-     * add a disposable item to the list
+     * add a disposable item to the list.
      *
-     * @param disposable Item, to be disposed later
-     * @param name for logging upon disposal
+     * @param disposable object, to be disposed later.
+     * @param name for logging upon disposal of this object.
      */
     public void add(Disposable disposable, String name){
         disposables.add(disposable);
