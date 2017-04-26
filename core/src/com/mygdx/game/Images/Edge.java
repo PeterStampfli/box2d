@@ -1,161 +1,130 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by peter on 4/10/17.
- * graphics shape2D that parallels the box2d edgeShape
+ * A shape2D class that goes together with the box2d shape edgeShape.
  */
 
-public class Edge implements Shape2D {
-
-    public float ghostAX,ghostAY,aX,aY,bX,bY,ghostBX,ghostBY;
-    public boolean ghostAExists=false;
-    public boolean ghostBExists=false;
+public class Edge extends Shape2DAdapter {
+    public float aX, aY, bX, bY;
+    public float ghostAX, ghostAY, ghostBX, ghostBY;
+    public boolean ghostAExists = false;
+    public boolean ghostBExists = false;
 
     /**
      * edge without data to create for reuse
      */
-    public Edge(){}
-
-    /**
-     * create an edge with both ghost vertices
-     * @param ghostAX
-     * @param ghostAY
-     * @param aX
-     * @param aY
-     * @param bX
-     * @param bY
-     * @param ghostBX
-     * @param ghostBY
-     */
-    public Edge(float ghostAX,float ghostAY,float aX,float aY,
-                float bX, float bY,float ghostBX,float ghostBY){
-        addGhostA(ghostAX,ghostAY);
-        set(aX,aY,bX,bY);
-        addGhostB(ghostBX,ghostBY);
+    public Edge() {
     }
 
     /**
      * create an edge without ghost vertices
-     * @param aX
-     * @param aY
-     * @param bX
-     * @param bY
+     *
+     * @param aX float, x-coordinate of vertex a
+     * @param aY float, y-coordinate of vertex a
+     * @param bX float, x-coordinate of vertex b
+     * @param bY float, y-coordinate of vertex b
      */
-    public Edge(float aX,float aY,float bX, float bY){
-        deleteGhosts();
-        set(aX,aY,bX,bY);
-    }
-
-    /**
-     * create an edge with both ghost vertices
-     * @param ghostA
-     * @param a
-     * @param b
-     * @param ghostB
-     */
-    public Edge(Vector2 ghostA,Vector2 a,Vector2 b,Vector2 ghostB){
-        this(ghostA.x,ghostA.y,a.x,a.y,b.x,b.y,ghostB.x,ghostB.y);
+    public Edge(float aX, float aY, float bX, float bY) {
+        set(aX, aY, bX, bY);
     }
 
     /**
      * create an edge without ghost vertices
-     * @param a
-     * @param b
+     *
+     * @param a Vector2, position of vertex a
+     * @param b Vector2, position of vertex a
      */
-    public Edge(Vector2 a,Vector2 b){
-        this(a.x,a.y,b.x,b.y);
+    public Edge(Vector2 a, Vector2 b) {
+        set(a, b);
     }
 
     /**
-     * null ghosts for reuse
+     * Delete the ghost vertices for reuse.
+     *
+     * @return this, for chaining
      */
-    public Edge deleteGhosts(){
-        ghostAExists=false;
-        ghostBExists=false;
+    public Edge deleteGhosts() {
+        ghostAExists = false;
+        ghostBExists = false;
+        return this;
+    }
+
+    /**
+     * Set position of ghost A and that it exists.
+     *
+     * @param x float, x-coordinate of ghost A
+     * @param y float, y-coordinate of ghost A
+     * @return this, for chaining
+     */
+    public Edge addGhostA(float x, float y) {
+        ghostAExists = true;
+        ghostAX = x;
+        ghostAY = y;
         return this;
     }
 
     /**
      * set ghost A position and that it exists
-     * @param x
-     * @param y
-     * @return
+     *
+     * @param position Vector2, position of ghost A
+     * @return this, for chaining
      */
-    public Edge addGhostA(float x, float y){
-        ghostAExists=true;
-        ghostAX=x;
-        ghostAY=y;
-        return this;
+    public Edge addGhostA(Vector2 position) {
+        return addGhostA(position.x, position.y);
     }
 
     /**
-     * set ghost A position and that it exists
-     * @param position
-     * @return
+     * set ghost B position and that it exists.
+     *
+     * @param x float, x-coordinate of ghost B
+     * @param y float, y-coordinate of ghost B
+     * @return this, for chaining
      */
-    public Edge addGhostA(Vector2 position){
-        return addGhostA(position.x,position.y);
-    }
-
-    /**
-     * set ghost b position and that it exists
-     * @param x
-     * @param y
-     * @return
-     */
-    public Edge addGhostB(float x, float y){
-        ghostBExists=true;
-        ghostBX=x;
-        ghostBY=y;
+    public Edge addGhostB(float x, float y) {
+        ghostBExists = true;
+        ghostBX = x;
+        ghostBY = y;
         return this;
     }
 
     /**
      * set ghost B position and that it exists
-     * @param position
-     * @return
+     *
+     * @param position Vector2, position of ghost B
+     * @return this, for chaining
      */
-    public Edge addGhostB(Vector2 position){
-        return addGhostB(position.x,position.y);
+    public Edge addGhostB(Vector2 position) {
+        return addGhostB(position.x, position.y);
     }
 
     /**
-     * set the edge positions
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @return
+     * Set the positions of the vertices.
+     *
+     * @param aX float, x-coordinate of vertex a
+     * @param aY float, y-coordinate of vertex a
+     * @param bX float, x-coordinate of vertex b
+     * @param bY float, y-coordinate of vertex b
+     * @return this, for chaining
      */
-    public Edge set(float x1,float y1,float x2,float y2){
-        aX=x1;
-        aY=y1;
-        bX=x2;
-        bY=y2;
+    public Edge set(float aX, float aY, float bX, float bY) {
+        this.aX = aX;
+        this.aY = aY;
+        this.bX = bX;
+        this.bY = bY;
         return this;
     }
 
     /**
-     * set the edge positions
+     * Set the positions of the vertices.
+     *
      * @param a
      * @param b
-     * @return
+     * @return this, for chaining
      */
-    public Edge set(Vector2 a,Vector2 b){
-        return set(a.x,a.y,b.x,b.y);
+    public Edge set(Vector2 a, Vector2 b) {
+        return set(a.x, a.y, b.x, b.y);
     }
 
-
-    @Override
-    public boolean contains(Vector2 point) {
-        return false;
-    }
-
-    @Override
-    public boolean contains(float x, float y) {
-        return false;
-    }
 }
