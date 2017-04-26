@@ -8,36 +8,35 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.TouchReader;
 
 /**
- * Created by peter on 3/29/17.
+ * Poll touch events and transmit to touchable objects.
  */
 
-public class TouchMove extends InputAdapter{
+public class TouchMove extends InputAdapter {
 
     public Touchable piece;
     public TouchReader touchReader;
     public Camera camera;
-    private boolean pieceIsSelected=false;                                 // piece is really selected
-    // if there was touch in previous call, we need this because we do polling
-    private boolean wasTouching=false;
-    //  positions of last touch and new touch
-    private Vector2 oldTouchPosition;
-    private Vector2 newTouchPosition;
-    //  touchPosition of touch as average (dragging) and displacement
     public Vector2 touchPosition;
     public Vector2 deltaTouchPosition;
-    public boolean somethingChanged=false;
+    //  touchPosition of touch as average (dragging) and displacement
+    private Vector2 oldTouchPosition;
+    private Vector2 newTouchPosition;
+    private boolean pieceIsSelected = false;                                 // piece is really selected
+    // if there was touch in previous call, we need this because we do polling
+    private boolean wasTouching = false;
+    //  positions of last touch and new touch
 
     /**
-     * create
+     * Create a TouchMove controller.
      *
-     * @param piece       or collection of pieces,its rendering, selection and moving methods get called,
-     * @param touchReader  for reading touch touchPosition, depends on camera
-     * @param camera
+     * @param piece       Touchable, typically a Touchables collection
+     * @param touchReader for reading the touch Position
+     * @param camera      Camera, for the touchReader
      */
     public TouchMove(Touchable piece, TouchReader touchReader, Camera camera) {
         this.piece = piece;
         this.touchReader = touchReader;
-        this.camera=camera;
+        this.camera = camera;
         oldTouchPosition = new Vector2();
         newTouchPosition = new Vector2();
         touchPosition = new Vector2();
@@ -45,18 +44,18 @@ public class TouchMove extends InputAdapter{
     }
 
     /**
-     * create
+     * Create a TouchMove controller.
      *
-     * @param piece       or collection of pieces,its rendering, selection and moving methods get called,
-     * @param touchReader  for reading touch touchPosition, depends on camera of viewport
-     * @param viewport
+     * @param piece       Touchable, typically a Touchables collection
+     * @param touchReader TouchReader, for reading the touch Position
+     * @param viewport    Viewport, with camera for the TouchReader
      */
     public TouchMove(Touchable piece, TouchReader touchReader, Viewport viewport) {
-        this(piece,touchReader,viewport.getCamera());
+        this(piece, touchReader, viewport.getCamera());
     }
 
     /**
-     * set average touch setPosition and change in touch
+     * Set the average touch position and change in touch position.
      */
     private void updateTouchPosition() {
         touchPosition.set(oldTouchPosition).add(newTouchPosition).scl(0.5f);
@@ -64,47 +63,44 @@ public class TouchMove extends InputAdapter{
     }
 
     /**
-     * update touch data and call events
-     * make sure all touchPosition data is well defined, even when not used
+     * Poll the touch data. Set touch position and change in touch. Have them defined at all times.
+     * At touch down see if a touchable is selected. Put it in front. Apply touch begin, dra and
+     * end commands on this object.
      *
-     * returns true if something changed and redraw needed
+     * @return boolean, true if something changed and redraw is needed
      */
     public boolean update() {
         boolean isTouching = touchReader.isTouching();
-        somethingChanged=false;
-        if (!isTouching&&!wasTouching){
+        boolean somethingChanged = false;
+        if (!isTouching && !wasTouching) {
             return false;                                     // totally out of touch
         }
         // update touch positions
-        if (isTouching&&!wasTouching){                                     // new touch - oldPosition is invalid
+        if (isTouching && !wasTouching) {                                     // new touch - oldPosition is invalid
             newTouchPosition.set(touchReader.getPosition(camera));
             oldTouchPosition.set(newTouchPosition);
-        }
-        else if (isTouching&&wasTouching){                         // continue touching
+        } else if (isTouching && wasTouching) {                         // continue touching
             oldTouchPosition.set(newTouchPosition);
             newTouchPosition.set(touchReader.getPosition(camera));
-        }
-        else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
+        } else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
             oldTouchPosition.set(newTouchPosition);
         }
         // relevant setPosition is average, and get change in setPosition
         touchPosition.set(oldTouchPosition).add(newTouchPosition).scl(0.5f);
         deltaTouchPosition.set(newTouchPosition).sub(oldTouchPosition);
         // for new touch see if a touchable piece has been selected
-        if (isTouching&&!wasTouching){
-            pieceIsSelected=piece.contains(touchPosition);
+        if (isTouching && !wasTouching) {
+            pieceIsSelected = piece.contains(touchPosition);
         }
         // act
         if (pieceIsSelected) {
-            if (isTouching&&!wasTouching) {
-                    somethingChanged = piece.touchBegin(touchPosition);
-            }
-            else if (isTouching&&wasTouching){
+            if (isTouching && !wasTouching) {
+                somethingChanged = piece.touchBegin(touchPosition);
+            } else if (isTouching && wasTouching) {
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition,camera);
+                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition, camera);
                 }
-            }
-            else {                     // !isTouching&&wasTouching
+            } else {                     // !isTouching&&wasTouching
                 somethingChanged = piece.touchEnd(touchPosition);
                 pieceIsSelected = false;
             }
@@ -114,23 +110,22 @@ public class TouchMove extends InputAdapter{
     }
 
     /**
-     * set this as inputprocessor (or part of multiplexer) to be able to use scroll wheel
+     * Set this as the inputProcessor (or part of multiplexer) to be able to use scroll wheel.
      */
-    public void asInputProcessor(){
+    public void asInputProcessor() {
         Gdx.input.setInputProcessor(this);
     }
 
     /**
-     * scroll draw only by event handling
-     * call scroll draw on the piece, together with mouse setPosition
-     * Note: scroll occurs only on PC, where mouse setPosition is always defined
-     * @param amount
-     * @return
+     * Scroll the element that contains the current mouse position.
+     * Note: scroll occurs only on PC, where touch (mouse) position is always defined.
+     *
+     * @param amount int, tells if scrolling up or down
+     * @return boolean, true if something changed
      */
     @Override
-    public boolean scrolled (int amount) {
-        piece.scroll(touchReader.getPosition(camera),amount);
-        return false;
+    public boolean scrolled(int amount) {
+        return piece.scroll(touchReader.getPosition(camera), amount);
     }
 
 }

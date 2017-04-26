@@ -130,7 +130,7 @@ public class Touchables implements Touchable {
 
     /**
      * Calls the touchEnd method on the first element of the collection.
-     * The calling method has to make shure that this makes sense.
+     * The calling method has to make sure that this makes sense.
      * Returns false if there is no touchable.
      *
      * @param position, Vector2 touch position
