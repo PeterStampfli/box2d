@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -239,6 +241,31 @@ public class Device implements Disposable {
     }
 
     /**
+     * Create an animation using an AtlasRegionArray.
+     *
+     * @param name String, name of the AtlasRegionArray
+     * @param frameDuration float, duration of a frame in seconds
+     * @param playMode Animation.PlayMode
+     * @return Animation
+     */
+    public Animation createAnimation(String name, float frameDuration, Animation.PlayMode playMode) {
+        return new Animation(frameDuration, basicAssets.getAtlasRegionArray(name), playMode);
+    }
+
+    /**
+     * Create a particle effect using images in an atlas.
+     *
+     * @param effectName String, name of the effect file
+     * @param atlasName  String, name of atlas with the images
+     * @return
+     */
+    public ParticleEffect createParticleEffect(String effectName, String atlasName) {
+        ParticleEffect particleEffect = new ParticleEffect();
+        particleEffect.load(Gdx.files.internal(effectName + ".p"), basicAssets.getAtlas(atlasName));
+        return particleEffect;
+    }
+    /**
+     *
      * Switch sounds on or off.
      *
      * @param on, boolean, true to switch sound on

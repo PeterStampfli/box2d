@@ -7,9 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -93,7 +91,9 @@ public class BasicAssets {
     public void getAllSounds() {
         ObjectMap.Keys<String> names = soundMap.keys();
         for (String name : names) {
-            soundMap.put(name, assetManager.get(name + "." + soundFileType, Sound.class));
+            if (soundMap.get(name)==null){
+                soundMap.put(name, assetManager.get(name + "." + soundFileType, Sound.class));
+            }
         }
     }
 
@@ -138,7 +138,9 @@ public class BasicAssets {
     public void getAllMusics() {
         ObjectMap.Keys<String> names = musicMap.keys();
         for (String name : names) {
-            musicMap.put(name, assetManager.get(name + "." + musicFileType, Music.class));
+            if (musicMap.get(name)==null){
+                musicMap.put(name, assetManager.get(name + "." + musicFileType, Music.class));
+            }
         }
     }
 
@@ -177,29 +179,30 @@ public class BasicAssets {
     }
 
     /**
-     * get texture atlases and extract the texture regions (extends texture region) as
-     * either simple atlas region or array of atlas regions (for animations)
-     * <p>
-     * multiple images format example: animation_01.png gives region_name=animation, region_index=01
-     * this will give an Array<AtlasRegion> named animation
-     * others: someImage.png give region_name=someImage, region_index=-1
+     * Get the texture atlases and extract the textureAtlas.AtlasRegions (extend texture region).
+     * Single images in the atlas (someImage.png) result in a single AtlasRegion (region.name=someImage and region.index=-1).
+     * Multiple images (animation_01.png, animation_02.png, ...) give an Array<AtlasRegion> named animation.
+     * This is because animation_01.png gives region_name=animation, region_index=01 in the atlas.
      */
-    public void getAtlases() {
+    public void getAllAtlases() {
         TextureAtlas atlas;
         Array<TextureAtlas.AtlasRegion> newRegions;
         String regionName;
         ObjectMap.Keys<String> atlasNames = atlasMap.keys();
         for (String atlasName : atlasNames) {
-            atlas = assetManager.get(atlasName + ".atlas", TextureAtlas.class);
-            // do the regions of each atlas
-            newRegions = atlas.getRegions();
-            for (TextureAtlas.AtlasRegion newRegion : newRegions) {
-                regionName = newRegion.name;
-                if (newRegion.index == -1) {  // a single masterTextureRegion of given name
-                    atlasRegionMap.put(regionName, newRegion);
-                } else {                     // multiple images
-                    if (!atlasRegionArrayMap.containsKey(regionName)) {  // if not already done, create atlasRegionArray
-                        atlasRegionArrayMap.put(regionName, atlas.findRegions(regionName));
+            if (atlasMap.get(atlasName)==null) {
+                atlas = assetManager.get(atlasName + ".atlas", TextureAtlas.class);
+                atlasMap.put(atlasName,atlas);
+                // do the regions of each atlas
+                newRegions = atlas.getRegions();
+                for (TextureAtlas.AtlasRegion newRegion : newRegions) {
+                    regionName = newRegion.name;
+                    if (newRegion.index == -1) {  // a single image of given name
+                        atlasRegionMap.put(regionName, newRegion);
+                    } else {                     // multiple images
+                        if (!atlasRegionArrayMap.containsKey(regionName)) {  // if not already done, create atlasRegionArray
+                            atlasRegionArrayMap.put(regionName, atlas.findRegions(regionName));
+                        }
                     }
                 }
             }
@@ -207,14 +210,47 @@ public class BasicAssets {
     }
 
     /**
-     * get the atlas region of given name, extends textureRegion, has more info than textureRegion
+     * get the entire TextureAtlas of a given name (for particle effects)
      *
-     * @param name
-     * @return
+     * @param name String name of the atlas
+     * @return TextureAtlas
+     */
+    public TextureAtlas getAtlas(String name) {
+        return atlasMap.get(name);
+    }
+
+    /**
+     * Get the atlas region of given name with a single image. AtlasRegion extends TextureRegion.
+     *
+     * @param name String, name of the region.
+     * @return the AtlasRegion
      */
     public TextureAtlas.AtlasRegion getAtlasRegion(String name) {
         return atlasRegionMap.get(name);
     }
+
+
+    /**
+     * Get atlas region of a multiple image in the array of given name and index (for still images).
+     *
+     * @param name String, the name of the image
+     * @param index int, index of the image
+     * @return the TextureAtlas.AtlasRegion
+     */
+    public TextureAtlas.AtlasRegion getAtlasRegion(String name, int index) {
+        return atlasRegionArrayMap.get(name).get(index);
+    }
+
+    /**
+     * For multiple images get the atlas region array of given name (for animation).
+     *
+     * @param name String, name of the regions
+     * @return Array<TextureAtlas.AtlasRegion>
+     */
+    public Array<TextureAtlas.AtlasRegion> getAtlasRegionArray(String name) {
+        return atlasRegionArrayMap.get(name);
+    }
+
 
     /**
      * To simplify debugging and production:
@@ -245,83 +281,24 @@ public class BasicAssets {
     }
 
     /**
-     * get atlas region array of given name (for animation)
+     * Load a font. There has to be a *.fnt file for the metrics and composition.
+     * The glyph images can be in an atlas.
      *
-     * @param name
-     * @return
-     */
-    public Array<TextureAtlas.AtlasRegion> getAtlasRegionArray(String name) {
-        return atlasRegionArrayMap.get(name);
-    }
-
-    /**
-     * get atlas region in an array of given name and index (for still images)
-     *
-     * @param name
-     * @param index
-     * @return
-     */
-    public TextureAtlas.AtlasRegion getAtlasRegionArrayElement(String name, int index) {
-        return atlasRegionArrayMap.get(name).get(index);
-    }
-
-    /**
-     * get the entire TextureAtlas of a given name (for particle effects)
-     *
-     * @param name
-     * @return
-     */
-    // for particle effects
-    public TextureAtlas getAtlas(String name) {
-        return atlasMap.get(name);
-    }
-
-
-    /**
-     * a loader for fonts, using a png and a fnt file.
-     * Better use a texture region instead of a png-file that makes its own texture.
-     *
-     * @param name
+     * @param name String, name of the font.
      */
     public void loadBitmapFont(String name) {
         assetManager.load(name, BitmapFont.class);
     }
 
     /**
-     * load a tiledMap with extension tmx (?)
-     * Ads the TmxMapLoader to the assetmanager
+     * Load a tiledMap. Ads the TmxMapLoader to the assetManager.
      *
-     * @param name
+     * @param name String, name of the map
      */
     public void loadTmxMap(String name) {
         if (assetManager.getLoader(TiledMap.class) == null) {
             assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         }
         assetManager.load(name, TiledMap.class);
-    }
-
-    /**
-     * create an animation using an AtlasRegionArray
-     *
-     * @param frameDuration
-     * @param name
-     * @param playMode
-     * @return
-     */
-    public Animation createAnimation(float frameDuration, String name, Animation.PlayMode playMode) {
-        return new Animation(frameDuration, getAtlasRegionArray(name), playMode);
-    }
-
-    /**
-     * create a particle effect
-     *
-     * @param effectName name of the effect file, uses file type extension p
-     * @param atlasName  name of atlas with the images
-     * @return
-     */
-    public ParticleEffect createParticleEffect(String effectName, String atlasName) {
-        ParticleEffect particleEffect = new ParticleEffect();
-        particleEffect.load(Gdx.files.internal(effectName + ".p"), getAtlas(atlasName));
-        return particleEffect;
     }
 }
