@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Iterator;
-
 /**
  * Collects touchables and implements methods on the collection.
  */
@@ -34,9 +32,7 @@ public class Touchables implements Touchable {
      */
     public boolean remove(Touchable toRemove) {
         boolean success = false;
-        Iterator<Touchable> touchableIterator = touchables.iterator();
-        while (touchableIterator.hasNext()) {
-            Touchable touchable = touchableIterator.next();
+        for (Touchable touchable : touchables) {
             if (touchable instanceof Touchables && ((Touchables) touchable).remove(toRemove)) {
                 success = true;
             }
@@ -154,9 +150,8 @@ public class Touchables implements Touchable {
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        Iterator<Touchable> touchableIterator = touchables.iterator();
-        while (touchableIterator.hasNext()) {
-            if (touchableIterator.next().scroll(position, amount)) {
+        for (Touchable touchable : touchables) {
+            if (touchable.scroll(position, amount)) {
                 return true;
             }
         }
@@ -172,9 +167,8 @@ public class Touchables implements Touchable {
     @Override
     public boolean keepVisible(Camera camera) {
         boolean somethingChanged = false;
-        Iterator<Touchable> touchableIterator = touchables.iterator();
-        while (touchableIterator.hasNext()) {
-            if (touchableIterator.next().keepVisible(camera)) {
+        for (Touchable touchable : touchables) {
+            if (touchable.keepVisible(camera)) {
                 somethingChanged = true;
             }
         }
