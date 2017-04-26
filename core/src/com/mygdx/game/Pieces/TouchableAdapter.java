@@ -11,15 +11,17 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TouchableAdapter implements Touchable {
     @Override
-    public void draw(Batch batch, Camera camera) {}
+    public void draw(Batch batch, Camera camera) {
+    }
 
     @Override
-    public boolean keepVisible(Camera camera) { return false;
+    public boolean keepVisible(Camera camera) {
+        return false;
     }
 
     @Override
     public boolean contains(Vector2 point) {
-        return contains(point.x,point.y);
+        return contains(point.x, point.y);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class TouchableAdapter implements Touchable {
 
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        if (contains(position.x,position.y)){
+        if (contains(position.x, position.y)) {
             return true;
         }
         return false;
