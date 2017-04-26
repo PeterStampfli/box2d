@@ -116,7 +116,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     /**
      * Draw an edge as a line with ghosts as points, if they exist.
      *
-     * @param edge
+     * @param edge Edge, to draw as a single line with ghost points.
      */
     public void draw(Edge edge){
         line(edge.aX,edge.aY,edge.bX,edge.bY);
@@ -129,9 +129,10 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draw an chain with ghosts, if they exist
-     * close the loop if it is a loop
-     * @param chain
+     * Draw an Chain as a polyline with ghosts as points, if they exist.
+     * Close the loop if the Chain is a loop.
+     *
+     * @param chain Chain to draw as a polyline with ghost points.
      */
     public void draw(Chain chain){
         int length=chain.coordinates.length;
@@ -152,7 +153,11 @@ public class Shape2DRenderer extends ShapeRenderer{
         }
     }
 
-
+    /**
+     * Draw any Shape2D shape, including collections.
+     *
+     * @param shape Shape2D to draw
+     */
     public void draw(Shape2D shape){
         if (shape instanceof Polygon){
             draw((Polygon)shape);
@@ -182,7 +187,7 @@ public class Shape2DRenderer extends ShapeRenderer{
             }
         }
         else {
-            Gdx.app.log(" ******************** draw","unknown masterShape "+shape.getClass());
+            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
         }
     }
 }

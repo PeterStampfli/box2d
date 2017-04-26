@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.FloatArray;
  * can create different shape2 shapes
  */
 
-public class Polypoint {
+public class Polypoint extends Shape2DAdapter{
 
     public FloatArray coordinates=new FloatArray();
     private float epsilon=0.1f;                   // on the basis of a pixel scale, 1=pixelsize

@@ -191,7 +191,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * Create a shaperenderer for debugging. Add to disposer.
+     * Create an extended shapeRenderer for debugging shape2D's. Add to disposer.
      *
      * @return Device, for chaining
      */
