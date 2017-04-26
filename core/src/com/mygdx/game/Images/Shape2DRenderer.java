@@ -10,44 +10,52 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 
 /**
- * Created by peter on 4/11/17.
- * drawing the shape2D's and Polypoint with a masterShape renderer
- * start shaperenderer, set color and type (ShapeType.Line) outside
+ * An extended shapeRenderer that draws Shape2D shapes including collections, Chains,
+ * Edges and Polypoint objects. Interfaces the Shape2D objects with corresponding circle,
+ * polygon, etc. shapeRenderer commands. Uses preset colors for points, lines and polygons.
  */
 
 public class Shape2DRenderer extends ShapeRenderer{
-    public float nullRadius;
+    public float nullRadius;                               // the circle radius to use for points
     public Color pointColor=Color.RED;
     public Color lineColor=Color.GREEN;
     public Color polygonColor=Color.YELLOW;
 
     /**
-     * create with shaperenderer to simplify further work
-     * @param nullRadius
+     * Create with special nullRadius.
+     *
+     * @param nullRadius float, radius for circles marking points
      */
     public Shape2DRenderer(float nullRadius){
-        this.nullRadius=nullRadius;
+        setNullRadius(nullRadius);
     }
 
     /**
-     * create with default null radius
+     * Create with default null radius.
      */
     public Shape2DRenderer(){
-        this.nullRadius=2;
+        setNullRadius(2);
     }
 
     /**
-     * set the nullRadius after creation with default
-     * @param nullRadius
+     * Set the nullRadius.
+     *
+     * @param nullRadius float, radius for circles marking points
      */
     public void setNullRadius(float nullRadius){
         this.nullRadius=nullRadius;
     }
 
     /**
-     * draw a point in the 2d plane as a small circle
-     * @param x
-     * @param y
+     * Begin rendering with ShapeType.line.
+     */
+    public void begin(){begin(ShapeRenderer.ShapeType.Line);}
+
+    /**
+     * Draw a point in the 2d plane as a small circle of nullRadius.
+     *
+     * @param x float, x-coordinate of point
+     * @param y float, y-coordinate of point
      */
     public void point(float x,float y){
         setColor(pointColor);
@@ -55,8 +63,9 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws the polygon with tranformed world vertices
-     * @param polygon
+     * Draws the polygon with its transformed world vertices (scaled, translated and rotated).
+     *
+     * @param polygon Polygon object to draw as outline of surface
      */
     public void draw(Polygon polygon){
         setColor(polygonColor);
@@ -64,8 +73,9 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws the polyline with transformed world vertices
-     * @param polyline
+     * Draws the Polyline with its transformed world vertices (scaled, translated and rotated).
+     *
+     * @param polyline Polyline object to draw as lines.
      */
     public void draw(Polyline polyline){
         setColor(lineColor);
@@ -73,8 +83,9 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draw the points of a polypoint object
-     * @param polypoint
+     * Draw the points of a polypoint object.
+     *
+     * @param polypoint Polypoint, to draw as a collection of points
      */
     public void draw(Polypoint polypoint){
         for (int i=polypoint.coordinates.size-2;i>=0;i-=2){
@@ -83,17 +94,19 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draws circle masterShape
-     * @param circle
+     * Draws a circle.
+     *
+     * @param circle Circle to draw as a line.
      */
     public void draw(Circle circle){
-        setColor(polygonColor);
+        setColor(lineColor);
         circle(circle.x,circle.y,circle.radius);
     }
 
     /**
-     * draw a rectangle masterShape
-     * @param rectangle
+     * Draw a rectangle.
+     *
+     * @param rectangle Rectangle to draw as outline of a polygon.
      */
     public void draw(Rectangle rectangle){
         setColor(polygonColor);
@@ -101,7 +114,8 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * draw an edge with ghosts, if they exist
+     * Draw an edge as a line with ghosts as points, if they exist.
+     *
      * @param edge
      */
     public void draw(Edge edge){
@@ -151,6 +165,9 @@ public class Shape2DRenderer extends ShapeRenderer{
         }
         else if (shape instanceof Polypoint){
             draw((Polypoint)shape);
+        }
+        else if (shape instanceof Polyline){
+            draw((Polyline) shape);
         }
         else if (shape instanceof Edge){
             draw((Edge) shape);
