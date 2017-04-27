@@ -17,13 +17,10 @@ import com.mygdx.game.utilities.Basic;
 import java.nio.ByteBuffer;
 
 /**
- * Created by peter on 2/26/17.
- * a rectangular region of bytes to use as a mask for pixmaps
- * stored in a single byte array
- * the y-axis is flipped to compensate for the inverted y-axis in pixmaps
- *
- * draw shape2D shapes in its region x=0...width and y=0 ...height
- * a pixel with indices(i,j) lies at (x,y)=(i+1/2,j+1/2)
+ * A rectangular region of bytes to use as a mask for pixmaps. Uses a simple byte array.
+ * The y-axis is flipped to compensate for the inverted y-axis of pixmaps.
+ * A pixel with indices(i,j) lies at (x,y)=(i+1/2,j+1/2).
+ * In the resulting textureRegions, the y-axis points upwards.
  */
 
 public class Mask {
@@ -32,11 +29,10 @@ public class Mask {
     public int height;
 
     /**
-     * create a mask of given width and height,
-     * sets all bytes=0 (means transparent),
-     * sets limits, such that there will be a transparent border
-     * @param width
-     * @param height
+     * Create a transparent mask of given width and height.
+     *
+     * @param width int, width of the pixmap
+     * @param height int, height of the pixmap
      */
     public Mask(int width, int height){
         this.width=width;
@@ -46,19 +42,21 @@ public class Mask {
     }
 
     /**
-     * flip the y-axis to compensate for the inversion of pixmaps
-     * images will appear upright. Higher y-values are higher up and rotation sense is unchanged
-     * @param y
-     * @return
+     * Flip the y-axis to compensate for the inversion of pixmaps. y=0 maps to y=height and inversely.
+     *
+     * @param y float, an y-coordinate
+     * @return float, the y-coordinate is flipped
      */
     private float flipY(float y){
         return height-y;
     }
 
     /**
-     * transform a byte into a positive integer 0...255
-     * @param b
-     * @return
+     * Transform a byte into a positive integer between 0 and 255.
+     * Note that a byte is cast as a signed 8 bit integer.
+     *
+     * @param b byte
+     * @return int, between 0 and 255
      */
     private int toPosInt(byte b) {
         int iB=b;
@@ -67,8 +65,9 @@ public class Mask {
     }
 
     /**
-     * clear the mask
-     * @return
+     * Make the mask transparent.
+     *
+     * @return this, for chaining
      */
     public Mask clear(){
         for (int index=alpha.length-1;index>=0;index--) {
@@ -78,8 +77,9 @@ public class Mask {
     }
 
     /**
-     * make the border bytes transparent
-     * @return this for chaining
+     * Make transparent border bytes. (For smoothing shapes)
+     *
+     * @return this, for chaining
      */
     public Mask transparentBorder(){
         int index;
@@ -96,7 +96,8 @@ public class Mask {
     }
 
     /**
-     * invert the mask bytes
+     * Invert the mask bytes. To draw transparent shapes in opaque regions.
+     *
      * @return this, for chaining
      */
     public Mask invert(){
@@ -108,25 +109,25 @@ public class Mask {
 
 
     /**
-     * the mask will always be set to the maximum value in case of superposition
-     * @param b   present mask value, >=0 (in range 0...255, as integer)
-     * @param f   opacity, will be clamped to region b to 1
-     * @return
+     * For drawing, the mask will always be set to the larger value of both the existing mask byte and the
+     * new opacity value.
+     *
+     * @param b   byte, present mask byte
+     * @param f   float, opacity to draw, between 0 and 1, 1 and larger give 255
+     * @return byte, maximum value
      */
     public byte maxByteFloat(byte b,float f){
-        int iB=b;
-        if (iB<0) iB+=256;
-        return (byte) MathUtils.clamp(Math.floor(f*256),iB,255);
+        return (byte) MathUtils.clamp(Math.floor(f*256),toPosInt(b),255);
     }
 
     /**
-     * draw a ring with opaque bits, smooth border
-     * outerRadius is the outer radius of the ring masterShape
-     * a disc if thickness <0
-     * @param centerX
-     * @param centerY
-     * @param thickness
-     * @param outerRadius
+     * Draw a ring of opaque bits with a smooth border given its center, outer radius and thickness.
+     * Draws a disc if the thickness is negative.
+     *
+     * @param centerX float, x-coordinate of the center
+     * @param centerY float, x-coordinate of the center
+     * @param thickness float, thickness of the ring, negative values give a simple disc
+     * @param outerRadius float, outer radius of the ring
      */
     public void drawRing(float centerX, float centerY, float outerRadius, float thickness){
         float dx,dy2,dx2Plusdy2;
@@ -177,27 +178,25 @@ public class Mask {
         }
     }
 
-
     /**
-     * fill a circle with opaque bits, smooth border
-     * @param centerX
-     * @param centerY
-     * @param radius
+     * Draw a disc of opaque bits with a smooth border given its center and radius.
+     *
+     * @param centerX float, x-coordinate of the center
+     * @param centerY float, x-coordinate of the center
+     * @param radius float, radius
      */
-    public void fillCircle(float centerX, float centerY, float radius){
+    public void drawCircle(float centerX, float centerY, float radius){
         drawRing(centerX,centerY,radius,-10);
     }
 
     /**
-     * fill a circle with opaque bits, smooth border
-     * the center is a continuous coordinate,
-     * (0,0) is at the lower left corner of the lowest leftest pixel
-     * center of pixels are integers plus one half
-     * @param center
-     * @param radius
+     * Draw a disc of opaque bits with a smooth border given its center and radius.
+     *
+     * @param center Vector2, center
+     * @param radius float, radius
      */
-    public void fillCircle(Vector2 center, float radius){
-        fillCircle(center.x,center.y,radius);
+    public void drawCircle(Vector2 center, float radius){
+        drawCircle(center.x,center.y,radius);
     }
 
 
@@ -326,8 +325,8 @@ public class Mask {
      * center of pixels are integers plus one half
      * @param circle
      */
-    public void fillCircle(Circle circle){
-        fillCircle(circle.x,circle.y,circle.radius);
+    public void drawCircle(Circle circle){
+        drawCircle(circle.x,circle.y,circle.radius);
     }
 
     /**
@@ -357,7 +356,7 @@ public class Mask {
             fillPolygon((Polygon)shape);
         }
         else if (shape instanceof Circle){
-            fillCircle((Circle) shape);
+            drawCircle((Circle) shape);
         }
         else if (shape instanceof Rectangle){
             fillRect((Rectangle) shape);
