@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -57,10 +56,10 @@ public class Polypoint extends Shape2DAdapter {
         int length = coordinates.size;
         for (int i = 0; i < newCoordinatesLength; i += 2) {
             if ((length == 0) || (Math.abs(newCoordinates[i] - coordinates.get(length - 2)) > Basic.epsilon)
-                    || (Math.abs(newCoordinates[i+1] - coordinates.get(length - 1)) > Basic.epsilon)) {
+                    || (Math.abs(newCoordinates[i + 1] - coordinates.get(length - 1)) > Basic.epsilon)) {
                 coordinates.add(newCoordinates[i]);
-                coordinates.add(newCoordinates[i+1]);
-                length+=2;
+                coordinates.add(newCoordinates[i + 1]);
+                length += 2;
             }
         }
     }
@@ -72,26 +71,24 @@ public class Polypoint extends Shape2DAdapter {
      */
     public void add(Vector2... points) {
         for (Vector2 point : points) {
-            add(point.x,point.y);
+            add(point.x, point.y);
         }
     }
 
     /**
-     * create points on a circle around given center with given radius
-     * from angle alpha to beta
-     * going clockwise or anticlockwise on the circle
+     * Make points on a circle arc around a given center with a given radius.
+     * Goes from angle alpha to beta, clockwise or anticlockwise.
      *
-     * @param centerX
-     * @param centerY
-     * @param radius
-     * @param alpha
-     * @param beta
-     * @param counterClockwise
-     * @return this
+     * @param centerX          float, x-coordinate of the center
+     * @param centerY          float, y-coordinate of the center
+     * @param radius           float, radius of the circle
+     * @param alpha            float, start angle
+     * @param beta             float, end angle
+     * @param counterclockwise boolean, true for going counterclockwise
      */
-    public Polypoint addBasicArc(float centerX, float centerY, float radius,
-                                 float alpha, float beta, boolean counterClockwise) {
-        if (counterClockwise) {
+    public void basicArc(float centerX, float centerY, float radius,
+                         float alpha, float beta, boolean counterclockwise) {
+        if (counterclockwise) {
             if (beta < alpha) {
                 beta += MathUtils.PI2;
             }
@@ -101,51 +98,45 @@ public class Polypoint extends Shape2DAdapter {
             }
         }
         int nSegments = MathUtils.ceil(Math.abs(beta - alpha) / maxDeltaAngle);
-        Gdx.app.log("nseg", "" + nSegments);
         float deltaAngle = (beta - alpha) / nSegments;
         float angle = alpha;
         for (int i = 0; i <= nSegments; i++) {
             add(centerX + radius * MathUtils.cos(angle), centerY + radius * MathUtils.sin(angle));
             angle += deltaAngle;
         }
-        return this;
     }
 
 
     /**
-     * create points on a circle arc around given center with given radius
-     * from angle alpha to beta
-     * going clockwise or anticlockwise on the circle
+     * Make points on a circle arc around a given center with a given radius.
+     * Goes from angle alpha to beta, clockwise or anticlockwise.
      *
-     * @param center
-     * @param radius
-     * @param alpha
-     * @param beta
-     * @param counterClockwise
-     * @return this
+     * @param center           Vector2, the center
+     * @param radius           float, radius of the circle
+     * @param alpha            float, start angle
+     * @param beta             float, end angle
+     * @param counterClockwise boolean, true for going counterclockwise
      */
-    public Polypoint addBasicArc(Vector2 center, float radius,
-                                 float alpha, float beta, boolean counterClockwise) {
-        return addBasicArc(center.x, center.y, radius, alpha, beta, counterClockwise);
+    public void basicArc(Vector2 center, float radius,
+                         float alpha, float beta, boolean counterClockwise) {
+        basicArc(center.x, center.y, radius, alpha, beta, counterClockwise);
     }
 
     /**
-     * create points on an arc going from a to b
-     * the center of the arc is on the line between a and someCenter
-     * someCenter may be the center of the arc or of another arc that joins tangentially this arc
-     * THIS should be used to join two circles
+     * Make points on an arc going from point a to point b.
+     * The center of the arc is on the line between point a and point someCenter.
+     * Point someCenter may be the center of this arc or of another arc that joins this arc.
      *
-     * @param aX
-     * @param aY
-     * @param bX
-     * @param bY
-     * @param someCenterX
-     * @param someCenterY
-     * @param counterclockwise
-     * @return this
+     * @param aX               float, x-coordinate of point a
+     * @param aY               float, y-coordinate of point a
+     * @param bX               float, x-coordinate of point b
+     * @param bY               float, y-coordinate of point b
+     * @param someCenterX      float, x-coordinate of someCenter
+     * @param someCenterY      float, x-coordinate of someCenter
+     * @param counterclockwise boolean, true for going counterclockwise
      */
-    public Polypoint addArcABSomeCenter(float aX, float aY, float bX, float bY,
-                                        float someCenterX, float someCenterY, boolean counterclockwise) {
+    public void addArcABSomeCenter(float aX, float aY, float bX, float bY,
+                                   float someCenterX, float someCenterY, boolean counterclockwise) {
         // unit vector pointing from a to someCenter
         float unitAToCenterX = someCenterX - aX;
         float unitAToCenterY = someCenterY - aY;
@@ -161,75 +152,68 @@ public class Polypoint extends Shape2DAdapter {
         float centerY = aY + unitAToCenterY * radius;
         float alpha = MathUtils.atan2(aY - centerY, aX - centerX);
         float beta = MathUtils.atan2(bY - centerY, bX - centerX);
-        addBasicArc(centerX, centerY, Math.abs(radius), alpha, beta, counterclockwise);
-        return this;
+        basicArc(centerX, centerY, Math.abs(radius), alpha, beta, counterclockwise);
     }
 
     /**
-     * create points on an arc going from a to b
-     * the center of the arc is on the line between a and someCenter
-     * someCenter may be the center of the arc or of another arc that joins tangentially this arc
-     * THIS should be used to join two circles
+     * Make points on an arc going from point a to point b.
+     * The center of the arc is on the line between point a and point someCenter.
+     * Point someCenter may be the center of this arc or of another arc that joins this arc.
      *
-     * @param a
-     * @param b
-     * @param someCenter
-     * @param counterclockwise
-     * @return this
+     * @param a                Vector2, point a
+     * @param b                Vector2, point b
+     * @param someCenter       Vector2, center point of some circle
+     * @param counterclockwise boolean, true for going counterclockwise
      */
-    public Polypoint addArcABSomeCenter(Vector2 a, Vector2 b, Vector2 someCenter, boolean counterclockwise) {
-        return addArcABSomeCenter(a.x, a.y, b.x, b.y, someCenter.x, someCenter.y, counterclockwise);
+    public void addArcABSomeCenter(Vector2 a, Vector2 b, Vector2 someCenter, boolean counterclockwise) {
+        addArcABSomeCenter(a.x, a.y, b.x, b.y, someCenter.x, someCenter.y, counterclockwise);
     }
 
     /**
-     * creat points on an arc from a to b
-     * the tangentPoint defines a tangent going from point a
-     * use only for joining a straight line
+     * Make points on an arc from point a to point b.
+     * The tangentPoint defines a tangent to the arc going out from point a.
+     * Use for joining a straight line to the arc.
      *
-     * @param aX
-     * @param aY
-     * @param bX
-     * @param bY
-     * @param tangentPointX
-     * @param tangentPointY
-     * @param counterclockwise
-     * @return this
+     * @param aX               float, x-coordinate of point a
+     * @param aY               float, y-coordinate of point a
+     * @param bX               float, x-coordinate of point b
+     * @param bY               float, y-coordinate of point b
+     * @param tangentPointX    float, x-coordinate of tangentPoint
+     * @param tangentPointY    float, y-coordinate of tangentPoint
+     * @param counterclockwise boolean, true for going counterclockwise
      */
-    public Polypoint addArcABTangent(float aX, float aY, float bX, float bY,
-                                     float tangentPointX, float tangentPointY, boolean counterclockwise) {
+    public void addArcABTangent(float aX, float aY, float bX, float bY,
+                                float tangentPointX, float tangentPointY, boolean counterclockwise) {
         float someCenterX = aX + (tangentPointY - aY);
         float someCenterY = aY - (tangentPointX - aX);
         addArcABSomeCenter(aX, aY, bX, bY, someCenterX, someCenterY, counterclockwise);
-        return this;
     }
 
     /**
-     * creat points on an arc from a to b
-     * the tangentPoint defines a tangent going from point a
-     * use only for joining a straight line
+     * Make points on an arc from point a to point b.
+     * The tangentPoint defines a tangent to the arc going out from point a.
+     * Use for joining a straight line to the arc.
      *
-     * @param a
-     * @param b
-     * @param tangentPoint
-     * @param counterclockwise
-     * @return this
+     * @param a                Vector2, point a
+     * @param b                Vector2, point b
+     * @param tangentPoint     Vector2, tangent point
+     * @param counterclockwise boolean, true for going counterclockwise
      */
-    public Polypoint addArcABTangent(Vector2 a, Vector2 b, Vector2 tangentPoint, boolean counterclockwise) {
-        return addArcABTangent(a.x, a.y, b.x, b.y, tangentPoint.x, tangentPoint.y, counterclockwise);
+    public void addArcABTangent(Vector2 a, Vector2 b, Vector2 tangentPoint, boolean counterclockwise) {
+        addArcABTangent(a.x, a.y, b.x, b.y, tangentPoint.x, tangentPoint.y, counterclockwise);
     }
 
     /**
-     * add an arc going from point a to b to c
+     * Make points on an arc going from point a to point b to point c.
      *
-     * @param aX
-     * @param aY
-     * @param bX
-     * @param bY
-     * @param cX
-     * @param cY
-     * @return this
+     * @param aX float, x-coordinate of point a
+     * @param aY float, y-coordinate of point a
+     * @param bX float, x-coordinate of point b
+     * @param bY float, y-coordinate of point b
+     * @param cX float, x-coordinate of point c
+     * @param cY float, y-coordinate of point c
      */
-    public Polypoint addArcABC(float aX, float aY, float bX, float bY, float cX, float cY) {
+    public void addArcABC(float aX, float aY, float bX, float bY, float cX, float cY) {
         float a2mb2 = (aX - bX) * (aX + bX) + (aY - bY) * (aY + bY);
         float a2mc2 = (aX - cX) * (aX + cX) + (aY - cY) * (aY + cY);
         float den = 2 * ((bY - aY) * (cX - aX) - (cY - aY) * (bX - aX));
@@ -240,20 +224,18 @@ public class Polypoint extends Shape2DAdapter {
         float gamma = MathUtils.atan2(cY - centerY, cX - centerX);
         float radius = Vector2.dst(aX, aY, centerX, centerY);
         boolean counterClockwise = ((alpha < beta) && (beta < gamma)) || ((beta < gamma) && (gamma < alpha)) || ((gamma < alpha) && (alpha < beta));
-        addBasicArc(centerX, centerY, radius, alpha, gamma, counterClockwise);
-        return this;
+        basicArc(centerX, centerY, radius, alpha, gamma, counterClockwise);
     }
 
     /**
-     * add an arc going from point a to b to c
+     * Make points on an arc going from point a to point b to point c.
      *
-     * @param a
-     * @param b
-     * @param c
-     * @return this
+     * @param a Vector2, point a
+     * @param b Vector2, point b
+     * @param c Vector2, point c
      */
-    public Polypoint addArcABC(Vector2 a, Vector2 b, Vector2 c) {
-        return addArcABC(a.x, a.y, b.x, b.y, c.x, c.y);
+    public void addArcABC(Vector2 a, Vector2 b, Vector2 c) {
+        addArcABC(a.x, a.y, b.x, b.y, c.x, c.y);
     }
 
 }

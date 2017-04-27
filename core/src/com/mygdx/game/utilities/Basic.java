@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class Basic {
 
     private static int numberOfRenderCalls;
-
     private static float timeOfLastFrame = 10;
+    public static final float epsilon=0.1f;
 
 
     /**

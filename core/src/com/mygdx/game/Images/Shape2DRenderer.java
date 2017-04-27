@@ -180,7 +180,7 @@ public class Shape2DRenderer extends ShapeRenderer{
         else if (shape instanceof Chain){
             draw((Chain) shape);
         }
-        else if (shape instanceof Shape2DCollection){
+        else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
                 draw(subShape);
