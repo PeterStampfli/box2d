@@ -2,8 +2,10 @@ package com.mygdx.game.Images;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
+import com.mygdx.game.utilities.Basic;
 
 /**
  * Create a collection of points. Make points on circle arcs.
@@ -14,23 +16,22 @@ public class Polypoint extends Shape2DAdapter {
     public FloatArray coordinates = new FloatArray();
     public float maxDeltaAngle = 0.1f;
     public boolean isLoop = false;
-    private float epsilon = 0.1f;                   // on the basis of a pixel scale, 1=pixelsize
 
     /**
-     * clear coordinates for reuse
+     * Reset for reuse. Deletes the points (their coordinates).
      *
-     * @return this
+     * @return this, for chaining
      */
-    public Polypoint clear() {
+    public Polypoint reset() {
         coordinates.clear();
         return this;
     }
 
     /**
-     * set if it is meant to be a loop
+     * Set if it is a loop. Implies that the last point should have a line to the first point.
      *
-     * @param isLoop
-     * @return this
+     * @param isLoop boolean, true if this is a loop
+     * @return this, for chaining
      */
     public Polypoint setIsLoop(boolean isLoop) {
         this.isLoop = isLoop;
@@ -38,69 +39,41 @@ public class Polypoint extends Shape2DAdapter {
     }
 
     /**
-     * set that it is meant to be a loop
+     * Get a shape2D polygon based on the vertices of a polypoint object.
      *
-     * @return
+     * @return Polygon, with the same points. An independent copy.
      */
-    public Polypoint setIsLoop() {
-        return setIsLoop(true);
+    public Polygon getPolygon() {
+        return new Polygon(coordinates.toArray());
     }
 
     /**
-     * add a point with coordinates (x,y)
-     * if it is same as last point it will not be added
-     * (important for joining arcs)
+     * Add points given by coordinate pairs (x,y)
      *
-     * @param x
-     * @param y
-     * @return this
+     * @param newCoordinates float... or float[], containg pairs of (x,y) coordinates
      */
-    public Polypoint add(float x, float y) {
+    public void add(float... newCoordinates) {
+        int newCoordinatesLength = newCoordinates.length;
         int length = coordinates.size;
-        if ((length == 0) || (Math.abs(x - coordinates.get(length - 2)) > epsilon)
-                || (Math.abs(y - coordinates.get(length - 1)) > epsilon)) {
-            coordinates.addAll(x, y);
+        for (int i = 0; i < newCoordinatesLength; i += 2) {
+            if ((length == 0) || (Math.abs(newCoordinates[i] - coordinates.get(length - 2)) > Basic.epsilon)
+                    || (Math.abs(newCoordinates[i+1] - coordinates.get(length - 1)) > Basic.epsilon)) {
+                coordinates.add(newCoordinates[i]);
+                coordinates.add(newCoordinates[i+1]);
+                length+=2;
+            }
         }
-        return this;
-    }
-
-    /**
-     * add a point
-     * if it is same as last point it will not be added
-     * (important for joining arcs)
-     *
-     * @param point
-     * @return this
-     */
-    public Polypoint add(Vector2 point) {
-        return add(point.x, point.y);
     }
 
     /**
      * add points (and corresponding line segments)
      *
-     * @param coordinates
-     * @return this
+     * @param points Vector2... or Vector2[] of points
      */
-    public Polypoint add(float... coordinates) {
-        int length = coordinates.length;
-        for (int i = 0; i < length; i += 2) {
-            add(coordinates[i], coordinates[i + 1]);
-        }
-        return this;
-    }
-
-    /**
-     * add points (and corresponding line segments)
-     *
-     * @param points
-     * @return this
-     */
-    public Polypoint add(Vector2... points) {
+    public void add(Vector2... points) {
         for (Vector2 point : points) {
-            add(point);
+            add(point.x,point.y);
         }
-        return this;
     }
 
     /**
