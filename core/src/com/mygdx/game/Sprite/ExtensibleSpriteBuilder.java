@@ -28,7 +28,7 @@ public class ExtensibleSpriteBuilder {
     public SpriteScroll masterScroll;
 
     public enum TextExtensionType{
-        NONE,SIMPLE,BIG
+        NONE, SMALL,BIG
     }
 
     /**
@@ -178,7 +178,7 @@ public class ExtensibleSpriteBuilder {
             case NONE:
                 sprite.textExtension=null;                          // say it again to be safe
                 break;
-            case SIMPLE:
+            case SMALL:
                 sprite.textExtension=new SmallTextExtension(glyphLayoutPool,font,sprite);
                 break;
             case BIG:

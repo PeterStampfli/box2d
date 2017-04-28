@@ -8,6 +8,7 @@ package com.mygdx.game.Sprite;
 public interface SpriteContains {
     /**
      * return true if the sprite contains the point
+     * 
      * @param sprite
      * @param x
      * @param y

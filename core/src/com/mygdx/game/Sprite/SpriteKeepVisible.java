@@ -3,16 +3,16 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Camera;
 
 /**
- * Created by peter on 4/19/17.
- * as an interface, can create reusable static methods of the interface
+ * A method to keep the sprite visible.
  */
 
 public interface SpriteKeepVisible {
 
     /**
-     * make that the sprite stays visible
-     * to do something needs camera
-     * @param sprite
+     * Makes that the sprite stays visible. Needs a camera.
+     *
+     * @param sprite ExtensibleSprite
+     * @param camera Camera, used for looking at sprite
      */
     boolean keepVisible(ExtensibleSprite sprite, Camera camera);
 }

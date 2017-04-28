@@ -4,15 +4,17 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 /**
- * Created by peter on 4/19/17.
+ * Draw method for sprites
  */
 
 public interface SpriteDraw {
 
     /**
-     * draw the sprite, with extras
-     * @param sprite
-     * @param camera
+     * Draw the sprite.
+     *
+     * @param sprite ExtensibleSprite
+     * @param batch  Batch
+     * @param camera Camera
      */
     public void draw(ExtensibleSprite sprite, Batch batch, Camera camera);
 }

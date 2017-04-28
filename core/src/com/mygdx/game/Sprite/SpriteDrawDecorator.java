@@ -9,7 +9,7 @@ abstract public class SpriteDrawDecorator implements SpriteDraw {
     SpriteDraw previousDraw;
 
     /**
-     * Apply the decorator to a sprite. Overwrite the draw method of the sprite.
+     * Apply the decorator pattern to the draw method of a sprite.
      *
      * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */

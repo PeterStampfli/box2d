@@ -3,10 +3,18 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by peter on 4/19/17.
- * scroll, mouse et given position, by given amount. Only for pc.
+ * sSroll action. Only for pc.
  */
 
 public interface SpriteScroll {
-     boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount);
+
+    /**
+     * Scroll action on the sprite.
+     *
+     * @param sprite   ExtensibleSprite
+     * @param position Vector2, position of the mouse (PC)
+     * @param amount   int, (+/-) 1, depending on scrolling up or down
+     * @return boolean, true if something changed
+     */
+    boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount);
 }

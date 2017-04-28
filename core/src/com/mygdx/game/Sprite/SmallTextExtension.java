@@ -18,32 +18,40 @@ import com.badlogic.gdx.utils.Pool;
 public class SmallTextExtension extends TextExtension {
 
     /**
-     * to create we need glyphlayout pool and font
-     * @param glyphLayoutPool
-     * @param font
+     * Create the extension with a glyphLayout pool and font.
+     * Attach to a sprite.
+     *
+     * @param glyphLayoutPool GlyphLayoutPool
+     * @param font            BitmapFont
+     * @param sprite          ExtensibleSprite, the text will be attached to this sprite
      */
+
     public SmallTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite) {
         super(glyphLayoutPool, font, sprite);
     }
 
     /**
-     * set the text of the sprite using its glyphLayout
-     * @param text
+     * Set the text of the sprite using its glyphLayout.
+     *
+     * @param text   String, the text to show.
+     * @param sprite ExtensibleSprite, the text layout depends on the dimensions of the sprite.
      */
     @Override
-    public void setText(String text,ExtensibleSprite sprite) {
+    public void setText(String text, ExtensibleSprite sprite) {
         glyphLayout.setText(font, text);
     }
 
     /**
-     * draw the sprite and then the text
-     * @param sprite
-     * @param batch
-     * @param camera
+     * Uses the decorator pattern.
+     * First draw the sprite. Then draw the text, clipped to the sprite rectangle.
+     *
+     * @param sprite Extensible Sprite
+     * @param batch  Batch
+     * @param camera Camera
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera){
-        sprite.superDraw(batch);
+    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
+        previousDraw.draw(sprite, batch, camera);
         font.draw(batch, glyphLayout, sprite.getWorldOriginX() - glyphLayout.width * 0.5f,
                 sprite.getWorldOriginY() + glyphLayout.height * 0.5f);
     }
