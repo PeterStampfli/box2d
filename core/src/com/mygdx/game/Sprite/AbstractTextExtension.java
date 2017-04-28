@@ -9,14 +9,14 @@ import com.mygdx.game.utilities.L;
  * Created by peter on 4/22/17.
  */
 
-public abstract class NullTextExtension extends SpriteDrawDecorator {
+public abstract class AbstractTextExtension extends SpriteDrawDecorator {
     public Pool<GlyphLayout> glyphLayoutPool;
     public GlyphLayout glyphLayout;
     public BitmapFont font;
 
 
     public static class Builder{
-        public NullTextExtension build(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
+        public AbstractTextExtension build(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
             L.og("tada");
             return null;
         }
@@ -30,7 +30,7 @@ public abstract class NullTextExtension extends SpriteDrawDecorator {
      * @param font BitmapFont
      * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */
-    public NullTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
+    public AbstractTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
         super(sprite);
         this.glyphLayoutPool=glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();

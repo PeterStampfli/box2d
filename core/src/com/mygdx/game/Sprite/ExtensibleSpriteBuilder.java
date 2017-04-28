@@ -18,7 +18,7 @@ public class ExtensibleSpriteBuilder {
     public BitmapFont font;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
-    public NullTextExtension TextExtension;
+    public AbstractTextExtension MasterTextExtension;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -39,7 +39,7 @@ public class ExtensibleSpriteBuilder {
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        setTextExtension(null);
+        setMasterTextExtension(null);
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
         setKeepVisible(SpriteActions.nullKeepVisible);
@@ -71,11 +71,11 @@ public class ExtensibleSpriteBuilder {
 
     /**
      * set the master type for text extension
-     * @param textExtension
+     * @param masterTextExtension
      * @return
      */
-    public ExtensibleSpriteBuilder setTextExtension(NullTextExtension textExtension){
-        masterTextExtension=textExtension;
+    public ExtensibleSpriteBuilder setMasterTextExtension(AbstractTextExtension masterTextExtension){
+        masterTextExtension= masterTextExtension;
         return this;
     }
 
@@ -170,7 +170,7 @@ public class ExtensibleSpriteBuilder {
         sprite.setTouchBegin(masterTouchBegin);
         sprite.setTouchDrag(masterTouchDrag);
         sprite.setTouchEnd(masterTouchEnd);
-        sprite.textExtension=masterTextExtension;
+        sprite.textExtension=masterTextExtension.;
         return sprite;
     }
 

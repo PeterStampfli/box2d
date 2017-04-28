@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -46,7 +45,6 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-
 		device=new Device();
 		device.createShape2DRenderer().createSpriteBatch().setLogging(true).createDefaultBitmapFont();
 		BasicAssets basicAssets=device.basicAssets;
@@ -77,7 +75,8 @@ public class Box2d extends ApplicationAdapter {
 
 		//extensibleSpriteBuilder.spriteTouchBegin();
 		extensibleSpriteBuilder.setTouchDrag(SpriteActions.touchDragTransRotate).
-                setKeepVisible(SpriteActions.keepOriginVisible).setTextExtension(ExtensibleSpriteBuilder.TextExtensionType.BIG);
+                setKeepVisible(SpriteActions.keepOriginVisible).
+				setMasterTextExtension(null);
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 
 		extensibleSprite.setPosition(100,300);
@@ -86,12 +85,11 @@ public class Box2d extends ApplicationAdapter {
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
 
-	//	BigTextExtension.setFont(device.bitmapFont);
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-		extensibleSprite.setText(langerText);
+		extensibleSprite.setText("kurz");
 		physics=new Physics(true);
-		physics.createWorld(0,-0,true);
+		physics.createWorld(0,-10,true);
 		physics.start();
 		BodyBuilder bodyBuilder=new BodyBuilder(physics);
 		FixtureBuilder fixtureBuilder=new FixtureBuilder();
@@ -108,6 +106,7 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		physics.advance();
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
 
@@ -122,9 +121,9 @@ public class Box2d extends ApplicationAdapter {
 
 
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.begin();
 		//shapeRenderer.draw(shape2DCollection);
-		//shapeRenderer.rect(0,0,100,300);
+		shapeRenderer.rect(0,0,100,300);
 		shapeRenderer.end();
 
 		physics.debugRender(viewport);
