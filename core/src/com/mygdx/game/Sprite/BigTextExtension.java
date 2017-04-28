@@ -12,104 +12,103 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool;
 
 /**
- * Created by peter on 4/20/17.
+ * An extension for ExtensibleSprite that shows a large scrollable text.
  */
 
-public class BigTextExtension extends TextExtension implements SpriteTouchDrag,SpriteScroll {
-    public float margin=10;
-    public float textShift;                            // shift the text upwards
+public class BigTextExtension extends TextExtension implements SpriteTouchDrag, SpriteScroll {
+    static private Rectangle scissors = new Rectangle();
+    static private Rectangle bounds = new Rectangle();
+    public float margin = 10;
+    public float textShift;                            // amount to shift the text upwards
     public float textShiftMax;
-    static private Rectangle scissors=new Rectangle();
-    static private Rectangle bounds=new Rectangle();
 
     /**
-     * to create we need glyphlayout pool and font
-     * @param glyphLayoutPool
-     * @param font
+     * Create the extension with a glyphLayout pool and font. Attach to a sprite.
+     * Overwrites the draw, touchDrag and scroll methods of the sprite.
+     *
+     * @param glyphLayoutPool GlyphLayoutPool
+     * @param font            BitmapFont
+     * @param sprite          ExtensibleSprite, the text will be attached to this sprite
      */
     public BigTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite) {
         super(glyphLayoutPool, font, sprite);
-    }
-
-    /**
-     * overwrite the draw,touchdrag and scroll methods of the sprite
-     * @param sprite
-     */
-    @Override
-    public void applyTo(ExtensibleSprite sprite){
-        sprite.setDraw(this);
         sprite.setTouchDrag(this);
         sprite.setScroll(this);
     }
 
     /**
-     * set size of margin, access via sprite.textExtension
-     * @param margin
-     * @return
+     * Set the size of the margin, access via sprite.textExtension.
+     *
+     * @param margin float, new margin around the text.
+     * @return this, for chaining
      */
-    public BigTextExtension setMargin(float margin){
-        this.margin=margin;
+    public BigTextExtension setMargin(float margin) {
+        this.margin = margin;
         return this;
     }
 
     /**
-     * set the text of the sprite using its glyphLayout
-     * depends on size of sprite
-     * @param text
-     * @param sprite
+     * Set the text of the sprite using its glyphLayout.
+     * Depends on the width of the sprite.
+     *
+     * @param text   String, to show in the sprite
+     * @param sprite ExtensibleSprite
      */
-    public void setText(String text,ExtensibleSprite sprite) {
-        glyphLayout.setText(font, text, font.getColor(),sprite.getWidth()-2*margin, Align.left,true);
-        textShift=0;
-        textShiftMax=glyphLayout.height-sprite.getHeight()+4*margin;
+    public void setText(String text, ExtensibleSprite sprite) {
+        glyphLayout.setText(font, text, font.getColor(), sprite.getWidth() - 2 * margin, Align.left, true);
+        textShift = 0;
+        textShiftMax = glyphLayout.height - sprite.getHeight() + 4 * margin;
     }
 
     /**
-     * draw the sprite, and then the text,clipped to the sprite rectangle
-     * @param sprite
-     * @param batch
-     * @param camera
+     * Uses the decorator pattern.
+     * First draw the sprite. Then draw the text, clipped to the sprite rectangle.
+     *
+     * @param sprite Extensible Sprite
+     * @param batch  Batch
+     * @param camera Camera, used here for clipping
      */
     @Override
     public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
-        sprite.superDraw(batch);
-        textShift= MathUtils.clamp(textShift,0,textShiftMax);
-        bounds.set(sprite.getX(),sprite.getY(),sprite.getWidth(),sprite.getHeight());
+        previousDraw.draw(sprite, batch, camera);
+        textShift = MathUtils.clamp(textShift, 0, textShiftMax);
+        bounds.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
         batch.flush();
-        ScissorStack.calculateScissors(camera,batch.getTransformMatrix(),bounds,scissors);
+        ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), bounds, scissors);
         ScissorStack.pushScissors(scissors);
-
-        font.draw(batch, glyphLayout, sprite.getX()+margin,
-                sprite.getY()+sprite.getHeight()-margin-margin+textShift);
+        font.draw(batch, glyphLayout, sprite.getX() + margin,
+                sprite.getY() + sprite.getHeight() - margin - margin + textShift);
         batch.flush();
         ScissorStack.popScissors();
     }
 
     /**
-     * shift the text up and down
-     * @param sprite
-     * @param position
-     * @param deltaPosition
+     * Touch drag shifts the text up and down.
+     *
+     * @param sprite        Extensible Sprite
+     * @param position      Vector2, position of touch
+     * @param deltaPosition Vector2, change in the position of touch
      * @param camera
-     * @return
+     * @return boolean, true
      */
     @Override
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
-        textShift+=deltaPosition.y;
+        textShift += deltaPosition.y;
         return true;
     }
 
     /**
-     * scroll the text up and down
-     * @param sprite
-     * @param position
-     * @param amount
-     * @return
+     * scroll the text up and down.
+     *
+     * @param sprite   ExtensibleSprite
+     * @param position Vector2, position of touch
+     * @param amount   int=(+/-)1, for the scroll direction
+     * @return boolean, true
      */
     @Override
     public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
-        if(sprite.contains(position)){
-            textShift+=0.4f*amount*font.getLineHeight();
+        if (sprite.contains(position)) {
+            textShift += 0.4f * amount * font.getLineHeight();
             return true;
         }
         return false;

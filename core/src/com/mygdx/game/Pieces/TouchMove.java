@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.TouchReader;
 
 /**
- * Poll touch events and transmit to touchable objects.
+ * Poll touch events and transmit to touchable objects. Touchable piece is typically a TouchableCollection.
  */
 
 public class TouchMove extends InputAdapter {
@@ -29,7 +29,7 @@ public class TouchMove extends InputAdapter {
     /**
      * Create a TouchMove controller.
      *
-     * @param piece       Touchable, typically a Touchables collection
+     * @param piece       Touchable, typically a TouchableCollection
      * @param touchReader for reading the touch Position
      * @param camera      Camera, for the touchReader
      */
@@ -46,7 +46,7 @@ public class TouchMove extends InputAdapter {
     /**
      * Create a TouchMove controller.
      *
-     * @param piece       Touchable, typically a Touchables collection
+     * @param piece       Touchable, typically a TouchableCollection
      * @param touchReader TouchReader, for reading the touch Position
      * @param viewport    Viewport, with camera for the TouchReader
      */

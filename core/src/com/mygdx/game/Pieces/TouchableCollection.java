@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
  * Collects touchables and implements methods on the collection.
  */
 
-public class Touchables implements Touchable {
+public class TouchableCollection implements Touchable {
 
     public Array<Touchable> touchables = new Array<Touchable>();
 
@@ -33,7 +33,7 @@ public class Touchables implements Touchable {
     public boolean remove(Touchable toRemove) {
         boolean success = false;
         for (Touchable touchable : touchables) {
-            if (touchable instanceof Touchables && ((Touchables) touchable).remove(toRemove)) {
+            if (touchable instanceof TouchableCollection && ((TouchableCollection) touchable).remove(toRemove)) {
                 success = true;
             }
         }

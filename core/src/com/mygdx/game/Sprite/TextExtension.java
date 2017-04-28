@@ -8,60 +8,39 @@ import com.badlogic.gdx.utils.Pool;
  * Created by peter on 4/22/17.
  */
 
-public abstract class TextExtension implements SpriteDraw {
+public abstract class TextExtension extends SpriteDrawDecorator {
     public Pool<GlyphLayout> glyphLayoutPool;
     public GlyphLayout glyphLayout;
     public BitmapFont font;
 
     /**
-     * to create we need glyphlayout pool and font
-     * @param glyphLayoutPool
-     * @param font
+     * Create the extension with a glyphLayout pool and font. Attach to a sprite.
+     *
+     * @param glyphLayoutPool GlyphLayoutPool
+     * @param font BitmapFont
+     * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */
     public TextExtension(Pool<GlyphLayout> glyphLayoutPool,BitmapFont font,ExtensibleSprite sprite){
+        super(sprite);
         this.glyphLayoutPool=glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();
         this.font=font;
-        applyTo(sprite);
     }
 
     /**
-     * overwrite the draw method of the sprite
-     * maybe other methods have to be overwritten too
-     * to implement the decorator pattern do:
-     * in declarations:
-     * ...................
-     * SpriteDraw previousDraw;
-     * .................
-     * in applyTo():
-     * .......
-     * previousDraw=sprite.spriteDraw;
-     * sprite.setDraw(this);
-     * .........
-     * in draw(sprite, batch):
-     * .......
-     * previousDraw.draw(sprite,batch);
-     * ......
-     * @param sprite
-     */
-    public void applyTo(ExtensibleSprite sprite){
-        sprite.setDraw(this);
-    }
-
-    /**
-     * set the text, depends on actual kind of text, its layout (same as draw)
-     * and dimensions of sprite
-     * @param text
+     * Set the text, depends on actual kind of text, its layout and the dimensions of sprite.
+     *
+     * @param text String, the text to show.
+     * @param sprite ExtensibleSprite, the text layout depends on the dimensions of the sprite.
      */
     public abstract void setText(String text,ExtensibleSprite sprite);
 
     /**
-     * reset all and free the glyphlayout (same for all text extensions)
-     * GlyphLayout is poolable !!!
+     * Frees the glyphLayout (same for all text extensions).
+     * GlyphLayout is Poolable and has its reset method!!!
+     * Gets called on freeing the sprite.
      */
     public void free(){
         glyphLayoutPool.free(glyphLayout);
     }
-
-
 }

@@ -182,7 +182,7 @@ public class Mask {
      * @param centerY float, x-coordinate of the center
      * @param radius  float, radius
      */
-    public void drawCircle(float centerX, float centerY, float radius) {
+    public void fillCircle(float centerX, float centerY, float radius) {
         drawRing(centerX, centerY, radius, -10);
     }
 
@@ -192,18 +192,58 @@ public class Mask {
      * @param center Vector2, center
      * @param radius float, radius
      */
-    public void drawCircle(Vector2 center, float radius) {
-        drawCircle(center.x, center.y, radius);
+    public void fillCircle(Vector2 center, float radius) {
+        fillCircle(center.x, center.y, radius);
     }
 
     /**
-     * draw a convex polygon masterShape. Vertices in counter-clock sense
-     * draws the outline with a given thickness inside the border lines
-     * (masterShape has to be closed)
-     * note that here thickness comes first, it is mainly for diagnstics
+     * A line and how to calculate its distance to a point.
+     */
+    private class Line {
+        float pointX, pointY;
+        float ex, ey;
+
+        /**
+         * Create a line going through points A and B. The y-coordinate values are flipped
+         * to match the flipped y-axis of pixmaps.
+         *
+         * @param ax float, x-coordinate of point A
+         * @param ay float, y-coordinate of point A
+         * @param bx float, x-coordinate of point B
+         * @param by float, y-coordinate of point B
+         */
+        Line(float ax, float ay, float bx, float by) {
+            ay = flipY(ay);
+            by = flipY(by);
+            pointX = ax;
+            pointY = ay;
+            ex = bx - ax;
+            ey = by - ay;
+            float normfactor = 1.0f / Vector2.len(ex, ey);
+            ex *= normfactor;
+            ey *= normfactor;
+        }
+
+        /**
+         * Determine the distance of a pixel (i,j) from the line. The pixel lies at (i+0.5,j+0.5).
+         *
+         * @param i int, column index of pixel
+         * @param j int, row index of pixels
+         * @return float, signed distance, positive if at the left side of the line looking from point A to point B
+         */
+        public float distance(int i, int j) {
+            float linePosition, d;
+            d = ex * (j + 0.5f - pointY) - ey * (i + 0.5f - pointX);
+            return -d + 0.5f;    // taking the mirroring into account that results from the y-axis flip
+        }
+    }
+
+    /**
+     * Draw a convex polygon shape. Vertices have to be given in counter-clock sense.
+     * Draws the outline with a given thickness inside the polygon border.
      *
-     * @param thickness
-     * @param coordinates
+     * @param thickness float, thickness of the border, use a very large number to fill the polygon
+     * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
      */
     public void drawPolygon(float thickness, float... coordinates) {
         int length = coordinates.length - 2;
@@ -249,9 +289,9 @@ public class Mask {
     }
 
     /**
-     * fill a convex polygon masterShape. Vertices in counter-clock sense
+     * fill a convex polygon shape. Give vertices in counter-clock sense.
      *
-     * @param coordinates
+     * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
      */
     public void fillPolygon(float... coordinates) {
         drawPolygon(100000, coordinates);
@@ -260,7 +300,7 @@ public class Mask {
     /**
      * fill a convex polygon masterShape. Vertices in counter-clock sense
      *
-     * @param points
+     * @param points Array<Vector2>, the vertices
      */
     public void fillPolygon(Array<Vector2> points) {
         fillPolygon(Basic.toFloats(points));
@@ -279,19 +319,16 @@ public class Mask {
     }
 
     /**
-     * fill a circle with opaque bits, smooth border
-     * the center is a continuous coordinate,
-     * (0,0) is at the lower left corner of the lowest leftest pixel
-     * center of pixels are integers plus one half
+     * Draw a disc of opaque bits with a smooth border given by a Shape2D Circle.
      *
      * @param circle
      */
-    public void drawCircle(Circle circle) {
-        drawCircle(circle.x, circle.y, circle.radius);
+    public void fillCircle(Circle circle) {
+        fillCircle(circle.x, circle.y, circle.radius);
     }
 
     /**
-     * fill a convex polygon masterShape. Vertices in counter-clock sense
+     * Fill a convex polygon given by a Shape2D Polygon.
      *
      * @param polygon
      */
@@ -300,7 +337,7 @@ public class Mask {
     }
 
     /**
-     * fill rectangle area (within limits), making it opaque
+     * Fill a rectangle, defined by a Shape2D Rectangle.
      *
      * @param rectangle
      */
@@ -310,7 +347,7 @@ public class Mask {
     }
 
     /**
-     * Fill a Shape2D shape on the mask.
+     * Fill a Shape2D shape.
      * Only Circle, Rectangle, Polygon, Shape2DCollection and DotsAndLines
      * (subclass of Shape2DCollection) shapes. The other Shape2D shapes have no surface.
      *
@@ -320,7 +357,7 @@ public class Mask {
         if (shape instanceof Polygon) {
             fillPolygon((Polygon) shape);
         } else if (shape instanceof Circle) {
-            drawCircle((Circle) shape);
+            fillCircle((Circle) shape);
         } else if (shape instanceof Rectangle) {
             fillRect((Rectangle) shape);
         } else if (shape instanceof Shape2DCollection) {
@@ -408,7 +445,7 @@ public class Mask {
     }
 
     /**
-     * Copy a piece of an input pixmap image with the size of the mask.
+     * Copy a piece of an input pixmap. The piece has the size as the mask.
      * The lower left corner of the copied region is given by an offset.
      * This part is masked and returned as a new pixmap.
      *
@@ -464,48 +501,6 @@ public class Mask {
         Texture result = new Texture(pixmap);
         pixmap.dispose();
         return new TextureRegion(result);
-    }
-
-    /**
-     * A line and how to calculate its distance to a point.
-     */
-    private class Line {
-        float pointX, pointY;
-        float ex, ey;
-
-        /**
-         * Create a line going through points A and B. The y-coordinate values are flipped
-         * to match the flipped y-axis of pixmaps.
-         *
-         * @param ax float, x-coordinate of point A
-         * @param ay float, y-coordinate of point A
-         * @param bx float, x-coordinate of point B
-         * @param by float, y-coordinate of point B
-         */
-        Line(float ax, float ay, float bx, float by) {
-            ay = flipY(ay);
-            by = flipY(by);
-            pointX = ax;
-            pointY = ay;
-            ex = bx - ax;
-            ey = by - ay;
-            float normfactor = 1.0f / Vector2.len(ex, ey);
-            ex *= normfactor;
-            ey *= normfactor;
-        }
-
-        /**
-         * Determine the distance of a pixel (i,j) from the line. The pixel lies at (i+0.5,j+0.5).
-         *
-         * @param i int, column index of pixel
-         * @param j int, row index of pixels
-         * @return float, signed distance, positive if at the left side of the line looking from point A to point B
-         */
-        public float distance(int i, int j) {
-            float linePosition, d;
-            d = ex * (j + 0.5f - pointY) - ey * (i + 0.5f - pointX);
-            return -d + 0.5f;    // taking the mirroring into account that results from the y-axis flip
-        }
     }
 }
 
