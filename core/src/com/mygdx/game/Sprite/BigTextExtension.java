@@ -22,7 +22,7 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
     public float textShiftMax;
 
     /**
-     * Create the extension with a glyphLayout pool and font. Attach to a sprite.
+     * Create the extension. Attach to a sprite.
      * Overwrites the draw, touchDrag and scroll methods of the sprite.
      *
      * @param device Device, device with its glyphLayoutPool
