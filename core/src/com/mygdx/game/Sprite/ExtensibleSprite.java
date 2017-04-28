@@ -10,16 +10,16 @@ import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Pieces.Touchable;
 
 /**
- * Created by peter on 4/18/17.
- * uses the built-in pool
+ * A basic sprite that can be extended. Use the ExtensibleSpriteBuilder for creation.
  */
 
 public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
     public Pool<ExtensibleSprite> extensibleSpritePool;
-    public AbstractTextExtension textExtension;
-    // the composable actions
+    // a composite extension
+    public TextExtension textExtension;
+    // the basic actions that can be extended
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
     public SpriteKeepVisible spriteKeepVisible;
@@ -29,138 +29,150 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public SpriteScroll spriteScroll;
 
     /**
-     * free, reset and put back in the pool an ExtensibleSprite object.
-     * together with reset and set local reference null ???
-     * as an interface ???
+     * Reset the sprite and put it back in the pool. Frees the text extension.
      */
-    public void free(){
-        shape=null;
+    public void free() {
+        shape = null;
         setTexture(null);
-        if (textExtension!=null){
+        if (textExtension != null) {
             textExtension.free();
-            textExtension=null;
+            textExtension = null;
         }
         extensibleSpritePool.free(this);
     }
 
     /**
-     * set the text of the sprite if there is a text extension
-     * @param text
+     * Set the text of the sprite if there is a text extension.
+     *
+     * @param text String, the text to set
      */
-    public void setText(String text){
-        textExtension.setText(text,this);
+    public void setText(String text) {
+        if (textExtension != null) textExtension.setText(text, this);
     }
 
     /**
-     * set setAngle of sprite
-     * @param angle in radians
+     * get the angle of the sprite
+     *
+     * @return float, tha angle in radians
      */
-    public void setAngle(float angle){
-        setRotation(angle * MathUtils.radiansToDegrees);
-    }
-
-    /**
-     * get setAngle of sprite
-     * @return  setAngle in radians
-     */
-    public float getAngle(){
+    public float getAngle() {
         return getRotation() / MathUtils.radiansToDegrees;
     }
 
     /**
-     * make that the sprite orientation has n discrete steps, 4 for a square lattice
-     * @param n
+     * Set the Angle of sprite using radians.
+     *
+     * @param angle float, in radians
      */
-    public void quantizeAngle(int n){
-        setRotation(360f/n*Math.round(n*getRotation()/360f));
+    public void setAngle(float angle) {
+        setRotation(angle * MathUtils.radiansToDegrees);
     }
 
     /**
-     * set the origin (center of rotation and scaling) equal to center of mass of the body
-     * In local coordinates. Zero is left bottom corner of the Textureregion.
-     * Uses world dimensions. (Not pixel numbers)
-     * @param centerX
-     * @param centerY
+     * Make that the sprite angle is a multiple of 360/n degrees. Use 4 for a square lattice.
+     *
+     * @param n int, number of different sprite orientations
      */
-    public void setLocalOrigin(float centerX,float centerY){
-        setOrigin(centerX,centerY);
+    public void quantizeAngle(int n) {
+        setRotation(360f / n * Math.round(n * getRotation() / 360f));
     }
 
     /**
-     * set the origin (center of rotation and scaling) equal to center of mass of the body
-     * In local coordinates. Zero is left bottom corner of the Textureregion.
-     * Uses world dimensions. (Not pixel numbers)
-     * @param center
+     * Set the origin (center of rotation and scaling) in local coordinates without translation.
+     * Zero is left bottom corner of the unrotated, unscaled Textureregion.
+     * Uses graphics lengths. The length of a pixel is the unit.
+     *
+     * @param centerX float, x-coordinate of the origin
+     * @param centerY float, y-coordinate of the origin
      */
-    public void setLocalOrigin(Vector2 center){
-        setLocalOrigin(center.x,center.y);
+    public void setLocalOrigin(float centerX, float centerY) {
+        setOrigin(centerX, centerY);
     }
 
     /**
-     * set the x-coordinate of center of mass (origin)
-     * @param x
+     * Set the origin (center of rotation and scaling) in local coordinates without translation.
+     * Zero is left bottom corner of the unrotated, unscaled Textureregion.
+     * Uses graphics lengths. The length of a pixel is the unit.
+     *
+     * @param center Vector2, position of the origin
      */
-    public void setWorldOriginX(float x){
-        setX(x-getOriginX());
+    public void setLocalOrigin(Vector2 center) {
+        setLocalOrigin(center.x, center.y);
     }
 
     /**
-     * set the y-coordinate of center of mass (origin)
-     * @param y
+     * Set the position of the sprite such that the origin (center of rotation and scaling)
+     * lies at a given world position.
+     *
+     * @param worldOriginPositionX float, x-coordinate of the origin
+     * @param worldOriginPositionY float, y-coordinate of the origin
      */
-    public void setWorldOriginY(float y){
-        setY(y-getOriginY());
+    public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
+        setPosition(worldOriginPositionX - getOriginX(), worldOriginPositionY - getOriginY());
     }
 
     /**
-     * set the setPosition of the sprite such that the origin (center of rotation)
-     * lies at given world setPosition (of center of mass)
-     * @param worldOriginPositionX
-     * @param worldOriginPositionY
-     */
-    public void setWorldOrigin(float worldOriginPositionX,float worldOriginPositionY){
-        setPosition(worldOriginPositionX-getOriginX(),worldOriginPositionY-getOriginY());
-    }
-
-    /**
-     * set the setPosition of the sprite such that the origin (center of rotation)
-     * lies at given setPosition of center of mass
+     * Set the position of the sprite such that the origin (center of rotation and scaling)
+     * lies at a given world position.
+     *
      * @param worldOriginPosition
      */
-    public void setWorldOrigin(Vector2 worldOriginPosition){
-        setWorldOrigin(worldOriginPosition.x,worldOriginPosition.y);
+    public void setWorldOrigin(Vector2 worldOriginPosition) {
+        setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
     }
 
     /**
-     * get x coordinate of the sprite center
-     * @return
+     * Get the x-coordinate of the sprite origin (center of rotation and scaling).
+     *
+     * @return float, x-coordinate
      */
-    public float getWorldOriginX(){
-        return getX()+getOriginX();
+    public float getWorldOriginX() {
+        return getX() + getOriginX();
     }
 
     /**
-     * get y coordinate of the sprite center
-     * @return
+     * Set the x-coordinate of the sprite origin (center of rotation and scaling).
+     *
+     * @param x  float, x-coordinate
      */
-    public float getWorldOriginY(){
-        return getY()+getOriginY();
+    public void setWorldOriginX(float x) {
+        setX(x - getOriginX());
+    }
+
+    /**
+     * Get the y-coordinate of the sprite origin (center of rotation and scaling).
+     *
+     * @return float, y-coordinate
+     */
+    public float getWorldOriginY() {
+        return getY() + getOriginY();
+    }
+
+    /**
+     * Set the x-coordinate of the sprite origin (center of rotation and scaling).
+     *
+     * @param y float, y-coordinate
+     */
+    public void setWorldOriginY(float y) {
+        setY(y - getOriginY());
     }
 
     // the composable actions
 
     /**
      * set the instance method for contains the point
+     *
      * @param spriteContains
      * @return
      */
-    public ExtensibleSprite setContains(SpriteContains spriteContains){
+    public ExtensibleSprite setContains(SpriteContains spriteContains) {
         this.spriteContains = spriteContains;
         return this;
     }
 
     /**
      * contains if sprite contains the point, using both the texture region and the masterShape
+     *
      * @param x
      * @param y
      * @return
@@ -172,12 +184,13 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     /**
      * contains if sprite contains the point
+     *
      * @param point
      * @return
      */
     @Override
     public boolean contains(Vector2 point) {
-        return contains(point.x,point.y);
+        return contains(point.x, point.y);
     }
 
     // draw the sprite, with extras ???
@@ -185,84 +198,98 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     /**
      * set the method for sprite draw
+     *
      * @param spriteDraw
      * @return
      */
-    public ExtensibleSprite setDraw(SpriteDraw spriteDraw){
-        this.spriteDraw=spriteDraw;
+    public ExtensibleSprite setDraw(SpriteDraw spriteDraw) {
+        this.spriteDraw = spriteDraw;
         return this;
     }
 
     /**
      * draw the basic batch using the method of the superclass "Sprite"
      * need this as basis for decorations
+     *
      * @param batch
      */
-    public void superDraw(Batch batch){
+    public void superDraw(Batch batch) {
         super.draw(batch);
     }
 
     /**
      * draw the sprite, with decos ? text!
+     *
      * @param batch
      * @param camera
      */
     @Override
-    public void draw(Batch batch, Camera camera){ spriteDraw.draw(this,batch, camera); }
+    public void draw(Batch batch, Camera camera) {
+        spriteDraw.draw(this, batch, camera);
+    }
 
 
     // what to do to keep sprite visible
 
     /**
      * set instance method for keep visible
+     *
      * @param spriteKeepVisible
      * @return
      */
-    public ExtensibleSprite setKeepVisible(SpriteKeepVisible spriteKeepVisible){
-        this.spriteKeepVisible=spriteKeepVisible;
+    public ExtensibleSprite setKeepVisible(SpriteKeepVisible spriteKeepVisible) {
+        this.spriteKeepVisible = spriteKeepVisible;
         return this;
     }
 
     @Override
-    public boolean keepVisible(Camera camera){return spriteKeepVisible.keepVisible(this,camera);};
+    public boolean keepVisible(Camera camera) {
+        return spriteKeepVisible.keepVisible(this, camera);
+    }
+
+    ;
 
     // what to do at begin of touch
 
 
     /**
      * select the draw for touch begin
+     *
      * @param spriteTouchBegin
      * @return
      */
-    public ExtensibleSprite setTouchBegin(SpriteTouchBegin spriteTouchBegin){
-        this.spriteTouchBegin=spriteTouchBegin;
+    public ExtensibleSprite setTouchBegin(SpriteTouchBegin spriteTouchBegin) {
+        this.spriteTouchBegin = spriteTouchBegin;
         return this;
     }
 
     /**
      * make something at begin of touch, return true if something changed
+     *
      * @param position
      * @return
      */
     @Override
     public boolean touchBegin(Vector2 position) {
-        return spriteTouchBegin.touchBegin(this,position);
+        return spriteTouchBegin.touchBegin(this, position);
     }
 
     // what to do for touch dragging around
 
     /**
      * select the draw for touch drag
+     *
      * @param spriteTouchDrag
      * @return
      */
-    public ExtensibleSprite setTouchDrag(SpriteTouchDrag spriteTouchDrag){
-        this.spriteTouchDrag=spriteTouchDrag;
+    public ExtensibleSprite setTouchDrag(SpriteTouchDrag spriteTouchDrag) {
+        this.spriteTouchDrag = spriteTouchDrag;
         return this;
     }
 
     /**
      * touch drag
+     *
      * @param position
      * @param deltaPosition
      * @param camera
@@ -270,51 +297,55 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
-        return spriteTouchDrag.touchDrag(this,position,deltaPosition, camera);
+        return spriteTouchDrag.touchDrag(this, position, deltaPosition, camera);
     }
 
     // what to do at end of touch
 
     /**
      * select the draw for touch begin
+     *
      * @param spriteTouchEnd
      * @return
      */
-    public ExtensibleSprite setTouchEnd(SpriteTouchEnd spriteTouchEnd){
-        this.spriteTouchEnd=spriteTouchEnd;
+    public ExtensibleSprite setTouchEnd(SpriteTouchEnd spriteTouchEnd) {
+        this.spriteTouchEnd = spriteTouchEnd;
         return this;
     }
 
     /**
      * make something at end of touch, return true if something changed
+     *
      * @param position
      * @return
      */
     @Override
     public boolean touchEnd(Vector2 position) {
-        return spriteTouchEnd.touchEnd(this,position);
+        return spriteTouchEnd.touchEnd(this, position);
     }
 
     // waht to do at scroll event
 
     /**
      * set the scroll draw
+     *
      * @param spriteScroll
      * @return
      */
-    public ExtensibleSprite setScroll(SpriteScroll spriteScroll){
-        this.spriteScroll=spriteScroll;
+    public ExtensibleSprite setScroll(SpriteScroll spriteScroll) {
+        this.spriteScroll = spriteScroll;
         return this;
     }
 
     /**
      * default touch scroll
+     *
      * @param position
      * @param amount
      * @return
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        return spriteScroll.scroll(this,position,amount);
+        return spriteScroll.scroll(this, position, amount);
     }
 }

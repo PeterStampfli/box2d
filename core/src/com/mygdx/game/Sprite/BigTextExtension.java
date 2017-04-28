@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Pool;
  * An extension for ExtensibleSprite that shows a large scrollable text.
  */
 
-public class BigTextExtension extends AbstractTextExtension implements SpriteTouchDrag, SpriteScroll {
+public class BigTextExtension extends TextExtension implements SpriteTouchDrag, SpriteScroll {
     static private Rectangle scissors = new Rectangle();
     static private Rectangle bounds = new Rectangle();
     public float margin = 10;

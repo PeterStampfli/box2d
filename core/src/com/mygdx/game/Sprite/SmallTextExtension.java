@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Pool;
  * extend a sprite to draw a simple short centered text
  */
 
-public class SmallTextExtension extends AbstractTextExtension {
+public class SmallTextExtension extends TextExtension {
 
     /**
      * Create the extension with a glyphLayout pool and font.
