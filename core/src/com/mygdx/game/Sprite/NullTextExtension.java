@@ -3,15 +3,25 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utilities.L;
 
 /**
  * Created by peter on 4/22/17.
  */
 
-public abstract class TextExtension extends SpriteDrawDecorator {
+public abstract class NullTextExtension extends SpriteDrawDecorator {
     public Pool<GlyphLayout> glyphLayoutPool;
     public GlyphLayout glyphLayout;
     public BitmapFont font;
+
+
+    public static class Builder{
+        public NullTextExtension build(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
+            L.og("tada");
+            return null;
+        }
+
+    }
 
     /**
      * Create the extension with a glyphLayout pool and font. Attach to a sprite.
@@ -20,7 +30,7 @@ public abstract class TextExtension extends SpriteDrawDecorator {
      * @param font BitmapFont
      * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */
-    public TextExtension(Pool<GlyphLayout> glyphLayoutPool,BitmapFont font,ExtensibleSprite sprite){
+    public NullTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
         super(sprite);
         this.glyphLayoutPool=glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();

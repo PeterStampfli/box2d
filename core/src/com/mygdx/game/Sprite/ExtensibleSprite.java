@@ -18,7 +18,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
     public Pool<ExtensibleSprite> extensibleSpritePool;
-    public TextExtension textExtension;
+    public NullTextExtension textExtension;
     // the composable actions
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;

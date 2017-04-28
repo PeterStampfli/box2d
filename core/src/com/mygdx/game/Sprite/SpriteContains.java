@@ -6,13 +6,14 @@ package com.mygdx.game.Sprite;
  */
 
 public interface SpriteContains {
+
     /**
-     * return true if the sprite contains the point
-     * 
-     * @param sprite
-     * @param x
-     * @param y
-     * @return
+     * Check if the sprite contains the point.
+     *
+     * @param sprite ExtensibleSprite
+     * @param x      float, x-coordinate of the point
+     * @param y      float, y-coordinate of the point
+     * @return boolean, true if the sprite contains the point
      */
     boolean contains(ExtensibleSprite sprite, float x, float y);
 }

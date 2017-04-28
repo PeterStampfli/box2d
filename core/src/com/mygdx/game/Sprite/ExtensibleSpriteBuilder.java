@@ -18,7 +18,7 @@ public class ExtensibleSpriteBuilder {
     public BitmapFont font;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
-    public TextExtensionType masterTextExtension;
+    public NullTextExtension TextExtension;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -26,10 +26,6 @@ public class ExtensibleSpriteBuilder {
     public SpriteTouchDrag masterTouchDrag;
     public SpriteTouchEnd masterTouchEnd;
     public SpriteScroll masterScroll;
-
-    public enum TextExtensionType{
-        NONE, SMALL,BIG
-    }
 
     /**
      * to create we need to know the pools (device)
@@ -43,7 +39,7 @@ public class ExtensibleSpriteBuilder {
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        setTextExtension(TextExtensionType.NONE);
+        setTextExtension(null);
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
         setKeepVisible(SpriteActions.nullKeepVisible);
@@ -75,11 +71,11 @@ public class ExtensibleSpriteBuilder {
 
     /**
      * set the master type for text extension
-     * @param type
+     * @param textExtension
      * @return
      */
-    public ExtensibleSpriteBuilder setTextExtension(TextExtensionType type){
-        masterTextExtension=type;
+    public ExtensibleSpriteBuilder setTextExtension(NullTextExtension textExtension){
+        masterTextExtension=textExtension;
         return this;
     }
 
@@ -174,17 +170,7 @@ public class ExtensibleSpriteBuilder {
         sprite.setTouchBegin(masterTouchBegin);
         sprite.setTouchDrag(masterTouchDrag);
         sprite.setTouchEnd(masterTouchEnd);
-        switch (masterTextExtension){
-            case NONE:
-                sprite.textExtension=null;                          // say it again to be safe
-                break;
-            case SMALL:
-                sprite.textExtension=new SmallTextExtension(glyphLayoutPool,font,sprite);
-                break;
-            case BIG:
-                sprite.textExtension=new BigTextExtension(glyphLayoutPool,font,sprite);
-                break;
-        }
+        sprite.textExtension=masterTextExtension;
         return sprite;
     }
 
