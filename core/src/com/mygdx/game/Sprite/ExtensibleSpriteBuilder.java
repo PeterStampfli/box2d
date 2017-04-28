@@ -1,8 +1,6 @@
 package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.Pool;
@@ -14,10 +12,6 @@ import com.mygdx.game.utilities.Device;
 
 public class ExtensibleSpriteBuilder {
     public Pool<ExtensibleSprite> extensibleSpritePool;
-    public Pool<GlyphLayout> glyphLayoutPool;
-    public BitmapFont font;
-    public TextureRegion masterTextureRegion;
-    public Shape2D masterShape;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -32,12 +26,9 @@ public class ExtensibleSpriteBuilder {
      * set defaults for the actions...
      * basic drawing only, else nothing
      * @param device
-     * @param font
      */
-    public ExtensibleSpriteBuilder(Device device,BitmapFont font){
+    public ExtensibleSpriteBuilder(Device device){
         this.extensibleSpritePool=device.extensibleSpritePool;
-        this.glyphLayoutPool=device.glyphLayoutPool;
-        this.font=font;
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
         setKeepVisible(SpriteActions.nullKeepVisible);
@@ -45,27 +36,6 @@ public class ExtensibleSpriteBuilder {
         setTouchEnd(SpriteActions.nullTouchEnd);
         setTouchDrag(SpriteActions.nullTouchDrag);
         setScroll(SpriteActions.nullScroll);
-    }
-
-    /**
-     * Set the master texture region.
-     *
-     * @param textureRegion TextureRegion, default image for sprites
-     * @return this, for chaining
-     */
-    public ExtensibleSpriteBuilder setTextureRegion(TextureRegion textureRegion){
-        masterTextureRegion =textureRegion;
-        return this;
-    }
-
-    /**
-     * set the default shape
-     * @param shape
-     * @return this, for chaining
-     */
-    public ExtensibleSpriteBuilder setShape(Shape2D shape){
-        masterShape=shape;
-        return this;
     }
 
     /**
@@ -169,13 +139,5 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSprite build(TextureRegion textureRegion){
         return build(textureRegion,null);
-    }
-
-    /**
-     * sprite with set textur region masterTextureRegion and set masterShape
-     * @return
-     */
-    public ExtensibleSprite build(){
-        return build(masterTextureRegion, masterShape);
     }
 }
