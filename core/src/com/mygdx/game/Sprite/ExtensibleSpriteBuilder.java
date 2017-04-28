@@ -3,7 +3,6 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.utilities.Device;
 
 /**
@@ -11,7 +10,7 @@ import com.mygdx.game.utilities.Device;
  */
 
 public class ExtensibleSpriteBuilder {
-    public Pool<ExtensibleSprite> extensibleSpritePool;
+    public Device device;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -28,7 +27,7 @@ public class ExtensibleSpriteBuilder {
      * @param device
      */
     public ExtensibleSpriteBuilder(Device device){
-        this.extensibleSpritePool=device.extensibleSpritePool;
+        this.device=device;
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
         setKeepVisible(SpriteActions.nullKeepVisible);
@@ -116,13 +115,13 @@ public class ExtensibleSpriteBuilder {
      * @return
      */
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
-        ExtensibleSprite sprite=extensibleSpritePool.obtain();
+        ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
         sprite.setRegion(textureRegion);
         sprite.setColor(Color.WHITE);
         sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         sprite.setOrigin(textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2);
         sprite.shape=shape;
-        sprite.extensibleSpritePool=extensibleSpritePool;
+        sprite.device=device;
         sprite.setContains(masterContains);
         sprite.setKeepVisible(masterKeepVisible);
         sprite.setDraw(masterDraw);

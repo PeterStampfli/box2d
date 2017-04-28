@@ -17,7 +17,7 @@ import com.mygdx.game.utilities.Device;
 public class SmallTextExtension extends TextExtension {
 
     /**
-     * Create the extension with a glyphLayout pool and font.
+     * Create the extension.
      * Attach to a sprite.
      *
      * @param device Device, device with its glyphLayoutPool

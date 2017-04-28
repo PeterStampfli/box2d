@@ -6,20 +6,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Pieces.Touchable;
+import com.mygdx.game.utilities.Device;
 
 /**
- * A basic sprite that can be extended. Use the ExtensibleSpriteBuilder for creation.
+ * A basic sprite that can be extended. With the strategy pattern for the basic actions.
+ * Use the ExtensibleSpriteBuilder for creation.
  */
 
 public class ExtensibleSprite extends Sprite implements Touchable {
 
     public Shape2D shape;
-    public Pool<ExtensibleSprite> extensibleSpritePool;
-    // a composite extension
-    public TextExtension textExtension;
-    // the basic actions that can be extended
+    public Device device;
+    public Array<Object> extensions=new Array<Object>();
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
     public SpriteKeepVisible spriteKeepVisible;
@@ -34,33 +34,47 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     public void free() {
         shape = null;
         setTexture(null);
-        if (textExtension != null) {
-            textExtension.free();
-            textExtension = null;
+        for (Object extension:extensions){
+            if (extension instanceof TextExtension){
+                device.glyphLayoutPool.free(((TextExtension) extension).glyphLayout);
+            }
         }
-        extensibleSpritePool.free(this);
+        device.extensibleSpritePool.free(this);
     }
 
     /**
-     * Set the text of the sprite if there is a text extension.
+     * Add an object to the array of extensions.
+     *
+     * @param extension Object, the new extension to add
+     */
+    public void addExtension(Object extension){
+        extensions.add(extension);
+    }
+
+    /**
+     * Set the text of text extensions.
      *
      * @param text String, the text to set
      */
     public void setText(String text) {
-        if (textExtension != null) textExtension.setText(text, this);
+        for (Object extension : extensions) {
+            if (extension instanceof TextExtension) {
+                ((TextExtension) extension).setText(text,this);
+            }
+        }
     }
 
     /**
-     * get the angle of the sprite
+     * Get the angle of the sprite.
      *
-     * @return float, tha angle in radians
+     * @return float, the angle in radians
      */
     public float getAngle() {
         return getRotation() / MathUtils.radiansToDegrees;
     }
 
     /**
-     * Set the Angle of sprite using radians.
+     * Set the Angle of the sprite using radians.
      *
      * @param angle float, in radians
      */
@@ -79,6 +93,8 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     /**
      * Set the origin (center of rotation and scaling) in local coordinates without translation.
+     * The origin is always the vector from the sprite position to the center of rotation
+     * and scaling, independent of rotation and scaling.
      * Zero is left bottom corner of the unrotated, unscaled Textureregion.
      * Uses graphics lengths. The length of a pixel is the unit.
      *
@@ -91,6 +107,8 @@ public class ExtensibleSprite extends Sprite implements Touchable {
 
     /**
      * Set the origin (center of rotation and scaling) in local coordinates without translation.
+     * The origin is always the vector from the sprite position to the center of rotation
+     * and scaling, independent of rotation and scaling.
      * Zero is left bottom corner of the unrotated, unscaled Textureregion.
      * Uses graphics lengths. The length of a pixel is the unit.
      *
@@ -115,7 +133,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
      * Set the position of the sprite such that the origin (center of rotation and scaling)
      * lies at a given world position.
      *
-     * @param worldOriginPosition
+     * @param worldOriginPosition Vector2, position for the origin
      */
     public void setWorldOrigin(Vector2 worldOriginPosition) {
         setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
@@ -124,7 +142,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Get the x-coordinate of the sprite origin (center of rotation and scaling).
      *
-     * @return float, x-coordinate
+     * @return float, x-coordinate of the origin
      */
     public float getWorldOriginX() {
         return getX() + getOriginX();
@@ -133,7 +151,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Set the x-coordinate of the sprite origin (center of rotation and scaling).
      *
-     * @param x  float, x-coordinate
+     * @param x  float, x-coordinate of the origin
      */
     public void setWorldOriginX(float x) {
         setX(x - getOriginX());
@@ -142,7 +160,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Get the y-coordinate of the sprite origin (center of rotation and scaling).
      *
-     * @return float, y-coordinate
+     * @return float, y-coordinate of the origin
      */
     public float getWorldOriginY() {
         return getY() + getOriginY();
@@ -151,7 +169,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Set the x-coordinate of the sprite origin (center of rotation and scaling).
      *
-     * @param y float, y-coordinate
+     * @param y float, y-coordinate of the origin
      */
     public void setWorldOriginY(float y) {
         setY(y - getOriginY());
@@ -162,7 +180,7 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Set the object that implements SpriteContains.
      *
-     * @param spriteContains SpriteContains, an object that implements SpriteContains
+     * @param spriteContains SpriteContains, an object that has a contains method
      */
     public void setContains(SpriteContains spriteContains) {
         this.spriteContains = spriteContains;
@@ -192,152 +210,133 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     /**
-     * set the method for sprite draw
+     * Set the object that implements SpriteDraw
      *
-     * @param spriteDraw
-     * @return
+     * @param spriteDraw SpriteDraw, object with a draw method
      */
-    public ExtensibleSprite setDraw(SpriteDraw spriteDraw) {
+    public void setDraw(SpriteDraw spriteDraw) {
         this.spriteDraw = spriteDraw;
-        return this;
     }
 
     /**
-     * draw the basic batch using the method of the superclass "Sprite"
-     * need this as basis for decorations
+     * A hook to the draw method of the superclass Sprite.
      *
-     * @param batch
+     * @param batch Batch, for drawing
      */
     public void superDraw(Batch batch) {
         super.draw(batch);
     }
 
     /**
-     * draw the sprite, with decos ? text!
+     * Draw the extended sprite with the draw method of the spriteDraw object.
+     * Can use the decorator pattern.
      *
-     * @param batch
-     * @param camera
+     * @param batch Batch, for drawing
+     * @param camera Camera, to keep sprite visible.
      */
     @Override
     public void draw(Batch batch, Camera camera) {
         spriteDraw.draw(this, batch, camera);
     }
 
-
-    // what to do to keep sprite visible
-
     /**
-     * set instance method for keep visible
+     * Set the object implementing SpriteKeepVisible
      *
-     * @param spriteKeepVisible
-     * @return
+     * @param spriteKeepVisible SpriteKeepVisible
      */
-    public ExtensibleSprite setKeepVisible(SpriteKeepVisible spriteKeepVisible) {
+    public void setKeepVisible(SpriteKeepVisible spriteKeepVisible) {
         this.spriteKeepVisible = spriteKeepVisible;
-        return this;
     }
 
+    /**
+     * Keep the sprite visible using the keepVisible method of the spriteKeepVisible object.
+     *
+     * @param camera Camera, current in use. To decide of sprite is visible and to determine repositioning of the sprite.
+     * @return
+     */
     @Override
     public boolean keepVisible(Camera camera) {
         return spriteKeepVisible.keepVisible(this, camera);
     }
 
-    ;
-
-    // what to do at begin of touch
-
-
     /**
-     * select the draw for touch begin
+     * Set the object that implements SpriteTouchBegin
      *
-     * @param spriteTouchBegin
-     * @return
+     * @param spriteTouchBegin SpriteTouchBegin object
      */
-    public ExtensibleSprite setTouchBegin(SpriteTouchBegin spriteTouchBegin) {
+    public void setTouchBegin(SpriteTouchBegin spriteTouchBegin) {
         this.spriteTouchBegin = spriteTouchBegin;
-        return this;
     }
 
     /**
-     * make something at begin of touch, return true if something changed
+     * Call the touchBegin method of the spriteTouchBegin object.
      *
-     * @param position
-     * @return
+     * @param position Vector2, position of touch.
+     * @return boolean, true if something changed
      */
     @Override
     public boolean touchBegin(Vector2 position) {
         return spriteTouchBegin.touchBegin(this, position);
     }
 
-    // what to do for touch dragging around
-
     /**
-     * select the draw for touch drag
+     * Set the object implementing SpriteTouchDrag
      *
-     * @param spriteTouchDrag
-     * @return
+     * @param spriteTouchDrag SpriteTouchDrag object with touchDrag method
      */
-    public ExtensibleSprite setTouchDrag(SpriteTouchDrag spriteTouchDrag) {
+    public void setTouchDrag(SpriteTouchDrag spriteTouchDrag) {
         this.spriteTouchDrag = spriteTouchDrag;
-        return this;
     }
 
     /**
-     * touch drag
+     * Call the touchDrag method of the spriteTouchDrag object.
      *
-     * @param position
-     * @param deltaPosition
-     * @param camera
-     * @return
+     * @param position      Vector2, position of touch.
+     * @param deltaPosition Vector2, change in the position of touch.
+     * @param camera        Camera current in use. For keeping the sprite visible.
+     * @return boolean, true if something changed
      */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
         return spriteTouchDrag.touchDrag(this, position, deltaPosition, camera);
     }
 
-    // what to do at end of touch
-
     /**
-     * select the draw for touch begin
+     * Set the object implementing SpriteTouchEnd.
      *
-     * @param spriteTouchEnd
-     * @return
+     * @param spriteTouchEnd SpriteTouchEnd with touchEnd method
      */
-    public ExtensibleSprite setTouchEnd(SpriteTouchEnd spriteTouchEnd) {
+    public void setTouchEnd(SpriteTouchEnd spriteTouchEnd) {
         this.spriteTouchEnd = spriteTouchEnd;
-        return this;
     }
 
     /**
-     * make something at end of touch, return true if something changed
+     * Call the touchEnd method of the spriteTouchEnd object.
      *
-     * @param position
-     * @return
+     * @param position Vector2, position of touch.
+     * @return boolean, true if something changed
      */
     @Override
     public boolean touchEnd(Vector2 position) {
         return spriteTouchEnd.touchEnd(this, position);
     }
 
-    // waht to do at scroll event
-
     /**
-     * set the scroll draw
+     * Set the object that implement SpriteScroll
      *
-     * @param spriteScroll
-     * @return
+     * @param spriteScroll SpriteScroll object with a scroll method.
      */
-    public ExtensibleSprite setScroll(SpriteScroll spriteScroll) {
+    public void setScroll(SpriteScroll spriteScroll) {
         this.spriteScroll = spriteScroll;
-        return this;
     }
 
+
     /**
-     * default touch scroll
+     * Call the scroll method of the spriteScroll object.
      *
-     * @param position
-     * @param amount
-     * @return
+     * @param position Vector2, position of the mouse (pc only).
+     * @param amount   int, tells if the wheel turns up or down.
+     * @return boolean, true if the sprite contains the mouse position.
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
