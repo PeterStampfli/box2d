@@ -160,22 +160,20 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     // the composable actions
 
     /**
-     * set the instance method for contains the point
+     * Set the object that implements SpriteContains.
      *
-     * @param spriteContains
-     * @return
+     * @param spriteContains SpriteContains, an object that implements SpriteContains
      */
-    public ExtensibleSprite setContains(SpriteContains spriteContains) {
+    public void setContains(SpriteContains spriteContains) {
         this.spriteContains = spriteContains;
-        return this;
     }
 
     /**
-     * contains if sprite contains the point, using both the texture region and the masterShape
+     * Check if the sprite contains a point. Uses the contains method of the SpriteContains object.
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x float, x-coordinate of the point
+     * @param y float, x-coordinate of the point
+     * @return boolean, the result of the contains-method
      */
     @Override
     public boolean contains(float x, float y) {
@@ -183,18 +181,15 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     }
 
     /**
-     * contains if sprite contains the point
+     * Check if the sprite contains a point. Uses the contains method of the SpriteContains object.
      *
-     * @param point
-     * @return
+     * @param point, Vector2, position of the point
+     * @return boolean, the result of the contains-method
      */
     @Override
     public boolean contains(Vector2 point) {
         return contains(point.x, point.y);
     }
-
-    // draw the sprite, with extras ???
-
 
     /**
      * set the method for sprite draw
