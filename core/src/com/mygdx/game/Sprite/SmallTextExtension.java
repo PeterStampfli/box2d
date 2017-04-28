@@ -7,8 +7,7 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utilities.Device;
 
 /**
  * Created by peter on 4/20/17.
@@ -21,13 +20,13 @@ public class SmallTextExtension extends TextExtension {
      * Create the extension with a glyphLayout pool and font.
      * Attach to a sprite.
      *
-     * @param glyphLayoutPool GlyphLayoutPool
-     * @param font            BitmapFont
-     * @param sprite          ExtensibleSprite, the text will be attached to this sprite
+     * @param device Device, device with its glyphLayoutPool
+     * @param font   BitmapFont
+     * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */
 
-    public SmallTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite) {
-        super(glyphLayoutPool, font, sprite);
+    public SmallTextExtension(Device device, BitmapFont font, ExtensibleSprite sprite) {
+        super(device, font, sprite);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utilities.Device;
 
 /**
  * Created by peter on 4/22/17.
@@ -15,14 +16,16 @@ public abstract class TextExtension extends SpriteDrawDecorator {
 
     /**
      * Create the extension with a glyphLayout pool and font. Attach to a sprite.
+     * Set it as the sprites textExtension.
      *
-     * @param glyphLayoutPool GlyphLayoutPool
+     * @param device Device with its glyphLayoutPool
      * @param font BitmapFont
      * @param sprite ExtensibleSprite, the text will be attached to this sprite
      */
-    public TextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite){
+    public TextExtension(Device device, BitmapFont font, ExtensibleSprite sprite){
         super(sprite);
-        this.glyphLayoutPool=glyphLayoutPool;
+        sprite.textExtension=this;
+        this.glyphLayoutPool=device.glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();
         this.font=font;
     }

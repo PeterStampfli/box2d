@@ -18,7 +18,6 @@ public class ExtensibleSpriteBuilder {
     public BitmapFont font;
     public TextureRegion masterTextureRegion;
     public Shape2D masterShape;
-    public TextExtensionType masterTextExtension;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -26,10 +25,6 @@ public class ExtensibleSpriteBuilder {
     public SpriteTouchDrag masterTouchDrag;
     public SpriteTouchEnd masterTouchEnd;
     public SpriteScroll masterScroll;
-
-    public enum TextExtensionType{
-        NONE, SMALL,BIG
-    }
 
     /**
      * to create we need to know the pools (device)
@@ -43,7 +38,6 @@ public class ExtensibleSpriteBuilder {
         this.extensibleSpritePool=device.extensibleSpritePool;
         this.glyphLayoutPool=device.glyphLayoutPool;
         this.font=font;
-        setTextExtension(TextExtensionType.NONE);
         setContains(SpriteActions.shapeContains);
         setDraw(SpriteActions.simpleDraw);
         setKeepVisible(SpriteActions.nullKeepVisible);
@@ -54,9 +48,10 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the texture region default
-     * @param textureRegion
-     * @return
+     * Set the master texture region.
+     *
+     * @param textureRegion TextureRegion, default image for sprites
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTextureRegion(TextureRegion textureRegion){
         masterTextureRegion =textureRegion;
@@ -66,7 +61,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set the default shape
      * @param shape
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setShape(Shape2D shape){
         masterShape=shape;
@@ -74,19 +69,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the master type for text extension
-     * @param type
-     * @return
-     */
-    public ExtensibleSpriteBuilder setTextExtension(TextExtensionType type){
-        masterTextExtension=type;
-        return this;
-    }
-
-    /**
      * set the master method for contains the point
      * @param spriteContains
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setContains(SpriteContains spriteContains){
         masterContains = spriteContains;
@@ -96,7 +81,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set the master method for sprite draw
      * @param spriteDraw
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setDraw(SpriteDraw spriteDraw){
         masterDraw =spriteDraw;
@@ -106,7 +91,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set master method for keep visible
      * @param spriteKeepVisible
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setKeepVisible(SpriteKeepVisible spriteKeepVisible){
         masterKeepVisible =spriteKeepVisible;
@@ -116,7 +101,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * select the draw for touch begin
      * @param spriteTouchBegin
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchBegin(SpriteTouchBegin spriteTouchBegin){
         masterTouchBegin =spriteTouchBegin;
@@ -126,7 +111,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set the draw for touch drag
      * @param spriteTouchDrag
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchDrag(SpriteTouchDrag spriteTouchDrag){
         masterTouchDrag =spriteTouchDrag;
@@ -136,7 +121,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set the master for touch begin
      * @param spriteTouchEnd
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchEnd(SpriteTouchEnd spriteTouchEnd){
         masterTouchEnd =spriteTouchEnd;
@@ -146,7 +131,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * set the master for scroll
      * @param spriteScroll
-     * @return
+     * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setScroll(SpriteScroll spriteScroll){
         masterScroll =spriteScroll;
@@ -174,20 +159,8 @@ public class ExtensibleSpriteBuilder {
         sprite.setTouchBegin(masterTouchBegin);
         sprite.setTouchDrag(masterTouchDrag);
         sprite.setTouchEnd(masterTouchEnd);
-        switch (masterTextExtension){
-            case NONE:
-                sprite.textExtension=null;                          // say it again to be safe
-                break;
-            case SMALL:
-                sprite.textExtension=new SmallTextExtension(glyphLayoutPool,font,sprite);
-                break;
-            case BIG:
-                sprite.textExtension=new BigTextExtension(glyphLayoutPool,font,sprite);
-                break;
-        }
         return sprite;
     }
-
 
     /**
      * sprite with given texture regio, but no masterShape

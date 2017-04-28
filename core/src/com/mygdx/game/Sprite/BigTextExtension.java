@@ -3,13 +3,12 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utilities.Device;
 
 /**
  * An extension for ExtensibleSprite that shows a large scrollable text.
@@ -26,12 +25,12 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
      * Create the extension with a glyphLayout pool and font. Attach to a sprite.
      * Overwrites the draw, touchDrag and scroll methods of the sprite.
      *
-     * @param glyphLayoutPool GlyphLayoutPool
+     * @param device Device, device with its glyphLayoutPool
      * @param font            BitmapFont
      * @param sprite          ExtensibleSprite, the text will be attached to this sprite
      */
-    public BigTextExtension(Pool<GlyphLayout> glyphLayoutPool, BitmapFont font, ExtensibleSprite sprite) {
-        super(glyphLayoutPool, font, sprite);
+    public BigTextExtension(Device device, BitmapFont font, ExtensibleSprite sprite) {
+        super(device, font, sprite);
         sprite.setTouchDrag(this);
         sprite.setScroll(this);
     }
