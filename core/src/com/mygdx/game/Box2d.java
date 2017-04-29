@@ -15,6 +15,7 @@ import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
+import com.mygdx.game.Sprite.SmallTextExtension;
 import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.physics.BodyBuilder;
 import com.mygdx.game.physics.FixtureBuilder;
@@ -70,14 +71,14 @@ public class Box2d extends ApplicationAdapter {
 
 		img=mask.createTransparentWhiteTextureRegion();
 
-		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device,
-				                                                                    device.bitmapFont);
+		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
+		SpriteActions spriteActions=extensibleSpriteBuilder.spriteActions;
 
 		//extensibleSpriteBuilder.spriteTouchBegin();
-		extensibleSpriteBuilder.setTouchDrag(SpriteActions.touchDragTransRotate).
-                setKeepVisible(SpriteActions.keepOriginVisible).
-				setMasterTextExtension(null);
+		extensibleSpriteBuilder.setTouchDrag(spriteActions.touchDragTransRotate).
+                setKeepVisible(extensibleSpriteBuilder.spriteActions.keepOriginVisible);
 		extensibleSprite=extensibleSpriteBuilder.build(img);
+		new SmallTextExtension(device,device.bitmapFont,extensibleSprite);
 
 		extensibleSprite.setPosition(100,300);
 		//extensibleSprite.setText("ÄtestfgjÂ");

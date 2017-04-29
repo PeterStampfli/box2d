@@ -11,6 +11,7 @@ import com.mygdx.game.utilities.Device;
 
 public class ExtensibleSpriteBuilder {
     public Device device;
+    public SpriteActions spriteActions;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -20,26 +21,27 @@ public class ExtensibleSpriteBuilder {
     public SpriteScroll masterScroll;
 
     /**
-     * Create with a device that has glyphlayout and sprite pools.
-     * Set minimal actions.
+     * Create the builder with a device that has glyphlayout and sprite pools.
+     * Set minimal default actions.
      *
      * @param device Device, with pools.
      */
     public ExtensibleSpriteBuilder(Device device){
         this.device=device;
-        setContains(SpriteActions.shapeContains);
-        setDraw(SpriteActions.simpleDraw);
-        setKeepVisible(SpriteActions.nullKeepVisible);
-        setTouchBegin(SpriteActions.nullTouchBegin);
-        setTouchEnd(SpriteActions.nullTouchEnd);
-        setTouchDrag(SpriteActions.nullTouchDrag);
-        setScroll(SpriteActions.nullScroll);
+        spriteActions=new SpriteActions();
+        setContains(spriteActions.shapeContains);
+        setDraw(spriteActions.simpleDraw);
+        setKeepVisible(spriteActions.nullKeepVisible);
+        setTouchBegin(spriteActions.nullTouchBegin);
+        setTouchEnd(spriteActions.nullTouchEnd);
+        setTouchDrag(spriteActions.nullTouchDrag);
+        setScroll(spriteActions.nullScroll);
     }
 
     /**
-     * Set the SpriteContains object for new sprites.
+     * Set the SpriteContains strategy for new sprites.
      *
-     * @param spriteContains SpriteContains, object with contains method.
+     * @param spriteContains SpriteContains object with a contains method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setContains(SpriteContains spriteContains){
@@ -48,8 +50,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the master method for sprite draw
-     * @param spriteDraw
+     * Set the SpriteDraw strategy for new sprites.
+     *
+     * @param spriteDraw SpriteDraw object with a draw method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setDraw(SpriteDraw spriteDraw){
@@ -58,8 +61,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set master method for keep visible
-     * @param spriteKeepVisible
+     * Set the SpriteKeepVisible strategy for new sprites.
+     *
+     * @param spriteKeepVisible SpriteKeepVisible object with a keepVisible method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setKeepVisible(SpriteKeepVisible spriteKeepVisible){
@@ -68,8 +72,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * select the draw for touch begin
-     * @param spriteTouchBegin
+     * Set the SpriteTouchBegin strategy for new sprites.
+     *
+     * @param spriteTouchBegin SpriteTouchBegin object with a touchBegin method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchBegin(SpriteTouchBegin spriteTouchBegin){
@@ -78,8 +83,8 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the draw for touch drag
-     * @param spriteTouchDrag
+     * Set the SpriteTouchDrag strategy for new sprites.
+     * @param spriteTouchDrag SpriteTouchDrag object with a touchDrag method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchDrag(SpriteTouchDrag spriteTouchDrag){
@@ -88,8 +93,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the master for touch begin
-     * @param spriteTouchEnd
+     * Set the SpriteTouchEnd strategy for new sprites.
+     *
+     * @param spriteTouchEnd SpriteTouchEnd object with a touchEnd method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setTouchEnd(SpriteTouchEnd spriteTouchEnd){
@@ -98,8 +104,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the master for scroll
-     * @param spriteScroll
+     * Set the SpriteScroll strategy for new sprites
+     *
+     * @param spriteScroll SpriteScroll, object with a scroll method
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setScroll(SpriteScroll spriteScroll){
@@ -108,11 +115,11 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * obtain an extensible sprite from its pool, with given texture region and shape2d masterShape
-     * use master methods
-     * @param textureRegion
-     * @param shape
-     * @return
+     * Obtain an extensible sprite from its pool, with given texture region and shape2d shape.
+     *
+     * @param textureRegion TextureRegion, image
+     * @param shape Shape2D, shape
+     * @return ExtensibleSprite, the sprite
      */
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
@@ -132,9 +139,10 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * sprite with given texture regio, but no masterShape
-     * @param textureRegion
-     * @return
+     * Build a sprite with given texture region, but without shape.
+     *
+     * @param textureRegion TextureRegion, image
+     * @return ExtensibleSprite, the sprite
      */
     public ExtensibleSprite build(TextureRegion textureRegion){
         return build(textureRegion,null);
