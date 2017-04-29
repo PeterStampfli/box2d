@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.utilities.Device;
 
 /**
- * Created by peter on 4/21/17.
+ * Getting extensible sprites from the pool and setting their basic actions. No extensions.
  */
 
 public class ExtensibleSpriteBuilder {
