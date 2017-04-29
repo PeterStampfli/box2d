@@ -7,15 +7,17 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.L;
 
 /**
  * A basic sprite that can be extended. With the strategy pattern for the basic actions.
  * Use the ExtensibleSpriteBuilder for creation.
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable {
+public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable {
 
     public Shape2D shape;
     public Device device;
@@ -31,14 +33,23 @@ public class ExtensibleSprite extends Sprite implements Touchable {
     /**
      * Reset the sprite and put it back in the pool. Frees the text extension.
      */
-    public void free() {
+    public void reset(){
         shape = null;
         setTexture(null);
         for (Object extension:extensions){
             if (extension instanceof TextExtension){
                 device.glyphLayoutPool.free(((TextExtension) extension).glyphLayout);
             }
+            extension=null;
         }
+        extensions.clear();
+        L.og("reset");
+    }
+
+    /**
+     * Put the sprite back to the pool. Calls reset in the process.
+     */
+    public void free() {
         device.extensibleSpritePool.free(this);
     }
 

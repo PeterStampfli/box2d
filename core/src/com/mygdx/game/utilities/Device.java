@@ -285,11 +285,9 @@ public class Device implements Disposable {
         }
     }
 
-
-
-
     /**
      * Calls the dispose method of the disposer. Call this in the final dispose.
+     * Calls finalization and garbage collection.
      */
     @Override
     public void dispose() {

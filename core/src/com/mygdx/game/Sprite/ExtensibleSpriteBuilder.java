@@ -20,11 +20,10 @@ public class ExtensibleSpriteBuilder {
     public SpriteScroll masterScroll;
 
     /**
-     * to create we need to know the pools (device)
-     * font is independent
-     * set defaults for the actions...
-     * basic drawing only, else nothing
-     * @param device
+     * Create with a device that has glyphlayout and sprite pools.
+     * Set minimal actions.
+     *
+     * @param device Device, with pools.
      */
     public ExtensibleSpriteBuilder(Device device){
         this.device=device;
@@ -38,8 +37,9 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the master method for contains the point
-     * @param spriteContains
+     * Set the SpriteContains object for new sprites.
+     *
+     * @param spriteContains SpriteContains, object with contains method.
      * @return this, for chaining
      */
     public ExtensibleSpriteBuilder setContains(SpriteContains spriteContains){
