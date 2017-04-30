@@ -64,12 +64,17 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		//shape2DCollection.add();
-		Circle circle=new Circle(150,150,149);
-		Mask mask=new Mask(300,300);
+		Circle circle=new Circle(20,20,16);
+		Mask mask=new Mask(40,40);
 
-		mask.fill(circle);
+		//mask.fill(circle);
 
+		mask.setSmoothing(2);
+		//mask.fillCircle(20,20,16);
+		mask.fillPolygon(5,5,30,20,15,35);
 		img=mask.createTransparentWhiteTextureRegion();
+		Basic.linearInterpolation(img);
+		//Basic.nearest(img);
 
 		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
 		SpriteActions spriteActions=extensibleSpriteBuilder.spriteActions;
@@ -80,7 +85,7 @@ public class Box2d extends ApplicationAdapter {
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 		new SmallTextExtension(device,device.bitmapFont,extensibleSprite);
 
-		extensibleSprite.setPosition(100,300);
+		extensibleSprite.setPosition(400,300);
 		//extensibleSprite.setText("ÄtestfgjÂ");
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
@@ -88,14 +93,14 @@ public class Box2d extends ApplicationAdapter {
 
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-		extensibleSprite.setText("kurz");
+		extensibleSprite.setText("");
 		physics=new Physics(true);
 		physics.createWorld(0,-10,true);
 		physics.start();
 		BodyBuilder bodyBuilder=new BodyBuilder(physics);
 		FixtureBuilder fixtureBuilder=new FixtureBuilder();
 
-		Body dynamicBody=bodyBuilder.setPosition(100,300).build();
+		Body dynamicBody=bodyBuilder.setPosition(400,300).build();
 		fixtureBuilder.build(dynamicBody,circle);
 	}
 
@@ -107,7 +112,9 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		physics.advance();
+		Basic.setContinuousRendering(false);
+		//====================================================================================
+		//physics.advance();
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
 
@@ -117,6 +124,7 @@ public class Box2d extends ApplicationAdapter {
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
 		extensibleSprite.draw(spriteBatch, viewport.getCamera());
+		spriteBatch.draw(img,0,0,400,400);
 
 		spriteBatch.end();
 
@@ -127,7 +135,7 @@ public class Box2d extends ApplicationAdapter {
 		shapeRenderer.rect(0,0,100,300);
 		shapeRenderer.end();
 
-		physics.debugRender(viewport);
+		//physics.debugRender(viewport);
 	}
 	
 	@Override
