@@ -26,6 +26,7 @@ public class Mask {
     public byte[] alpha;
     public int width;
     public int height;
+    public float smoothLengthHalf,smoothFactor;
 
     /**
      * Create a transparent mask of given width and height.
@@ -37,7 +38,19 @@ public class Mask {
         this.width = width;
         this.height = height;
         alpha = new byte[width * height];
+        setSmoothing(1);
         clear();
+    }
+
+    /**
+     * Set smoothing. The length of the transition region.
+     *
+     * @param length float, 0 for no smoothing, 1 for minimal smooth border pixels.
+     */
+    public void setSmoothing(float length){
+        length=Math.max(length,Basic.epsilon);
+        smoothLengthHalf=length/2;
+        smoothFactor=256/length;
     }
 
     /**
@@ -120,70 +133,69 @@ public class Mask {
     }
 
     /**
-     * Draw a ring of opaque bits with a smooth border given its center, outer radius and thickness.
-     * Draws a disc if the thickness is negative.
+     * Set the opacity of a mask byte. Distance is from the boundary of a shape measured towards the
+     * inside. The transition region width is given by setSmoothing(transitionLength).
+     * This smooths out the shape.
      *
-     * @param centerX     float, x-coordinate of the center
-     * @param centerY     float, x-coordinate of the center
-     * @param thickness   float, thickness of the ring, negative values give a simple disc
-     * @param outerRadius float, outer radius of the ring
+     * @param index int, index of the byte in the alpha arrray
+     * @param distance float, measured from the boundary, positve sign inside, negative outside.
      */
-    public void drawRing(float centerX, float centerY, float outerRadius, float thickness) {
-        float dx, dy2, dx2Plusdy2;
-        float innerRadius;
-        float d = 0.5f;
-        float outerRadiusSqPlus = (outerRadius + d) * (outerRadius + d);
-        float outerRadiusSqMinus = (outerRadius - d) * (outerRadius - d);
-        float outerDenom = 1f / (outerRadiusSqPlus - outerRadiusSqMinus);
-        float innerRadiusSqMinus, innerRadiusSqPlus, innerDenom;
-        if (thickness >= 0) {
-            innerRadius = outerRadius - thickness;
-            innerRadiusSqPlus = (innerRadius + d) * (innerRadius + d);
-            innerRadiusSqMinus = (innerRadius - d) * (innerRadius - d);
-            innerDenom = 1f / (innerRadiusSqPlus - innerRadiusSqMinus);
-        } else {
-            innerRadiusSqMinus = -100;
-            innerRadiusSqPlus = -90;
-            innerDenom = 1;
+    public void setOpacity(int index,float distance){
+        if (distance<-smoothLengthHalf){                    // trivial case: far outside, no added opacity
+            return;
         }
-        centerY = flipY(centerY);
-        int iMax, iMin, jMax, jMin;
-        iMax = Math.min(width - 1, MathUtils.ceil(centerX + outerRadius));
-        iMin = Math.max(0, MathUtils.floor(centerX - outerRadius - 1));
-        jMax = Math.min(height - 1, MathUtils.ceil(centerY + outerRadius));
-        jMin = Math.max(0, MathUtils.floor(centerY - outerRadius - 1));
-        int i, j, jWidth;
-        for (j = jMin; j <= jMax; j++) {
-            jWidth = j * width;
-            dy2 = j + 0.5f - centerY;
-            dy2 *= dy2;
-            for (i = iMin; i <= iMax; i++) {
-                dx = i + 0.5f - centerX;
-                dx2Plusdy2 = dy2 + dx * dx;
-                if (dx2Plusdy2 > innerRadiusSqMinus) {
-                    if (dx2Plusdy2 < innerRadiusSqPlus) {
-                        d = (dx2Plusdy2 - innerRadiusSqMinus) * innerDenom;
-                        alpha[i + jWidth] = maxByteFloat(alpha[i + jWidth], d);
-                    } else if (dx2Plusdy2 < outerRadiusSqMinus) {
-                        alpha[i + jWidth] = (byte) 255;
-                    } else if (dx2Plusdy2 < outerRadiusSqPlus) {
-                        d = (outerRadiusSqPlus - dx2Plusdy2) * outerDenom;
-                        alpha[i + jWidth] = maxByteFloat(alpha[i + jWidth], d);
-                    }
-                }
-            }
+        if (distance>smoothLengthHalf){            // trivial case: far inside, fully opaque
+            alpha[index]=(byte) 255;
+            return;
+        }
+        double newOpacity=Math.floor(128+distance*smoothFactor);
+        if (newOpacity>=255){                 // in the transition region: fully opaque
+            alpha[index]=(byte) 255;
+            return;
+        }
+        if (toPosInt(alpha[index])<newOpacity){   // in the transition region: more opaque than previous
+            alpha[index]=(byte) newOpacity;
         }
     }
 
     /**
      * Draw a disc of opaque bits with a smooth border given its center and radius.
      *
-     * @param centerX float, x-coordinate of the center
-     * @param centerY float, x-coordinate of the center
-     * @param radius  float, radius
+     * @param centerX     float, x-coordinate of the center
+     * @param centerY     float, x-coordinate of the center
+     * @param radius float, radius of the circle
      */
     public void fillCircle(float centerX, float centerY, float radius) {
-        drawRing(centerX, centerY, radius, -10);
+        float dx, dy2, dx2Plusdy2;
+        float radiusSq=radius*radius;
+        float iRadius2=0.5f/radius;
+        float outerRadius=radius+smoothLengthHalf;
+        float outerRadiusSq=outerRadius*outerRadius;
+        float innerRadius=radius-smoothLengthHalf;
+        float innerRadiusSq=innerRadius*innerRadius;
+        centerY = flipY(centerY);
+        int iMax, iMin, jMax, jMin;
+        iMax = Math.min(width - 1, MathUtils.ceil(centerX + outerRadius));
+        iMin = Math.max(0, MathUtils.floor(centerX - outerRadius - 1));
+        jMax = Math.min(height - 1, MathUtils.ceil(centerY + outerRadius));
+        jMin = Math.max(0, MathUtils.floor(centerY - outerRadius - 1));
+        int i, j, index;
+        for (j = jMin; j <= jMax; j++) {
+            index = j * width;
+            dy2 = j + 0.5f - centerY;
+            dy2 *= dy2;
+            for (i = iMin; i <= iMax; i++) {
+                dx = i + 0.5f - centerX;
+                dx2Plusdy2 = dy2 + dx * dx;
+                if (dx2Plusdy2 < innerRadiusSq) {    // d>smallLengthHalf
+                    alpha[index]=(byte) 255;
+                }
+                else if (dx2Plusdy2 < outerRadiusSq) {  // d>-smallLengthHalf
+                    setOpacity(index,(radiusSq-dx2Plusdy2)*iRadius2);
+                }
+                    index++;
+            }
+        }
     }
 
     /**
@@ -226,6 +238,8 @@ public class Mask {
 
         /**
          * Determine the distance of a pixel (i,j) from the line. The pixel lies at (i+0.5,j+0.5).
+         * Distance is positive if point is inside the polygon (Vertices are given counterclockwise
+         * and the polygon is convex).
          *
          * @param i int, column index of pixel
          * @param j int, row index of pixels
@@ -234,18 +248,16 @@ public class Mask {
         public float distance(int i, int j) {
             float linePosition, d;
             d = ex * (j + 0.5f - pointY) - ey * (i + 0.5f - pointX);
-            return -d + 0.5f;    // taking the mirroring into account that results from the y-axis flip
+            return -d;    // taking the mirroring into account that results from the y-axis flip
         }
     }
 
     /**
-     * Draw a convex polygon shape. Vertices have to be given in counter-clock sense.
-     * Draws the outline with a given thickness inside the polygon border.
+     * Fill a convex polygon shape. Vertices have to be given in counter-clock sense.
      *
-     * @param thickness float, thickness of the border, use a very large number to fill the polygon
      * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
      */
-    public void drawPolygon(float thickness, float... coordinates) {
+    public void fillPolygon(float... coordinates) {
         int length = coordinates.length - 2;
         Array<Line> lines = new Array<Line>();
         float xMin = coordinates[length];
@@ -261,40 +273,31 @@ public class Mask {
         }
         lines.add(new Line(coordinates[length], coordinates[length + 1], coordinates[0], coordinates[1]));
         // taking into account smooth border of with 0.5 and shift of pixel positions
-        int iMin = Math.max(0, MathUtils.floor(xMin - 1));
-        int iMax = Math.min(width - 1, MathUtils.ceil(xMax));
-        int jMin = Math.max(0, MathUtils.floor(yMin - 1));
-        int jMax = Math.min(height - 1, MathUtils.ceil(yMax));
-        int i, j, jWidth;
+        int iMin = Math.max(0, MathUtils.floor(xMin - 1-smoothLengthHalf));
+        int iMax = Math.min(width - 1, MathUtils.ceil(xMax+smoothLengthHalf));
+        int jMin = Math.max(0, MathUtils.floor(yMin - 1-smoothLengthHalf));
+        int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthHalf));
+        int i, j, index;
         float d;
-        length = lines.size;
         for (j = jMin; j <= jMax; j++) {
-            jWidth = j * width;
+            index = j * width;
             for (i = iMin; i <= iMax; i++) {
                 d = 100000f;
                 for (Line line : lines) {
                     d = Math.min(d, line.distance(i, j));
-                    if (d < 0) {
+                    if (d < -smoothLengthHalf) {
                         break;
                     }
                 }
-                if (d > 0) {
-                    if (d > thickness - 0.5f) {
-                        d = thickness + 0.5f - d;
-                    }
-                    alpha[i + jWidth] = maxByteFloat(alpha[i + jWidth], d);
+                if (d > smoothLengthHalf) {
+                    alpha[index]=(byte) 255;
                 }
+                else if (d>-smoothLengthHalf){
+                    setOpacity(index,d);
+                }
+                index++;
             }
         }
-    }
-
-    /**
-     * fill a convex polygon shape. Give vertices in counter-clock sense.
-     *
-     * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
-     */
-    public void fillPolygon(float... coordinates) {
-        drawPolygon(100000, coordinates);
     }
 
     /**
@@ -473,7 +476,6 @@ public class Mask {
         pixmap.fill();
         setPixmapAlpha(pixmap);
         Texture result = new Texture(pixmap);
-        Basic.linearInterpolation(result);
         pixmap.dispose();
         return new TextureRegion(result);
     }

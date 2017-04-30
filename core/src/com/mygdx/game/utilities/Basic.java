@@ -88,7 +88,16 @@ public class Basic {
      * @param textureRegion
      */
     public static void linearInterpolation(TextureRegion textureRegion) {
-        textureRegion.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        linearInterpolation(textureRegion.getTexture());
+    }
+
+    /**
+     * Set the texture of a TextureRegion to nearest neighbor "interpolation".
+     *
+     * @param textureRegion
+     */
+    public static void nearestInterpolation(TextureRegion textureRegion) {
+        textureRegion.getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     /**
