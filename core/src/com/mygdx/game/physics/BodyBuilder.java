@@ -6,18 +6,17 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
- * Created by peter on 3/22/17.
- *
- * input data is in grphical world units (virtual pixels)
+ * Build box2D bodies. Dimensions are in graphical units (unit is one pixel).
  */
 public class BodyBuilder {
 
-    private Physics physics;
     public BodyDef bodyDef;
+    private Physics physics;
 
     /**
-     * creates and resets the bodydef
-     * @param physics we need the world to create the body
+     * Creates and resets the bodydef.
+     *
+     * @param physics Physics, We need physics and the world to create the body.
      */
     public BodyBuilder(Physics physics) {
         this.physics = physics;
@@ -26,12 +25,12 @@ public class BodyBuilder {
     }
 
     /**
-     * reset the BodyDef data to defaults, userData=null
-     * dynamic body
-     * @return this
+     * Reset the bodyDef to defaults.
+     *
+     * @return this, for chaining
      */
     public BodyBuilder reset() {
-        bodyDef.type= BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.angle = 0;
         bodyDef.bullet = false;
         bodyDef.fixedRotation = false;
@@ -47,8 +46,9 @@ public class BodyBuilder {
     }
 
     /**
-     * set the bodyDef data to same as a body, including userData
-     * @param body
+     * Set the bodyDef to be the same as of another body.
+     *
+     * @param body Body, to copy the bodyDef data
      * @return this
      */
     public BodyBuilder sameAs(Body body) {
@@ -67,10 +67,10 @@ public class BodyBuilder {
         return this;
     }
 
-
     /**
-     * set the body type
-     * @param bodyType
+     * Set the body type.
+     *
+     * @param bodyType BodyDef.BodyType, dynamic, static or kinematic
      * @return this
      */
     public BodyBuilder setBodyType(BodyDef.BodyType bodyType) {
@@ -79,8 +79,9 @@ public class BodyBuilder {
     }
 
     /**
-     * set if body starts isActive (default=true)
-     * @param isActive
+     * Set if body is active at start (default=true).
+     *
+     * @param isActive boolean, true if body should be active at start
      * @return
      */
     public BodyBuilder setIsActive(boolean isActive) {
@@ -89,8 +90,9 @@ public class BodyBuilder {
     }
 
     /**
-     * set if body starts isAwake (default=true)
-     * @param isAwake
+     * Set if body is awake at start (default=true).
+     *
+     * @param isAwake boolean, true if body should be awake at start
      * @return
      */
     public BodyBuilder setIsAwake(boolean isAwake) {
@@ -99,8 +101,9 @@ public class BodyBuilder {
     }
 
     /**
-     * set if body may sleep (default=true)
-     * @param allowed
+     * Set if body may sleep (default=true).
+     *
+     * @param allowed boolean, true if body may sleep
      * @return
      */
     public BodyBuilder setAllowSleep(boolean allowed) {
@@ -109,8 +112,9 @@ public class BodyBuilder {
     }
 
     /**
-     * set if body is bullet (default=false)
-     * @param isBullet
+     * Set if body is a bullet (default=false).
+     *
+     * @param isBullet boolean, true for a bullet
      * @return
      */
     public BodyBuilder setIsBullet(boolean isBullet) {
@@ -119,30 +123,32 @@ public class BodyBuilder {
     }
 
     /**
-     * set body setPosition
-     * as scaled from graphics setPosition
-     * @param positionX
-     * @param positionY
+     * Set body position (Given in pixel units).
+     *
+     * @param positionX float, x-component of the position in the graphics world.
+     * @param positionY float, y-component of the position in the graphics world.
      * @return
      */
     public BodyBuilder setPosition(float positionX, float positionY) {
-        bodyDef.position.set(positionX/Physics.PIXELS_PER_METER, positionY/Physics.PIXELS_PER_METER);
+        bodyDef.position.set(positionX / Physics.PIXELS_PER_METER, positionY / Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * set body setPosition (graphics world units)
+     * Set body position  (in pixel units).
+     *
      * @param position
      * @return
      */
     public BodyBuilder setPosition(Vector2 position) {
-        bodyDef.position.set(position);
+        setPosition(position.x,position.y);
         return this;
     }
 
     /**
-     * set body angle
-     * @param angle
+     * Set body angle, in radians.
+     *
+     * @param angle float, radians
      * @return
      */
     public BodyBuilder setAngle(float angle) {
@@ -151,9 +157,10 @@ public class BodyBuilder {
     }
 
     /**
-     * set angular damping. (default=0), reduces rotational velocity
-     * can be larger than 1. Effect depends on time step for large values.
-     * @param damping
+     * Set the angular damping (default=0). Reduces the rotational velocity.
+     * Can be larger than 1. Effect depends on time step for large values.
+     *
+     * @param damping float, angular damping, between 0 and 1 ?
      * @return
      */
     public BodyBuilder setAngularDamping(float damping) {
@@ -162,7 +169,8 @@ public class BodyBuilder {
     }
 
     /**
-     * set angular velocity (radians/sec) (default=0)
+     * Set the angular velocity in radians/sec (default=0).
+     *
      * @param velocity
      * @return
      */
@@ -172,9 +180,10 @@ public class BodyBuilder {
     }
 
     /**
-     * set linear damping (default=0), reduces linear velocity
-     * can be larger than 1. Effect depends on time step for large values.
-     * @param damping
+     * Set the linear damping (default=0). Reduces the linear velocity.
+     * Can be larger than 1. Effect depends on time step for large values.
+     *
+     * @param damping float, linear damping, between 0 and 1 ?
      * @return
      */
     public BodyBuilder setLinearDamping(float damping) {
@@ -183,30 +192,33 @@ public class BodyBuilder {
     }
 
     /**
-     * set initial velocity (default=0)
-     * scaled from graphics world units
+     * Set initial velocity (default=0) in pixels/sec.
+     *
      * @param velocityX
      * @param velocityY
      * @return
      */
     public BodyBuilder setLinearVelocity(float velocityX, float velocityY) {
-        bodyDef.linearVelocity.set(velocityX/Physics.PIXELS_PER_METER, velocityY/Physics.PIXELS_PER_METER);
+        bodyDef.linearVelocity.set(velocityX / Physics.PIXELS_PER_METER, velocityY / Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * set initial velocity (default=0)
+     * Set initial velocity (default=0) in pixels/sec.
+     *
      * @param velocity
      * @return
      */
     public BodyBuilder setLinearVelocity(Vector2 velocity) {
-        bodyDef.linearVelocity.set(velocity);
+        setLinearVelocity(velocity.x,velocity.y);
         return this;
     }
 
     /**
-     * set gravity scale (default=1, natural gravity)
-     * @param scale
+     * Set gravity scale (default=1, natural gravity). Multiplies world gravity acceleration.
+     * For particles that float ?
+     *
+     * @param scale float, multiplier for gravity.
      * @return
      */
     public BodyBuilder setGravityScale(float scale) {
@@ -215,19 +227,19 @@ public class BodyBuilder {
     }
 
     /**
-     * build the body without user data
-     * set that bodies list needs update
-     * @return
+     * Build the body without user data. Tells physics to update the bodies array.
+     *
+     * @return Body, a box2D body.
      */
-    public Body build(){
-        physics.bodiesNeedUpdate=true;
+    public Body build() {
+        physics.bodiesNeedUpdate = true;
         return physics.world.createBody(bodyDef);
     }
 
     /**
-     * build the body from BodyDef and attach the supplied userData
-     * mark, that the bodies array has to be updated
-     * @param userData
+     * Build the body and attach the supplied userData.
+     *
+     * @param userData Object, attach to the body.
      * @return
      */
     public Body build(Object userData) {
@@ -237,15 +249,16 @@ public class BodyBuilder {
     }
 
     /**
-     * build a body with a sprite (created extra with its image ...)
-     * creates a bodyToSprite object for the new body and given sprite and sets it as user data
-     * get bodyToSprite from body.userData if needed (why?)
-     * @param sprite
-     * @return
+     * Build a body with a sprite that moves with the body.
+     * Creates a BodyToSprite object that connects the body and the sprite. Sets it as user data.
+     * We can get the bodyToSprite object from bodyToSprite=(BodyToSprite)body.userData.
+     *
+     * @param sprite ExtensibleSprite, to attach to the body.
+     * @return body with connection to a sprite.,
      */
-    public Body build(ExtensibleSprite sprite){
-        Body body=build();
-        body.setUserData(new BodyToSprite(body,sprite));
+    public Body build(ExtensibleSprite sprite) {
+        Body body = build();
+        body.setUserData(new BodyToSprite(body, sprite));
         return body;
     }
 }

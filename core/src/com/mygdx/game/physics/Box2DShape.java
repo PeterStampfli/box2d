@@ -16,20 +16,18 @@ import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.L;
 
 /**
- * Created by peter on 4/10/17.
- * static methods to create box2d shapes from Shape2D shapes
- * Idea: use only Shape2D shapes ...
- * convert only simple shapes
- *
+ * Static methods to create box2d shapes from Shape2D shapes.
+ * Shape2D shapes use pixels as unit for length. box2d shapes use meters as length.
  * CALL Box2D.init before using this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 
 public class Box2DShape {
 
     /**
-     * create scaled circle masterShape based on shape2D circle
-     * @param circle
-     * @return
+     * Create box2d CircleShape based on a Shape2D Circle.
+     *
+     * @param circle Circle (Shape2D)
+     * @return CircleShape (box2d)
      */
     static public CircleShape ofShape2D(Circle circle) {
         CircleShape circleShape = new CircleShape();
