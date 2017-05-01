@@ -8,15 +8,14 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.mygdx.game.Images.Shape2DCollection;
 
 /**
- * Created by peter on 3/22/17.
- * setting fixture parameters
- * attaching fixture to a body with given masterShape or collection of shapes and user data
+ * Attach fixtures to a body. Set data and shape of the fixture.
  */
+
 public class FixtureBuilder {
     public FixtureDef fixtureDef;
 
     /**
-     * create fixturebuilder with scale=1 as default
+     * Create a fixturebuilder with default fixtureDef data.
      */
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();
@@ -24,9 +23,9 @@ public class FixtureBuilder {
     }
 
     /**
-     * reset the fixtureDef with defaults
-     * except the scale, masterShape and body
-     * @return
+     * Reset the fixtureDef with default data.
+     *
+     * @return this, for chaining
      */
     public FixtureBuilder reset() {
         fixtureDef.density = 1;
@@ -40,9 +39,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set the mass density (default=1)
-     * @param density
-     * @return
+     * Set the mass density (default=1kg/m²).
+     *
+     * @param density float, density in kg/m² (?)
+     * @return this, for chaining
      */
     public FixtureBuilder setDensity(float density) {
         fixtureDef.density = density;
@@ -50,9 +50,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set groupIndex (default=0)
-     * @param index
-     * @return
+     * Set group index (default=0) for collisions.
+     *
+     * @param index int, group index
+     * @return this, for chaining
      */
     public FixtureBuilder setGroupIndex(short index) {
         fixtureDef.filter.groupIndex = index;
@@ -60,9 +61,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set the category bits (default=1)
-     * @param bits
-     * @return
+     * Set the category bits (default=1) for collisions.
+     *
+     * @param bits short, 16 bits for filtering collisions.
+     * @return this, for chaining
      */
     public FixtureBuilder setCategoryBits(short bits) {
         fixtureDef.filter.categoryBits = bits;
@@ -70,9 +72,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set the mask bits (default=1)
-     * @param bits
-     * @return
+     * Set the mask bits (default=1) for collisions.
+     *
+     * @param bits short, 16 bits for filtering collisions.
+     * @return this, for chaining
      */
     public FixtureBuilder setMaskBits(short bits) {
         fixtureDef.filter.maskBits = bits;
@@ -80,9 +83,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set the friction for surface contact with other bodies (default=0.3 ?)
-     * @param friction
-     * @return
+     * Set the friction for surface contact with other bodies.
+     *
+     * @param friction float, between 0 and 1
+     * @return this, for chaining
      */
     public FixtureBuilder setFriction(float friction) {
         fixtureDef.friction = friction;
@@ -90,9 +94,10 @@ public class FixtureBuilder {
     }
 
     /**
-     * set if fixture is sensor (default=false)
-     * @param isSensor
-     * @return
+     * Set if fixture is a sensor (default=false).
+     *
+     * @param isSensor boolean, true if fixture is a sensor
+     * @return this, for chaining
      */
     public FixtureBuilder setIsSensor(boolean isSensor) {
         fixtureDef.isSensor = isSensor;
@@ -100,9 +105,11 @@ public class FixtureBuilder {
     }
 
     /**
-     * set restition, bouncyness at collision (default=0.6 ?)
-     * @param restitition
-     * @return
+     * Set restition, bouncyness at collision (default=0.6).
+     * 0 for inelastic collision. 1 for elastic collision.
+     *
+     * @param restitition float, fraction of elastic collision
+     * @return this, for chaining
      */
     public FixtureBuilder setRestitution(float restitition) {
         fixtureDef.restitution = restitition;
@@ -110,12 +117,13 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and return a fixture, attached to given body with given masterShape and userData
-     * dispose the masterShape later
-     * @param body
-     * @param shape
-     * @param userData
-     * @return
+     * Build and return a fixture, attached to given body with a box2D Shape and userData.
+     * Dispose the Shape later.
+     *
+     * @param body Body, to attach the fixture
+     * @param shape Shape, box2D, for the fixture
+     * @param userData Object
+     * @return this, for chaining
      */
     public Fixture build(Body body, Shape shape, Object userData){
         fixtureDef.shape=shape;
@@ -125,24 +133,25 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and return a fixture, attached to given body with given masterShape, no userData
-     * you have to dispose the masterShape later
-     * @param body
-     * @param shape
-     * @return
+     * Build and return a fixture, attached to given body with a box2D Shape. No userData.
+     * Dispose the Shape later.
+     *
+     * @param body Body, gets the fixture
+     * @param shape Shape, box2D, for the fixture
+     * @return Fixture, the fixture that has been attached
      */
     public Fixture build(Body body, Shape shape){
         return build(body, shape, null);
     }
 
     /**
-     * build and attach shapes from shape2D objects, including shape2DCollections,
-     * to given body and userData object
-     * the generated masterShape is disposed automatically
-     * @param body
-     * @param shape2D
-     * @param userData
-     * @return
+     * Build and attach one or more fixtures with the shapes from shape2D objects, including shape2DCollections,
+     * to a body. Set the userData object of the fixtures. The generated box2D Shapes are disposed automatically.
+     *
+     * @param body Body, gets the fixture
+     * @param shape2D Shape2D, shape for the fixture, can be a Shape2DCollection
+     * @param userData Object
+     * @return Fixture, the fixture that has been attached
      */
     public Fixture build(Body body, Shape2D shape2D,Object userData){
         Fixture fixture=null;
@@ -161,13 +170,12 @@ public class FixtureBuilder {
     }
 
     /**
-     * build and attach shapes from shape2D objects, including shape2DCollections,
-     * to given body
-     * the generated masterShape is disposed automatically
-     * no user data
-     * @param body
-     * @param shape2D
-     * @return
+     * Build and attach one or more fixtures with the shapes from shape2D objects, including shape2DCollections,
+     * to a body. Set the userData object of the fixtures. The generated box2D Shapes are disposed automatically.
+     *
+     * @param body Body, gets the fixture
+     * @param shape2D Shape2D, shape for the fixture, can be a Shape2DCollection
+     * @return Fixture, the fixture that has been attached
      */
     public Fixture build(Body body, Shape2D shape2D){
         return build(body, shape2D,null);
