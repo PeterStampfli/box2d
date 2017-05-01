@@ -135,19 +135,12 @@ public class Mask {
     /**
      * Set the opacity of a mask byte. Distance is from the boundary of a shape measured towards the
      * inside. The transition region width is given by setSmoothing(transitionLength).
-     * This smooths out the shape.
+     * This smooths out the shape. For efficiency check if the distance is in the transition region before calling this.
      *
      * @param index int, index of the byte in the alpha arrray
      * @param distance float, measured from the boundary, positve sign inside, negative outside.
      */
     public void setOpacity(int index,float distance){
-        if (distance<-smoothLengthHalf){                    // trivial case: far outside, no added opacity
-            return;
-        }
-        if (distance>smoothLengthHalf){            // trivial case: far inside, fully opaque
-            alpha[index]=(byte) 255;
-            return;
-        }
         double newOpacity=Math.floor(128+distance*smoothFactor);
         if (newOpacity>=255){                 // in the transition region: fully opaque
             alpha[index]=(byte) 255;

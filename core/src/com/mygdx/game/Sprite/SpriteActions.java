@@ -11,73 +11,12 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public class SpriteActions {
-
-    /**
-     * An object that implements SpriteTouchDrag:
-     * Translates the sprite without rotation and keeps it visible.
-     */
-     public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
-        @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
-            sprite.translate(deltaPosition.x, deltaPosition.y);
-            sprite.keepVisible(camera);
-            return true;
-        }
-    };
-    /**
-     * An object that implements SpriteTouchDrag:
-     * Translates and rotates the sprite and keeps it visible.
-     */
-     public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
-        @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition, Camera camera) {
-            float centerTouchX = touchPosition.x - sprite.getWorldOriginX();
-            float centerTouchY = touchPosition.y - sprite.getWorldOriginY();
-            float centerTouchLength = Vector2.len(centerTouchX, centerTouchY);
-            float centerTouchCrossDeltaTouch = centerTouchX * deltaTouchPosition.y - centerTouchY * deltaTouchPosition.x;
-            float deltaAngle = MathUtils.atan2(centerTouchCrossDeltaTouch, centerTouchLength * centerTouchLength);
-            deltaAngle *= 2 * centerTouchLength / (sprite.getWidth() * sprite.getScaleX() + sprite.getHeight() * sprite.getScaleY());
-            sprite.setRotation(sprite.getRotation() + MathUtils.radiansToDegrees * deltaAngle);
-            //  the rest
-            float sinDeltaAngle = MathUtils.sin(deltaAngle);
-            float cosDeltaAngle = MathUtils.cos(deltaAngle);
-            sprite.translate(deltaTouchPosition.x - ((cosDeltaAngle - 1) * centerTouchX - sinDeltaAngle * centerTouchY),
-                    deltaTouchPosition.y - (sinDeltaAngle * centerTouchX + (cosDeltaAngle - 1) * centerTouchY));
-
-            sprite.keepVisible(camera);
-            return true;
-        }
-    };
-    /**
-     * An object that implements SpriteTouchEnd:
-     * Does nothing and returns false.
-     */
-     public SpriteTouchEnd nullTouchEnd = new SpriteTouchEnd() {
-        @Override
-        public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
-            return false;
-        }
-    };
-    /**
-     * An object that implements SpriteTouchEnd:
-     * Returns true if sprite contains the mouse position, but does nothing.
-     * This prevents a scroll on sprites lying behind this sprite.
-     */
-     public SpriteScroll nullScroll = new SpriteScroll() {
-        @Override
-        public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
-            if (sprite.contains(position.x, position.y)) {
-                return true;
-            }
-            return false;
-        }
-    };
     /**
      * An object that implements SpriteContains:
      * Does NOT check if the point is inside the sprite. Always returns false.
      * For sprites that do not interact.
      */
-    public SpriteContains nullContains = new SpriteContains() {
+    public SpriteContains containsNull = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             return false;
@@ -94,7 +33,7 @@ public class SpriteActions {
      * @param y      float, y-coordinate of the point
      * @return boolean, true if the sprite contains the point
      */
-    public SpriteContains shapeContains = new SpriteContains() {
+    public SpriteContains containsTransRotate = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             // shift that "origin" is at (0,0)
@@ -132,12 +71,12 @@ public class SpriteActions {
      * @param y      float, y-coordinate of the point
      * @return boolean, true if the sprite contains the point
      */
-    public SpriteContains withoutRotationShapeContains = new SpriteContains() {
+    public SpriteContains containsTranslate = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             // shift that "origin" is at (0,0)
-            x -= sprite.getWorldOriginX();
-            y -= sprite.getWorldOriginY();
+            x -= sprite.getX();
+            y -= sprite.getY();
             // limit to texture/pixmap region and check the masterShape, if there is one
             boolean isInside = (x >= 0) && (x <= sprite.getWidth())
                     && (y >= 0) && (y <= sprite.getHeight())
@@ -145,11 +84,12 @@ public class SpriteActions {
             return isInside;
         }
     };
+
     /**
      * An object that implements SpriteDraw:
      * Does not draw anything.
      */
-    public SpriteDraw nullDraw = new SpriteDraw() {
+    public SpriteDraw drawNull = new SpriteDraw() {
         @Override
         public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
         }
@@ -158,7 +98,7 @@ public class SpriteActions {
      * An object that implements SpriteDraw:
      * Draws the basic sprite without extras.
      */
-    public SpriteDraw simpleDraw = new SpriteDraw() {
+    public SpriteDraw drawSuper = new SpriteDraw() {
         @Override
         public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
             sprite.superDraw(batch);
@@ -168,7 +108,7 @@ public class SpriteActions {
      * An object that implements SpriteKeepVisible:
      * Does nothing and returns false.
      */
-    public SpriteKeepVisible nullKeepVisible = new SpriteKeepVisible() {
+    public SpriteKeepVisible keepVisibleNull = new SpriteKeepVisible() {
         @Override
         public boolean keepVisible(ExtensibleSprite sprite, Camera camera) {
             return false;
@@ -179,7 +119,7 @@ public class SpriteActions {
      * Makes that the origin of the sprite can be seen by the camera.
      * Shifts the sprite back if it is too far outside.
      */
-    public SpriteKeepVisible keepOriginVisible = new SpriteKeepVisible() {
+    public SpriteKeepVisible keepVisibleOrigin = new SpriteKeepVisible() {
         @Override
         public boolean keepVisible(ExtensibleSprite sprite, Camera camera) {
             float diff = sprite.getWorldOriginX() - camera.position.x;
@@ -208,7 +148,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchBegin:
      * Does nothing and returns false.
      */
-    public SpriteTouchBegin nullTouchBegin = new SpriteTouchBegin() {
+    public SpriteTouchBegin touchBeginNull = new SpriteTouchBegin() {
         @Override
         public boolean touchBegin(ExtensibleSprite sprite, Vector2 position) {
             return false;
@@ -218,10 +158,72 @@ public class SpriteActions {
      * An object that implements SpriteTouchDrag:
      * Does nothing and returns false.
      */
-    public SpriteTouchDrag nullTouchDrag = new SpriteTouchDrag() {
+    public SpriteTouchDrag touchDragNull = new SpriteTouchDrag() {
         @Override
         public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
             return false;
         }
     };
+
+    /**
+     * An object that implements SpriteTouchDrag:
+     * Translates the sprite without rotation and keeps it visible.
+     */
+    public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
+        @Override
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
+            sprite.translate(deltaPosition.x, deltaPosition.y);
+            sprite.keepVisible(camera);
+            return true;
+        }
+    };
+    /**
+     * An object that implements SpriteTouchDrag:
+     * Translates and rotates the sprite and keeps it visible.
+     */
+    public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
+        @Override
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition, Camera camera) {
+            float centerTouchX = touchPosition.x - sprite.getWorldOriginX();
+            float centerTouchY = touchPosition.y - sprite.getWorldOriginY();
+            float centerTouchLength = Vector2.len(centerTouchX, centerTouchY);
+            float centerTouchCrossDeltaTouch = centerTouchX * deltaTouchPosition.y - centerTouchY * deltaTouchPosition.x;
+            float deltaAngle = MathUtils.atan2(centerTouchCrossDeltaTouch, centerTouchLength * centerTouchLength);
+            deltaAngle *= 2 * centerTouchLength / (sprite.getWidth() * sprite.getScaleX() + sprite.getHeight() * sprite.getScaleY());
+            sprite.setRotation(sprite.getRotation() + MathUtils.radiansToDegrees * deltaAngle);
+            //  the rest
+            float sinDeltaAngle = MathUtils.sin(deltaAngle);
+            float cosDeltaAngle = MathUtils.cos(deltaAngle);
+            sprite.translate(deltaTouchPosition.x - ((cosDeltaAngle - 1) * centerTouchX - sinDeltaAngle * centerTouchY),
+                    deltaTouchPosition.y - (sinDeltaAngle * centerTouchX + (cosDeltaAngle - 1) * centerTouchY));
+
+            sprite.keepVisible(camera);
+            return true;
+        }
+    };
+    /**
+     * An object that implements SpriteTouchEnd:
+     * Does nothing and returns false.
+     */
+    public SpriteTouchEnd touchEndNull = new SpriteTouchEnd() {
+        @Override
+        public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
+            return false;
+        }
+    };
+    /**
+     * An object that implements SpriteTouchEnd:
+     * Returns true if sprite contains the mouse position, but does nothing.
+     * This prevents a scroll on sprites lying behind this sprite.
+     */
+    public SpriteScroll nullScroll = new SpriteScroll() {
+        @Override
+        public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
+            if (sprite.contains(position.x, position.y)) {
+                return true;
+            }
+            return false;
+        }
+    };
+
 }

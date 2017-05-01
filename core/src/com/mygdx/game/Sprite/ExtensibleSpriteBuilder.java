@@ -29,12 +29,12 @@ public class ExtensibleSpriteBuilder {
     public ExtensibleSpriteBuilder(Device device){
         this.device=device;
         spriteActions=new SpriteActions();
-        setContains(spriteActions.shapeContains);
-        setDraw(spriteActions.simpleDraw);
-        setKeepVisible(spriteActions.nullKeepVisible);
-        setTouchBegin(spriteActions.nullTouchBegin);
-        setTouchEnd(spriteActions.nullTouchEnd);
-        setTouchDrag(spriteActions.nullTouchDrag);
+        setContains(spriteActions.containsTransRotate);
+        setDraw(spriteActions.drawSuper);
+        setKeepVisible(spriteActions.keepVisibleNull);
+        setTouchBegin(spriteActions.touchBeginNull);
+        setTouchEnd(spriteActions.touchEndNull);
+        setTouchDrag(spriteActions.touchDragNull);
         setScroll(spriteActions.nullScroll);
     }
 
@@ -111,6 +111,38 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSpriteBuilder setScroll(SpriteScroll spriteScroll){
         masterScroll =spriteScroll;
+        return this;
+    }
+
+    /**
+     * Set sprite actions for a translating rotating sprite. Keeping it visible.
+     *
+     * @return this, for chaining.
+     */
+    public ExtensibleSpriteBuilder setTransRotate(){
+        setContains(spriteActions.containsTransRotate);
+        setKeepVisible(spriteActions.keepVisibleOrigin);
+        setDraw(spriteActions.drawSuper);
+        setTouchBegin(spriteActions.touchBeginNull);
+        setTouchDrag(spriteActions.touchDragTransRotate);
+        setTouchEnd(spriteActions.touchEndNull);
+        setScroll(spriteActions.nullScroll);
+        return this;
+    }
+
+    /**
+     * Set sprite actions for an only translating sprite. Keeping it visible.
+     *
+     * @return this, for chaining.
+     */
+    public ExtensibleSpriteBuilder setTranslate(){
+        setContains(spriteActions.containsTranslate);
+        setKeepVisible(spriteActions.keepVisibleOrigin);
+        setDraw(spriteActions.drawSuper);
+        setTouchBegin(spriteActions.touchBeginNull);
+        setTouchDrag(spriteActions.touchDragTranslate);
+        setTouchEnd(spriteActions.touchEndNull);
+        setScroll(spriteActions.nullScroll);
         return this;
     }
 
