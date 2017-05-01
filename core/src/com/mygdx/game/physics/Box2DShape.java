@@ -17,7 +17,7 @@ import com.mygdx.game.utilities.L;
 
 /**
  * Static methods to create box2d shapes from Shape2D shapes.
- * Shape2D shapes use pixels as unit for length. box2d shapes use meters as length.
+ * Transformes lengths because Shape2D shapes use pixels as unit for length and box2d shapes use meters for lengths.
  * CALL Box2D.init before using this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 
@@ -37,9 +37,10 @@ public class Box2DShape {
     }
 
     /**
-     * create polygonshape from shape2d polygon, scaled
-     * @param polygon
-     * @return
+     * Create a box2d PolygonShape from Shape2D Polygon.
+     *
+     * @param polygon Polygon (Shape2D)
+     * @return PolygonShape (box2d)
      */
     static public PolygonShape ofShape2D(Polygon polygon){
         PolygonShape polygonShape = new PolygonShape();
@@ -48,9 +49,10 @@ public class Box2DShape {
     }
 
     /**
-     * create a rectangular polygon masterShape with scaling from Shape2D Rectangle
-     * @param rectangle
-     * @return
+     * Create a rectangular box2D PolygonShape from Shape2D Rectangle.
+     *
+     * @param rectangle Rectangle (Shape2D) with pixels for lengths.
+     * @return PolygonShape (box2D) with meters for length.
      */
     static public PolygonShape ofShape2D(Rectangle rectangle) {
         PolygonShape polygon = new PolygonShape();
@@ -62,10 +64,11 @@ public class Box2DShape {
     }
 
     /**
-     * create a ChainShape from a Shape2D Chain with scaled dimensions
-     * takes into account if it is a loop or chain (with possibly ghosts)
-     * @param chain
-     * @return
+     * Create a box2D ChainShape from a Shape2D Chain.
+     * Takes into account if it is a loop or chain (with ghosts).
+     *
+     * @param chain Chain (Shape2D)
+     * @return ChainShape (box2D)
      */
     static public ChainShape ofShape2D(Chain chain){
         ChainShape chainShape=new ChainShape();
@@ -87,9 +90,10 @@ public class Box2DShape {
     }
 
     /**
-     * create an edgeShape based on a shape2D edge with scaled vertices
-     * @param edge
-     * @return
+     * Create a box2D EdgeShape based on a shape2D Edge.
+     *
+     * @param edge Edge (Shape2D)
+     * @return EdgeShape (box2d)
      */
     static public EdgeShape ofShape2D(Edge edge){
         EdgeShape edgeShape=new EdgeShape();
@@ -107,9 +111,10 @@ public class Box2DShape {
     }
 
     /**
-     * create a scaled (Box2D) Shape from a Shape2D masterShape
-     * @param shape2D
-     * @return
+     * Create a box2D Shape from a Shape2D shape.
+     *
+     * @param shape2D Shape2D shape
+     * @return Shape (box2D)
      */
     static public Shape ofShape2D(Shape2D shape2D){
         if (shape2D instanceof Polygon){
