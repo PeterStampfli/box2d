@@ -99,7 +99,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param n int, number of different sprite orientations
      */
     public void quantizeAngle(int n) {
-        setRotation(360f / n * Math.round(n * getRotation() / 360f));
+        setAngle(MathUtils.PI2 / n * Math.round(n * getAngle() / MathUtils.PI2));
     }
 
     /**
@@ -127,27 +127,6 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      */
     public void setLocalOrigin(Vector2 center) {
         setLocalOrigin(center.x, center.y);
-    }
-
-    /**
-     * Set the position of the sprite such that the origin (center of rotation and scaling)
-     * lies at a given world position.
-     *
-     * @param worldOriginPositionX float, x-coordinate of the origin
-     * @param worldOriginPositionY float, y-coordinate of the origin
-     */
-    public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
-        setPosition(worldOriginPositionX - getOriginX(), worldOriginPositionY - getOriginY());
-    }
-
-    /**
-     * Set the position of the sprite such that the origin (center of rotation and scaling)
-     * lies at a given world position.
-     *
-     * @param worldOriginPosition Vector2, position for the origin
-     */
-    public void setWorldOrigin(Vector2 worldOriginPosition) {
-        setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
     }
 
     /**
@@ -184,6 +163,28 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      */
     public void setWorldOriginY(float y) {
         setY(y - getOriginY());
+    }
+
+    /**
+     * Set the position of the sprite such that the origin (center of rotation and scaling)
+     * lies at a given world position.
+     *
+     * @param worldOriginPositionX float, x-coordinate of the origin
+     * @param worldOriginPositionY float, y-coordinate of the origin
+     */
+    public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
+        setWorldOriginX(worldOriginPositionX);
+        setWorldOriginY(worldOriginPositionY);
+    }
+
+    /**
+     * Set the position of the sprite such that the origin (center of rotation and scaling)
+     * lies at a given world position.
+     *
+     * @param worldOriginPosition Vector2, position for the origin
+     */
+    public void setWorldOrigin(Vector2 worldOriginPosition) {
+        setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
     }
 
     // the composable actions

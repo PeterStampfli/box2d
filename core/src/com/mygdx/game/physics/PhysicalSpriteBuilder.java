@@ -28,14 +28,23 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         physicalSpriteActions=new PhysicalSpriteActions();
     }
 
+    /**
+     * Get a physical sprite from the sprite pool. Set image and other data.
+     * Attach a body and create its fixtures from shape. Set origin of the sprite and position of the body.
+     *
+     * @param textureRegion TextureRegion, the sprites image
+     * @param shape Shape2D shape for the sprite and the body.
+     * @param body
+     * @return
+     */
     public PhysicalSprite build(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);
         sprite.body=body;
         body.setUserData(sprite);
         physics.fixtureBuilder.build(body,shape);
-
-
+        sprite.setLocalOrigin();
+        sprite.setPositionAngleOfBody();
         return sprite;
     }
     /*

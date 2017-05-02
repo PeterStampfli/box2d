@@ -41,17 +41,19 @@ public class PhysicalSprite extends ExtensibleSprite {
      * Usually we first create the sprite with its shapes. Then the body and its fixtures. This
      * determines the center of mass for the body.
      * Thus we set the origin (center of rotation and scaling) of the sprite equal to center of mass of the body.
-     * In local coordinates. Zero is left bottom corner of the Textureregion.
-     * Scales from physics dimensions to graphics
+     * In local coordinates. Zero is left bottom corner of the TextureRegion.
+     * Scales from physics dimensions to graphics. Call after creating all fixtures.
      */
     public void setLocalOrigin(){
         Vector2 bodyCenter=body.getLocalCenter();
         setLocalOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
     }
 
+    // placing and rotating the sprite: Do same for the body!
+
     /**
      * Set the origin of the body and its angle equal to the sprite's. Convert lengths.
-     * Sets the body data used here for interpolation.
+     * Sets the body data used for interpolation.
      */
     public void setPositionAngleOfBody(){
         // set body origin and rotation
@@ -65,8 +67,12 @@ public class PhysicalSprite extends ExtensibleSprite {
         newBodyWorldCenterY=getWorldOriginY();
     }
 
+// changes body data:
+// setX,setY,setPosition,setRotation,setAngle
+
     /**
      * Reads and stores position and angle of the body. Position is converted into pixel units.
+     * Used for making the body move the sprite.
      */
     public void readPositionAngleOfBody(){
         previousBodyAngle = newBodyAngle;
@@ -79,7 +85,8 @@ public class PhysicalSprite extends ExtensibleSprite {
     }
 
     /**
-     * set angle and position of sprite from linear interpolation between previous and new physics data
+     * set angle and position of sprite from linear interpolation
+     * between previous and new data of the body.
      *
      * progress=1 for graphics time equal to time of new physics data
      * progress=0 for graphics time equal to time of previous physics data
