@@ -1,5 +1,6 @@
 package com.mygdx.game.physics;
 
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -236,14 +237,40 @@ public class BodyBuilder {
     }
 
     /**
+     * Build the body without user data. Build fixtures defined by the Shape2D shape.
+     *
+     * @param shape Shape2D, shape or shape collection to attach to the body
+     * @return Body, a box2D body.
+     */
+    public Body build(Shape2D shape){
+        Body body=build();
+        physics.fixtureBuilder.build(body,shape);
+        return body;
+    }
+
+    /**
      * Build the body and attach the supplied userData.
      *
      * @param userData Object, attach to the body.
-     * @return
+     * @return Body, a box2D body.
      */
     public Body build(Object userData) {
         Body body = build();
         body.setUserData(userData);
         return body;
     }
+
+    /**
+     * Build the body without user data. Build fixtures defined by the Shape2D shape. Attach the userData
+     *
+     * @param shape Shape2D, shape or shape collection to attach to the body
+     * @param userData Object, attach to the body.
+     * @return Body, a box2D body.
+     */
+    public Body build(Shape2D shape,Object userData){
+        Body body=build(shape);
+        body.setUserData(userData);
+        return body;
+    }
+
 }

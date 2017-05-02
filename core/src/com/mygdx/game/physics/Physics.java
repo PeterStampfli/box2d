@@ -21,9 +21,9 @@ import com.mygdx.game.utilities.Basic;
  */
 
 public class Physics implements Disposable {
-    World world;
-    BodyBuilder bodyBuilder;
-    FixtureBuilder fixtureBuilder;
+    public World world;
+    public BodyBuilder bodyBuilder;
+    public FixtureBuilder fixtureBuilder;
     Pool<PhysicalSprite> physicalSpritePool;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera debugCamera;

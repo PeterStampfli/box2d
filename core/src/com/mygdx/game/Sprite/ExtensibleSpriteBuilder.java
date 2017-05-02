@@ -153,7 +153,7 @@ public class ExtensibleSpriteBuilder {
      * @param textureRegion TextureRegion, image
      * @param shape Shape2D, shape
      */
-    public void spriteSetup(ExtensibleSprite sprite,TextureRegion textureRegion, Shape2D shape){
+    public void setup(ExtensibleSprite sprite, TextureRegion textureRegion, Shape2D shape){
         sprite.setRegion(textureRegion);
         sprite.setColor(Color.WHITE);
         sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
@@ -177,7 +177,7 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
-        spriteSetup(sprite,textureRegion,shape);
+        setup(sprite,textureRegion,shape);
         return sprite;
     }
 

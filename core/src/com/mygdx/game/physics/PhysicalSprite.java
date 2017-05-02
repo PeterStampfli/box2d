@@ -24,6 +24,7 @@ public class PhysicalSprite extends ExtensibleSprite {
         super.reset();
         if (body!=null) {
             physics.world.destroyBody(body);
+            body=null;
             physics.bodiesNeedUpdate = true;
         }
     }

@@ -151,22 +151,19 @@ public class FixtureBuilder {
      * @param body Body, gets the fixture
      * @param shape2D Shape2D, shape for the fixture, can be a Shape2DCollection
      * @param userData Object
-     * @return Fixture, the fixture that has been attached
      */
-    public Fixture build(Body body, Shape2D shape2D,Object userData){
-        Fixture fixture=null;
+    public void build(Body body, Shape2D shape2D,Object userData){
         if (shape2D instanceof Shape2DCollection){
             Shape2DCollection shape2DCollection=(Shape2DCollection) shape2D;
             for (Shape2D subShape2D:shape2DCollection.shapes2D){
-                fixture=build(body,subShape2D,userData);
+                build(body,subShape2D,userData);
             }
         }
         else {
             Shape shape = Box2DShape.ofShape2D(shape2D);
-            fixture = build(body, shape, userData);
+            build(body, shape, userData);
             shape.dispose();
         }
-        return fixture;
     }
 
     /**
@@ -175,10 +172,9 @@ public class FixtureBuilder {
      *
      * @param body Body, gets the fixture
      * @param shape2D Shape2D, shape for the fixture, can be a Shape2DCollection
-     * @return Fixture, the fixture that has been attached
      */
-    public Fixture build(Body body, Shape2D shape2D){
-        return build(body, shape2D,null);
+    public void build(Body body, Shape2D shape2D){
+        build(body, shape2D,null);
     }
 
 }

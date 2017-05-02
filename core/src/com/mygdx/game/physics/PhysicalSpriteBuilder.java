@@ -1,9 +1,9 @@
 package com.mygdx.game.physics;
 
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
-import com.mygdx.game.Sprite.SpriteContains;
 import com.mygdx.game.utilities.Device;
 
 /**
@@ -14,6 +14,7 @@ import com.mygdx.game.utilities.Device;
 
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     Physics physics;
+    PhysicalSpriteActions physicalSpriteActions;
 
     /**
      * Create the builder with a device that has glyphlayout pool.
@@ -24,34 +25,21 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public PhysicalSpriteBuilder(Device device,Physics physics){
         super(device);
         this.physics=physics;
+        physicalSpriteActions=new PhysicalSpriteActions();
     }
 
-    /**
-     * An object that implements SpriteContains:
-     * Contains a position if one of its body fixtures contains it.
-     * Check only fixtures that are not sensors.
-     * Does not check the region of the sprite image because the full shapes define the physics.
-     * Use only shapes/fixtures that do not go outside the sprite's image.
-     *
-     * 		physicalSpriteBuilder.setContains(physicalSpriteBuilder.containsUsesBody);
-     */
-    public SpriteContains containsUsesBody = new SpriteContains() {
-        @Override
-        public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite,  float positionX, float positionY) {
-            PhysicalSprite physicalSprite= (PhysicalSprite) sprite;
-            positionX/=Physics.PIXELS_PER_METER;
-            positionY/=Physics.PIXELS_PER_METER;
-            Array<Fixture> fixtures = physicalSprite.body.getFixtureList();
-            for (Fixture fixture : fixtures) {
-                // if any fixture is not a sensor and it contains the point, then the body contains the point
-                if (!fixture.isSensor()&&fixture.testPoint(positionX, positionY)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
+    public PhysicalSprite build(TextureRegion textureRegion, Shape2D shape, Body body){
+        PhysicalSprite sprite=physics.physicalSpritePool.obtain();
+        setup(sprite,textureRegion,shape);
+        sprite.body=body;
+        body.setUserData(sprite);
+        physics.fixtureBuilder.build(body,shape);
 
 
-    public PhysicalSprite
+        return sprite;
+    }
+    /*
+    public PhysicalSprite buildPhysical(TextureRegion textureRegion,Shape2D shape){
+
+    }*/
 }
