@@ -15,13 +15,9 @@ import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMove;
-import com.mygdx.game.Sprite.ExtensibleSprite;
-import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
-import com.mygdx.game.Sprite.SmallTextExtension;
-import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.physics.BodyBuilder;
-import com.mygdx.game.physics.BodyToSprite;
 import com.mygdx.game.physics.FixtureBuilder;
+import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.PhysicalSpriteBuilder;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
@@ -44,11 +40,10 @@ public class Box2d extends ApplicationAdapter {
 	Shape2DCollection shape2DCollection;
 	TouchMove touchMove;
 
-	ExtensibleSprite extensibleSprite;
+	PhysicalSprite extensibleSprite;
 
 	Physics physics;
 	Edge edge;
-	BodyToSprite bodyToSprite;
 
 	@Override
 	public void create () {
@@ -77,18 +72,7 @@ public class Box2d extends ApplicationAdapter {
 		mask.setSmoothing(2);
 		img=mask.createTransparentWhiteTextureRegion();
 		Basic.linearInterpolation(img);
-		//Basic.nearest(img);
 
-		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
-		SpriteActions spriteActions=extensibleSpriteBuilder.spriteActions;
-		extensibleSpriteBuilder.setTranslate();
-		//extensibleSpriteBuilder.spriteTouchBegin();
-
-		extensibleSprite=extensibleSpriteBuilder.build(img);
-		new SmallTextExtension(device,device.bitmapFont,extensibleSprite);
-
-		//extensibleSprite.setPosition(200,300);
-		extensibleSprite.setColor(Color.FIREBRICK);
 		//extensibleSprite.setText("ÄtestfgjÂ");
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
@@ -96,25 +80,29 @@ public class Box2d extends ApplicationAdapter {
 
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
-		extensibleSprite.setText("");
 		physics=new Physics(true);
 		physics.createWorld(0,-10,true);
 		physics.start();
-		BodyBuilder bodyBuilder=new BodyBuilder(physics);
-		FixtureBuilder fixtureBuilder=new FixtureBuilder();
+		BodyBuilder bodyBuilder=physics.bodyBuilder;
+		FixtureBuilder fixtureBuilder=physics.fixtureBuilder;
 
 		Body dynamicBody=bodyBuilder.setPosition(200,300).build();
-		fixtureBuilder.build(dynamicBody,circle);
 		bodyBuilder.setBodyType(BodyDef.BodyType.StaticBody);
 		 edge=new Edge(-100,10,1000,10);
-		Body ground=bodyBuilder.setPosition(0,0).build();
-		fixtureBuilder.build(ground,edge);
-		bodyToSprite=new BodyToSprite(dynamicBody,extensibleSprite);
-		dynamicBody.setUserData(bodyToSprite);
+		Body ground=bodyBuilder.setPosition(0,0).build(edge);
+
+
+
+
 
 
 		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
-		physicalSpriteBuilder.setContains(physicalSpriteBuilder.containsUsesBody);
+
+		extensibleSprite=physicalSpriteBuilder.build(img,circle,dynamicBody);
+		extensibleSprite.setPosition(100,300);
+
+		extensibleSprite.setColor(Color.FIREBRICK);
+
 	}
 
 	@Override

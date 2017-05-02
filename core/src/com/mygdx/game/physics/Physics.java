@@ -137,7 +137,7 @@ public class Physics implements Disposable {
     }
 
     /**
-     * Set the positions and angles of all BodyToSprite userData objects.
+     * Set the positions and angles of all PhysicalSprite userData objects.
      * Updates the Array of bodies if some bodies may have been destroyed or created in the world step.
      */
     public void setPhysicsData() {
@@ -145,14 +145,14 @@ public class Physics implements Disposable {
         updateBodies();
         for (Body body : bodies) {
             userData = body.getUserData();
-            if (userData instanceof BodyToSprite) {
-                ((BodyToSprite) userData).readPositionAngleOfBody();
+            if (userData instanceof PhysicalSprite) {
+                ((PhysicalSprite) userData).readPositionAngleOfBody();
             }
         }
     }
 
     /**
-     * Let the BodyToSprite userData objects interpolate positions and angles to give the data at graphics time.
+     * Let the PhysicalSprite userData objects interpolate positions and angles to give the data at graphics time.
      * progress=1 gets the new physics data, progress=0 gets the previous physics data.
      *
      * @param progress float, interpolation parameter
@@ -162,8 +162,8 @@ public class Physics implements Disposable {
         updateBodies();
         for (Body body : bodies) {
             userData = body.getUserData();
-            if (userData instanceof BodyToSprite) {
-                ((BodyToSprite) userData).interpolateSpritePositionAngle(progress);
+            if (userData instanceof PhysicalSprite) {
+                ((PhysicalSprite) userData).interpolateSpritePositionAngle(progress);
             }
         }
     }
