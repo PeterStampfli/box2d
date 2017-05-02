@@ -147,14 +147,13 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * Obtain an extensible sprite from its pool, with given texture region and shape2d shape.
+     * Set the sprite data.
      *
+     * @param sprite ExtensibleSprite, or subtype, to set up.
      * @param textureRegion TextureRegion, image
      * @param shape Shape2D, shape
-     * @return ExtensibleSprite, the sprite
      */
-    public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
-        ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
+    public void spriteSetup(ExtensibleSprite sprite,TextureRegion textureRegion, Shape2D shape){
         sprite.setRegion(textureRegion);
         sprite.setColor(Color.WHITE);
         sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
@@ -167,6 +166,18 @@ public class ExtensibleSpriteBuilder {
         sprite.setTouchBegin(masterTouchBegin);
         sprite.setTouchDrag(masterTouchDrag);
         sprite.setTouchEnd(masterTouchEnd);
+    }
+
+    /**
+     * Obtain an extensible sprite from its pool, with given texture region and shape2d shape.
+     *
+     * @param textureRegion TextureRegion, image
+     * @param shape Shape2D, shape
+     * @return ExtensibleSprite, the sprite
+     */
+    public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
+        ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
+        spriteSetup(sprite,textureRegion,shape);
         return sprite;
     }
 

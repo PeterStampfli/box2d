@@ -3,22 +3,18 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Sprite.ExtensibleSprite;
-import com.mygdx.game.Sprite.SpriteContains;
 
 /**
  * A sprite with a body, using physics for motion
  */
 
-public class PhysicalSprite extends ExtensibleSprite implements SpriteContains {
+public class PhysicalSprite extends ExtensibleSprite {
     Physics physics;
     Body body;
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyWorldCenterX, newBodyWorldCenterX;   // using pixel units
     private float previousBodyWorldCenterY, newBodyWorldCenterY;
-
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -95,26 +91,4 @@ public class PhysicalSprite extends ExtensibleSprite implements SpriteContains {
         setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));
     }
 
-    /**
-     * Contains a position if one of its body fixtures contains it.
-     * Check only fixtures that are not sensors.
-     * Does not check the region of the sprite image because the full shapes define the physics.
-     * Use only shapes/fixtures that do not go outside the sprite's image.
-     *
-     * @param positionX float, x-coordinate of the position in pixel units
-     * @param positionY float, x-coordinate of the position in pixel units
-     * @return boolean, true if the shapes of the body fixtures contain the position.
-     */
-    public boolean contains(ExtensibleSprite sprite, float positionX, float positionY){
-        positionX/=Physics.PIXELS_PER_METER;
-        positionY/=Physics.PIXELS_PER_METER;
-        Array<Fixture> fixtures = body.getFixtureList();
-        for (Fixture fixture : fixtures) {
-            // if any fixture is not a sensor and it contains the point, then the body contains the point
-            if (!fixture.isSensor()&&fixture.testPoint(positionX, positionY)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

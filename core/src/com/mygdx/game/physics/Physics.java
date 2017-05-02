@@ -22,6 +22,8 @@ import com.mygdx.game.utilities.Basic;
 
 public class Physics implements Disposable {
     World world;
+    BodyBuilder bodyBuilder;
+    FixtureBuilder fixtureBuilder;
     Pool<PhysicalSprite> physicalSpritePool;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera debugCamera;
@@ -48,6 +50,8 @@ public class Physics implements Disposable {
             debugCamera = new OrthographicCamera();
         }
         Box2D.init();
+        bodyBuilder=new BodyBuilder(this);
+        fixtureBuilder=new FixtureBuilder();
         physicalSpritePool= Pools.get(PhysicalSprite.class);
     }
 

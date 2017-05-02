@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
@@ -18,7 +20,9 @@ import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.Sprite.SmallTextExtension;
 import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.physics.BodyBuilder;
+import com.mygdx.game.physics.BodyToSprite;
 import com.mygdx.game.physics.FixtureBuilder;
+import com.mygdx.game.physics.PhysicalSpriteBuilder;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
@@ -43,6 +47,8 @@ public class Box2d extends ApplicationAdapter {
 	ExtensibleSprite extensibleSprite;
 
 	Physics physics;
+	Edge edge;
+	BodyToSprite bodyToSprite;
 
 	@Override
 	public void create () {
@@ -51,7 +57,6 @@ public class Box2d extends ApplicationAdapter {
 		BasicAssets basicAssets=device.basicAssets;
 		device.bitmapFont.getData().scale(2);
 		device.bitmapFont.setColor(Color.BROWN);
-
 		followCamera=new FollowCamera();
 
 		int viewportSize=500;
@@ -64,28 +69,26 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		//shape2DCollection.add();
-		Circle circle=new Circle(20,20,16);
-		Mask mask=new Mask(40,40);
+		Circle circle=new Circle(99,99,97);
+		Mask mask=new Mask(200,200);
 
-		//mask.fill(circle);
+		mask.fill(circle);
 
 		mask.setSmoothing(2);
-		//mask.fillCircle(20,20,16);
-		mask.fillPolygon(5,5,30,20,15,35);
 		img=mask.createTransparentWhiteTextureRegion();
 		Basic.linearInterpolation(img);
 		//Basic.nearest(img);
 
 		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
 		SpriteActions spriteActions=extensibleSpriteBuilder.spriteActions;
-
+		extensibleSpriteBuilder.setTranslate();
 		//extensibleSpriteBuilder.spriteTouchBegin();
-		extensibleSpriteBuilder.setTouchDrag(spriteActions.touchDragTransRotate).
-                setKeepVisible(extensibleSpriteBuilder.spriteActions.keepOriginVisible);
+
 		extensibleSprite=extensibleSpriteBuilder.build(img);
 		new SmallTextExtension(device,device.bitmapFont,extensibleSprite);
 
-		extensibleSprite.setPosition(400,300);
+		//extensibleSprite.setPosition(200,300);
+		extensibleSprite.setColor(Color.FIREBRICK);
 		//extensibleSprite.setText("ÄtestfgjÂ");
 
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
@@ -100,8 +103,18 @@ public class Box2d extends ApplicationAdapter {
 		BodyBuilder bodyBuilder=new BodyBuilder(physics);
 		FixtureBuilder fixtureBuilder=new FixtureBuilder();
 
-		Body dynamicBody=bodyBuilder.setPosition(400,300).build();
+		Body dynamicBody=bodyBuilder.setPosition(200,300).build();
 		fixtureBuilder.build(dynamicBody,circle);
+		bodyBuilder.setBodyType(BodyDef.BodyType.StaticBody);
+		 edge=new Edge(-100,10,1000,10);
+		Body ground=bodyBuilder.setPosition(0,0).build();
+		fixtureBuilder.build(ground,edge);
+		bodyToSprite=new BodyToSprite(dynamicBody,extensibleSprite);
+		dynamicBody.setUserData(bodyToSprite);
+
+
+		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
+		physicalSpriteBuilder.setContains(physicalSpriteBuilder.containsUsesBody);
 	}
 
 	@Override
@@ -112,9 +125,9 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Basic.setContinuousRendering(false);
+		//Basic.setContinuousRendering(false);
 		//====================================================================================
-		//physics.advance();
+		physics.advance();
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
 
@@ -124,7 +137,6 @@ public class Box2d extends ApplicationAdapter {
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
 		extensibleSprite.draw(spriteBatch, viewport.getCamera());
-		spriteBatch.draw(img,0,0,400,400);
 
 		spriteBatch.end();
 
@@ -132,10 +144,11 @@ public class Box2d extends ApplicationAdapter {
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin();
 		//shapeRenderer.draw(shape2DCollection);
-		shapeRenderer.rect(0,0,100,300);
+		//shapeRenderer.rect(0,0,100,300);
+		shapeRenderer.draw(edge);
 		shapeRenderer.end();
 
-		//physics.debugRender(viewport);
+		physics.debugRender(viewport);
 	}
 	
 	@Override
