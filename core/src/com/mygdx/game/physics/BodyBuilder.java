@@ -3,7 +3,6 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Build box2D bodies. Dimensions are in graphical units (unit is one pixel).
@@ -245,20 +244,6 @@ public class BodyBuilder {
     public Body build(Object userData) {
         Body body = build();
         body.setUserData(userData);
-        return body;
-    }
-
-    /**
-     * Build a body with a sprite that moves with the body.
-     * Creates a BodyToSprite object that connects the body and the sprite. Sets it as user data.
-     * We can get the bodyToSprite object from bodyToSprite=(BodyToSprite)body.userData.
-     *
-     * @param sprite ExtensibleSprite, to attach to the body.
-     * @return body with connection to a sprite.,
-     */
-    public Body build(ExtensibleSprite sprite) {
-        Body body = build();
-        body.setUserData(new BodyToSprite(body, sprite));
         return body;
     }
 }

@@ -32,11 +32,8 @@ public class BodyToSprite implements SpriteContains{
     public BodyToSprite(Body body,ExtensibleSprite sprite){
         this.body=body;
         this.sprite=sprite;
-        body.setUserData(this);
-        sprite.setContains(this);
-        setLocalOrigin();
+        setSpriteLocalOrigin();
         setSpritePositionAngle();
-        saveBodyPositionAngle();
     }
 
 
@@ -45,7 +42,7 @@ public class BodyToSprite implements SpriteContains{
      * In local coordinates. Zero is left bottom corner of the Textureregion.
      * Scales from physics dimensions to graphics
      */
-    public void setLocalOrigin(){
+    public void setSpriteLocalOrigin(){
         Vector2 bodyCenter=body.getLocalCenter();
         sprite.setLocalOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
     }
@@ -55,9 +52,9 @@ public class BodyToSprite implements SpriteContains{
      * scale from physics position to graphics
      */
     public void setSpritePositionAngle(){
-        sprite.setAngle(body.getAngle());
-        Vector2 bodyCenter=body.getLocalCenter();
-        sprite.setWorldOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
+        readPositionAngleOfBody();
+        readPositionAngleOfBody();
+        interpolateSpritePositionAngle(1);
     }
 
     /**
@@ -68,7 +65,7 @@ public class BodyToSprite implements SpriteContains{
      *
      * scale from physics dimensions to graphics
      */
-    public void saveBodyPositionAngle(){
+    public void readPositionAngleOfBody(){
         previousBodyAngle = newBodyAngle;
         previousBodyWorldCenterX = newBodyWorldCenterX;
         previousBodyWorldCenterY = newBodyWorldCenterY;
@@ -87,7 +84,7 @@ public class BodyToSprite implements SpriteContains{
      * if (time of new physics step-time of previous physics step)=TIME_STEP
      * @param progress
      */
-    public void updateSpritePositionAngle(float progress){
+    public void interpolateSpritePositionAngle(float progress){
         sprite.setWorldOrigin(MathUtils.lerp(previousBodyWorldCenterX, newBodyWorldCenterX,progress),
                 MathUtils.lerp(previousBodyWorldCenterY, newBodyWorldCenterY,progress));
         sprite.setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));

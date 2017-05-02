@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.Basic;
 
@@ -19,12 +21,8 @@ import com.mygdx.game.utilities.Basic;
  */
 
 public class Physics implements Disposable {
-    static public float PIXELS_PER_METER = 100;       // default
-    final float TIME_STEP = 1 / 60f;
-    final float MAX_TIMEINTERVAL = 0.25f;
-    final int VELOCITY_ITERATIONS = 8;
-    final int POSITION_ITERATIONS = 3;
     World world;
+    Pool<PhysicalSprite> physicalSpritePool;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera debugCamera;
     float physicsTime;
@@ -32,6 +30,11 @@ public class Physics implements Disposable {
     Array<Body> bodies;
     boolean bodiesNeedUpdate = true;
     private float accumulator = 0f;
+    static public float PIXELS_PER_METER = 100;       // default
+    final float TIME_STEP = 1 / 60f;
+    final float MAX_TIMEINTERVAL = 0.25f;
+    final int VELOCITY_ITERATIONS = 8;
+    final int POSITION_ITERATIONS = 3;
 
     /**
      * Initialize box2D and debugRenderer.
@@ -45,6 +48,7 @@ public class Physics implements Disposable {
             debugCamera = new OrthographicCamera();
         }
         Box2D.init();
+        physicalSpritePool= Pools.get(PhysicalSprite.class);
     }
 
     /**
@@ -138,7 +142,7 @@ public class Physics implements Disposable {
         for (Body body : bodies) {
             userData = body.getUserData();
             if (userData instanceof BodyToSprite) {
-                ((BodyToSprite) userData).saveBodyPositionAngle();
+                ((BodyToSprite) userData).readPositionAngleOfBody();
             }
         }
     }
@@ -155,7 +159,7 @@ public class Physics implements Disposable {
         for (Body body : bodies) {
             userData = body.getUserData();
             if (userData instanceof BodyToSprite) {
-                ((BodyToSprite) userData).updateSpritePositionAngle(progress);
+                ((BodyToSprite) userData).interpolateSpritePositionAngle(progress);
             }
         }
     }
