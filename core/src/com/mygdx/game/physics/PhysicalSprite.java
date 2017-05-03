@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.utilities.L;
 
 /**
  * A sprite with a body, using physics for motion
@@ -46,7 +47,9 @@ public class PhysicalSprite extends ExtensibleSprite {
      */
     public void setLocalOrigin(){
         Vector2 bodyCenter=body.getLocalCenter();
+        L.og("local origin "+bodyCenter.toString());
         setLocalOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
+        L.og("originx "+getOriginX());
     }
 
     // placing and rotating the sprite: Do same for the body!
@@ -57,8 +60,9 @@ public class PhysicalSprite extends ExtensibleSprite {
      */
     public void setPositionAngleOfBody(){
         // set body origin and rotation
-        body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER,
-                          getWorldOriginY()/Physics.PIXELS_PER_METER,getAngle());
+        body.setTransform(getX()/Physics.PIXELS_PER_METER,
+                          getY()/Physics.PIXELS_PER_METER,getAngle());
+        L.og("trans "+getWorldOriginX()/Physics.PIXELS_PER_METER);
         previousBodyAngle=getAngle();
         newBodyAngle=getAngle();
         previousBodyWorldCenterX=getWorldOriginX();
@@ -67,8 +71,27 @@ public class PhysicalSprite extends ExtensibleSprite {
         newBodyWorldCenterY=getWorldOriginY();
     }
 
-// changes body data:
-// setX,setY,setPosition,setRotation,setAngle
+
+    /**
+     * Set the Angle of the sprite and body using radians.
+     *
+     * @param angle float, in radians
+     */
+    public void setPhysicalAngle(float angle) {
+        setRotation(angle * MathUtils.radiansToDegrees);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Make that the sprite angle and angle of body is a multiple of 360/n degrees. Use 4 for a square lattice.
+     *
+     * @param n int, number of different sprite orientations
+     */
+    @Override
+    public void quantizeAngle(int n) {
+        setAngle(MathUtils.PI2 / n * Math.round(n * getAngle() / MathUtils.PI2));
+        setPositionAngleOfBody();
+    }
 
     /**
      * Reads and stores position and angle of the body. Position is converted into pixel units.
@@ -94,9 +117,16 @@ public class PhysicalSprite extends ExtensibleSprite {
      * @param progress float, progress between previous to new data, from 0 to 1
      */
     public void interpolateSpritePositionAngle(float progress){
-        setWorldOriginX(MathUtils.lerp(previousBodyWorldCenterX, newBodyWorldCenterX,progress));
-        setWorldOriginY(MathUtils.lerp(previousBodyWorldCenterY, newBodyWorldCenterY,progress));
+        progress=1;
+        L.og("setting");
+        super.setWorldOriginX(MathUtils.lerp(previousBodyWorldCenterX, newBodyWorldCenterX,progress));
+        super.setWorldOriginY(MathUtils.lerp(previousBodyWorldCenterY, newBodyWorldCenterY,progress));
         setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));
+
+        L.og("body pos "+body.getPosition().toString());
+        L.og("Sprite pos x "+getX());
+        L.og(getWidth());
+
     }
 
 }

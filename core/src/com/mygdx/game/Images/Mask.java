@@ -174,7 +174,7 @@ public class Mask {
         jMin = Math.max(0, MathUtils.floor(centerY - outerRadius - 1));
         int i, j, index;
         for (j = jMin; j <= jMax; j++) {
-            index = j * width;
+            index = j * width+iMin;
             dy2 = j + 0.5f - centerY;
             dy2 *= dy2;
             for (i = iMin; i <= iMax; i++) {
@@ -273,7 +273,7 @@ public class Mask {
         int i, j, index;
         float d;
         for (j = jMin; j <= jMax; j++) {
-            index = j * width;
+            index = j * width+iMin;
             for (i = iMin; i <= iMax; i++) {
                 d = 100000f;
                 for (Line line : lines) {
