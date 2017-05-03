@@ -9,7 +9,9 @@ import com.mygdx.game.utilities.Device;
 /**
  * Extension of extensibleSpriteBuilder to make physicalSprites that use a box2D body for moving.
  * The setter methods of the ExtensibleSpriteBuilder can still be used and chained,
- * but they return an extensibleSpriteBuilder. We can use it to build ExtensibleSprites too.
+ * but they return an extensibleSpriteBuilder.
+ * Build methods give ExtensibleSprites. BuildPhysical methods give physical sprites.
+ * NEEDS the BOX"D EXTENSION.
  */
 
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
@@ -30,20 +32,26 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
 
     /**
      * Get a physical sprite from the sprite pool. Set image and other data.
-     * Attach a body and create its fixtures from shape. Set origin of the sprite and position of the body.
+     * Attach a body and create its fixtures from shape.
+     * Set local origin of the sprite from center of mass of the body.
+     * Position and angle of sprite and body will be set afterwards.
      *
      * @param textureRegion TextureRegion, the sprites image
      * @param shape Shape2D shape for the sprite and the body.
      * @param body
      * @return
      */
-    public PhysicalSprite build(TextureRegion textureRegion, Shape2D shape, Body body){
+    public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);
         sprite.body=body;
         body.setUserData(sprite);
         physics.fixtureBuilder.build(body,shape);
         sprite.setLocalOrigin();
+
+        //sprite.setPosition(200,100);
+        sprite.setAngle(3.141592f/2);
+
         sprite.setPositionAngleOfBody();
         return sprite;
     }

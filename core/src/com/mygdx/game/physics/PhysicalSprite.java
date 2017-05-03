@@ -44,6 +44,7 @@ public class PhysicalSprite extends ExtensibleSprite {
      * Thus we set the origin (center of rotation and scaling) of the sprite equal to center of mass of the body.
      * In local coordinates. Zero is left bottom corner of the TextureRegion.
      * Scales from physics dimensions to graphics. Call after creating all fixtures.
+     * Note that the local origin does not depend on translation and rotation.
      */
     public void setLocalOrigin(){
         Vector2 bodyCenter=body.getLocalCenter();
@@ -57,12 +58,25 @@ public class PhysicalSprite extends ExtensibleSprite {
     /**
      * Set the origin of the body and its angle equal to the sprite's. Convert lengths.
      * Sets the body data used for interpolation.
+     * Note that the local center rotates with the body.
      */
     public void setPositionAngleOfBody(){
         // set body origin and rotation
         body.setTransform(getX()/Physics.PIXELS_PER_METER,
-                          getY()/Physics.PIXELS_PER_METER,getAngle());
-        L.og("trans "+getWorldOriginX()/Physics.PIXELS_PER_METER);
+                getY()/Physics.PIXELS_PER_METER,getAngle());
+
+        L.og("trans x"+getX()/Physics.PIXELS_PER_METER);
+        L.og("trans y"+getY()/Physics.PIXELS_PER_METER);
+
+        L.og("body Worigin "+body.getWorldCenter().toString());
+        L.og("body Lorigin "+body.getLocalCenter().toString());
+
+        float lcX=body.getLocalCenter().x;
+        float lcY=body.getLocalCenter().y;
+        float ang=body.getAngle();
+        L.og("rotatedX "+(MathUtils.cos(ang)*lcX-MathUtils.sin(ang)*lcY));
+
+
         previousBodyAngle=getAngle();
         newBodyAngle=getAngle();
         previousBodyWorldCenterX=getWorldOriginX();
@@ -71,14 +85,25 @@ public class PhysicalSprite extends ExtensibleSprite {
         newBodyWorldCenterY=getWorldOriginY();
     }
 
-
     /**
      * Set the Angle of the sprite and body using radians.
      *
      * @param angle float, in radians
      */
-    public void setPhysicalAngle(float angle) {
-        setRotation(angle * MathUtils.radiansToDegrees);
+    @Override
+    public void setAngle(float angle) {
+        super.setAngle(angle);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the Angle of the sprite and body using degrees.
+     *
+     * @param degrees float, in radians
+     */
+    @Override
+    public void setRotation(float degrees) {
+        super.setRotation(degrees);
         setPositionAngleOfBody();
     }
 
@@ -89,9 +114,116 @@ public class PhysicalSprite extends ExtensibleSprite {
      */
     @Override
     public void quantizeAngle(int n) {
-        setAngle(MathUtils.PI2 / n * Math.round(n * getAngle() / MathUtils.PI2));
+        super.quantizeAngle(n);
         setPositionAngleOfBody();
     }
+
+    /**
+     * Set the x-position of sprite and body
+     *
+     * @param x float, x-coordinate of the position
+     */
+    @Override
+    public void setX(float x){
+        superSetX(x);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the y-position of sprite and body
+     *
+     * @param y float, y-coordinate of the position
+     */
+    @Override
+    public void setY(float y){
+        superSetY(y);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the position of sprite and body
+     *
+     * @param x float, x-coordinate of the position
+     * @param y float, y-coordinate of the position
+     */
+    @Override
+    public void setPosition(float x,float y){
+        super.setPosition(x,y);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the x-coordinate of the sprite origin (center of rotation and scaling)
+     * and the center of mass of the body.
+     *
+     * @param x  float, x-coordinate of the origin
+     */
+    @Override
+    public void setWorldOriginX(float x) {
+        super.setWorldOriginX(x);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the y-coordinate of the sprite origin (center of rotation and scaling)
+     * and the center of mass of the body.
+     *
+     * @param y  float, y-coordinate of the origin
+     */
+    @Override
+    public void setWorldOriginY(float y) {
+        super.setWorldOriginY(y);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the origin (center of rotation and scaling) of the sprite
+     * and the center of mass of the body.
+     *
+     * Implicitely also overrides the setWorldOrigin(Vector2 position) method.
+     *
+     * @param worldOriginPositionX float, x-coordinate of the origin
+     * @param worldOriginPositionY float, y-coordinate of the origin
+     */
+    @Override
+    public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
+        super.setWorldOriginX(worldOriginPositionX);
+        super.setWorldOriginY(worldOriginPositionY);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the origin (center of rotation and scaling) and angle of the sprite
+     * and the center of mass and angle of the body.
+     *
+     * @param worldOriginPositionX float, x-coordinate of the origin
+     * @param worldOriginPositionY float, y-coordinate of the origin
+     * @param angle float, angle in radians
+     */
+    public void setWorldOriginAngle(float worldOriginPositionX, float worldOriginPositionY,float angle) {
+        super.setWorldOriginX(worldOriginPositionX);
+        super.setWorldOriginY(worldOriginPositionY);
+        super.setAngle(angle);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the origin (center of rotation and scaling) and angle of the sprite
+     * and the center of mass and angle of the body.
+     *
+     * @param worldOrigin vector2, position of the origin
+     * @param angle float, angle in radians
+     */
+    public void setWorldOriginAngle(Vector2 worldOrigin,float angle) {
+        super.setWorldOriginX(worldOrigin.x);
+        super.setWorldOriginY(worldOrigin.y);
+        super.setAngle(angle);
+        setPositionAngleOfBody();
+    }
+
+
+
+
 
     /**
      * Reads and stores position and angle of the body. Position is converted into pixel units.

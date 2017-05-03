@@ -85,12 +85,21 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
+     * Hook to the bare setRotation method of Sprite, safe from override.
+     *
+     * @param degrees float, set the sprite angle in degrees
+     */
+    public void superSetRotation(float degrees){
+        super.setRotation(degrees);
+    }
+
+    /**
      * Set the Angle of the sprite using radians.
      *
      * @param angle float, in radians
      */
     public void setAngle(float angle) {
-        setRotation(angle * MathUtils.radiansToDegrees);
+        superSetRotation(angle * MathUtils.radiansToDegrees);
     }
 
     /**
@@ -99,7 +108,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param n int, number of different sprite orientations
      */
     public void quantizeAngle(int n) {
-        setAngle(MathUtils.PI2 / n * Math.round(n * getAngle() / MathUtils.PI2));
+        superSetRotation(360f / n * Math.round(n * getRotation() / 360f));
     }
 
     /**
@@ -130,6 +139,24 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
+     * Hook to the setX() method of sprite, safe from override
+     *
+     * @param x x-coordinate of position
+     */
+    public void superSetX(float x){
+        super.setX(x);
+    }
+
+    /**
+     * Hook to the setY() method of sprite, safe from override
+     *
+     * @param y y-coordinate of position
+     */
+    public void superSetY(float y){
+        super.setY(y);
+    }
+
+    /**
      * Get the x-coordinate of the sprite origin (center of rotation and scaling).
      *
      * @return float, x-coordinate of the origin
@@ -144,7 +171,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param x  float, x-coordinate of the origin
      */
     public void setWorldOriginX(float x) {
-        setX(x - getOriginX());
+        superSetX(x - getOriginX());
     }
 
     /**
@@ -162,7 +189,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param y float, y-coordinate of the origin
      */
     public void setWorldOriginY(float y) {
-        setY(y - getOriginY());
+        superSetY(y - getOriginY());
     }
 
     /**

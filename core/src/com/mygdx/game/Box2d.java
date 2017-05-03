@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
+import com.mygdx.game.Images.Polypoint;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMove;
@@ -24,6 +26,7 @@ import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
+import com.mygdx.game.utilities.L;
 
 public class Box2d extends ApplicationAdapter {
 	Shape2DRenderer shapeRenderer;
@@ -64,10 +67,15 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.addPolygon(10,10,280,10,200,200).addCircle(100,100,50);
 		//shape2DCollection.addDotsAndLines(10,false,10,10,250,50,123,40,20,240);
 		//shape2DCollection.add();
-		Circle circle=new Circle(99,99,97);
-		Mask mask=new Mask(200,200);
+		Circle circle=new Circle(99,99,80);
+		Polypoint dotsAndLines=new Polypoint();
+		dotsAndLines.add(30,30,90,10,90,50,30,50);
+		Polygon polygon=dotsAndLines.getPolygon();
 
-		mask.fill(circle);
+				Mask mask=new Mask(200,200);
+
+		mask.fill(polygon);
+		//mask.invert();
 
 		mask.setSmoothing(2);
 		img=mask.createTransparentWhiteTextureRegion();
@@ -75,13 +83,13 @@ public class Box2d extends ApplicationAdapter {
 
 		//extensibleSprite.setText("ÄtestfgjÂ");
 
-		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
-		touchMove.asInputProcessor();
 
 		String langerText="ein langer text ipsum lorem un noch mehr als das kommt jetz"+
 				"mehr ist auch noch drin aber alles hat eine nede";
 		physics=new Physics(true);
+
 		physics.createWorld(0,-10,true);
+
 		physics.start();
 		BodyBuilder bodyBuilder=physics.bodyBuilder;
 		FixtureBuilder fixtureBuilder=physics.fixtureBuilder;
@@ -95,13 +103,17 @@ public class Box2d extends ApplicationAdapter {
 
 
 
-
 		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
 
-		extensibleSprite=physicalSpriteBuilder.build(img,circle,dynamicBody);
-		extensibleSprite.setPosition(100,300);
+		extensibleSprite=physicalSpriteBuilder.buildPhysical(img,polygon,dynamicBody);
 
 		extensibleSprite.setColor(Color.FIREBRICK);
+		L.og(extensibleSprite.contains(0,0));
+		//extensibleSprite.setPhysicalX(00);
+		//extensibleSprite.setPhysicalAngle(1.7f);
+		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
+		touchMove.asInputProcessor();
+
 
 	}
 
@@ -115,7 +127,8 @@ public class Box2d extends ApplicationAdapter {
 	public void render () {
 		//Basic.setContinuousRendering(false);
 		//====================================================================================
-		physics.advance();
+		//physics.advance();
+
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
 
@@ -132,7 +145,7 @@ public class Box2d extends ApplicationAdapter {
 		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
 		shapeRenderer.begin();
 		//shapeRenderer.draw(shape2DCollection);
-		//shapeRenderer.rect(0,0,100,300);
+		shapeRenderer.rect(0,0,100,300);
 		shapeRenderer.draw(edge);
 		shapeRenderer.end();
 
