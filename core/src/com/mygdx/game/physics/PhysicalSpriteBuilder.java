@@ -16,7 +16,7 @@ import com.mygdx.game.utilities.Device;
 
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     Physics physics;
-    PhysicalSpriteActions physicalSpriteActions;
+    public PhysicalSpriteActions physicalSpriteActions;
 
     /**
      * Create the builder with a device that has glyphlayout pool.
