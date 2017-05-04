@@ -79,6 +79,33 @@ public class BodyBuilder {
     }
 
     /**
+     * Set to dynamical body type.
+     *
+     * @return this
+     */
+    public BodyBuilder setDynamicalBody() {
+        return setBodyType(BodyDef.BodyType.DynamicBody);
+    }
+
+    /**
+     * Set to static body type.
+     *
+     * @return this
+     */
+    public BodyBuilder setStaticBody() {
+        return setBodyType(BodyDef.BodyType.StaticBody);
+    }
+
+    /**
+     * Set to kinematic body type.
+     *
+     * @return this
+     */
+    public BodyBuilder setKinemazicBody() {
+        return setBodyType(BodyDef.BodyType.KinematicBody);
+    }
+
+    /**
      * Set if body is active at start (default=true).
      *
      * @param isActive boolean, true if body should be active at start

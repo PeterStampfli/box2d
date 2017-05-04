@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
@@ -26,7 +25,6 @@ import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FollowCamera;
-import com.mygdx.game.utilities.L;
 
 public class Box2d extends ApplicationAdapter {
 	Shape2DRenderer shapeRenderer;
@@ -95,7 +93,7 @@ public class Box2d extends ApplicationAdapter {
 		FixtureBuilder fixtureBuilder=physics.fixtureBuilder;
 
 		Body dynamicBody=bodyBuilder.setPosition(200,300).build();
-		bodyBuilder.setBodyType(BodyDef.BodyType.StaticBody);
+		bodyBuilder.setStaticBody();
 		 edge=new Edge(-100,10,1000,10);
 		Body ground=bodyBuilder.setPosition(0,0).build(edge);
 
@@ -105,12 +103,13 @@ public class Box2d extends ApplicationAdapter {
 
 		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
 
-		extensibleSprite=physicalSpriteBuilder.buildPhysical(img,polygon,dynamicBody);
+		bodyBuilder.setDynamicalBody();
+
+		extensibleSprite=physicalSpriteBuilder.buildPhysical(img,polygon);
 
 		extensibleSprite.setColor(Color.FIREBRICK);
-		L.og(extensibleSprite.contains(0,0));
-		//extensibleSprite.setPhysicalX(00);
-		//extensibleSprite.setPhysicalAngle(1.7f);
+
+		extensibleSprite.setWorldOriginAngle(100,300,0.7f);
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
 
