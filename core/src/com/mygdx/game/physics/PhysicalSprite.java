@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.utilities.L;
 
 /**
  * A sprite with a body, using physics for motion
@@ -65,6 +66,10 @@ public class PhysicalSprite extends ExtensibleSprite {
         Vector2 bodyLocalCenter=body.getLocalCenter();
         float bodyRotatedLocalCenterX=cosAngle*bodyLocalCenter.x-sinAngle*bodyLocalCenter.y;
         float bodyRotatedLocalCenterY=sinAngle*bodyLocalCenter.x+cosAngle*bodyLocalCenter.y;
+
+        L.og(bodyRotatedLocalCenterX+" "+bodyRotatedLocalCenterY);
+        L.og((body.getWorldVector(bodyLocalCenter)).toString());
+        L.og(bodyLocalCenter.toString());
         // set body origin and rotation
         body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER-bodyRotatedLocalCenterX,
                 getWorldOriginY()/Physics.PIXELS_PER_METER-bodyRotatedLocalCenterY,angle);

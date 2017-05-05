@@ -2,6 +2,9 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 
 /**
  * A builder for all kinds of joints.
@@ -11,21 +14,30 @@ public class JointBuilder {
     private Physics physics;
     private Body bodyA;
     private Body bodyB;
+    public Body dummyBody;
     private Vector2 localAnchorA;
+    boolean LocalAnchorAIsLocalCenter;
     private Vector2 localAnchorB;
+    boolean LocalAnchorBIsLocalCenter;
     private float length;
     boolean adjustLength;
     float dampingRatio;
     float frequencyHz;
     boolean collideConnected;
 
+
+    DistanceJointDef distanceJointDef;
+
     /**
      * Create a joint builder with access to physics.
+     * Creates a dummy body for the mouse joint. Resets the bodyBuilder.
      *
      * @param physics Physics with a world, that creates the joints
      */
     public JointBuilder(Physics physics){
         this.physics=physics;
+        dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
+        physics.bodyBuilder.reset();
         reset();
     }
 
@@ -48,7 +60,7 @@ public class JointBuilder {
     /**
      * Set one of the connected bodies.
      *
-     * @param body Body, attached to the joint
+     * @param body Body, will be attached to the joint
      * @return this, for chaining
      */
     public JointBuilder setBodyA(Body body) {
@@ -57,9 +69,31 @@ public class JointBuilder {
     }
 
     /**
+     * Set one of the connected bodies.
+     *
+     * @param physicalSprite PhysicalSprite, its Body will be attached to the joint
+     * @return this, for chaining
+     */
+    public JointBuilder setBodyA(PhysicalSprite physicalSprite) {
+        bodyA = physicalSprite.body;
+        return this;
+    }
+
+    /**
+     * Set one of the connected bodies to be the dummy body. For the mouse joint.
+     * (A static body without fixture, far away).
+     *
+     * @return this, for chaining
+     */
+    public JointBuilder setBodyAIsDummy() {
+        bodyA = dummyBody;
+        return this;
+    }
+
+    /**
      * Set the other connected body.
      *
-     * @param body Body, attached to the joint
+     * @param body Body, will be attached to the joint
      * @return this, for chaining
      */
     public JointBuilder setBodyB(Body body) {
@@ -68,7 +102,20 @@ public class JointBuilder {
     }
 
     /**
-     * Set the LOCAL anchor point on body A. Relative to local origin and rotation angle=0.
+     * Set the other of the connected bodies.
+     *
+     * @param physicalSprite PhysicalSprite, its Body will be attached to the joint
+     * @return this, for chaining
+     */
+    public JointBuilder setBodyB(PhysicalSprite physicalSprite) {
+        bodyB = physicalSprite.body;
+        return this;
+    }
+
+    /**
+     * Set the LOCAL anchor point on body A.
+     * Relative to local "origin" at getPosition(), corresponds to the lower left corner of the sprite image,
+     * not the center of mass and for rotation angle=0.
      * Uses pixels (graphics) as unit for length.
      *
      * @param x float, x-coordinate in pixels for the anchor
@@ -76,12 +123,15 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorA(float x, float y) {
+        LocalAnchorAIsLocalCenter=false;
         localAnchorA.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * Set the LOCAL anchor point on body A. Relative to local origin and rotation angle=0.
+     * Set the LOCAL anchor point on body A.
+     *Relative to local "origin" at getPosition(), corresponds to the lower left corner of the sprite image,
+     * not the center of mass and for rotation angle=0.
      * Uses pixels (graphics) as unit for length.
      *
      * @param position Vector2, position in pixels for the anchor
@@ -92,16 +142,19 @@ public class JointBuilder {
     }
 
     /**
-     * Set that the local anchor of body A is its center.
+     * Set that the local anchor of body A at its center.
      *
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorAIsLocalCenter() {
-        return setLocalAnchorA(0,0);
+        LocalAnchorAIsLocalCenter=true;
+        return this;
     }
 
     /**
-     * Set the LOCAL anchor point on body B. Relative to local origin and rotation angle=0.
+     * Set the LOCAL anchor point on body B.
+     * Relative to local "origin" at getPosition(), corresponds to the lower left corner of the sprite image,
+     * not the center of mass and for rotation angle=0.
      * Uses pixels (graphics) as unit for length.
      *
      * @param x float, x-coordinate in pixels for the anchor
@@ -109,12 +162,15 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorB(float x, float y) {
+        LocalAnchorBIsLocalCenter=false;
         localAnchorB.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
         return this;
     }
 
     /**
-     * Set the LOCAL anchor point on body B. Relative to local origin and rotation angle=0.
+     * Set the LOCAL anchor point on body B.
+     * Relative to local "origin" at getPosition(), corresponds to the lower left corner of the sprite image,
+     * not the center of mass and for rotation angle=0.
      * Uses pixels (graphics) as unit for length.
      *
      * @param position Vector2, position in pixels for the anchor
@@ -125,12 +181,13 @@ public class JointBuilder {
     }
 
     /**
-     * Set that the local anchor of body B is its center.
+     * Set that the local anchor of body B at its center.
      *
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorBIsLocalCenter() {
-        return setLocalAnchorB(0,0);
+        LocalAnchorBIsLocalCenter=true;
+        return this;
     }
 
     /**
@@ -157,12 +214,21 @@ public class JointBuilder {
 
     /**
      * Estimate Length of joint from distance between body positions.
+     * Assuming that local anchors rotate with the body.
+     * Local anchors are relative to the bodies origin !
      *
      * @return float, estimate for the length
      */
     public float estimateLength() {
-        return bodyA.getPosition().dst(bodyB.getPosition());
-
+        //distanceJointDef.bodyA.g
+        Vector2 localAnchor=new Vector2();
+        Vector2 anchorSeparation = new Vector2(distanceJointDef.bodyA.getPosition())
+                .sub(distanceJointDef.bodyB.getPosition());
+        localAnchor.set(distanceJointDef.localAnchorA).rotateRad(distanceJointDef.bodyA.getAngle());
+        anchorSeparation.add(localAnchor);
+        localAnchor.set(distanceJointDef.localAnchorB).rotateRad(distanceJointDef.bodyB.getAngle());
+        anchorSeparation.sub(localAnchor);
+        return anchorSeparation.len();
     }
 
     /**
@@ -198,4 +264,34 @@ public class JointBuilder {
         return this;
     }
 
+    /**
+     * Set basic joint def data for all joints.
+     *
+     * @param jointDef JointDef subclass
+     */
+    private void setBasicJointDef(JointDef jointDef){
+        jointDef.bodyA=bodyA;
+        jointDef.bodyB=bodyB;
+        jointDef.collideConnected=collideConnected;
+    }
+
+    public DistanceJoint buildDistanceJoint(Object userData){
+        if (distanceJointDef==null){
+            distanceJointDef=new DistanceJointDef();
+        }
+        setBasicJointDef(distanceJointDef);
+        distanceJointDef.dampingRatio=dampingRatio;
+        distanceJointDef.frequencyHz=frequencyHz;
+        if (adjustLength){
+            distanceJointDef.length=estimateLength();
+        }
+        else {
+            distanceJointDef.length=length;
+        }
+        distanceJointDef.localAnchorA.set(localAnchorA);
+        distanceJointDef.localAnchorB.set(localAnchorB);
+        DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
+        distanceJoint.setUserData(userData);
+        return distanceJoint;
+    }
 }
