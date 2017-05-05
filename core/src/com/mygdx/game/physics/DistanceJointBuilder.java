@@ -74,7 +74,7 @@ public class DistanceJointBuilder {
     }
 
     /**
-     * Set one of the connected bodies.
+     * Set one of the connectnined bodies.
      *
      * @param body Body, attached to the joint
      * @return this, for chaining

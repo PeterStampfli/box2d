@@ -175,7 +175,7 @@ public class ExtensibleSpriteBuilder {
      * @param shape Shape2D, shape
      * @return ExtensibleSprite, the sprite
      */
-    public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
+    public ExtensibleSprite buildExtensible(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
         setup(sprite,textureRegion,shape);
         return sprite;
@@ -187,7 +187,7 @@ public class ExtensibleSpriteBuilder {
      * @param textureRegion TextureRegion, image
      * @return ExtensibleSprite, the sprite
      */
-    public ExtensibleSprite build(TextureRegion textureRegion){
-        return build(textureRegion,null);
+    public ExtensibleSprite buildExtensible(TextureRegion textureRegion){
+        return buildExtensible(textureRegion,null);
     }
 }

@@ -36,5 +36,4 @@ public class PhysicalSpriteActions extends SpriteActions {
             return false;
         }
     };
-
 }

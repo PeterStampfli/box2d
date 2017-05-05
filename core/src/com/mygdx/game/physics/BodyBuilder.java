@@ -30,6 +30,13 @@ public class BodyBuilder {
      * @return this, for chaining
      */
     public BodyBuilder reset() {
+        setDynamicalBody();
+        setAngle(0);
+        setIsBullet(false);
+        setFixedRotation(false);
+        setGravityScale(1);
+        setAllowSleep(true);
+
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.angle = 0;
         bodyDef.bullet = false;
@@ -101,7 +108,7 @@ public class BodyBuilder {
      *
      * @return this
      */
-    public BodyBuilder setKinemazicBody() {
+    public BodyBuilder setKinematicBody() {
         return setBodyType(BodyDef.BodyType.KinematicBody);
     }
 
@@ -192,6 +199,17 @@ public class BodyBuilder {
      */
     public BodyBuilder setAngularDamping(float damping) {
         bodyDef.angularDamping = damping;
+        return this;
+    }
+
+    /**
+     * Set if angle of body is fixed.
+     *
+     * @param fixed boolean, true for no rotation
+     * @return this BodyBuilder
+     */
+    public BodyBuilder setFixedRotation(boolean fixed){
+        bodyDef.fixedRotation=fixed;
         return this;
     }
 

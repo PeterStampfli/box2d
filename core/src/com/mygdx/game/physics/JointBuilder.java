@@ -17,9 +17,7 @@ public class JointBuilder {
     boolean adjustLength;
     float dampingRatio;
     float frequencyHz;
-    boolean setCollideConnected;
-
-
+    boolean collideConnected;
 
     /**
      * Create a joint builder with access to physics.
@@ -31,21 +29,19 @@ public class JointBuilder {
         reset();
     }
 
-
     /**
      * Reset to default values.
      * Makes it a stiff joint.
      *
      * @return this, for chaining
      */
-    public DistanceJointBuilder reset() {
+    public JointBuilder reset() {
         setAdjustLength();
-
-        distanceJointDef.dampingRatio = 0;
-        distanceJointDef.frequencyHz = 0;
-        distanceJointDef.collideConnected = true;
-        distanceJointDef.localAnchorA.setZero();
-        distanceJointDef.localAnchorB.setZero();
+        setDampingRatio(0);
+        setFrequencyHz(10);
+        setCollideConnected(false);
+        setLocalAnchorAIsLocalCenter();
+        setLocalAnchorBIsLocalCenter();
         return this;
     }
 
@@ -70,7 +66,6 @@ public class JointBuilder {
         bodyB = body;
         return this;
     }
-
 
     /**
      * Set the LOCAL anchor point on body A. Relative to local origin and rotation angle=0.
@@ -168,6 +163,39 @@ public class JointBuilder {
     public float estimateLength() {
         return bodyA.getPosition().dst(bodyB.getPosition());
 
+    }
+
+    /**
+     * Set dimensionless damping of the joint. 0 is no damping. 1 is critical damping (no overshoot).
+     *
+     * @param d float, damping
+     * @return this, for chaining
+     */
+    public JointBuilder setDampingRatio(float d) {
+        dampingRatio = d;
+        return this;
+    }
+
+    /**
+     * Set the oscillation frequency of the joint, < 0.5/TIME_STEP.
+     *
+     * @param f float, oscillation frequency, 0 for rigid joint (?)
+     * @return this, for chaining
+     */
+    public JointBuilder setFrequencyHz(float f) {
+        frequencyHz = f;
+        return this;
+    }
+
+    /**
+     * Set that the bodies connected by the joint can collide or not.
+     *
+     * @param enabled boolean, true to enable the collision
+     * @return
+     */
+    public JointBuilder setCollideConnected(boolean enabled) {
+        collideConnected = enabled;
+        return this;
     }
 
 }

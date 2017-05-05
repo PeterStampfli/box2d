@@ -84,9 +84,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape){
         Body body=physics.bodyBuilder.build();
-        PhysicalSprite sprite=physics.physicalSpritePool.obtain();
-        setup(sprite,textureRegion,shape,body);
-        return sprite;
+        return buildPhysical(textureRegion,shape,body);
     }
 
 }
