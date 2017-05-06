@@ -16,9 +16,9 @@ public class JointBuilder {
     private Body bodyB;
     public Body dummyBody;
     private Vector2 localAnchorA;
-    boolean LocalAnchorAIsLocalCenter;
+    boolean localAnchorAIsLocalCenter;
     private Vector2 localAnchorB;
-    boolean LocalAnchorBIsLocalCenter;
+    boolean localAnchorBIsLocalCenter;
     private float length;
     boolean adjustLength;
     float dampingRatio;
@@ -123,7 +123,7 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorA(float x, float y) {
-        LocalAnchorAIsLocalCenter=false;
+        localAnchorAIsLocalCenter =false;
         localAnchorA.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
         return this;
     }
@@ -147,7 +147,7 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorAIsLocalCenter() {
-        LocalAnchorAIsLocalCenter=true;
+        localAnchorAIsLocalCenter =true;
         return this;
     }
 
@@ -162,7 +162,7 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorB(float x, float y) {
-        LocalAnchorBIsLocalCenter=false;
+        localAnchorBIsLocalCenter =false;
         localAnchorB.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
         return this;
     }
@@ -186,7 +186,7 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setLocalAnchorBIsLocalCenter() {
-        LocalAnchorBIsLocalCenter=true;
+        localAnchorBIsLocalCenter =true;
         return this;
     }
 
@@ -213,22 +213,12 @@ public class JointBuilder {
     }
 
     /**
-     * Estimate Length of joint from distance between body positions.
-     * Assuming that local anchors rotate with the body.
-     * Local anchors are relative to the bodies origin !
+     * Determine length between anchor points on the bodies using transformation to world points.
      *
      * @return float, estimate for the length
      */
-    public float estimateLength() {
-        //distanceJointDef.bodyA.g
-        Vector2 localAnchor=new Vector2();
-        Vector2 anchorSeparation = new Vector2(distanceJointDef.bodyA.getPosition())
-                .sub(distanceJointDef.bodyB.getPosition());
-        localAnchor.set(distanceJointDef.localAnchorA).rotateRad(distanceJointDef.bodyA.getAngle());
-        anchorSeparation.add(localAnchor);
-        localAnchor.set(distanceJointDef.localAnchorB).rotateRad(distanceJointDef.bodyB.getAngle());
-        anchorSeparation.sub(localAnchor);
-        return anchorSeparation.len();
+    public float determineLength() {
+        return bodyA.getWorldPoint(localAnchorA).sub(bodyB.getWorldPoint(localAnchorB)).len();
     }
 
     /**
@@ -280,16 +270,22 @@ public class JointBuilder {
             distanceJointDef=new DistanceJointDef();
         }
         setBasicJointDef(distanceJointDef);
-        distanceJointDef.dampingRatio=dampingRatio;
-        distanceJointDef.frequencyHz=frequencyHz;
+        if (localAnchorAIsLocalCenter){               // adjust local anchor if it is the body center
+            localAnchorA.set(bodyA.getLocalCenter()); // now we know the body
+        }
+        if (localAnchorBIsLocalCenter){
+            localAnchorB.set(bodyB.getLocalCenter());
+        }
+        distanceJointDef.localAnchorA.set(localAnchorA);
+        distanceJointDef.localAnchorB.set(localAnchorB);
         if (adjustLength){
-            distanceJointDef.length=estimateLength();
+            distanceJointDef.length= determineLength();
         }
         else {
             distanceJointDef.length=length;
         }
-        distanceJointDef.localAnchorA.set(localAnchorA);
-        distanceJointDef.localAnchorB.set(localAnchorB);
+        distanceJointDef.dampingRatio=dampingRatio;
+        distanceJointDef.frequencyHz=frequencyHz;
         DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
         distanceJoint.setUserData(userData);
         return distanceJoint;

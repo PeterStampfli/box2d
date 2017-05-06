@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Sprite.ExtensibleSprite;
-import com.mygdx.game.utilities.L;
 
 /**
  * A sprite with a body, using physics for motion
@@ -12,7 +11,7 @@ import com.mygdx.game.utilities.L;
 
 public class PhysicalSprite extends ExtensibleSprite {
     Physics physics;
-    Body body;
+    public Body body;
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyWorldCenterX, newBodyWorldCenterX;   // using pixel units
     private float previousBodyWorldCenterY, newBodyWorldCenterY;
@@ -54,25 +53,19 @@ public class PhysicalSprite extends ExtensibleSprite {
     // placing and rotating the sprite: Do same for the body!
 
     /**
-     * Set the origin of the body and its angle equal to the sprite's. Convert lengths.
+     * Set the angle of the body equal to the sprite's. The bodies center of mass should
+     * be at the sprites "origin" for rotation. Convert lengths.
      * Sets the body data used for interpolation.
      * Note that the local center (of mass) rotates with the body around it's "position".
      */
     public void setPositionAngleOfBody(){
-        // rotate the local center
         float angle=getAngle();
-        float sinAngle=MathUtils.sin(angle);
-        float cosAngle=MathUtils.cos(angle);
-        Vector2 bodyLocalCenter=body.getLocalCenter();
-        float bodyRotatedLocalCenterX=cosAngle*bodyLocalCenter.x-sinAngle*bodyLocalCenter.y;
-        float bodyRotatedLocalCenterY=sinAngle*bodyLocalCenter.x+cosAngle*bodyLocalCenter.y;
-
-        L.og(bodyRotatedLocalCenterX+" "+bodyRotatedLocalCenterY);
-        L.og((body.getWorldVector(bodyLocalCenter)).toString());
-        L.og(bodyLocalCenter.toString());
-        // set body origin and rotation
-        body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER-bodyRotatedLocalCenterX,
-                getWorldOriginY()/Physics.PIXELS_PER_METER-bodyRotatedLocalCenterY,angle);
+        // get the world center for position (0,0): set the body angle
+        body.setTransform(0,0,angle);
+        Vector2 rotatedLocalCenter=body.getWorldCenter();
+        // set body origin using that the center of the body should be at the world origin of the sprite
+        body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER-rotatedLocalCenter.x,
+                getWorldOriginY()/Physics.PIXELS_PER_METER-rotatedLocalCenter.y,angle);
         // set interpolation data to new position
         previousBodyAngle=getAngle();
         newBodyAngle=getAngle();
@@ -178,7 +171,8 @@ public class PhysicalSprite extends ExtensibleSprite {
      * and the center of mass of the body.
      *
      * Implicitely also overrides the setWorldOrigin(Vector2 position) method.
-     *
+     *		L.og(extensibleSprite.body.getWorldVector(new Vector2(1,0)).toString());
+
      * @param worldOriginPositionX float, x-coordinate of the origin
      * @param worldOriginPositionY float, y-coordinate of the origin
      */
