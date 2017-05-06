@@ -41,7 +41,6 @@ public class JointBuilder {
      */
     public JointBuilder(Physics physics){
         this.physics=physics;
-        dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
         physics.bodyBuilder.reset();
         reset();
     }
@@ -92,6 +91,9 @@ public class JointBuilder {
      * @return this, for chaining
      */
     public JointBuilder setBodyAIsDummy() {
+        if (dummyBody==null){
+            dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
+        }
         bodyA = dummyBody;
         return this;
     }
