@@ -5,6 +5,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
 /**
  * A builder for all kinds of joints.
@@ -15,18 +17,21 @@ public class JointBuilder {
     private Body bodyA;
     private Body bodyB;
     public Body dummyBody;
-    private Vector2 localAnchorA;
+    private Vector2 localAnchorA=new Vector2();
     boolean localAnchorAIsLocalCenter;
-    private Vector2 localAnchorB;
+    private Vector2 localAnchorB=new Vector2();
     boolean localAnchorBIsLocalCenter;
+    private Vector2 target=new Vector2();
     private float length;
     boolean adjustLength;
     float dampingRatio;
     float frequencyHz;
     boolean collideConnected;
+    float maxAcceleration;
 
 
-    DistanceJointDef distanceJointDef;
+    private DistanceJointDef distanceJointDef;
+    private MouseJointDef mouseJointDef;
 
     /**
      * Create a joint builder with access to physics.
@@ -54,6 +59,7 @@ public class JointBuilder {
         setCollideConnected(false);
         setLocalAnchorAIsLocalCenter();
         setLocalAnchorBIsLocalCenter();
+        setMaxAcceleration(5000);
         return this;
     }
 
@@ -191,6 +197,40 @@ public class JointBuilder {
     }
 
     /**
+     * Set the world target point in pixels.
+     *
+     * @param x float, x-coordinate in pixels
+     * @param y float, y-coordinate in pixels
+     * @return
+     */
+    public JointBuilder setTarget(float x, float y) {
+        target.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
+        return this;
+    }
+
+    /**
+     * Set the world target point in pixels.
+     *
+     * @param p Vector2, position in pixels
+     * @return
+     */
+    public JointBuilder setTarget(Vector2 p) {
+        return setTarget(p.x,p.y);
+    }
+
+    /**
+     * Set the maximum acceleration for mouse joints in pixels/sec².
+     * (maxForce=max acceleration* mass)
+     *
+     * @param a float, limit for acceleration
+     * @return this, JointBuilder
+     */
+    public JointBuilder setMaxAcceleration(float a){
+        maxAcceleration=a/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
      * Set the length of the joint.
      *
      * @param d float, the length
@@ -265,6 +305,12 @@ public class JointBuilder {
         jointDef.collideConnected=collideConnected;
     }
 
+    /**
+     * Build a distance joint with user data.
+     *
+     * @param userData
+     * @return DistanceJoint
+     */
     public DistanceJoint buildDistanceJoint(Object userData){
         if (distanceJointDef==null){
             distanceJointDef=new DistanceJointDef();
@@ -289,5 +335,44 @@ public class JointBuilder {
         DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
         distanceJoint.setUserData(userData);
         return distanceJoint;
+    }
+
+    /**
+     * Build a distance joint without data.
+     *
+     * @return DistanceJoint
+     */
+
+    public DistanceJoint buildDistanceJoint(){
+        return buildDistanceJoint(null);
+    }
+
+    /**
+     * Build a mousejoint based on the mouseJountDef and attach user data.
+     *
+     * @param userData Object
+     * @return MouseJoint
+     */
+    public MouseJoint buildMouseJoint(Object userData) {
+        if (mouseJointDef==null){
+            mouseJointDef=new MouseJointDef();
+        }
+        setBasicJointDef(mouseJointDef);
+        mouseJointDef.dampingRatio=dampingRatio;
+        mouseJointDef.frequencyHz=frequencyHz;
+        mouseJointDef.maxForce=bodyB.getMass()*maxAcceleration;
+        mouseJointDef.target.set(target);
+        MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
+        mouseJoint.setUserData(userData);
+        return mouseJoint;
+    }
+
+    /**
+     * Build a mousejoint based on the mouseJountDef. No user data.
+     *
+     * @return MouseJoint
+     */
+    public MouseJoint buildMouseJoint() {
+        return buildMouseJoint(null);
     }
 }

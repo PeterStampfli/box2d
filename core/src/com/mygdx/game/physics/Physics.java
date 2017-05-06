@@ -32,7 +32,7 @@ public class Physics implements Disposable {
     Array<Body> bodies;
     boolean bodiesNeedUpdate = true;
     private float accumulator = 0f;
-    static public float PIXELS_PER_METER = 100;       // default
+    static public float PIXELS_PER_METER = 30;       // default
     final float TIME_STEP = 1 / 60f;
     final float MAX_TIMEINTERVAL = 0.25f;
     final int VELOCITY_ITERATIONS = 8;
@@ -68,7 +68,8 @@ public class Physics implements Disposable {
         if (world != null) {
             Gdx.app.log("***** Physics", "World already exists!!!!!!!!!!!!!");
         } else {
-            world = new World(new Vector2(gravityX, gravityY), maySleep);
+            world = new World(new Vector2(gravityX/PIXELS_PER_METER, gravityY/PIXELS_PER_METER),
+                                maySleep);
         }
         return world;
     }
