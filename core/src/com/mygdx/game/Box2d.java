@@ -18,6 +18,7 @@ import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.physics.BodyBuilder;
 import com.mygdx.game.physics.FixtureBuilder;
+import com.mygdx.game.physics.JointBuilder;
 import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.PhysicalSpriteBuilder;
 import com.mygdx.game.physics.Physics;
@@ -67,7 +68,7 @@ public class Box2d extends ApplicationAdapter {
 		//shape2DCollection.add();
 		Circle circle=new Circle(99,99,80);
 		Polypoint dotsAndLines=new Polypoint();
-		dotsAndLines.add(30,30,90,10,90,50,30,50);
+		dotsAndLines.add(10,10,190,10,90,170,30,150);
 		Polygon polygon=dotsAndLines.getPolygon();
 
 				Mask mask=new Mask(200,200);
@@ -86,30 +87,36 @@ public class Box2d extends ApplicationAdapter {
 				"mehr ist auch noch drin aber alles hat eine nede";
 		physics=new Physics(true);
 
-		physics.createWorld(0,-10,true);
+		physics.createWorld(0,-1000,true);
 
 		physics.start();
 		BodyBuilder bodyBuilder=physics.bodyBuilder;
 		FixtureBuilder fixtureBuilder=physics.fixtureBuilder;
-
-		Body dynamicBody=bodyBuilder.setPosition(200,300).build();
+		fixtureBuilder.setFriction(0.7f);
 		bodyBuilder.setStaticBody();
-		 edge=new Edge(-100,10,1000,10);
+		 edge=new Edge(-1000,10,1000,10);
 		Body ground=bodyBuilder.setPosition(0,0).build(edge);
 
-
+		Body top=bodyBuilder.setPosition(250,350).build(new Circle(0,0,20));
 
 
 
 		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
-
+		physicalSpriteBuilder.setContains(physicalSpriteBuilder.physicalSpriteActions.bodyContains);
 		bodyBuilder.setDynamicalBody();
+
 
 		extensibleSprite=physicalSpriteBuilder.buildPhysical(img,polygon);
 
 		extensibleSprite.setColor(Color.FIREBRICK);
 
-		extensibleSprite.setWorldOriginAngle(100,300,0.7f);
+		extensibleSprite.setWorldOriginAngle(100,300,0);
+
+		JointBuilder jointBuilder=new JointBuilder(physics);
+
+		jointBuilder.setBodyA(top).setBodyB(extensibleSprite).setLocalAnchorB(100,100);
+		jointBuilder.buildDistanceJoint();
+
 		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
 		touchMove.asInputProcessor();
 
@@ -126,7 +133,11 @@ public class Box2d extends ApplicationAdapter {
 	public void render () {
 		//Basic.setContinuousRendering(false);
 		//====================================================================================
-		//physics.advance();
+		physics.advance();
+
+		//L.og(extensibleSprite.body.getWorldVector(new Vector2(1,0)).toString());
+
+		//L.og(extensibleSprite.contains(device.touchReader.getPosition(viewport)));
 
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
