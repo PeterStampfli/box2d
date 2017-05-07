@@ -14,8 +14,6 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 
 public class JointBuilder {
     private Physics physics;
-    private Body bodyA;
-    private Body bodyB;
     public Body dummyBody;
     private Vector2 localAnchorA=new Vector2();
     boolean localAnchorAIsLocalCenter;
@@ -41,7 +39,6 @@ public class JointBuilder {
      */
     public JointBuilder(Physics physics){
         this.physics=physics;
-        physics.bodyBuilder.reset();
         reset();
     }
 
@@ -59,64 +56,6 @@ public class JointBuilder {
         setLocalAnchorAIsLocalCenter();
         setLocalAnchorBIsLocalCenter();
         setMaxAcceleration(5000);
-        return this;
-    }
-
-    /**
-     * Set one of the connected bodies.
-     *
-     * @param body Body, will be attached to the joint
-     * @return this, for chaining
-     */
-    public JointBuilder setBodyA(Body body) {
-        bodyA = body;
-        return this;
-    }
-
-    /**
-     * Set one of the connected bodies.
-     *
-     * @param physicalSprite PhysicalSprite, its Body will be attached to the joint
-     * @return this, for chaining
-     */
-    public JointBuilder setBodyA(PhysicalSprite physicalSprite) {
-        bodyA = physicalSprite.body;
-        return this;
-    }
-
-    /**
-     * Set one of the connected bodies to be the dummy body. For the mouse joint.
-     * (A static body without fixture, far away).
-     *
-     * @return this, for chaining
-     */
-    public JointBuilder setBodyAIsDummy() {
-        if (dummyBody==null){
-            dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
-        }
-        bodyA = dummyBody;
-        return this;
-    }
-
-    /**
-     * Set the other connected body.
-     *
-     * @param body Body, will be attached to the joint
-     * @return this, for chaining
-     */
-    public JointBuilder setBodyB(Body body) {
-        bodyB = body;
-        return this;
-    }
-
-    /**
-     * Set the other of the connected bodies.
-     *
-     * @param physicalSprite PhysicalSprite, its Body will be attached to the joint
-     * @return this, for chaining
-     */
-    public JointBuilder setBodyB(PhysicalSprite physicalSprite) {
-        bodyB = physicalSprite.body;
         return this;
     }
 
@@ -297,27 +236,15 @@ public class JointBuilder {
     }
 
     /**
-     * Set basic joint def data for all joints.
+     * Build a distance joint with user data. Attach user data later if needed.
      *
-     * @param jointDef JointDef subclass
-     */
-    private void setBasicJointDef(JointDef jointDef){
-        jointDef.bodyA=bodyA;
-        jointDef.bodyB=bodyB;
-        jointDef.collideConnected=collideConnected;
-    }
-
-    /**
-     * Build a distance joint with user data.
-     *
-     * @param userData
      * @return DistanceJoint
      */
-    public DistanceJoint buildDistanceJoint(Object userData){
+    public DistanceJoint buildDistanceJoint(Body){
         if (distanceJointDef==null){
             distanceJointDef=new DistanceJointDef();
         }
-        setBasicJointDef(distanceJointDef);
+
         if (localAnchorAIsLocalCenter){               // adjust local anchor if it is the body center
             localAnchorA.set(bodyA.getLocalCenter()); // now we know the body
         }
@@ -332,31 +259,26 @@ public class JointBuilder {
         else {
             distanceJointDef.length=length;
         }
+        distanceJointDef.collideConnected=collideConnected;
         distanceJointDef.dampingRatio=dampingRatio;
         distanceJointDef.frequencyHz=frequencyHz;
         DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
-        distanceJoint.setUserData(userData);
         return distanceJoint;
     }
 
-    /**
-     * Build a distance joint without data.
-     *
-     * @return DistanceJoint
-     */
-    public DistanceJoint buildDistanceJoint(){
-        return buildDistanceJoint(null);
-    }
 
     /**
-     * Build a mousejoint based on the mouseJountDef and attach user data.
+     * Build a mouseJoint based on the mouseJointDef.
+     * Creates a reasonable dummy body. Change if no good.
+     * Attach user data later if needed.
      *
-     * @param userData Object
      * @return MouseJoint
      */
-    public MouseJoint buildMouseJoint(Object userData) {
+    public MouseJoint buildMouseJoint() {
         if (mouseJointDef==null){
             mouseJointDef=new MouseJointDef();
+            dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
+            physics.bodyBuilder.reset();
         }
         setBasicJointDef(mouseJointDef);
         mouseJointDef.dampingRatio=dampingRatio;
@@ -364,16 +286,7 @@ public class JointBuilder {
         mouseJointDef.maxForce=bodyB.getMass()*maxAcceleration;
         mouseJointDef.target.set(target);
         MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
-        mouseJoint.setUserData(userData);
         return mouseJoint;
     }
 
-    /**
-     * Build a mousejoint based on the mouseJountDef. No user data.
-     *
-     * @return MouseJoint
-     */
-    public MouseJoint buildMouseJoint() {
-        return buildMouseJoint(null);
-    }
 }

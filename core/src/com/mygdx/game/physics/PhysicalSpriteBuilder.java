@@ -17,6 +17,7 @@ import com.mygdx.game.utilities.Device;
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     Physics physics;
     public PhysicalSpriteActions physicalSpriteActions;
+    private MouseJointMover mouseJointMover;
 
     /**
      * Create the builder with a device that has glyphlayout pool.
@@ -30,6 +31,17 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         physicalSpriteActions=new PhysicalSpriteActions();
     }
 
+    /**
+     * Use the mouseJoint to move the sprite. Sets the basic touch methods.
+     */
+    public void setTouchMouseJoint(){
+        if (mouseJointMover==null){
+            mouseJointMover=new MouseJointMover();
+        }
+        setTouchBegin(mouseJointMover);
+        setTouchDrag(mouseJointMover);
+        setTouchEnd(mouseJointMover);
+    }
 
     /**
      * Set the sprite data. Add the body. Attach fixtures to the body. Set sprite origin.
@@ -48,20 +60,20 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         sprite.setLocalOrigin();
     }
 
-        /**
-         * Get a physical sprite from the sprite pool. Set image and other data.
-         * Attach a body and create its fixtures from shape.
-         * Set local origin of the sprite from center of mass of the body.
-         * Position and angle of sprite and body will be set afterwards.
-         *
-         * Note: We can't set the position of the origin without knowing the center of
-         * mass of the body. Thus we have to create the body before setting its position.
-         *
-         * @param textureRegion TextureRegion, the sprites image
-         * @param shape Shape2D shape for the sprite and the body.
-         * @param body
-         * @return
-         */
+    /**
+     * Get a physical sprite from the sprite pool. Set image and other data.
+     * Attach a body and create its fixtures from shape.
+     * Set local origin of the sprite from center of mass of the body.
+     * Position and angle of sprite and body will be set afterwards.
+     *
+     * Note: We can't set the position of the origin without knowing the center of
+     * mass of the body. Thus we have to create the body before setting its position.
+     *
+     * @param textureRegion TextureRegion, the sprites image
+     * @param shape Shape2D shape for the sprite and the body.
+     * @param body
+     * @return
+     */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape,body);
