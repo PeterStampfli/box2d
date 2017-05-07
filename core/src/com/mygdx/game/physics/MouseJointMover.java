@@ -15,7 +15,7 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
 public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd {
     private MouseJoint mouseJoint;
     private Vector2 target=new Vector2();
-    
+
     /**
      * Start move: Create the mouseJoint and set target.
      *
@@ -41,7 +41,8 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      * @return boolean, true, something changed
      */
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition,Vector2 deltaTouchPosition) {
-        target.set(touchPosition.x+0.5f*deltaTouchPosition.x,touchPosition.y+0.5f*deltaTouchPosition.y);
+        target.set((touchPosition.x+0.5f*deltaTouchPosition.x)/Physics.PIXELS_PER_METER,
+                   (touchPosition.y+0.5f*deltaTouchPosition.y)/Physics.PIXELS_PER_METER);
         mouseJoint.setTarget(target);
         return true;
     }

@@ -2,7 +2,6 @@ package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
@@ -19,7 +18,6 @@ public class JointBuilder {
     boolean localAnchorAIsLocalCenter;
     private Vector2 localAnchorB=new Vector2();
     boolean localAnchorBIsLocalCenter;
-    private Vector2 target=new Vector2();
     private float length;
     boolean adjustLength;
     float dampingRatio;
@@ -138,28 +136,6 @@ public class JointBuilder {
     }
 
     /**
-     * Set the world target point in pixels.
-     *
-     * @param x float, x-coordinate in pixels
-     * @param y float, y-coordinate in pixels
-     * @return
-     */
-    public JointBuilder setTarget(float x, float y) {
-        target.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
-        return this;
-    }
-
-    /**
-     * Set the world target point in pixels.
-     *
-     * @param p Vector2, position in pixels
-     * @return
-     */
-    public JointBuilder setTarget(Vector2 p) {
-        return setTarget(p.x,p.y);
-    }
-
-    /**
      * Set the maximum acceleration for mouse joints in pixels/sec².
      * (maxForce=max acceleration* mass)
      *
@@ -196,9 +172,11 @@ public class JointBuilder {
     /**
      * Determine length between anchor points on the bodies using transformation to world points.
      *
+     * @param bodyA Body, one of the two bodies
+     * @param bodyB Body, the other of the two bodies
      * @return float, estimate for the length
      */
-    public float determineLength() {
+    public float determineLength(Body bodyA,Body bodyB) {
         return bodyA.getWorldPoint(localAnchorA).sub(bodyB.getWorldPoint(localAnchorB)).len();
     }
 
@@ -236,15 +214,18 @@ public class JointBuilder {
     }
 
     /**
-     * Build a distance joint with user data. Attach user data later if needed.
+     * Build a distance joint between two bodies. Attach user data later if needed.
      *
+     * @param bodyA Body
+     * @param bodyB Body
      * @return DistanceJoint
      */
-    public DistanceJoint buildDistanceJoint(Body){
+    public DistanceJoint buildDistanceJoint(Body bodyA,Body bodyB){
         if (distanceJointDef==null){
             distanceJointDef=new DistanceJointDef();
         }
-
+        distanceJointDef.bodyA=bodyA;
+        distanceJointDef.bodyB=bodyB;
         if (localAnchorAIsLocalCenter){               // adjust local anchor if it is the body center
             localAnchorA.set(bodyA.getLocalCenter()); // now we know the body
         }
@@ -254,7 +235,7 @@ public class JointBuilder {
         distanceJointDef.localAnchorA.set(localAnchorA);
         distanceJointDef.localAnchorB.set(localAnchorB);
         if (adjustLength){
-            distanceJointDef.length= determineLength();
+            distanceJointDef.length= determineLength(bodyA,bodyB);
         }
         else {
             distanceJointDef.length=length;
@@ -266,27 +247,53 @@ public class JointBuilder {
         return distanceJoint;
     }
 
+    /**
+     * Build a distance joint between two physical sprites. Attach user data later if needed.
+     *
+     * @param spriteA PhysicalSprite
+     * @param spriteB PhysicalSprite
+     * @return DistanceJoint
+     */
+    public DistanceJoint buildDistanceJoint(PhysicalSprite spriteA,PhysicalSprite spriteB){
+        return buildDistanceJoint(spriteA.body,spriteB.body);
+    }
 
     /**
      * Build a mouseJoint based on the mouseJointDef.
      * Creates a reasonable dummy body. Change if no good.
      * Attach user data later if needed.
      *
+     * @param body Body, the body to move.
+     * @param target Vector2, world point, where the mouseJoint is attached to the body, in pixels
      * @return MouseJoint
      */
-    public MouseJoint buildMouseJoint() {
+    public MouseJoint buildMouseJoint(Body body,Vector2 target) {
         if (mouseJointDef==null){
             mouseJointDef=new MouseJointDef();
             dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
             physics.bodyBuilder.reset();
         }
-        setBasicJointDef(mouseJointDef);
+        mouseJointDef.bodyA=dummyBody;
+        mouseJointDef.bodyB=body;
+        mouseJointDef.maxForce=body.getMass()*maxAcceleration;
+        mouseJointDef.target.set(target.x/Physics.PIXELS_PER_METER,target.y/Physics.PIXELS_PER_METER);
         mouseJointDef.dampingRatio=dampingRatio;
         mouseJointDef.frequencyHz=frequencyHz;
-        mouseJointDef.maxForce=bodyB.getMass()*maxAcceleration;
         mouseJointDef.target.set(target);
         MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
         return mouseJoint;
     }
 
+    /**
+     * Build a mouseJoint based on the mouseJointDef.
+     * Creates a reasonable dummy body. Change if no good.
+     * Attach user data later if needed.
+     *
+     * @param sprite PhysicalSprite, the sprite to move.
+     * @param target Vector2, world point, where the mouseJoint is attached to the body, in pixels
+     * @return MouseJoint
+     */
+    public MouseJoint buildMouseJoint(PhysicalSprite sprite,Vector2 target) {
+        return buildMouseJoint(sprite.body,target);
+    }
 }
