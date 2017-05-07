@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
@@ -21,7 +22,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
 
     public Shape2D shape;
     public Device device;
-    public Array<Object> extensions=new Array<Object>();
+    public Array<Disposable> extensions=new Array<Disposable>(4);
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
     public SpriteKeepVisible spriteKeepVisible;
@@ -31,15 +32,13 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     public SpriteScroll spriteScroll;
 
     /**
-     * Reset the sprite and put it back in the pool. Frees the text extension.
+     * Reset the sprite before putting it back in the pool. Disposes extensions.
      */
     public void reset(){
         shape = null;
         setTexture(null);
-        for (Object extension:extensions){
-            if (extension instanceof TextExtension){
-                device.glyphLayoutPool.free(((TextExtension) extension).glyphLayout);
-            }
+        for (Disposable extension:extensions){
+            extension.dispose();
             extension=null;
         }
         extensions.clear();
@@ -54,11 +53,11 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
-     * Add an object to the array of extensions.
+     * Add a disposable object to the array of extensions.
      *
      * @param extension Object, the new extension to add
      */
-    public void addExtension(Object extension){
+    public void addExtension(Disposable extension){
         extensions.add(extension);
     }
 
@@ -329,6 +328,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
 
     /**
      * Call the touchDrag method of the spriteTouchDrag object.
+     * Afterwards call the keepVisible() method to gard against the sprite disappearing
      *
      * @param position      Vector2, position of touch.
      * @param deltaPosition Vector2, change in the position of touch.
@@ -337,7 +337,9 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
-        return spriteTouchDrag.touchDrag(this, position, deltaPosition, camera);
+        boolean changed= spriteTouchDrag.touchDrag(this, position, deltaPosition);
+        keepVisible(camera);
+        return changed;
     }
 
     /**

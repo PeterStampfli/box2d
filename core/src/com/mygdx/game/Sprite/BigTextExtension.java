@@ -87,11 +87,10 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
      * @param sprite        Extensible Sprite
      * @param position      Vector2, position of touch
      * @param deltaPosition Vector2, change in the position of touch
-     * @param camera
      * @return boolean, true
      */
     @Override
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
+    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
         textShift += deltaPosition.y;
         return true;
     }

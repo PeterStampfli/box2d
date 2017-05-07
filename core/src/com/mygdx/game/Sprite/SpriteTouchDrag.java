@@ -1,6 +1,5 @@
 package com.mygdx.game.Sprite;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -17,5 +16,5 @@ public interface SpriteTouchDrag {
      * @param deltaPosition Vector2, change in the touch position
      * @return boolean, true if something changed
      */
-    boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera);
+    boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition);
 }

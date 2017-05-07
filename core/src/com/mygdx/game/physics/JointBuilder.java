@@ -344,7 +344,6 @@ public class JointBuilder {
      *
      * @return DistanceJoint
      */
-
     public DistanceJoint buildDistanceJoint(){
         return buildDistanceJoint(null);
     }

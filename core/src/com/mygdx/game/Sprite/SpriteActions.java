@@ -7,7 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Basic (default) actions for extensible sprites,
- * defined as instances of anonymous classes that implement the interfaces.
+ * Defined as instances of anonymous classes that implement the interfaces.
+ * Have no data to remember, thus one single object does it for all.
  */
 
 public class SpriteActions {
@@ -160,30 +161,29 @@ public class SpriteActions {
      */
     public SpriteTouchDrag touchDragNull = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             return false;
         }
     };
 
     /**
      * An object that implements SpriteTouchDrag:
-     * Translates the sprite without rotation and keeps it visible.
+     * Translates the sprite without rotation.
      */
     public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition, Camera camera) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             sprite.translate(deltaPosition.x, deltaPosition.y);
-            sprite.keepVisible(camera);
             return true;
         }
     };
     /**
      * An object that implements SpriteTouchDrag:
-     * Translates and rotates the sprite and keeps it visible.
+     * Translates and rotates the sprite.
      */
     public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition, Camera camera) {
+        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
             float centerTouchX = touchPosition.x - sprite.getWorldOriginX();
             float centerTouchY = touchPosition.y - sprite.getWorldOriginY();
             float centerTouchLength = Vector2.len(centerTouchX, centerTouchY);
@@ -196,8 +196,6 @@ public class SpriteActions {
             float cosDeltaAngle = MathUtils.cos(deltaAngle);
             sprite.translate(deltaTouchPosition.x - ((cosDeltaAngle - 1) * centerTouchX - sinDeltaAngle * centerTouchY),
                     deltaTouchPosition.y - (sinDeltaAngle * centerTouchX + (cosDeltaAngle - 1) * centerTouchY));
-
-            sprite.keepVisible(camera);
             return true;
         }
     };
