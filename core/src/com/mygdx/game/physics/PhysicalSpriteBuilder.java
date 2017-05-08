@@ -32,7 +32,8 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     }
 
     /**
-     * Use the mouseJoint to move the sprite. Sets the basic methods for physical sprite.
+     * Use the mouseJoint to move the sprite. Use the bodies shapes for contains method.
+     * Sets the basic methods for physical sprite.
      */
     public void setMouseJoint(){
         if (mouseJointMover==null){
@@ -103,5 +104,4 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         Body body=physics.bodyBuilder.setDynamicalBody().build();
         return buildPhysical(textureRegion,shape,body);
     }
-
 }

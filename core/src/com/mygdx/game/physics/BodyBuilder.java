@@ -164,7 +164,7 @@ public class BodyBuilder {
      * @return
      */
     public BodyBuilder setPosition(float positionX, float positionY) {
-        bodyDef.position.set(positionX / Physics.PIXELS_PER_METER, positionY / Physics.PIXELS_PER_METER);
+        bodyDef.position.set(positionX, positionY).scl(1f / Physics.PIXELS_PER_METER);
         return this;
     }
 
@@ -244,7 +244,7 @@ public class BodyBuilder {
      * @return
      */
     public BodyBuilder setLinearVelocity(float velocityX, float velocityY) {
-        bodyDef.linearVelocity.set(velocityX / Physics.PIXELS_PER_METER, velocityY / Physics.PIXELS_PER_METER);
+        bodyDef.linearVelocity.set(velocityX, velocityY).scl(1f / Physics.PIXELS_PER_METER);
         return this;
     }
 

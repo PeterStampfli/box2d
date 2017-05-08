@@ -41,8 +41,7 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      * @return boolean, true, something changed
      */
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition,Vector2 deltaTouchPosition) {
-        target.set((touchPosition.x+0.5f*deltaTouchPosition.x)/Physics.PIXELS_PER_METER,
-                   (touchPosition.y+0.5f*deltaTouchPosition.y)/Physics.PIXELS_PER_METER);
+        target.set(deltaTouchPosition).scl(0.5f).add(touchPosition).scl(1f/Physics.PIXELS_PER_METER);
         mouseJoint.setTarget(target);
         return true;
     }

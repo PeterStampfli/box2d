@@ -69,7 +69,7 @@ public class JointBuilder {
      */
     public JointBuilder setLocalAnchorA(float x, float y) {
         localAnchorAIsLocalCenter =false;
-        localAnchorA.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
+        localAnchorA.set(x,y).scl(1f/Physics.PIXELS_PER_METER);
         return this;
     }
 
@@ -108,7 +108,7 @@ public class JointBuilder {
      */
     public JointBuilder setLocalAnchorB(float x, float y) {
         localAnchorBIsLocalCenter =false;
-        localAnchorB.set(x/Physics.PIXELS_PER_METER, y/Physics.PIXELS_PER_METER);
+        localAnchorB.set(x,y).scl(1f/Physics.PIXELS_PER_METER);
         return this;
     }
 
@@ -276,7 +276,7 @@ public class JointBuilder {
         mouseJointDef.bodyA=dummyBody;
         mouseJointDef.bodyB=body;
         mouseJointDef.maxForce=body.getMass()*maxAcceleration;
-        mouseJointDef.target.set(target.x/Physics.PIXELS_PER_METER,target.y/Physics.PIXELS_PER_METER);
+        mouseJointDef.target.set(target).scl(1f/Physics.PIXELS_PER_METER);
         mouseJointDef.dampingRatio=dampingRatio;
         mouseJointDef.frequencyHz=frequencyHz;
         MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
