@@ -32,15 +32,19 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     }
 
     /**
-     * Use the mouseJoint to move the sprite. Sets the basic touch methods.
+     * Use the mouseJoint to move the sprite. Sets the basic methods for physical sprite.
      */
-    public void setMouseJointTouch(){
+    public void setMouseJoint(){
         if (mouseJointMover==null){
             mouseJointMover=new MouseJointMover();
         }
+        setContains(physicalSpriteActions.bodyContains);
+        setKeepVisible(spriteActions.keepVisibleNull);
+        setDraw(spriteActions.drawSuper);
         setTouchBegin(mouseJointMover);
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
+        setScroll(spriteActions.nullScroll);
     }
 
     /**
