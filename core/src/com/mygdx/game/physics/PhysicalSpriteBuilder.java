@@ -34,7 +34,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     /**
      * Use the mouseJoint to move the sprite. Sets the basic touch methods.
      */
-    public void setTouchMouseJoint(){
+    public void setMouseJointTouch(){
         if (mouseJointMover==null){
             mouseJointMover=new MouseJointMover();
         }
@@ -55,6 +55,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public void setup(PhysicalSprite sprite, TextureRegion textureRegion, Shape2D shape,Body body) {
         setup(sprite,textureRegion,shape);
         sprite.body=body;
+        sprite.physics=physics;
         body.setUserData(sprite);
         physics.fixtureBuilder.build(body,shape);
         sprite.setLocalOrigin();
@@ -95,7 +96,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * @return
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape){
-        Body body=physics.bodyBuilder.build();
+        Body body=physics.bodyBuilder.setDynamicalBody().build();
         return buildPhysical(textureRegion,shape,body);
     }
 

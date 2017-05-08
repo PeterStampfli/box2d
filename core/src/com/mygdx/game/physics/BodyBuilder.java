@@ -294,28 +294,27 @@ public class BodyBuilder {
     }
 
     /**
-     * Build the body and attach the supplied userData.
-     *
-     * @param userData Object, attach to the body.
-     * @return Body, a box2D body.
-     */
-    public Body build(Object userData) {
-        Body body = build();
-        body.setUserData(userData);
-        return body;
-    }
-
-    /**
-     * Build the body without user data. Build fixtures defined by the Shape2D shape. Attach the userData
+     * Build a static body without user data. Build fixtures defined by the Shape2D shape.
      *
      * @param shape Shape2D, shape or shape collection to attach to the body
-     * @param userData Object, attach to the body.
      * @return Body, a box2D body.
      */
-    public Body build(Shape2D shape,Object userData){
-        Body body=build(shape);
-        body.setUserData(userData);
-        return body;
+    public Body buildStaticBody(Shape2D shape){
+        setStaticBody();
+        return build(shape);
     }
+
+
+    /**
+     * Build a dynamical body without user data. Build fixtures defined by the Shape2D shape.
+     *
+     * @param shape Shape2D, shape or shape collection to attach to the body
+     * @return Body, a box2D body.
+     */
+    public Body buildDynamicalBody(Shape2D shape){
+        setDynamicalBody();
+        return build(shape);
+    }
+
 
 }

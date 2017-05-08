@@ -270,7 +270,7 @@ public class JointBuilder {
     public MouseJoint buildMouseJoint(Body body,Vector2 target) {
         if (mouseJointDef==null){
             mouseJointDef=new MouseJointDef();
-            dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
+            dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(10000,00).build();
             physics.bodyBuilder.reset();
         }
         mouseJointDef.bodyA=dummyBody;
@@ -279,7 +279,6 @@ public class JointBuilder {
         mouseJointDef.target.set(target.x/Physics.PIXELS_PER_METER,target.y/Physics.PIXELS_PER_METER);
         mouseJointDef.dampingRatio=dampingRatio;
         mouseJointDef.frequencyHz=frequencyHz;
-        mouseJointDef.target.set(target);
         MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
         return mouseJoint;
     }
