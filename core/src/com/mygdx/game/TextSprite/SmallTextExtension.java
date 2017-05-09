@@ -1,4 +1,4 @@
-package com.mygdx.game.Sprite;
+package com.mygdx.game.TextSprite;
 
 /**
  * Created by peter on 4/22/17.
@@ -7,6 +7,7 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.utilities.Device;
 
 /**

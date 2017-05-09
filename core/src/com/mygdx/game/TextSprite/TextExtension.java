@@ -1,16 +1,17 @@
-package com.mygdx.game.Sprite;
+package com.mygdx.game.TextSprite;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.Sprite.SpriteDraw;
 import com.mygdx.game.utilities.Device;
 
 /**
  * Created by peter on 4/22/17.
  */
 
-public abstract class TextExtension implements SpriteDraw,Disposable {
+public abstract class TextExtension implements SpriteDraw {
     public Pool<GlyphLayout> glyphLayoutPool;
     public GlyphLayout glyphLayout;
     public BitmapFont font;
@@ -27,7 +28,7 @@ public abstract class TextExtension implements SpriteDraw,Disposable {
     public TextExtension(Device device, BitmapFont font, ExtensibleSprite sprite){
         previousDraw=sprite.spriteDraw;
         sprite.setDraw(this);
-        sprite.addExtension(this);
+        sprite.textExtension=this;
         glyphLayoutPool=device.glyphLayoutPool;
         glyphLayout=glyphLayoutPool.obtain();
         this.font=font;
@@ -42,10 +43,9 @@ public abstract class TextExtension implements SpriteDraw,Disposable {
     public abstract void setText(String text,ExtensibleSprite sprite);
 
     /**
-     * Dispose frees the glyphLayout. GlyphLayout has its reset method that deletes the text.
+     * Frees the glyphLayout. GlyphLayout has its reset method that deletes the text.
      */
-    @Override
-    public void dispose(){
+    public void free(){
         glyphLayoutPool.free(glyphLayout);
     }
 }

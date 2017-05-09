@@ -1,4 +1,4 @@
-package com.mygdx.game.Sprite;
+package com.mygdx.game.TextSprite;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.Sprite.SpriteScroll;
+import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.utilities.Device;
 
 /**

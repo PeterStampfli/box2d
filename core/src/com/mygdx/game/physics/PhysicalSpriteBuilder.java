@@ -11,7 +11,7 @@ import com.mygdx.game.utilities.Device;
  * The setter methods of the ExtensibleSpriteBuilder can still be used and chained,
  * but they return an extensibleSpriteBuilder.
  * Build methods give ExtensibleSprites. BuildPhysical methods give physical sprites.
- * NEEDS the BOX"D EXTENSION.
+ * NEEDS the BOX2D EXTENSION.
  */
 
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {

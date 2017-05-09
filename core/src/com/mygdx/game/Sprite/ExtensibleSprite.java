@@ -6,12 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 
 /**
  * A basic sprite that can be extended. With the strategy pattern for the basic actions.
@@ -22,7 +19,8 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
 
     public Shape2D shape;
     public Device device;
-    public Array<Disposable> extensions=new Array<Disposable>(4);
+    public com.mygdx.game.TextSprite.TextExtension textExtension;
+    public com.mygdx.game.Buttons.ButtonExtension buttonExtension;
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
     public SpriteKeepVisible spriteKeepVisible;
@@ -35,14 +33,20 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * Reset the sprite before putting it back in the pool. Disposes extensions.
      */
     public void reset(){
+        if (textExtension!=null){
+            textExtension.free();
+            textExtension=null;
+        }
+        if (buttonExtension!=null){
+            buttonExtension.free();
+            buttonExtension=null;
+        }
         shape = null;
         setTexture(null);
-        for (Disposable extension:extensions){
-            extension.dispose();
-            extension=null;
-        }
-        extensions.clear();
-        L.og("reset");
+        setContains(null);
+        setKeepVisible(null);
+        setTouchBegin(null);
+        setTouchEnd(null);
     }
 
     /**
@@ -53,27 +57,13 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
-     * Add a disposable object to the array of extensions.
+     * Set the text of a text extension.
      *
-     * @param extension Object, the new extension to add
+     * @param theText String, text to set
      */
-    public void addExtension(Disposable extension){
-        extensions.add(extension);
+    public void setText(String theText){
+        textExtension.setText(theText,this);
     }
-
-    /**
-     * Set the text of text extensions.
-     *
-     * @param text String, the text to set
-     */
-    public void setText(String text) {
-        for (Object extension : extensions) {
-            if (extension instanceof TextExtension) {
-                ((TextExtension) extension).setText(text,this);
-            }
-        }
-    }
-
     /**
      * Get the angle of the sprite.
      *
