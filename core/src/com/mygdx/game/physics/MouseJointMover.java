@@ -1,20 +1,24 @@
 package com.mygdx.game.physics;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
+import com.mygdx.game.utilities.L;
 
 /**
  * Moving sprite with a mouse joint and touch.
  * Move methods are basic and set before others in the sprite builder.
+ * Attention: Static bodies have localCenter=0, always.
  */
 
 public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd {
     private MouseJoint mouseJoint;
     private Vector2 target=new Vector2();
+    public boolean useStaticBodies=false;
 
     /**
      * Start move: Create the mouseJoint and set target.
@@ -26,6 +30,9 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
     @Override
     public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
+        if (useStaticBodies){
+            physicalSprite.body.setType(BodyDef.BodyType.DynamicBody);
+        }
         JointBuilder jointBuilder=physicalSprite.physics.jointBuilder;
         mouseJoint=jointBuilder.buildMouseJoint(physicalSprite,touchPosition);
         return false;
@@ -56,6 +63,18 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         physicalSprite.physics.world.destroyJoint(mouseJoint);
         mouseJoint=null;
+        if (useStaticBodies){
+            L.og("dyn body "+physicalSprite.body.getLocalCenter().toString());
+            L.og("dyn spy "+physicalSprite.getWorldOriginY());
+            physicalSprite.body.setType(BodyDef.BodyType.StaticBody);
+            L.og("stat body"+physicalSprite.body.getLocalCenter().toString());
+            L.og("stat spy "+physicalSprite.getWorldOriginY());
+
+        }
+        else {
+            physicalSprite.body.setAngularVelocity(0);
+            physicalSprite.body.setLinearVelocity(0, 0);
+        }
         return false;
     }
 }

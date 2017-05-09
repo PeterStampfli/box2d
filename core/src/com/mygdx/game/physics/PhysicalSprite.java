@@ -57,6 +57,7 @@ public class PhysicalSprite extends ExtensibleSprite {
      * be at the sprites "origin" for rotation. Convert lengths.
      * Sets the body data used for interpolation.
      * Note that the local center (of mass) rotates with the body around it's "position".
+     * Attention: For static bodies worldCenter==position, localCenter==0.
      */
     public void setPositionAngleOfBody(){
         float angle=getAngle();

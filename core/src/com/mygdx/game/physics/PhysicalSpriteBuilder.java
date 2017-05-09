@@ -34,11 +34,14 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     /**
      * Use the mouseJoint to move the sprite. Use the bodies shapes for contains method.
      * Sets the basic methods for physical sprite.
+     *
+     * @param useStaticBodies boolean, true for making nonmoving bodies static
      */
-    public void setMouseJoint(){
+    public void setMouseJoint(boolean useStaticBodies){
         if (mouseJointMover==null){
             mouseJointMover=new MouseJointMover();
         }
+        mouseJointMover.useStaticBodies=useStaticBodies;
         setContains(physicalSpriteActions.bodyContains);
         setKeepVisible(spriteActions.keepVisibleNull);
         setDraw(spriteActions.drawSuper);

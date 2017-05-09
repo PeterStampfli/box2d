@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -140,7 +141,7 @@ public class Physics implements Disposable {
     }
 
     /**
-     * Set the positions and angles of all PhysicalSprite userData objects.
+     * Set the positions and angles of all PhysicalSprite userData objects that have dynamic bodies.
      * Updates the Array of bodies if some bodies may have been destroyed or created in the world step.
      */
     public void setPhysicsData() {
@@ -148,7 +149,7 @@ public class Physics implements Disposable {
         updateBodies();
         for (Body body : bodies) {
             userData = body.getUserData();
-            if (userData instanceof PhysicalSprite) {
+            if ((body.getType()== BodyDef.BodyType.DynamicBody)&&(userData instanceof PhysicalSprite)) {
                 ((PhysicalSprite) userData).readPositionAngleOfBody();
             }
         }
@@ -157,6 +158,7 @@ public class Physics implements Disposable {
     /**
      * Let the PhysicalSprite userData objects interpolate positions and angles to give the data at graphics time.
      * progress=1 gets the new physics data, progress=0 gets the previous physics data.
+     * For static body use last position as dynamic body and fix progress=1.
      *
      * @param progress float, interpolation parameter
      */
@@ -166,7 +168,12 @@ public class Physics implements Disposable {
         for (Body body : bodies) {
             userData = body.getUserData();
             if (userData instanceof PhysicalSprite) {
-                ((PhysicalSprite) userData).interpolateSpritePositionAngle(progress);
+                if (body.getType()== BodyDef.BodyType.DynamicBody) {
+                    ((PhysicalSprite) userData).interpolateSpritePositionAngle(progress);
+                }
+                else {
+                    ((PhysicalSprite) userData).interpolateSpritePositionAngle(1);
+                }
             }
         }
     }
