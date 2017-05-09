@@ -19,6 +19,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     static final public int PRESSED=2;
 
     public ExtensibleSprite sprite;
+    public Choice choice;
 
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
