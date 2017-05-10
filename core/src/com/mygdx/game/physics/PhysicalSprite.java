@@ -70,15 +70,12 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      */
     public void setPositionAngleOfBody(){
         float angle=getAngle();
-        // get the world center for position (0,0): set the body angle
-        body.setTransform(0,0,angle);
-
-
-
-        Vector2 rotatedLocalCenter=body.getWorldCenter();
-        // set body origin using that the center of the body should be at the world origin of the sprite
-        body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER-rotatedLocalCenter.x,
-                getWorldOriginY()/Physics.PIXELS_PER_METER-rotatedLocalCenter.y,angle);
+        float sinAngle=MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        float bodyPositionX=getWorldOriginX()-cosAngle*getOriginX()+sinAngle*getOriginY();
+        float bodyPositionY=getWorldOriginY()-sinAngle*getOriginX()-cosAngle*getOriginY();
+        body.setTransform(bodyPositionX/Physics.PIXELS_PER_METER,
+                          bodyPositionY/Physics.PIXELS_PER_METER,angle);
         // set interpolation data to new position
         previousBodyAngle=getAngle();
         newBodyAngle=getAngle();
@@ -241,7 +238,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
 
     /**
      * set angle and position of sprite from linear interpolation
-     * between previous and new data of the body. Take into account rotated body origin.
+     * between previous and new data of the body. Take into account rotated origin (body mass center).
      *
      * progress=1 for graphics time equal to time of new physics data
      * progress=0 for graphics time equal to time of previous physics data
@@ -249,12 +246,14 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param progress float, progress between previous to new data, from 0 to 1
      */
     public void interpolatePositionAngleOfBody(float progress){
-
         float angle=MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress);
-
-        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress));
-        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress));
-        super.setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));
+        float sinAngle=MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress)
+                              +cosAngle*getOriginX()-sinAngle*getOriginY());
+        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress)
+                              +sinAngle*getOriginX()+cosAngle*getOriginY());
+        super.setAngle(angle);
     }
 
 }

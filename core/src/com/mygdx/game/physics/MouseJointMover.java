@@ -7,7 +7,6 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
-import com.mygdx.game.utilities.L;
 
 /**
  * Moving sprite with a mouse joint and touch.
@@ -64,12 +63,8 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
         physicalSprite.physics.world.destroyJoint(mouseJoint);
         mouseJoint=null;
         if (useStaticBodies){
-            L.og("dyn body "+physicalSprite.body.getLocalCenter().toString());
-            L.og("dyn spy "+physicalSprite.getWorldOriginY());
             physicalSprite.body.setType(BodyDef.BodyType.StaticBody);
-            L.og("stat body"+physicalSprite.body.getLocalCenter().toString());
-            L.og("stat spy "+physicalSprite.getWorldOriginY());
-
+            physicalSprite.interpolatePositionAngleOfBody(1);
         }
         else {
             physicalSprite.body.setAngularVelocity(0);

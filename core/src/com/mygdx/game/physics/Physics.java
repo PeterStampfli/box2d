@@ -149,7 +149,7 @@ public class Physics implements Disposable {
         updateBodies();
         for (Body body : bodies) {
             userData = body.getUserData();
-            if ((body.getType()== BodyDef.BodyType.DynamicBody)&&(userData instanceof BodyFollower)) {
+            if ((body.getType()!= BodyDef.BodyType.StaticBody)&&(userData instanceof BodyFollower)) {
                 ((BodyFollower) userData).readPositionAngleOfBody();
             }
         }
@@ -167,13 +167,8 @@ public class Physics implements Disposable {
         updateBodies();
         for (Body body : bodies) {
             userData = body.getUserData();
-            if (userData instanceof BodyFollower) {
-                if (body.getType()== BodyDef.BodyType.DynamicBody) {
+            if ((body.getType()!= BodyDef.BodyType.StaticBody)&&(userData instanceof BodyFollower)) {
                     ((BodyFollower) userData).interpolatePositionAngleOfBody(progress);
-                }
-                else {
-                    ((BodyFollower) userData).interpolatePositionAngleOfBody(1);
-                }
             }
         }
     }
