@@ -47,6 +47,9 @@ public class ButtonActions {
         public boolean touchEnd(ButtonExtension button){return false;}
     };
 
+    /**
+     * TouchBegin: Make that button appears pressed
+     */
     public ButtonTouchBegin touchBeginPressed=new ButtonTouchBegin() {
         @Override
         public boolean touchBegin(ButtonExtension buttonExtension) {
@@ -55,6 +58,9 @@ public class ButtonActions {
         }
     };
 
+    /**
+     *TouchEnd: Simply make action, does not change button state
+     */
     public ButtonTouchEnd touchEndAct=new ButtonTouchEnd() {
         @Override
         public boolean touchEnd(ButtonExtension buttonExtension) {
