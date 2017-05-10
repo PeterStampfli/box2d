@@ -14,7 +14,7 @@ public class BodyBuilder {
     private Physics physics;
 
     /**
-     * Creates and resets the bodydef.
+     * Creates and resets the bodyDef.
      *
      * @param physics Physics, We need physics and the world to create the body.
      */

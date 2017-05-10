@@ -3,18 +3,19 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * A sprite with a body, using physics for motion
  */
 
-public class PhysicalSprite extends ExtensibleSprite {
+public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     Physics physics;
     public Body body;
     private float previousBodyAngle, newBodyAngle;
-    private float previousBodyWorldCenterX, newBodyWorldCenterX;   // using pixel units
-    private float previousBodyWorldCenterY, newBodyWorldCenterY;
+    private float previousBodyPositionX, newBodyPositionX;   // using pixel units
+    private float previousBodyPositionY, newBodyPositionY;
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -44,10 +45,18 @@ public class PhysicalSprite extends ExtensibleSprite {
      * In local coordinates. Zero is left bottom corner of the TextureRegion.
      * Scales from physics dimensions to graphics. Call after creating all fixtures.
      * Note that the local origin does not depend on translation and rotation.
+     * Attention: Only valid for dynamical bodies. For other bodies switch to dynamical body and back.
      */
     public void setLocalOrigin(){
+        BodyDef.BodyType bodyType=body.getType();
+        if (bodyType!= BodyDef.BodyType.DynamicBody){
+            body.setType(BodyDef.BodyType.DynamicBody);
+        }
         Vector2 bodyCenter=body.getLocalCenter();
         setLocalOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
+        if (bodyType!= BodyDef.BodyType.DynamicBody){
+            body.setType(bodyType);
+        }
     }
 
     // placing and rotating the sprite: Do same for the body!
@@ -63,6 +72,9 @@ public class PhysicalSprite extends ExtensibleSprite {
         float angle=getAngle();
         // get the world center for position (0,0): set the body angle
         body.setTransform(0,0,angle);
+
+
+
         Vector2 rotatedLocalCenter=body.getWorldCenter();
         // set body origin using that the center of the body should be at the world origin of the sprite
         body.setTransform(getWorldOriginX()/Physics.PIXELS_PER_METER-rotatedLocalCenter.x,
@@ -70,10 +82,10 @@ public class PhysicalSprite extends ExtensibleSprite {
         // set interpolation data to new position
         previousBodyAngle=getAngle();
         newBodyAngle=getAngle();
-        previousBodyWorldCenterX=getWorldOriginX();
-        newBodyWorldCenterX=getWorldOriginX();
-        previousBodyWorldCenterY=getWorldOriginY();
-        newBodyWorldCenterY=getWorldOriginY();
+        previousBodyPositionX =getWorldOriginX();
+        newBodyPositionX =getWorldOriginX();
+        previousBodyPositionY =getWorldOriginY();
+        newBodyPositionY =getWorldOriginY();
     }
 
     /**
@@ -219,26 +231,29 @@ public class PhysicalSprite extends ExtensibleSprite {
      */
     public void readPositionAngleOfBody(){
         previousBodyAngle = newBodyAngle;
-        previousBodyWorldCenterX = newBodyWorldCenterX;
-        previousBodyWorldCenterY = newBodyWorldCenterY;
+        previousBodyPositionX = newBodyPositionX;
+        previousBodyPositionY = newBodyPositionY;
         newBodyAngle =body.getAngle();
-        Vector2 bodyCenter=body.getWorldCenter();
-        newBodyWorldCenterX =bodyCenter.x*Physics.PIXELS_PER_METER;
-        newBodyWorldCenterY =bodyCenter.y*Physics.PIXELS_PER_METER;
+        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
+        newBodyPositionX =bodyPosition.x;
+        newBodyPositionY =bodyPosition.y;
     }
 
     /**
      * set angle and position of sprite from linear interpolation
-     * between previous and new data of the body.
+     * between previous and new data of the body. Take into account rotated body origin.
      *
      * progress=1 for graphics time equal to time of new physics data
      * progress=0 for graphics time equal to time of previous physics data
      *
      * @param progress float, progress between previous to new data, from 0 to 1
      */
-    public void interpolateSpritePositionAngle(float progress){
-        super.setWorldOriginX(MathUtils.lerp(previousBodyWorldCenterX, newBodyWorldCenterX,progress));
-        super.setWorldOriginY(MathUtils.lerp(previousBodyWorldCenterY, newBodyWorldCenterY,progress));
+    public void interpolatePositionAngleOfBody(float progress){
+
+        float angle=MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress);
+
+        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress));
+        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress));
         super.setAngle(MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress));
     }
 

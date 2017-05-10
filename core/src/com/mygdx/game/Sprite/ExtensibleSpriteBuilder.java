@@ -7,6 +7,7 @@ import com.mygdx.game.utilities.Device;
 
 /**
  * Getting extensible sprites from the pool and setting their basic actions. No extensions.
+ * Set position and angle later.
  */
 
 public class ExtensibleSpriteBuilder {
