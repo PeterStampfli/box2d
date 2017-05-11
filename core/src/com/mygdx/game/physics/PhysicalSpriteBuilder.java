@@ -3,6 +3,7 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.utilities.Device;
 
@@ -52,28 +53,11 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     }
 
     /**
-     * Set the sprite data. Add the body. Attach fixtures to the body. Set sprite origin.
-     * Note that the local origin of the body does not
-     *
-     * @param sprite ExtensibleSprite, or subtype, to set up.
-     * @param textureRegion TextureRegion, image
-     * @param shape Shape2D, shape
-     * @param body Body, body to add to sprite
-     */
-    public void setup(PhysicalSprite sprite, TextureRegion textureRegion, Shape2D shape,Body body) {
-        setup(sprite,textureRegion,shape);
-        sprite.body=body;
-        sprite.physics=physics;
-        body.setUserData(sprite);
-        physics.fixtureBuilder.build(body,shape);
-        sprite.setLocalOrigin();
-    }
-
-    /**
      * Get a physical sprite from the sprite pool. Set image and other data.
      * Attach a body and create its fixtures from shape.
      * Set local origin of the sprite from center of mass of the body.
      * Position and angle of sprite and body will be set afterwards.
+     * If body has mouseJointMover then make it static.
      *
      * Note: We can't set the position of the origin without knowing the center of
      * mass of the body. Thus we have to create the body before setting its position.
@@ -85,7 +69,15 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
-        setup(sprite,textureRegion,shape,body);
+        setup(sprite,textureRegion,shape);                         // ExtensibleSprite
+        sprite.body=body;
+        sprite.physics=physics;
+        body.setUserData(sprite);
+        if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)){
+            body.setType(BodyDef.BodyType.StaticBody);
+        }
+        physics.fixtureBuilder.build(body,shape);
+        sprite.setLocalOrigin();
         return sprite;
     }
 
@@ -104,7 +96,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * @return
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape){
-        Body body=physics.bodyBuilder.setDynamicalBody().build();
+        Body body=physics.bodyBuilder.buildDynamicalBody(null);
         return buildPhysical(textureRegion,shape,body);
     }
 }

@@ -30,7 +30,6 @@ public class BodyBuilder {
      * @return this, for chaining
      */
     public BodyBuilder reset() {
-        setDynamicalBody();
         setAngle(0);
         setIsBullet(false);
         setFixedRotation(false);
@@ -43,66 +42,6 @@ public class BodyBuilder {
         setAngularDamping(0.3f);
         setLinearDamping(0.3f);
         return this;
-    }
-
-    /**
-     * Set the bodyDef to be the same as of another body.
-     *
-     * @param body Body, to copy the bodyDef data
-     * @return this
-     */
-    public BodyBuilder sameAs(Body body) {
-        setBodyType(body.getType());
-        setAngle(body.getAngle());
-        setIsBullet(body.isBullet());
-        setFixedRotation(body.isFixedRotation());
-        setGravityScale(body.getGravityScale());
-        setAllowSleep(body.isSleepingAllowed());
-        setIsActive(body.isActive());
-        setIsAwake(body.isAwake());
-        setAngularDamping(body.getAngularDamping());
-        setLinearDamping(body.getLinearDamping());
-        setAngularVelocity(body.getAngularVelocity());
-        bodyDef.linearVelocity.set(body.getLinearVelocity());  // do not scale
-        return this;
-    }
-
-    /**
-     * Set the body type.
-     *
-     * @param bodyType BodyDef.BodyType, dynamic, static or kinematic
-     * @return this
-     */
-    public BodyBuilder setBodyType(BodyDef.BodyType bodyType) {
-        bodyDef.type = bodyType;
-        return this;
-    }
-
-    /**
-     * Set to dynamical body type.
-     *
-     * @return this
-     */
-    public BodyBuilder setDynamicalBody() {
-        return setBodyType(BodyDef.BodyType.DynamicBody);
-    }
-
-    /**
-     * Set to static body type.
-     *
-     * @return this
-     */
-    public BodyBuilder setStaticBody() {
-        return setBodyType(BodyDef.BodyType.StaticBody);
-    }
-
-    /**
-     * Set to kinematic body type.
-     *
-     * @return this
-     */
-    public BodyBuilder setKinematicBody() {
-        return setBodyType(BodyDef.BodyType.KinematicBody);
     }
 
     /**
@@ -280,9 +219,9 @@ public class BodyBuilder {
      * @param shape Shape2D, shape or shape collection to attach to the body
      * @return Body, a box2D body.
      */
-    public Body build(Shape2D shape){
+    private Body build(Shape2D shape){
         Body body=build();
-        physics.fixtureBuilder.build(body,shape);
+        if (shape!=null) physics.fixtureBuilder.build(body,shape);
         return body;
     }
 
@@ -293,7 +232,7 @@ public class BodyBuilder {
      * @return Body, a box2D body.
      */
     public Body buildStaticBody(Shape2D shape){
-        setStaticBody();
+        bodyDef.type= BodyDef.BodyType.StaticBody;
         return build(shape);
     }
 
@@ -304,7 +243,7 @@ public class BodyBuilder {
      * @return Body, a box2D body.
      */
     public Body buildDynamicalBody(Shape2D shape){
-        setDynamicalBody();
+        bodyDef.type= BodyDef.BodyType.DynamicBody;
         return build(shape);
     }
 
@@ -315,7 +254,7 @@ public class BodyBuilder {
      * @return Body, a box2D body.
      */
     public Body buildKinematicBody(Shape2D shape){
-        setKinematicBody();
+        bodyDef.type= BodyDef.BodyType.KinematicBody;
         return build(shape);
     }
 }
