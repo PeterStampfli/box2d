@@ -46,7 +46,7 @@ public class TouchableCollection implements Touchable {
     /**
      * Get index of a touchable in the array.
      * @param touchable
-     * @return int, index of touchable or -1 if not found
+     * @return int, last index of touchable or -1 if not found
      */
     public int getIndex(Touchable touchable){
         return touchables.lastIndexOf(touchable,true);

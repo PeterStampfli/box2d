@@ -54,6 +54,22 @@ public class ButtonCollection extends TouchableCollection {
     }
 
     /**
+     * Remove a given touchable object, using identity. Searches all. Removes multiple occurencies.
+     * If it is a button sets its buttonExtension collection to null.
+     *
+     * @param toRemove Touchable, to remove
+     * @return true if something has been removed
+     */
+    public boolean remove(Touchable toRemove) {
+        boolean success = super.remove(toRemove);
+        ButtonExtension buttonExtension=getButtonExtension(toRemove);
+        if (buttonExtension!=null){
+            buttonExtension.collection=null;
+        }
+        return success;
+    }
+
+    /**
      * set state of all buttons to up, except if they are locked.
      */
     public void setStatesUp(){

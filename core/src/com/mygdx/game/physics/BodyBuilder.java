@@ -36,19 +36,12 @@ public class BodyBuilder {
         setFixedRotation(false);
         setGravityScale(1);
         setAllowSleep(true);
-
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.angle = 0;
-        bodyDef.bullet = false;
-        bodyDef.fixedRotation = false;
-        bodyDef.gravityScale = 1;
-        bodyDef.allowSleep = true;
-        bodyDef.active = true;
-        bodyDef.awake = true;
-        bodyDef.angularVelocity = 0;
-        bodyDef.linearVelocity.setZero();
-        bodyDef.angularDamping = 0;
-        bodyDef.linearDamping = 0;
+        setIsActive(true);
+        setIsAwake(true);
+        setAngularVelocity(0);
+        setLinearVelocity(0,0);
+        setAngularDamping(0.3f);
+        setLinearDamping(0.3f);
         return this;
     }
 
@@ -59,18 +52,18 @@ public class BodyBuilder {
      * @return this
      */
     public BodyBuilder sameAs(Body body) {
-        bodyDef.type = body.getType();
-        bodyDef.angle = body.getAngle();
-        bodyDef.bullet = body.isBullet();
-        bodyDef.fixedRotation = body.isFixedRotation();
-        bodyDef.gravityScale = body.getGravityScale();
-        bodyDef.allowSleep = body.isSleepingAllowed();
-        bodyDef.active = body.isActive();
-        bodyDef.awake = body.isAwake();
-        bodyDef.angularVelocity = body.getAngularVelocity();
-        bodyDef.linearVelocity.set(body.getLinearVelocity());
-        bodyDef.angularDamping = body.getAngularDamping();
-        bodyDef.linearDamping = body.getLinearDamping();
+        setBodyType(body.getType());
+        setAngle(body.getAngle());
+        setIsBullet(body.isBullet());
+        setFixedRotation(body.isFixedRotation());
+        setGravityScale(body.getGravityScale());
+        setAllowSleep(body.isSleepingAllowed());
+        setIsActive(body.isActive());
+        setIsAwake(body.isAwake());
+        setAngularDamping(body.getAngularDamping());
+        setLinearDamping(body.getLinearDamping());
+        setAngularVelocity(body.getAngularVelocity());
+        bodyDef.linearVelocity.set(body.getLinearVelocity());  // do not scale
         return this;
     }
 
@@ -304,7 +297,6 @@ public class BodyBuilder {
         return build(shape);
     }
 
-
     /**
      * Build a dynamical body without user data. Build fixtures defined by the Shape2D shape.
      *
@@ -316,5 +308,14 @@ public class BodyBuilder {
         return build(shape);
     }
 
-
+    /**
+     * Build a kinematic body without user data. Build fixtures defined by the Shape2D shape.
+     *
+     * @param shape Shape2D, shape or shape collection to attach to the body
+     * @return Body, a box2D body.
+     */
+    public Body buildKinematicBody(Shape2D shape){
+        setKinematicBody();
+        return build(shape);
+    }
 }
