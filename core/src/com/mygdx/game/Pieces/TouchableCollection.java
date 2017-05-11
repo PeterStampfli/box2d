@@ -25,7 +25,7 @@ public class TouchableCollection implements Touchable {
     }
 
     /**
-     * Remove a given touchable object, using identity. Searches all.
+     * Remove a given touchable object, using identity. Searches all. Removes multiple occurencies.
      *
      * @param toRemove Touchable, to remove
      * @return true if something has been removed
@@ -41,6 +41,28 @@ public class TouchableCollection implements Touchable {
             success = true;
         }
         return success;
+    }
+
+    /**
+     * Get index of a touchable in the array.
+     * @param touchable
+     * @return int, index of touchable or -1 if not found
+     */
+    public int getIndex(Touchable touchable){
+        return touchables.lastIndexOf(touchable,true);
+    }
+
+    /**
+     * Get touchable with given index. or null if index is negative.
+     *
+     * @param i
+     * @return Touchable, of index i, or null
+     */
+    public Touchable get(int i){
+        if (i<0){
+            return null;
+        }
+        return touchables.get(i);
     }
 
     /**
