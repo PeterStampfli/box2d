@@ -15,7 +15,7 @@ public class FixtureBuilder {
     public FixtureDef fixtureDef;
 
     /**
-     * Create a fixturebuilder with default fixtureDef data.
+     * Create a fixtureBuilder with default fixtureDef data.
      */
     public FixtureBuilder() {
         fixtureDef = new FixtureDef();

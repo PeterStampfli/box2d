@@ -215,13 +215,16 @@ public class BodyBuilder {
 
     /**
      * Build the body without user data. Build fixtures defined by the Shape2D shape.
+     * Fixtures are not sensors.
      *
      * @param shape Shape2D, shape or shape collection to attach to the body
      * @return Body, a box2D body.
      */
     private Body build(Shape2D shape){
         Body body=build();
-        if (shape!=null) physics.fixtureBuilder.build(body,shape);
+        if (shape!=null) {
+            physics.fixtureBuilder.setIsSensor(false).build(body,shape);
+        }
         return body;
     }
 

@@ -59,6 +59,33 @@ public class ButtonActions {
     };
 
     /**
+     * Makes that this button is the only pressed one in a collection. For selection buttons.
+     */
+    public ButtonTouchBegin touchBeginSelect=new ButtonTouchBegin() {
+        @Override
+        public boolean touchBegin(ButtonExtension buttonExtension) {
+            buttonExtension.collection.select(buttonExtension);
+            return true;
+        }
+    };
+
+    /**
+     * Change the state from up to pressed and inverse. For switching something.
+     */
+    public ButtonTouchBegin touchBeginToggle=new ButtonTouchBegin() {
+        @Override
+        public boolean touchBegin(ButtonExtension buttonExtension) {
+            if (buttonExtension.state==ButtonExtension.UP){
+                buttonExtension.setStatePressed();
+            }
+            else {
+                buttonExtension.setStateUp();                   // does not changed if locked
+            }
+            return true;
+        }
+    };
+
+    /**
      *TouchEnd: Simply make action, does not change button state
      */
     public ButtonTouchEnd touchEndAct=new ButtonTouchEnd() {
@@ -66,6 +93,16 @@ public class ButtonActions {
         public boolean touchEnd(ButtonExtension buttonExtension) {
             L.og("touchend");
             return buttonExtension.act();
+        }
+    };
+
+    /**
+     * button touch end: make action and put button to up. For single event buttons.
+     */
+    public ButtonTouchEnd touchEndActUp=new ButtonTouchEnd() {
+        @Override
+        public boolean touchEnd(ButtonExtension buttonExtension) {
+            return false;
         }
     };
 }

@@ -73,11 +73,11 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         sprite.body=body;
         sprite.physics=physics;
         body.setUserData(sprite);
+        physics.fixtureBuilder.setIsSensor(false).build(body,shape);
+        sprite.setLocalOrigin();
         if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)){
             body.setType(BodyDef.BodyType.StaticBody);
         }
-        physics.fixtureBuilder.build(body,shape);
-        sprite.setLocalOrigin();
         return sprite;
     }
 

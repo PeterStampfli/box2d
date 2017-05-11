@@ -76,13 +76,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
         float bodyPositionY=getWorldOriginY()-sinAngle*getOriginX()-cosAngle*getOriginY();
         body.setTransform(bodyPositionX/Physics.PIXELS_PER_METER,
                           bodyPositionY/Physics.PIXELS_PER_METER,angle);
-        // set interpolation data to new position
-        previousBodyAngle=getAngle();
-        newBodyAngle=getAngle();
-        previousBodyPositionX =getWorldOriginX();
-        newBodyPositionX =getWorldOriginX();
-        previousBodyPositionY =getWorldOriginY();
-        newBodyPositionY =getWorldOriginY();
+        // set interpolation data (newAngle and newPosition)
+        readPositionAngleOfBody();
     }
 
     /**
