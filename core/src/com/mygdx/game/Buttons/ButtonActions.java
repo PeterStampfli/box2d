@@ -3,7 +3,6 @@ package com.mygdx.game.Buttons;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.mygdx.game.Sprite.ExtensibleSprite;
-import com.mygdx.game.utilities.L;
 
 /**
  * Basic button methods
@@ -91,7 +90,6 @@ public class ButtonActions {
     public ButtonTouchEnd touchEndAct=new ButtonTouchEnd() {
         @Override
         public boolean touchEnd(ButtonExtension buttonExtension) {
-            L.og("touchend");
             return buttonExtension.act();
         }
     };
@@ -102,7 +100,8 @@ public class ButtonActions {
     public ButtonTouchEnd touchEndActUp=new ButtonTouchEnd() {
         @Override
         public boolean touchEnd(ButtonExtension buttonExtension) {
-            return false;
+            buttonExtension.setStateUp();
+            return buttonExtension.act();
         }
     };
 }
