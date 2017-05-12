@@ -10,7 +10,7 @@ import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
 
 /**
- * Extension to give button functions to a sprite.
+ * Extension to give button functions to a sprite. Without the actual button command.
  */
 
 public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchEnd {
@@ -30,7 +30,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     SpriteDraw previousDraw;
 
 
-    public ButtonExtension(ButtonActions buttonActions,ExtensibleSprite sprite){
+    public ButtonExtension(ExtensibleSprite sprite){
         state=UP;
         this.sprite=sprite;
         sprite.buttonExtension=this;
@@ -38,10 +38,6 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
         sprite.setDraw(this);
         sprite.setTouchBegin(this);
         sprite.setTouchEnd(this);
-        setButtonDraw(buttonActions.drawTinted);
-        setButtonAct(buttonActions.actNull);
-        setButtonTouchBegin(buttonActions.touchBeginNull);
-        setButtonTouchEnd(buttonActions.touchEndNull);
     }
 
     /**
