@@ -24,6 +24,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     public SpriteContains spriteContains;
     public SpriteDraw spriteDraw;
     public SpriteKeepVisible spriteKeepVisible;
+
     public SpriteTouchBegin spriteTouchBegin;
     public SpriteTouchDrag spriteTouchDrag;
     public SpriteTouchEnd spriteTouchEnd;
@@ -203,7 +204,9 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
         setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
     }
 
-    // the composable actions
+    // the composable actions: basics
+    // set in spriteBuilder
+
 
     /**
      * Set the object that implements SpriteContains.
@@ -361,7 +364,6 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
         this.spriteScroll = spriteScroll;
     }
 
-
     /**
      * Call the scroll method of the spriteScroll object.
      *
@@ -372,5 +374,39 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     @Override
     public boolean scroll(Vector2 position, int amount) {
         return spriteScroll.scroll(this, position, amount);
+    }
+
+    // additional effects as decorations. Add to sprite after it has been built
+    // by the spriteBuilder.
+
+
+
+
+    public SpriteDraw getDraw() {
+        return spriteDraw;
+    }
+
+    public SpriteTouchBegin getTouchBegin() {
+        return spriteTouchBegin;
+    }
+
+
+    /**
+     * Add an effect to touchBegin
+     *
+     * @param effect SpriteEffect object with the effect method
+     * @return ExtensibleSprite, for chaining
+     */
+    public ExtensibleSprite addTouchBeginEffect(SpriteEffect effect){
+        new SpriteTouchBeginEffect(this,effect);
+        return this;
+    }
+
+    public SpriteTouchDrag getTouchDrag() {
+        return spriteTouchDrag;
+    }
+
+    public SpriteTouchEnd getTouchEnd() {
+        return spriteTouchEnd;
     }
 }
