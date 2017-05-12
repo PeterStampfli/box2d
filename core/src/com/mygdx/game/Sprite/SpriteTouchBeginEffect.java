@@ -3,19 +3,18 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Decorator for the touchBegin method
+ * A decorator for adding an effect to spriteTouchBegin
  */
 
 public class SpriteTouchBeginEffect implements SpriteTouchBegin {
-
     SpriteTouchBegin previousTouchBegin;
     SpriteEffect effect;
 
     /**
      * Create a SpriteTouchBegin object with an effect and add it as a decoration to a sprite.
      *
-     * @param sprite
-     * @param effect
+     * @param sprite ExtensibleSprite, to which we attach the effect
+     * @param effect SpriteEffect
      */
     public SpriteTouchBeginEffect(ExtensibleSprite sprite, SpriteEffect effect){
         previousTouchBegin=sprite.getTouchBegin();

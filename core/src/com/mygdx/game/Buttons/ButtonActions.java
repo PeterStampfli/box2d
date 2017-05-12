@@ -23,14 +23,6 @@ public class ButtonActions {
     };
 
     /**
-     * ButtonAct: does nothing.
-     */
-    public ButtonAct actNull =new ButtonAct(){
-        @Override
-        public boolean act(ButtonExtension button){return false;}
-    };
-
-    /**
      * ButtonTouchBegin: does nothing.
      */
     public ButtonTouchBegin touchBeginNull=new ButtonTouchBegin(){
@@ -85,23 +77,13 @@ public class ButtonActions {
     };
 
     /**
-     *TouchEnd: Simply make action, does not change button state
-     */
-    public ButtonTouchEnd touchEndAct=new ButtonTouchEnd() {
-        @Override
-        public boolean touchEnd(ButtonExtension buttonExtension) {
-            return buttonExtension.act();
-        }
-    };
-
-    /**
      * button touch end: make action and put button to up. For single event buttons.
      */
-    public ButtonTouchEnd touchEndActUp=new ButtonTouchEnd() {
+    public ButtonTouchEnd touchEndUp=new ButtonTouchEnd() {
         @Override
         public boolean touchEnd(ButtonExtension buttonExtension) {
             buttonExtension.setStateUp();
-            return buttonExtension.act();
+            return true;
         }
     };
 }

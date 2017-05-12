@@ -8,7 +8,6 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 
 public class ButtonBuilder {
     ButtonActions buttonActions;
-    ButtonAct buttonAct;
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
@@ -19,20 +18,8 @@ public class ButtonBuilder {
      */
     public ButtonBuilder(){
         buttonActions=new ButtonActions();
-        buttonAct=buttonActions.actNull;
         buttonDraw=buttonActions.drawTinted;
         setPressButton();
-    }
-
-    /**
-     * Set the act-method.
-     *
-     * @param buttonAct ButtonAct, object with act-method
-     * @return ButtonBuilder, for chaining
-     */
-    public ButtonBuilder setAct(ButtonAct buttonAct){
-        this.buttonAct=buttonAct;
-        return this;
     }
 
     /**
@@ -75,7 +62,7 @@ public class ButtonBuilder {
      */
     public ButtonBuilder setPressButton(){
         buttonTouchBegin=buttonActions.touchBeginPressed;
-        buttonTouchEnd=buttonActions.touchEndActUp;
+        buttonTouchEnd=buttonActions.touchEndUp;
         return this;
     }
 
@@ -88,7 +75,7 @@ public class ButtonBuilder {
     public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
         this.buttonCollection=buttonCollection;
         buttonTouchBegin=buttonActions.touchBeginSelect;
-        buttonTouchEnd=buttonActions.touchEndAct;
+        buttonTouchEnd=buttonActions.touchEndNull;
         return this;
     }
 
@@ -100,7 +87,6 @@ public class ButtonBuilder {
      */
     public ButtonExtension build(ExtensibleSprite sprite){
         ButtonExtension buttonExtension=new ButtonExtension(sprite);
-        buttonExtension.setButtonAct(buttonAct);
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);

@@ -11,8 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.Buttons.ButtonAct;
 import com.mygdx.game.Buttons.ButtonActions;
+import com.mygdx.game.Buttons.ButtonBuilder;
+import com.mygdx.game.Buttons.ButtonCollection;
 import com.mygdx.game.Buttons.ButtonExtension;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
@@ -20,7 +21,8 @@ import com.mygdx.game.Images.Polypoint;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMove;
-import com.mygdx.game.Pieces.TouchableCollection;
+import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.Sprite.SpriteEffect;
 import com.mygdx.game.TextSprite.SmallTextExtension;
 import com.mygdx.game.physics.BodyBuilder;
 import com.mygdx.game.physics.FixtureBuilder;
@@ -54,7 +56,7 @@ public class Box2d extends ApplicationAdapter {
 	Physics physics;
 	Edge edge;
 	MouseJoint mouseJoint;
-	TouchableCollection touchableCollection=new TouchableCollection();
+	ButtonCollection buttonCollection =new ButtonCollection();
 
 	@Override
 	public void create () {
@@ -80,7 +82,7 @@ public class Box2d extends ApplicationAdapter {
 		dotsAndLines.add(10,10,190,10,90,170,30,150);
 		Polygon polygon=dotsAndLines.getPolygon();
 
-				Mask mask=new Mask(200,200);
+		Mask mask=new Mask(200,200);
 
 		mask.fill(polygon);
 		//mask.invert();
@@ -105,17 +107,16 @@ public class Box2d extends ApplicationAdapter {
 		JointBuilder jointBuilder=physics.jointBuilder;
 
 		fixtureBuilder.setFriction(0.7f);
-		bodyBuilder.setStaticBody();
 		 edge=new Edge(-1000,10,1000,10);
 		Body ground=bodyBuilder.setPosition(0,0).buildStaticBody(edge);
 
 		Body top=bodyBuilder.setPosition(250,350).buildStaticBody(new Circle(0,0,20));
 
-
+		jointBuilder.setFrequencyHz(2);
 
 		PhysicalSpriteBuilder physicalSpriteBuilder=new PhysicalSpriteBuilder(device,physics);
 		physicalSpriteBuilder.setContains(physicalSpriteBuilder.physicalSpriteActions.bodyContains);
-		//physicalSpriteBuilder.setMouseJoint();
+		//physicalSpriteBuilder.setMouseJoint(true);
 
 
 		extensibleSprite=physicalSpriteBuilder.buildPhysical(img,polygon);
@@ -123,26 +124,54 @@ public class Box2d extends ApplicationAdapter {
 
 		extensibleSprite.setColor(Color.FIREBRICK);
 
-		extensibleSprite.setWorldOriginAngle(100,300,0);
+		extensibleSprite.setWorldOriginAngle(100,300,0.5f);
 
 		new SmallTextExtension(device,device.bitmapFont,extensibleSprite);
 		extensibleSprite.setText("Hallo");
+		ButtonBuilder buttonBuilder=new ButtonBuilder();
+		buttonBuilder.setSelectionButton(buttonCollection);
 
 		ButtonActions buttonActions=new ButtonActions();
-		ButtonExtension buttonExtension=new ButtonExtension(buttonActions,extensibleSprite);
-
+		ButtonExtension buttonExtension=buttonBuilder.build(extensibleSprite);
+/*
 		buttonExtension.setButtonAct(new ButtonAct() {
 			@Override
 			public boolean act(ButtonExtension buttonExtension) {
-				L.og("action "+buttonExtension.state);
+				L.og("action red"+buttonExtension.state);
 				return false;
 			}
 		});
-		buttonExtension.setButtonTouchEnd(buttonActions.touchEndAct);
-		buttonExtension.setButtonTouchBegin(buttonActions.touchBeginPressed);
-		touchMove=new TouchMove(extensibleSprite,device.touchReader,viewport);
-		touchMove.asInputProcessor();
 
+*/
+		extensibleSprite.addTouchBeginEffect(new SpriteEffect() {
+			@Override
+			public boolean effect(ExtensibleSprite sprite) {
+				L.og("effect");
+				return false;
+			}
+		});
+
+		PhysicalSprite greenSprite=physicalSpriteBuilder.buildPhysical(img,polygon);
+		greenSprite.setColor(Color.GREEN);
+		greenSprite.setWorldOriginAngle(300,100,0);
+
+		ButtonExtension buttonExtensionGreen=buttonBuilder.build(greenSprite);
+
+/*
+		buttonExtensionGreen.setButtonAct(new ButtonAct() {
+			@Override
+			public boolean act(ButtonExtension buttonExtension) {
+				L.og("action green"+buttonExtension.state);
+				return false;
+			}
+		});
+
+*/
+
+
+		touchMove=new TouchMove(buttonCollection,device.touchReader,viewport);
+		touchMove.asInputProcessor();
+		L.og((greenSprite.body.getAngularDamping()));
 		//   dummyBody=physics.bodyBuilder.reset().setStaticBody().setPosition(100,100).build();
 	}
 
@@ -156,7 +185,7 @@ public class Box2d extends ApplicationAdapter {
 	public void render () {
 		//Basic.setContinuousRendering(false);
 		//====================================================================================
-		physics.advance();
+		//physics.advance();
 
 		//L.og(extensibleSprite.body.getWorldVector(new Vector2(1,0)).toString());
 
@@ -171,8 +200,8 @@ public class Box2d extends ApplicationAdapter {
 		touchMove.update();
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		spriteBatch.begin();
-		extensibleSprite.draw(spriteBatch, viewport.getCamera());
-
+		//extensibleSprite.draw(spriteBatch, viewport.getCamera());
+		buttonCollection.draw(spriteBatch,viewport.getCamera());
 		spriteBatch.end();
 
 
