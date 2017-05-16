@@ -8,7 +8,7 @@ public class LatticeData {
     public float left;
     public float bottom;
     public float size;
-    public int iMax, jMax;
+    public int iWidth, iHeight;
 
     /**
      * Set size of a lattice unit
@@ -24,13 +24,13 @@ public class LatticeData {
     /**
      * Set maximum indices.
      *
-     * @param iMax
-     * @param jMax
+     * @param iWidth
+     * @param iHeight
      * @return
      */
-    public LatticeData setIJMax(int iMax, int jMax) {
-        this.iMax = iMax;
-        this.jMax = jMax;
+    public LatticeData setWidthHeight(int iWidth, int iHeight) {
+        this.iWidth = iWidth;
+        this.iHeight = iHeight;
         return this;
     }
 
