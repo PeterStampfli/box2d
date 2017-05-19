@@ -126,4 +126,84 @@ public class LatticeVector extends Vector2 {
         lattice.stepUp(this);
         return this;
     }
+
+    /**
+     * Change address to go up n steps. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepUp(int n){
+        toAddress();
+        for (int i=0;i<n;i++) lattice.stepUp(this);
+        return this;
+    }
+
+    /**
+     * Change address to go down one step. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepDown(){
+        toAddress();
+        lattice.stepDown(this);
+        return this;
+    }
+
+    /**
+     * Change address to go down n steps. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepDown(int n){
+        toAddress();
+        for (int i=0;i<n;i++) lattice.stepDown(this);
+        return this;
+    }
+
+    /**
+     * Change address to go left one step. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepLeft(){
+        toAddress();
+        lattice.stepLeft(this);
+        return this;
+    }
+
+    /**
+     * Change address to go left n steps. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepLeft(int n){
+        toAddress();
+        for (int i=0;i<n;i++) lattice.stepLeft(this);
+        return this;
+    }
+
+
+    /**
+     * Change address to go right one step. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepRight(){
+        toAddress();
+        lattice.stepRight(this);
+        return this;
+    }
+
+    /**
+     * Change address to go right n steps. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepRight(int n){
+        toAddress();
+        for (int i=0;i<n;i++) lattice.stepRight(this);
+        return this;
+    }
+
+
 }
