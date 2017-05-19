@@ -7,6 +7,51 @@ package com.mygdx.game.Lattice;
 
 public class SquareLattice extends Lattice {
 
+    /**
+     * Create with given size
+     *
+     * @param size
+     */
+    public SquareLattice(float size){
+        super(size);
+    }
+
+    /**
+     * Set size of a lattice unit
+     *
+     * @param size
+     * @return this, for chaining
+     */
+    public SquareLattice setSize(float size) {
+        this.size = size;
+        return this;
+    }
+
+    /**
+     * Set maximum indices.
+     *
+     * @param iWidth
+     * @param iHeight
+     * @return
+     */
+    public SquareLattice setWidthHeight(int iWidth, int iHeight) {
+        this.iWidth = iWidth;
+        this.iHeight = iHeight;
+        return this;
+    }
+
+    /**
+     * Set position of bottom left corner. With chaining.
+     *
+     * @param left
+     * @param bottom
+     * @return this, for chaining
+     */
+    public SquareLattice setLeftBottom(float left, float bottom) {
+        this.left = left;
+        this.bottom = bottom;
+        return this;
+    }
 
     @Override
     public void toAddress(LatticeVector vector) {

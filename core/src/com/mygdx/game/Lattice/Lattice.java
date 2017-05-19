@@ -16,7 +16,7 @@ public abstract class Lattice {
     public Lattice(){}
 
     /**
-     * Create with given size-
+     * Create with given size
      *
      * @param size
      */

@@ -21,6 +21,14 @@ public class LatticeVector extends Vector2 {
         this.isAddress=false;
     }
 
+    @Override
+    public String toString(){
+        if (isAddress){
+            return "Address "+super.toString();
+        }
+        return "Position "+super.toString();
+    }
+
     /**
      * Set components and that it is an address.
      * @param i
@@ -57,12 +65,13 @@ public class LatticeVector extends Vector2 {
     }
 
     /**
-     * Get the components of this vector to set a Vector2.
+     * Get the components of the position to set a Vector2.
      *
      * @param vector2 Vector2, will be set to components of this vector
      * @return this, for chaining
      */
-    public LatticeVector put(Vector2 vector2){
+    public LatticeVector putPosition(Vector2 vector2){
+        toPosition();
         vector2.set(x,y);
         return  this;
     }
@@ -75,6 +84,7 @@ public class LatticeVector extends Vector2 {
     public LatticeVector toAddress(){
         if (!isAddress){
             lattice.toAddress(this);
+            isAddress=true;
         }
         return  this;
     }
@@ -87,6 +97,7 @@ public class LatticeVector extends Vector2 {
      public LatticeVector toPosition(){
          if (isAddress){
              lattice.toPosition(this);
+             isAddress=false;
          }
          return this;
      }
