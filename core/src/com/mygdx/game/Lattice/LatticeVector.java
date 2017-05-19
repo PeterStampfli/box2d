@@ -6,18 +6,18 @@ import com.badlogic.gdx.math.Vector2;
  * Extension of vector2 to include address vectors of a lattice, superclass of square, triangle and hex lattice
  */
 
-abstract public class LatticeVector extends Vector2 {
-    public LatticeData latticeData;
+public class LatticeVector extends Vector2 {
+    public Lattice lattice;
     public boolean isAddress;
 
     /**
      * Needs the data of the lattice. Creates position(0,0) vector.
      *
-     * @param latticeData LatticeData object with important data
+     * @param lattice Lattice object with important data and specific methods
      */
-    public LatticeVector(LatticeData latticeData){
+    public LatticeVector(Lattice lattice){
         super();
-        this.latticeData=latticeData;
+        this.lattice=lattice;
         this.isAddress=false;
     }
 
@@ -68,38 +68,62 @@ abstract public class LatticeVector extends Vector2 {
     }
 
     /**
-     * Make that a position vector becomes an address vector. Adress vector remains unchanged.
+     * Make that a position vector becomes an address vector. Address vector remains unchanged.
      *
      * @return this, for chaining
      */
-    abstract public LatticeVector toAddress();
+    public LatticeVector toAddress(){
+        if (!isAddress){
+            lattice.toAddress(this);
+        }
+        return  this;
+    }
 
     /**
      * Make that an address vector becomes a position vector. Position vector remains unchanged.
      *
      * @return this, for chaining
      */
-    abstract public LatticeVector toPosition();
+     public LatticeVector toPosition(){
+         if (isAddress){
+             lattice.toPosition(this);
+         }
+         return this;
+     }
 
     /**
      * Check if position or address is inside lattice part defined by latticeData.
      *
      * @return boolean
      */
-    abstract public boolean isInside();
+     public boolean isInside(){
+         return lattice.isInside(this);
+     }
 
     /**
-     * Get index to array if position/address is inside area.
+     * Get index to array if position/address is inside area. For usual rectangular array.
+     * Critical lattice dependent test in isInside() method call.
      *
      * @return int, index to array, or negative if position/address is not inside the area of matrix.
      */
     public int index(){
         if (isInside()){
-            return -1;
+            toAddress();
+            return Math.round(x+lattice.iWidth*y);
         }
         else {
-            toAddress();
-            return Math.round(x+latticeData.iWidth*y);
+            return -1;
         }
+    }
+
+    /**
+     * Change address to go up one step. Converts position to address. May depend on lattice type.
+     *
+     * @return this, for chaining
+     */
+    public LatticeVector stepUp(){
+        toAddress();
+        lattice.stepUp(this);
+        return this;
     }
 }
