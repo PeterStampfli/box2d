@@ -54,67 +54,76 @@ public class SquareLattice extends Lattice {
     }
 
     @Override
-    public void toAddress(LatticeVector vector) {
-        vector.x = Math.round((vector.x - left) / size);
-        vector.y = Math.round((vector.y - bottom) / size);
+    public int getI(float x,float y) {
+        return (int)Math.floor((x-left)/size);
     }
 
     @Override
-    public void toPosition(LatticeVector vector) {
-        vector.x = left + vector.x * size;
-        vector.y = bottom + vector.y * size;
+    public int getJ(float x,float y) {
+        return (int)Math.floor((y-bottom)/size);
     }
 
     @Override
-    public boolean isInside(LatticeVector vector) {
-        if (vector.isAddress) {
-            return (vector.x >= 0) && (vector.x < iWidth) && (vector.y >= 0) && (vector.y < iHeight);
-        }
-        return (vector.x >= left) && (vector.x <= left + size * iWidth)
-                && (vector.y >= bottom) && (vector.y <= bottom + size * iHeight);
+    public float getX(Address address) {
+        return left+size*(0.5f+address.i);
     }
 
     @Override
-    public void stepUp(LatticeVector vector) {
-        vector.y++;
+    public float getY(Address address) {
+        return bottom+size*(0.5f+address.j);
     }
 
     @Override
-    public void stepDown(LatticeVector vector) {
-        vector.y--;
+    public boolean isInside(float x,float y) {
+        return (x>=left)&&(x<=left+size*iWidth)&&(y>=bottom)&&(y<=bottom+size*iHeight);
     }
 
     @Override
-    public void stepRight(LatticeVector vector) {
-        vector.x++;
+    public boolean isInside(int i, int j) {
+        return (i>=0)&&(i<iWidth)&&(j>=0)&&(j<iHeight);
     }
 
     @Override
-    public void stepLeft(LatticeVector vector) {
-        vector.x--;
+    public void stepUp(Address address) {
+        address.j++;
     }
 
     @Override
-    public void stepUpLeft(LatticeVector vector) {
-        vector.x--;
-        vector.y++;
+    public void stepDown(Address address) {
+        address.j--;
     }
 
     @Override
-    public void stepDownLeft(LatticeVector vector) {
-        vector.x--;
-        vector.y--;
+    public void stepRight(Address address) {
+        address.i++;
     }
 
     @Override
-    public void stepUpRight(LatticeVector vector) {
-        vector.x++;
-        vector.y++;
+    public void stepLeft(Address address) {
+        address.i--;
     }
 
     @Override
-    public void stepDownRight(LatticeVector vector) {
-        vector.x++;
-        vector.y--;
+    public void stepUpLeft(Address address) {
+        address.i--;
+        address.j++;
+    }
+
+    @Override
+    public void stepDownLeft(Address address) {
+        address.i--;
+        address.j--;
+    }
+
+    @Override
+    public void stepUpRight(Address address) {
+        address.i++;
+        address.j++;
+    }
+
+    @Override
+    public void stepDownRight(Address address) {
+        address.i++;
+        address.j--;
     }
 }

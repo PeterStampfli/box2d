@@ -13,15 +13,16 @@ public abstract class Lattice {
     /**
      * default constructor ...
      */
-    public Lattice(){}
+    public Lattice() {
+    }
 
     /**
      * Create with given size
      *
      * @param size
      */
-    public Lattice(float size){
-        this.size=size;
+    public Lattice(float size) {
+        this.size = size;
     }
 
     /**
@@ -60,94 +61,121 @@ public abstract class Lattice {
         this.bottom = bottom;
         return this;
     }
-    
+
     // manipulate LatticeVector objects
 
     /**
-     * Make that a position vector becomes an address vector.
+     * Calculate i-component of address vector fitting given position
      *
-     * @param vector LatticeVector to transform
-     * @return this, for chaining
+     * @param x float, x-component
+     * @param y float, y-component
      */
-    abstract public void toAddress(LatticeVector vector);
+    abstract public int getI(float x,float y);
 
     /**
-     * Make that an address vector becomes a position vector.
+     * Calculate j-component of address vector fitting given position
      *
-     * @param vector LatticeVector to transform
-     * @return this, for chaining
+     * @param x float, x-component
+     * @param y float, y-component
      */
-    abstract public void toPosition(LatticeVector vector);
+    abstract public int getJ(float x,float y);
 
     /**
-     * Check if position or address is inside lattice part defined by latticeData.
-     * @param vector LatticeVector to check
+     * Calculate the x-component of the position fitting the address.
+     * The center of the cell.
+     *
+     * @param address
+     */
+    abstract public float getX(Address address);
+
+    /**
+     * Calculate the y-component of the position fitting the address.
+     * The center of the cell.
+     *
+     * @param address
+     */
+    abstract public float getY(Address address);
+
+    /**
+     * Check if position is inside lattice part defined by latticeData.
+     *
+     * @param x float, x-component of position
+     * @param y float, y-component of position
      * @return boolean
      */
-    abstract public boolean isInside(LatticeVector vector);
+    abstract public boolean isInside(float x,float y);
 
     /**
-     * Make a step upwards in the address. Caller makes that it is an address.
+     * Check if address is inside lattice part defined by latticeData.
      *
-     * @param vector LatticeVector to transform, is an address
-     * @return this, for chaining
+     * @param i int, x-component of address
+     * @param j int, y-component of address
+     * @return boolean
      */
-    abstract public void stepUp(LatticeVector vector);
+    abstract public boolean isInside(int i, int j);
 
     /**
-     * Make a step downwards in the address. Caller makes that it is an address.
+     * Make a step upwards in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepDown(LatticeVector vector);
+    abstract public void stepUp(Address address);
 
     /**
-     * Make a step right in the address. Caller makes that it is an address.
+     * Make a step downwards in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepRight(LatticeVector vector);
+    abstract public void stepDown(Address address);
 
     /**
-     * Make a step left in the address. Caller makes that it is an address.
+     * Make a step right in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepLeft(LatticeVector vector);
+    abstract public void stepRight(Address address);
 
     /**
-     * Make a step upwards and left in the address. Caller makes that it is an address.
+     * Make a step left in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepUpLeft(LatticeVector vector);
+    abstract public void stepLeft(Address address);
 
     /**
-     * Make a step left and down in the address. Caller makes that it is an address.
+     * Make a step upwards and left in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepDownLeft(LatticeVector vector);
+    abstract public void stepUpLeft(Address address);
 
     /**
-     * Make a step up and right in the address. Caller makes that it is an address.
+     * Make a step left and down in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepUpRight(LatticeVector vector);
+    abstract public void stepDownLeft(Address address);
 
     /**
-     * Make a step down and right in the address. Caller makes that it is an address.
+     * Make a step up and right in the address.
      *
-     * @param vector LatticeVector to transform, is an address
+     * @param address Address, to transform
      * @return this, for chaining
      */
-    abstract public void stepDownRight(LatticeVector vector);
+    abstract public void stepUpRight(Address address);
+
+    /**
+     * Make a step down and right in the address.
+     *
+     * @param address Address, to transform
+     * @return this, for chaining
+     */
+    abstract public void stepDownRight(Address address);
 
 }
