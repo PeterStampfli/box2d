@@ -1,5 +1,7 @@
 package com.mygdx.game.Lattice;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Defines LatticeVector methods for lattices together with lattice data
  */
@@ -9,6 +11,7 @@ public abstract class Lattice {
     public float bottom;
     public float size;
     public int iWidth, iHeight;
+    public  Address address;
 
     /**
      * default constructor ...
@@ -65,36 +68,59 @@ public abstract class Lattice {
     // manipulate LatticeVector objects
 
     /**
-     * Calculate i-component of address vector fitting given position
+     * Calculate components of address vector fitting given position
      *
+     * @param address Address, will be determined from position (x,y)
      * @param x float, x-component
      * @param y float, y-component
+     * @return the changed address for chaining
      */
-    abstract public int getI(float x,float y);
+    abstract public Address addressOfPosition(Address address,float x,float y);
 
     /**
-     * Calculate j-component of address vector fitting given position
-     *
-     * @param x float, x-component
-     * @param y float, y-component
-     */
-    abstract public int getJ(float x,float y);
-
-    /**
-     * Calculate the x-component of the position fitting the address.
-     * The center of the cell.
+     * set address depending on position
      *
      * @param address
+     * @param vector
+     * @return the changed address for chaining
      */
-    abstract public float getX(Address address);
+    public Address addressOfPosition(Address address,Vector2 vector){
+        return addressOfPosition(address,vector.x,vector.y);
+    }
 
     /**
-     * Calculate the y-component of the position fitting the address.
+     * Calculate components of the position fitting the address.
      * The center of the cell.
      *
-     * @param address
+     * @param vector will be set to position corresponding to address
+     * @param i int, x-component of address
+     * @param j int, y-component of address
+     * @return Vector2 position for chaining
      */
-    abstract public float getY(Address address);
+    abstract public Vector2 positionOfAddress(Vector2 vector,int i,int j);
+
+    /**
+     * set position depending on address
+     *
+     * @param vector
+     * @param address
+     * @return Vector2 position for chaining
+     */
+    public Vector2 positionOfAddress(Vector2 vector,Address address){
+        return positionOfAddress(vector,address.i,address.j);
+    }
+
+    /**
+     * Adjusts position to lattice (centers)
+     *
+     * @param vector Vector2, position vector to adjust
+     * @return Vector2, adjusted vector, for chaining
+     */
+    public Vector2 adjust(Vector2 vector){
+        addressOfPosition(address,vector);
+        positionOfAddress(vector,address);
+        return vector;
+    }
 
     /**
      * Check if position is inside lattice part defined by latticeData.

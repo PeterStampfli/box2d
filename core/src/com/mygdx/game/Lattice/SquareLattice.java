@@ -1,5 +1,7 @@
 package com.mygdx.game.Lattice;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Created by peter on 5/19/17.
  * A simple square lattice
@@ -54,23 +56,17 @@ public class SquareLattice extends Lattice {
     }
 
     @Override
-    public int getI(float x,float y) {
-        return (int)Math.floor((x-left)/size);
+    public Address addressOfPosition(Address address, float x, float y) {
+        address.i=(int)Math.floor((x-left)/size);
+        address.j=(int)Math.floor((y-bottom)/size);
+        return address;
     }
 
     @Override
-    public int getJ(float x,float y) {
-        return (int)Math.floor((y-bottom)/size);
-    }
-
-    @Override
-    public float getX(Address address) {
-        return left+size*(0.5f+address.i);
-    }
-
-    @Override
-    public float getY(Address address) {
-        return bottom+size*(0.5f+address.j);
+    public Vector2 positionOfAddress(Vector2 vector, int i, int j) {
+        vector.x=left+size*(0.5f+address.i);
+        vector.y=bottom+size*(0.5f+address.j);
+        return vector;
     }
 
     @Override

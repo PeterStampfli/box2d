@@ -37,7 +37,7 @@ public class ButtonCollection extends TouchableCollection {
     }
 
     /**
-     * Add touchables to the list. For buttons set their ButtonExtension to refernce to this.
+     * Add touchables to the list. For buttons set their ButtonExtension to reference to this collection.
      *
      * @param touchables Touchable... or Touchable[]
      */

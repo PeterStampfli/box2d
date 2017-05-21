@@ -44,8 +44,7 @@ public class Address {
      * @return
      */
     public Address fromPosition(float x,float y){
-        this.i=lattice.getI(x, y);
-        this.j=lattice.getJ(x, y);
+        lattice.addressOfPosition(this,x,y);
         return this;
     }
 
@@ -53,7 +52,7 @@ public class Address {
      * set address from position vector and given lattice
      *
      * @param vector
-     * @return
+     * @return this address for chaining
      */
     public Address fromPosition(Vector2 vector){
         fromPosition(vector.x,vector.y);
@@ -61,28 +60,14 @@ public class Address {
     }
 
     /**
-     * get x-component of vector to this address
-     */
-    public float getX(){
-        return lattice.getX(this);
-    }
-
-    /**
-     * get y-component of vector to this address
-     */
-    public float getY(){
-        return lattice.getY(this);
-    }
-
-    /**
      * set position vector depending on this address and given lattice
-     * @param vector
+     *
+     * @param vector Vector2, the changed vector for chaining
      * @return
      */
-    public Address toPosition(Vector2 vector){
-        vector.x=lattice.getX(this);
-        vector.y=lattice.getY(this);
-        return this;
+    public Vector2 toPosition(Vector2 vector){
+        lattice.positionOfAddress(vector,this);
+        return vector;
     }
 
     /**
@@ -141,6 +126,36 @@ public class Address {
      */
     public Address stepUpRight(){
         lattice.stepUpRight(this);
+        return this;
+    }
+
+    /**
+     * Make a step up and left in the lattice
+     *
+     * @return
+     */
+    public Address stepUpLeft(){
+        lattice.stepUpLeft(this);
+        return this;
+    }
+
+    /**
+     * Make a step down and right in the lattice
+     *
+     * @return
+     */
+    public Address stepDownRight(){
+        lattice.stepDownRight(this);
+        return this;
+    }
+
+    /**
+     * Make a step down and left in the lattice
+     *
+     * @return
+     */
+    public Address stepDownLeft(){
+        lattice.stepDownLeft(this);
         return this;
     }
 }
