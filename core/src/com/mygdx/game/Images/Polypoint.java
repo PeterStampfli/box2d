@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.mygdx.game.utilities.Basic;
 
 /**
- * Create a collection of points. Make points on circle arcs.
+ * Create a collection of points connected by lines. Make points on circle arcs.
  */
 
 public class Polypoint extends Shape2DAdapter {
