@@ -70,12 +70,12 @@ public class SquareLattice extends Lattice {
     }
 
     @Override
-    public boolean isInside(float x,float y) {
+    public boolean positionIsInside(float x,float y) {
         return (x>=left)&&(x<=left+size*iWidth)&&(y>=bottom)&&(y<=bottom+size*iHeight);
     }
 
     @Override
-    public boolean isInside(int i, int j) {
+    public boolean addressIsInside(int i, int j) {
         return (i>=0)&&(i<iWidth)&&(j>=0)&&(j<iHeight);
     }
 

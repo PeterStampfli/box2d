@@ -76,7 +76,7 @@ public class Address {
      * @return
      */
     public boolean isInside(){
-        return lattice.isInside(this.i,this.j);
+        return lattice.addressIsInside(this.i,this.j);
     }
 
     /**

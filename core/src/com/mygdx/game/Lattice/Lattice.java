@@ -129,7 +129,17 @@ public abstract class Lattice {
      * @param y float, y-component of position
      * @return boolean
      */
-    abstract public boolean isInside(float x,float y);
+    abstract public boolean positionIsInside(float x,float y);
+
+    /**
+     * Check if position is inside lattice part defined by latticeData.
+     *
+     * @param vector Vector2, to check
+     * @return boolean
+     */
+    public boolean positionIsInside(Vector2 vector){
+        return positionIsInside(vector.x,vector.y);
+    }
 
     /**
      * Check if address is inside lattice part defined by latticeData.
@@ -138,7 +148,17 @@ public abstract class Lattice {
      * @param j int, y-component of address
      * @return boolean
      */
-    abstract public boolean isInside(int i, int j);
+    abstract public boolean addressIsInside(int i, int j);
+
+    /**
+     * Check if address is inside lattice part defined by latticeData.
+     *
+     * @param address Address, to check
+     * @return boolean
+     */
+    public boolean addressIsInside(Address address){
+        return addressIsInside(address.i,address.j);
+    }
 
     /**
      * Make a step upwards in the address.

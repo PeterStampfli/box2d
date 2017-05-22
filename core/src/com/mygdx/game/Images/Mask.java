@@ -468,9 +468,9 @@ public class Mask {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         setPixmapAlpha(pixmap);
-        Texture result = new Texture(pixmap);
+        TextureRegion result=new TextureRegion(new Texture(pixmap));
         pixmap.dispose();
-        return new TextureRegion(result);
+        return result;
     }
 
     /**
@@ -493,9 +493,9 @@ public class Mask {
             pixels.put(index++, (byte) 255);
         }
         pixels.rewind();
-        Texture result = new Texture(pixmap);
+        TextureRegion result=new TextureRegion(new Texture(pixmap));
         pixmap.dispose();
-        return new TextureRegion(result);
+        return result;
     }
 }
 
