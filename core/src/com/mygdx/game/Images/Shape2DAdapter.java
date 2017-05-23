@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Implements contains method, doing nothing, returning false.
+ * Contains(vector) method uses contains(x,y).
  */
 
 public class Shape2DAdapter implements Shape2D {

@@ -15,7 +15,7 @@ import com.mygdx.game.Buttons.ButtonActions;
 import com.mygdx.game.Buttons.ButtonBuilder;
 import com.mygdx.game.Buttons.ButtonCollection;
 import com.mygdx.game.Buttons.ButtonExtension;
-import com.mygdx.game.Images.DrawDotsAndLines;
+import com.mygdx.game.Images.DrawLines;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Polypoint;
@@ -170,7 +170,7 @@ Vector2 v;
 
 		//L.og(squareLattice.isInside(1,1));
 		//L.og(squareLattice.isInside(1f,1f));
-		DrawDotsAndLines drawDotsAndLines=new DrawDotsAndLines(device,"disc","line");
+		DrawLines drawDotsAndLines=new DrawLines(device,"disc","line");
 	}
 
 	@Override
@@ -181,13 +181,15 @@ Vector2 v;
 
 	@Override
 	public void render () {
-		//Basic.setContinuousRendering(false);
+		Basic.setContinuousRendering(false);
 		//====================================================================================
 		//physics.advance();
 
 		//L.og(extensibleSprite.body.getWorldVector(new Vector2(1,0)).toString());
 
 		//L.og(extensibleSprite.contains(device.touchReader.getPosition(viewport)));
+		DrawLines drawLines=new DrawLines(device,"d","L");
+		//drawLines.addLines(100,100,250,150,300,400,350,380,100,400,80,0);
 
 		viewport.apply();
 		Basic.clearBackground(Color.BLUE);
@@ -200,10 +202,8 @@ Vector2 v;
 		//extensibleSprite.draw(spriteBatch, viewport.getCamera());
 		//buttonCollection.draw(spriteBatch,viewport.getCamera());
 		spriteBatch.setColor(Color.WHITE);
-		spriteBatch.draw(DrawDotsAndLines.makeDiscImage(40),150,150,220,220);
-
+		drawLines.draw(spriteBatch);
 		spriteBatch.setColor(Color.FIREBRICK);
-		spriteBatch.draw(DrawDotsAndLines.makeLineImage(40),270,150,4,220);
 		spriteBatch.end();
 
 
