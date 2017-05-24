@@ -8,20 +8,22 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.mygdx.game.utilities.Basic;
 
 /**
- * Shape2DCollection that joins points with lines and discs.
+ * Shape2DCollection that joins points with lines and discs (collected Shape2D polygons and discs).
+ * Takes the points as they are at the moment. Input can be polypoint, polyline, polygon and pairs of coordinates.
+ * Do smoothing afterwards.
  */
 
-public class DotsAndLines extends Shape2DCollection{
+public class DotsAndLines extends Shape2DCollection {
+    float width=10;
 
     /**
      * Make lines of given width between points. Join first and last point if it should be a loop.
      * Make discs of same diameter at the points to make line joints and ends.
      *
-     * @param width   float, width of the line and diameter of discs
      * @param isLoop      boolean, true if we want a loop, joining first and last point
      * @param coordinates float... or float[] pairs of coordinates of points
      */
-    public DotsAndLines(float width, boolean isLoop, float... coordinates) {
+    public DotsAndLines add(boolean isLoop, float... coordinates) {
         float radius = 0.5f * width;
         int length = coordinates.length;
         for (int i = 0; i < length - 1; i += 2) {
@@ -35,45 +37,45 @@ public class DotsAndLines extends Shape2DCollection{
             add(line(width, coordinates[0], coordinates[1],
                     coordinates[length - 2], coordinates[length - 1]));
         }
+        return this;
     }
-
 
     /**
      * Make lines of given width between points. No loop.
      * Make discs of same diameter at the points to make line joints and ends.
      *
-     * @param width   float, width of the line and diameter of discs
      * @param coordinates float... or float[] pairs of coordinates of points
      */
-    public DotsAndLines(float width, float... coordinates) {
-        this(width, false, coordinates);
+    public DotsAndLines add(float... coordinates) {
+        add( false, coordinates);
+        return this;
     }
+
 
     /**
      * Make lines of given width between points defined by a Polypoint object.
      * Join first and last point if the Polypoint is a loop.
      * Make discs of same diameter at the points to make line joints and ends.
      *
-     * @param width float, width of the line and diameter of discs
      * @param polypoint Polypoint object that defines the points and if it is a loop
      * @return Shape2DCollection with the lines and discs
      */
-    public DotsAndLines (float width, Polypoint polypoint) {
-        FloatArray coordinates=polypoint.coordinates;
+    public DotsAndLines add(Polypoint polypoint) {
+        FloatArray coordinates = polypoint.coordinates;
         float radius = 0.5f * width;
         int length = coordinates.size;
         for (int i = 0; i < length - 1; i += 2) {
-            add(new Circle(coordinates.get(i), coordinates.get(i+1), radius));
+            add(new Circle(coordinates.get(i), coordinates.get(i + 1), radius));
         }
         for (int i = 0; i < length - 3; i += 2) {
-            add(line(width, coordinates.get(i), coordinates.get(i+1),
-                    coordinates.get(i+2), coordinates.get(i+3)));
+            add(line(width, coordinates.get(i), coordinates.get(i + 1),
+                    coordinates.get(i + 2), coordinates.get(i + 3)));
         }
         if (polypoint.isLoop) {
             add(line(width, coordinates.get(0), coordinates.get(1),
-                    coordinates.get(length-2), coordinates.get(length-1)));
+                    coordinates.get(length - 2), coordinates.get(length - 1)));
         }
-
+        return this;
     }
 
     /**
@@ -82,11 +84,11 @@ public class DotsAndLines extends Shape2DCollection{
      * Join first and last point because it is a Polygon.
      * Make discs of same diameter at the points to make line joints and ends.
      *
-     * @param width float, width of the line and diameter of discs
-     * @param polygon   Polygon
+     * @param polygon Polygon
      */
-    public DotsAndLines(float width, Polygon polygon) {
-        this(width, true, polygon.getTransformedVertices());
+    public DotsAndLines add(Polygon polygon) {
+        add( true, polygon.getTransformedVertices());
+        return this;
     }
 
     /**
@@ -95,11 +97,11 @@ public class DotsAndLines extends Shape2DCollection{
      * First and last point are not joined, because it is a Polyline.
      * Make discs of same diameter at the points to make line joints and ends.
      *
-     * @param width float, width of the line and diameter of discs
-     * @param polyline  Polyline
+     * @param polyline Polyline
      */
-    public DotsAndLines(float width, Polyline polyline) {
-        this(width, false, polyline.getTransformedVertices());
+    public DotsAndLines add(Polyline polyline) {
+        add( false, polyline.getTransformedVertices());
+        return this;
     }
 
     /**
@@ -107,11 +109,11 @@ public class DotsAndLines extends Shape2DCollection{
      * Ignores ghosts. Joins first and last point if Chain is a loop.
      * Draw discs of same diameter at the points to make line joints and ends.
      *
-     * @param width float, width of the line and diameter of discs
-     * @param chain     Chain
+     * @param chain Chain
      */
-    public DotsAndLines(float width, Chain chain) {
-        this(width, chain.isLoop, chain.coordinates);
+    public DotsAndLines add(Chain chain) {
+        add( chain.isLoop, chain.coordinates);
+        return this;
     }
 
     /**
@@ -119,11 +121,11 @@ public class DotsAndLines extends Shape2DCollection{
      * Ignores ghosts.
      * Draw discs of same diameter at the points to make line joints and ends.
      *
-     * @param width float, width of the line and diameter of discs
-     * @param edge      Edge
+     * @param edge  Edge
      */
-    public DotsAndLines(float width, Edge edge) {
-        this(width, false, edge.aX, edge.aY, edge.bX, edge.bY);
+    public DotsAndLines add(Edge edge) {
+        add( false, edge.aX, edge.aY, edge.bX, edge.bY);
+        return this;
     }
 
     /**
@@ -131,10 +133,10 @@ public class DotsAndLines extends Shape2DCollection{
      * sharp cutoff at end points. Returns null if endpoints are too close to each other.
      *
      * @param width float, width of the line
-     * @param x1        float, x-coordinate of first point
-     * @param y1        float, y-coordinate of first point
-     * @param x2        float, x-coordinate of second point
-     * @param y2        float, y-coordinate of second point
+     * @param x1    float, x-coordinate of first point
+     * @param y1    float, y-coordinate of first point
+     * @param x2    float, x-coordinate of second point
+     * @param y2    float, y-coordinate of second point
      * @return Polygon
      */
     static public Polygon line(float width, float x1, float y1, float x2, float y2) {
@@ -143,22 +145,35 @@ public class DotsAndLines extends Shape2DCollection{
         if (length > Basic.epsilon) {
             float ex = (x2 - x1) / length * halfWidth;
             float ey = (y2 - y1) / length * halfWidth;
-            float[] coordinates = {x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex, x1 - ey, y1 + ex};
+            float[] coordinates = {x1 - ey, y1 + ex, x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex};
             return new Polygon(coordinates);
         }
         return null;
     }
+
+    // static methods for use in other places ??
 
     /**
      * Create a rectangular polygon that makes a line between two points with a given width with
      * sharp cutoff at end points. Returns null if endpoints are too close to each other.
      *
      * @param width float, width of the line
-     * @param a         Vector2, first endpoint
-     * @param b         Vector2, second endpoint
+     * @param a     Vector2, first endpoint
+     * @param b     Vector2, second endpoint
      * @return Polygon
      */
     static public Polygon line(float width, Vector2 a, Vector2 b) {
         return line(width, a.x, a.y, b.x, b.y);
+    }
+
+    /**
+     * Set the width of lines and diameter of dots.
+     *
+     * @param width
+     * @return
+     */
+    public DotsAndLines setLineWidth(float width) {
+        this.width = width;
+        return this;
     }
 }

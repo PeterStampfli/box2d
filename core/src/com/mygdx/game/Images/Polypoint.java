@@ -17,11 +17,11 @@ public class Polypoint extends Shape2DAdapter {
     public boolean isLoop = false;
 
     /**
-     * Reset for reuse. Deletes the points (their coordinates).
+     * Clear for reuse. Deletes the points (their coordinates).
      *
      * @return this, for chaining
      */
-    public Polypoint reset() {
+    public Polypoint clear() {
         coordinates.clear();
         return this;
     }
