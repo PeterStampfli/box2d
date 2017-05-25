@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -15,7 +16,8 @@ import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.L;
 
 /**
- * Draw Lines on screen, assuming that drawing the discs is not expensive. Uses positions at time of rendering.
+ * Draw Lines on screen, assuming that drawing the discs is not expensive.
+ * Uses positions at time of rendering. Use for shapes2D and for arrays of vector2.
  */
 
 public class DrawLines {
@@ -270,11 +272,52 @@ public class DrawLines {
 
     /**
      * draw the lines of a polypoint object
+     *
      * @param batch
      * @param polypoint
      */
     public void draw(SpriteBatch batch,Polypoint polypoint){
         draw(batch,polypoint.isLoop,polypoint.coordinates);
+    }
+
+    /**
+     * draw the lines of a polyline object. Is not a closed loop.
+     *
+     * @param batch
+     * @param polyline
+     */
+    public void draw(SpriteBatch batch, Polyline polyline){
+        draw(batch,false,polyline.getTransformedVertices());
+    }
+
+    /**
+     * draw the lines of a polygon object. Is a closed loop.
+     *
+     * @param batch
+     * @param polygon
+     */
+    public void draw(SpriteBatch batch, Polygon polygon){
+        draw(batch,true,polygon.getTransformedVertices());
+    }
+
+    /**
+     * draw the lines of a chain object. May be a closed loop or not.
+     *
+     * @param batch
+     * @param chain
+     */
+    public void draw(SpriteBatch batch, Chain chain){
+        draw(batch,chain.isLoop,chain.coordinates);
+    }
+
+    /**
+     * draw the line of an edge object.
+     *
+     * @param batch
+     * @param edge
+     */
+    public void draw(SpriteBatch batch, Edge edge){
+        draw(batch,false,edge.aX, edge.aY, edge.bX, edge.bY);
     }
 
     /**
@@ -304,16 +347,29 @@ public class DrawLines {
      *
      * @param shape Shape2D to draw
      */
-    public void draw(Shape2D shape){
-        if (shape instanceof DotsAndLines){
-            draw((DotsAndLines)shape);
+    public void draw(SpriteBatch batch,Shape2D shape){
+        if (shape instanceof Polygon){
+            draw(batch,(Polygon)shape);
         }
-        else if (shape instanceof Shape2DCollection){         // without DotsAndLines
+        else if (shape instanceof Polypoint){
+            draw(batch,(Polypoint)shape);
+        }
+        else if (shape instanceof Polyline){
+            draw(batch,(Polyline) shape);
+        }
+        else if (shape instanceof Edge){
+            draw(batch,(Edge) shape);
+        }
+        else if (shape instanceof Chain){
+            draw(batch,(Chain) shape);
+        }
+        else if (shape instanceof DotsAndLines){
+            draw(batch,(DotsAndLines) shape);
+        }        else if (shape instanceof Shape2DCollection){         // without DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
-                draw(subShape);
+                draw(batch,subShape);
             }
         }
     }
-
 }

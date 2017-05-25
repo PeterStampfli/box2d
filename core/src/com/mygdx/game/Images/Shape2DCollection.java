@@ -41,6 +41,19 @@ public class Shape2DCollection extends Shape2DAdapter {
     }
 
     /**
+     * Add one or several shapes to the collection. Does nothing if a shape is null.
+     *
+     * @param shapes2D Array<Shape2D>, the shapes to add.
+     */
+    public void add(Array<Shape2D> shapes2D) {
+        for (Shape2D shape2D : shapes2D) {
+            if (shape2D != null) {
+                this.shapes2D.add(shape2D);
+            }
+        }
+    }
+
+    /**
      * Clear all shapes. For reuse.
      */
     public void clear(){

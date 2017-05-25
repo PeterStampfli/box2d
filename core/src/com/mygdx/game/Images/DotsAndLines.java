@@ -3,6 +3,7 @@ package com.mygdx.game.Images;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
 import com.mygdx.game.utilities.Basic;
@@ -14,7 +15,43 @@ import com.mygdx.game.utilities.Basic;
  */
 
 public class DotsAndLines extends Shape2DCollection {
-    float width=10;
+    float width = 10;
+
+    /**
+     * Create a rectangular polygon that makes a line between two points with a given width with
+     * sharp cutoff at end points. Returns null if endpoints are too close to each other.
+     *
+     * @param width float, width of the line
+     * @param x1    float, x-coordinate of first point
+     * @param y1    float, y-coordinate of first point
+     * @param x2    float, x-coordinate of second point
+     * @param y2    float, y-coordinate of second point
+     * @return Polygon
+     */
+    static public Polygon line(float width, float x1, float y1, float x2, float y2) {
+        float halfWidth = 0.5f * width;
+        float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        if (length > Basic.epsilon) {
+            float ex = (x2 - x1) / length * halfWidth;
+            float ey = (y2 - y1) / length * halfWidth;
+            float[] coordinates = {x1 - ey, y1 + ex, x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex};
+            return new Polygon(coordinates);
+        }
+        return null;
+    }
+
+    /**
+     * Create a rectangular polygon that makes a line between two points with a given width with
+     * sharp cutoff at end points. Returns null if endpoints are too close to each other.
+     *
+     * @param width float, width of the line
+     * @param a     Vector2, first endpoint
+     * @param b     Vector2, second endpoint
+     * @return Polygon
+     */
+    static public Polygon line(float width, Vector2 a, Vector2 b) {
+        return line(width, a.x, a.y, b.x, b.y);
+    }
 
     /**
      * Make lines of given width between points. Join first and last point if it should be a loop.
@@ -47,10 +84,9 @@ public class DotsAndLines extends Shape2DCollection {
      * @param coordinates float... or float[] pairs of coordinates of points
      */
     public DotsAndLines add(float... coordinates) {
-        add( false, coordinates);
+        add(false, coordinates);
         return this;
     }
-
 
     /**
      * Make lines of given width between points defined by a Polypoint object.
@@ -87,7 +123,7 @@ public class DotsAndLines extends Shape2DCollection {
      * @param polygon Polygon
      */
     public DotsAndLines add(Polygon polygon) {
-        add( true, polygon.getTransformedVertices());
+        add(true, polygon.getTransformedVertices());
         return this;
     }
 
@@ -100,7 +136,7 @@ public class DotsAndLines extends Shape2DCollection {
      * @param polyline Polyline
      */
     public DotsAndLines add(Polyline polyline) {
-        add( false, polyline.getTransformedVertices());
+        add(false, polyline.getTransformedVertices());
         return this;
     }
 
@@ -112,58 +148,65 @@ public class DotsAndLines extends Shape2DCollection {
      * @param chain Chain
      */
     public DotsAndLines add(Chain chain) {
-        add( chain.isLoop, chain.coordinates);
+        add(chain.isLoop, chain.coordinates);
         return this;
     }
+
+    // static methods for use in other places ??
 
     /**
      * Make lines of given width between the points of an Edge.
      * Ignores ghosts.
      * Draw discs of same diameter at the points to make line joints and ends.
      *
-     * @param edge  Edge
+     * @param edge Edge
      */
     public DotsAndLines add(Edge edge) {
-        add( false, edge.aX, edge.aY, edge.bX, edge.bY);
+        add(false, edge.aX, edge.aY, edge.bX, edge.bY);
+        return this;
+    }
+
+    /** add elements of a dotsAndLines object
+     *
+     * @param dotsAndLines
+     * @return
+     */
+    public DotsAndLines add(DotsAndLines dotsAndLines){
+        super.add(dotsAndLines.shapes2D);
         return this;
     }
 
     /**
-     * Create a rectangular polygon that makes a line between two points with a given width with
-     * sharp cutoff at end points. Returns null if endpoints are too close to each other.
+     * Add shape2D shapes as dotsAndLines.
+     * Includes collections, polyPoint, polyLine, polygon,chain and edge.
      *
-     * @param width float, width of the line
-     * @param x1    float, x-coordinate of first point
-     * @param y1    float, y-coordinate of first point
-     * @param x2    float, x-coordinate of second point
-     * @param y2    float, y-coordinate of second point
-     * @return Polygon
+     * @param shape Shape2D to add transformed
      */
-    static public Polygon line(float width, float x1, float y1, float x2, float y2) {
-        float halfWidth = 0.5f * width;
-        float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-        if (length > Basic.epsilon) {
-            float ex = (x2 - x1) / length * halfWidth;
-            float ey = (y2 - y1) / length * halfWidth;
-            float[] coordinates = {x1 - ey, y1 + ex, x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex};
-            return new Polygon(coordinates);
+    public void add(Shape2D shape){
+        if (shape instanceof Polygon){
+            add((Polygon)shape);
         }
-        return null;
-    }
-
-    // static methods for use in other places ??
-
-    /**
-     * Create a rectangular polygon that makes a line between two points with a given width with
-     * sharp cutoff at end points. Returns null if endpoints are too close to each other.
-     *
-     * @param width float, width of the line
-     * @param a     Vector2, first endpoint
-     * @param b     Vector2, second endpoint
-     * @return Polygon
-     */
-    static public Polygon line(float width, Vector2 a, Vector2 b) {
-        return line(width, a.x, a.y, b.x, b.y);
+        else if (shape instanceof Polypoint){
+            add((Polypoint)shape);
+        }
+        else if (shape instanceof Polyline){
+            add((Polyline) shape);
+        }
+        else if (shape instanceof Edge){
+            add((Edge) shape);
+        }
+        else if (shape instanceof Chain){
+            add((Chain) shape);
+        }
+        else if (shape instanceof DotsAndLines){
+            add((DotsAndLines) shape);
+        }
+        else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
+            Shape2DCollection shapes=(Shape2DCollection) shape;
+            for (Shape2D subShape:shapes.shapes2D){
+                add(subShape);
+            }
+        }
     }
 
     /**
