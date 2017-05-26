@@ -38,6 +38,16 @@ public class Polypoint extends Shape2DAdapter {
     }
 
     /**
+     * Set that it is a loop. Implies that the last point should have a line to the first point.
+     *
+     * @return this, for chaining
+     */
+    public Polypoint setIsLoop() {
+        this.isLoop = true;
+        return this;
+    }
+
+    /**
      * Get a shape2D polygon based on the vertices of a polypoint object.
      *
      * @return Polygon, with the same points. An independent copy.
@@ -49,7 +59,7 @@ public class Polypoint extends Shape2DAdapter {
     /**
      * Add points given by coordinate pairs (x,y)
      *
-     * @param newCoordinates float... or float[], containg pairs of (x,y) coordinates
+     * @param newCoordinates float... or float[], containing pairs of (x,y) coordinates
      */
     public void add(float... newCoordinates) {
         int newCoordinatesLength = newCoordinates.length;

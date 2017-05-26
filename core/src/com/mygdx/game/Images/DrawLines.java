@@ -18,6 +18,10 @@ import com.mygdx.game.utilities.L;
 /**
  * Draw Lines on screen, assuming that drawing the discs is not expensive.
  * Uses positions at time of rendering. Use for shapes2D and for arrays of vector2.
+ *
+ * We get smoother lines if lineImage has half the width of the line.
+ * Adjust value of discImageSizeReduction to get good line end joins.
+ * Smoothing only works if images are blown up.
  */
 
 public class DrawLines {
@@ -26,6 +30,7 @@ public class DrawLines {
     TextureRegion lineImage;
     final private int defaultImageSize = 20;
     private float regionSize;
+    public int discImageSizeReduction=3;
 
     /**
      * Load images for disc and line, if not present create them.
@@ -40,16 +45,16 @@ public class DrawLines {
         lineImage = basicAssets.getTextureRegion(lineImageName);
         if (discImage == null) {
             L.og("*** creating discImage: " + discImageName);
-            discImage = makeDiscImage(defaultImageSize);
+            discImage = makeDiscImage(defaultImageSize-discImageSizeReduction);
             Basic.linearInterpolation(discImage);
 
         }
         if (lineImage == null) {
             L.og("*** creating lineImage: " + lineImageName);
-            lineImage = makeLineImage(defaultImageSize);
+            lineImage = makeLineImage(defaultImageSize/2);
             Basic.linearInterpolation(lineImage);
         }
-        regionSize = discImage.getRegionWidth();
+        regionSize = discImage.getRegionWidth()+discImageSizeReduction;
     }
 
     /**
@@ -60,7 +65,8 @@ public class DrawLines {
      */
     static public TextureRegion makeDiscImage(int size) {
         Mask mask = new Mask(size + 2, size + 2);
-        mask.fillCircle(0.5f * size + 1, 0.5f * size + 1, size * 0.5f);
+        float radius=size*0.5f;
+        mask.fillCircle(0.5f * size + 1, 0.5f * size + 1, radius);
         return mask.createTransparentWhiteTextureRegion();
     }
 
@@ -85,7 +91,7 @@ public class DrawLines {
      * @return
      */
     public DrawLines setLineWidth(float width) {
-        float size = discImage.getRegionWidth() - 2f;
+        float size = discImage.getRegionWidth() +discImageSizeReduction - 2f;
         regionSize = (size + 2f) * width / size;
         return this;
     }
@@ -98,7 +104,9 @@ public class DrawLines {
      * @param y
      */
     public void drawDisc(SpriteBatch batch, float x, float y) {
-        batch.draw(discImage, x - 0.5f * regionSize, y - 0.5f * regionSize, regionSize, regionSize);
+        float reducedSize=regionSize-discImageSizeReduction;
+        batch.draw(discImage, x - 0.5f * reducedSize, y - 0.5f * reducedSize,
+                   reducedSize, reducedSize);
     }
 
     /**
@@ -365,7 +373,8 @@ public class DrawLines {
         }
         else if (shape instanceof DotsAndLines){
             draw(batch,(DotsAndLines) shape);
-        }        else if (shape instanceof Shape2DCollection){         // without DotsAndLines
+        }
+        else if (shape instanceof Shape2DCollection){         // without DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
                 draw(batch,subShape);

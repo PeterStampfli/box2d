@@ -64,14 +64,14 @@ public class DotsAndLines extends Shape2DCollection {
         float radius = 0.5f * width;
         int length = coordinates.length;
         for (int i = 0; i < length - 1; i += 2) {
-            add(new Circle(coordinates[i], coordinates[i + 1], radius));
+            super.add(new Circle(coordinates[i], coordinates[i + 1], radius));
         }
         for (int i = 0; i < length - 3; i += 2) {
-            add(line(width, coordinates[i], coordinates[i + 1],
+            super.add(line(width, coordinates[i], coordinates[i + 1],
                     coordinates[i + 2], coordinates[i + 3]));
         }
         if (isLoop) {
-            add(line(width, coordinates[0], coordinates[1],
+            super.add(line(width, coordinates[0], coordinates[1],
                     coordinates[length - 2], coordinates[length - 1]));
         }
         return this;
@@ -101,14 +101,14 @@ public class DotsAndLines extends Shape2DCollection {
         float radius = 0.5f * width;
         int length = coordinates.size;
         for (int i = 0; i < length - 1; i += 2) {
-            add(new Circle(coordinates.get(i), coordinates.get(i + 1), radius));
+            super.add(new Circle(coordinates.get(i), coordinates.get(i + 1), radius));
         }
         for (int i = 0; i < length - 3; i += 2) {
-            add(line(width, coordinates.get(i), coordinates.get(i + 1),
+            super.add(line(width, coordinates.get(i), coordinates.get(i + 1),
                     coordinates.get(i + 2), coordinates.get(i + 3)));
         }
         if (polypoint.isLoop) {
-            add(line(width, coordinates.get(0), coordinates.get(1),
+            super.add(line(width, coordinates.get(0), coordinates.get(1),
                     coordinates.get(length - 2), coordinates.get(length - 1)));
         }
         return this;
