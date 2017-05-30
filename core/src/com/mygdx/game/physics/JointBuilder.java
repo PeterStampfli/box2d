@@ -1,11 +1,15 @@
 package com.mygdx.game.physics;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 /**
  * A builder for all kinds of joints.
@@ -24,10 +28,18 @@ public class JointBuilder {
     float frequencyHz;
     boolean collideConnected;
     float maxAcceleration;
+    boolean enableLimit;
+    boolean enableMotor;
+    float lowerAngle;
+    float referenceAngle;
+    float upperAngle;
+    float maxMotorTorque;
+    float motorSpeed;
 
 
     private DistanceJointDef distanceJointDef;
     private MouseJointDef mouseJointDef;
+    private RevoluteJointDef revoluteJointDef;
 
     /**
      * Create a joint builder with access to physics.
@@ -54,6 +66,13 @@ public class JointBuilder {
         setLocalAnchorAIsLocalCenter();
         setLocalAnchorBIsLocalCenter();
         setMaxAcceleration(5000);
+        setEnableLimit(false);
+        setEnableMotor(false);
+        setLowerAngle(-MathUtils.PI);
+        setUpperAngle(MathUtils.PI);
+        setReferenceAngle(0);
+        setMaxMotorTorque(10000);
+        setMotorSpeed(0);
         return this;
     }
 
@@ -214,6 +233,140 @@ public class JointBuilder {
     }
 
     /**
+     * Set that there are joint limits.
+     *
+     * @param enabled boolean, true to enable the limits
+     * @return
+     */
+    public JointBuilder setEnableLimit(boolean enabled) {
+        enableLimit = enabled;
+        return this;
+    }
+
+    /**
+     * Set that there joint has motor.
+     *
+     * @param enabled boolean, true to enable the motor
+     * @return
+     */
+    public JointBuilder setEnableMotor(boolean enabled) {
+        enableMotor = enabled;
+        return this;
+    }
+
+    /**
+     * set reference for revolution angle
+     *
+     * @param angle
+     * @return
+     */
+    public JointBuilder setReferenceAngle(float angle){
+        referenceAngle=angle;
+        return this;
+    }
+
+    /**
+     * set upper limit for revolution angle
+     *
+     * @param angle
+     * @return
+     */
+    public JointBuilder setUpperAngle(float angle){
+        upperAngle=angle;
+        return this;
+    }
+
+    /**
+     * set lower limit for revolution angle
+     *
+     * @param angle
+     * @return
+     */
+    public JointBuilder setLowerAngle(float angle){
+        lowerAngle=angle;
+        return this;
+    }
+
+    /**
+     * Set the maximum motor torque of a joint in graphics units: kg pixels² /sec² instead of Nm.
+     *
+     * @param torque float,limit
+     * @return
+     */
+    public JointBuilder setMaxMotorTorque(float torque) {
+        maxMotorTorque=torque/(Physics.PIXELS_PER_METER*Physics.PIXELS_PER_METER);
+        return this;
+    }
+
+    /**
+     * set motor speed in radians per second. Positive for counter-clockwise.
+     *
+     * @param speed
+     * @return
+     */
+    public JointBuilder setMotorSpeed(float speed){
+        motorSpeed=speed;
+        return this;
+    }
+
+    /**
+     * Set bodies of jointDef and local anchor positions of they are local centers.
+     * Set collideConnected.
+     *
+     * @param jointDef
+     * @param bodyA
+     * @param bodyB
+     */
+    private void setBodiesAndAnchors(JointDef jointDef, Body bodyA, Body bodyB){
+        jointDef.bodyA=bodyA;
+        jointDef.bodyB=bodyB;
+        jointDef.collideConnected=collideConnected;
+        if (localAnchorAIsLocalCenter){               // adjust local anchor if it is the body center
+            localAnchorA.set(bodyA.getLocalCenter()); // now we know the body
+        }
+        if (localAnchorBIsLocalCenter){
+            localAnchorB.set(bodyB.getLocalCenter());
+        }
+    }
+
+    /**
+     * Build a revolute joint between two bodies. Attach user data later if needed.
+     *
+     * @param bodyA Body
+     * @param bodyB Body
+     * @return DistanceJoint
+     */
+    public RevoluteJoint buildRevoluteJoint(Body bodyA, Body bodyB){
+        if (revoluteJointDef==null){
+            revoluteJointDef=new RevoluteJointDef();
+        }
+        setBodiesAndAnchors(revoluteJointDef,bodyA,bodyB);
+        revoluteJointDef.collideConnected=false;
+        revoluteJointDef.localAnchorA.set(localAnchorA);
+        revoluteJointDef.localAnchorB.set(localAnchorB);
+        revoluteJointDef.enableLimit=enableLimit;
+        revoluteJointDef.enableMotor=enableMotor;
+        revoluteJointDef.lowerAngle=lowerAngle;
+        revoluteJointDef.referenceAngle=referenceAngle;
+        revoluteJointDef.upperAngle=upperAngle;
+        revoluteJointDef.maxMotorTorque=maxMotorTorque;
+        revoluteJointDef.motorSpeed=motorSpeed;
+        RevoluteJoint revoluteJoint=(RevoluteJoint) physics.world.createJoint(revoluteJointDef);
+        return revoluteJoint;
+    }
+
+    /**
+     * Build a revolute joint between two physical sprites. Attach user data later if needed.
+     *
+     * @param spriteA
+     * @param spriteB
+     * @return
+     */
+    public RevoluteJoint buildRevoluteJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
+        return buildRevoluteJoint(spriteA.body, spriteB.body);
+    }
+
+    /**
      * Build a distance joint between two bodies. Attach user data later if needed.
      *
      * @param bodyA Body
@@ -224,14 +377,7 @@ public class JointBuilder {
         if (distanceJointDef==null){
             distanceJointDef=new DistanceJointDef();
         }
-        distanceJointDef.bodyA=bodyA;
-        distanceJointDef.bodyB=bodyB;
-        if (localAnchorAIsLocalCenter){               // adjust local anchor if it is the body center
-            localAnchorA.set(bodyA.getLocalCenter()); // now we know the body
-        }
-        if (localAnchorBIsLocalCenter){
-            localAnchorB.set(bodyB.getLocalCenter());
-        }
+        setBodiesAndAnchors(distanceJointDef,bodyA,bodyB);
         distanceJointDef.localAnchorA.set(localAnchorA);
         distanceJointDef.localAnchorB.set(localAnchorB);
         if (adjustLength){
@@ -240,7 +386,6 @@ public class JointBuilder {
         else {
             distanceJointDef.length=length;
         }
-        distanceJointDef.collideConnected=collideConnected;
         distanceJointDef.dampingRatio=dampingRatio;
         distanceJointDef.frequencyHz=frequencyHz;
         DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
