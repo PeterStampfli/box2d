@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 
 /**
  * A builder for all kinds of joints.
@@ -35,11 +37,13 @@ public class JointBuilder {
     float upperAngle;
     float maxMotorTorque;
     float motorSpeed;
+    float maxLength;
 
 
     private DistanceJointDef distanceJointDef;
     private MouseJointDef mouseJointDef;
     private RevoluteJointDef revoluteJointDef;
+    private RopeJointDef ropeJointDef;
 
     /**
      * Create a joint builder with access to physics.
@@ -61,7 +65,7 @@ public class JointBuilder {
     public JointBuilder reset() {
         setAdjustLength();
         setDampingRatio(0);
-        setFrequencyHz(10);
+        setFrequencyHz(0);
         setCollideConnected(false);
         setLocalAnchorAIsLocalCenter();
         setLocalAnchorBIsLocalCenter();
@@ -179,6 +183,17 @@ public class JointBuilder {
     }
 
     /**
+     * Set the maximum length of the (rope) joint.
+     *
+     * @param d float, the maximum length
+     * @return this Jointbuilder
+     */
+    public JointBuilder setMaxLength(float d) {
+        maxLength = d;
+        return this;
+    }
+
+    /**
      * Set that the joint length will be determined after joint creation using getLength/setLength.
      *
      * @return
@@ -213,7 +228,7 @@ public class JointBuilder {
     /**
      * Set the oscillation frequency of the joint, < 0.5/TIME_STEP.
      *
-     * @param f float, oscillation frequency, 0 for rigid joint (?)
+     * @param f float, oscillation frequency, set 0 for rigid joint (no softness)
      * @return this, for chaining
      */
     public JointBuilder setFrequencyHz(float f) {
@@ -255,7 +270,9 @@ public class JointBuilder {
     }
 
     /**
-     * set reference for revolution angle
+     * set reference value for revolution angle at initial positions and angles of bodies.
+     * Default is zero. But the bodies might then be in a rotated state. Relevant for
+     * getting current joint angle and limits.
      *
      * @param angle
      * @return
@@ -310,7 +327,8 @@ public class JointBuilder {
     }
 
     /**
-     * Set bodies of jointDef and local anchor positions of they are local centers.
+     * Set bodies of jointDef and set local anchor positions if they are local centers.
+     * Can't set local anchors because they are not fields of JointDef.
      * Set collideConnected.
      *
      * @param jointDef
@@ -330,11 +348,40 @@ public class JointBuilder {
     }
 
     /**
+     * Build a rope joint between two bodies. Use it to keep a chain from breaking. Attach user data later if needed.
+     *
+     * @param bodyA Body
+     * @param bodyB Body
+     * @return RopeJoint
+     */
+    public RopeJoint buildRopeJoint(Body bodyA,Body bodyB){
+        if (ropeJointDef==null){
+            ropeJointDef=new RopeJointDef();
+        }
+        setBodiesAndAnchors(ropeJointDef,bodyA,bodyB);
+        ropeJointDef.localAnchorA.set(localAnchorA);
+        ropeJointDef.localAnchorB.set(localAnchorB);
+        ropeJointDef.maxLength=maxLength;
+        return (RopeJoint) physics.world.createJoint(ropeJointDef);
+    }
+    
+    /**
+     * Build a rope joint between two physical bodies. Use it to keep a chain from breaking. Attach user data later if needed.
+     *
+     * @param spriteA Body
+     * @param spriteB Body
+     * @return RopeJoint
+     */
+    public RopeJoint buildRopeJoint(PhysicalSprite spriteA, PhysicalSprite spriteB){
+        return buildRopeJoint(spriteA.body,spriteB.body);
+    }
+
+    /**
      * Build a revolute joint between two bodies. Attach user data later if needed.
      *
      * @param bodyA Body
      * @param bodyB Body
-     * @return DistanceJoint
+     * @return RevoluteJoint
      */
     public RevoluteJoint buildRevoluteJoint(Body bodyA, Body bodyB){
         if (revoluteJointDef==null){
@@ -351,17 +398,16 @@ public class JointBuilder {
         revoluteJointDef.upperAngle=upperAngle;
         revoluteJointDef.maxMotorTorque=maxMotorTorque;
         revoluteJointDef.motorSpeed=motorSpeed;
-        RevoluteJoint revoluteJoint=(RevoluteJoint) physics.world.createJoint(revoluteJointDef);
-        return revoluteJoint;
+        return (RevoluteJoint) physics.world.createJoint(revoluteJointDef);
     }
 
-    /**
-     * Build a revolute joint between two physical sprites. Attach user data later if needed.
-     *
-     * @param spriteA
-     * @param spriteB
-     * @return
-     */
+        /**
+         * Build a revolute joint between two physical sprites. Attach user data later if needed.
+         *
+         * @param spriteA
+         * @param spriteB
+         * @return
+         */
     public RevoluteJoint buildRevoluteJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
         return buildRevoluteJoint(spriteA.body, spriteB.body);
     }
@@ -388,8 +434,7 @@ public class JointBuilder {
         }
         distanceJointDef.dampingRatio=dampingRatio;
         distanceJointDef.frequencyHz=frequencyHz;
-        DistanceJoint distanceJoint = (DistanceJoint) physics.world.createJoint(distanceJointDef);
-        return distanceJoint;
+        return  (DistanceJoint) physics.world.createJoint(distanceJointDef);
     }
 
     /**
@@ -424,8 +469,7 @@ public class JointBuilder {
         mouseJointDef.target.set(target).scl(1f/Physics.PIXELS_PER_METER);
         mouseJointDef.dampingRatio=dampingRatio;
         mouseJointDef.frequencyHz=frequencyHz;
-        MouseJoint mouseJoint = (MouseJoint) physics.world.createJoint(mouseJointDef);
-        return mouseJoint;
+        return  (MouseJoint) physics.world.createJoint(mouseJointDef);
     }
 
     /**
