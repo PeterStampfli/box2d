@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
+import com.badlogic.gdx.physics.box2d.joints.PrismaticJoint;
+import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
@@ -38,12 +40,17 @@ public class JointBuilder {
     float maxMotorTorque;
     float motorSpeed;
     float maxLength;
+    private Vector2 localAxisA=new Vector2();
+    private float lowerTranslation;
+    private float upperTranslation;
+    private float maxMotorForce;
 
 
     private DistanceJointDef distanceJointDef;
     private MouseJointDef mouseJointDef;
     private RevoluteJointDef revoluteJointDef;
     private RopeJointDef ropeJointDef;
+    private PrismaticJointDef prismaticJointDef;
 
     /**
      * Create a joint builder with access to physics.
@@ -76,7 +83,8 @@ public class JointBuilder {
         setUpperAngle(MathUtils.PI);
         setReferenceAngle(0);
         setMaxMotorTorque(10000);
-        setMotorSpeed(0);
+        setMaxMotorForce(10000);
+        setRotatingMotorSpeed(0);
         return this;
     }
 
@@ -316,13 +324,79 @@ public class JointBuilder {
     }
 
     /**
-     * set motor speed in radians per second. Positive for counter-clockwise.
+     * set motor speed in radians per second for revolute joint. Positive for counter-clockwise.
      *
      * @param speed
      * @return
      */
-    public JointBuilder setMotorSpeed(float speed){
+    public JointBuilder setRotatingMotorSpeed(float speed){
         motorSpeed=speed;
+        return this;
+    }
+
+    /**
+     * set motor speed in pixels per second for prismatic joint.
+     *
+     * @param speed
+     * @return
+     */
+    public JointBuilder setLinearMotorSpeed(float speed){
+        motorSpeed=speed/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * set lower position of prismatic joint in pixels.
+     *
+     * @param limit
+     * @return
+     */
+    public JointBuilder setLowerTranslation(float limit){
+        lowerTranslation=limit/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * set upper position of prismatic joint in pixels.
+     *
+     * @param limit
+     * @return
+     */
+    public JointBuilder setUpperTranslation(float limit){
+        upperTranslation=limit/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * sets the local axis at body A of a prismatic joint. (will be normalized)
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public JointBuilder setLocalAxisA(float x,float y){
+        localAxisA.set(x, y).nor();
+        return this;
+    }
+
+    /**
+     * sets the local axis at body A of a prismatic joint. (will be normalized)
+     *
+     * @param v
+     * @return
+     */
+    public JointBuilder setLocalAxisA(Vector2 v){
+        setLocalAxisA(v.x,v.y);
+        return this;
+    }
+
+    /**
+     * set the maximum motor force of a prismatic joint (in kg pixels/sec² instead of N)
+     * @param force
+     * @return
+     */
+    public JointBuilder setMaxMotorForce(float force){
+        maxMotorForce=force/Physics.PIXELS_PER_METER;
         return this;
     }
 
@@ -348,6 +422,42 @@ public class JointBuilder {
     }
 
     /**
+     * build a prismatic joint between two bodies
+     *
+     * @param bodyA
+     * @param bodyB
+     * @return
+     */
+    public PrismaticJoint buildPrismaticJoint(Body bodyA, Body bodyB){
+        if (prismaticJointDef==null){
+            prismaticJointDef=new PrismaticJointDef();
+        }
+        setBodiesAndAnchors(prismaticJointDef,bodyA,bodyB);
+        prismaticJointDef.localAnchorA.set(localAnchorA);
+        prismaticJointDef.localAnchorB.set(localAnchorB);
+        prismaticJointDef.enableLimit=enableLimit;
+        prismaticJointDef.enableMotor=enableMotor;
+        prismaticJointDef.localAxisA.set(localAxisA);
+        prismaticJointDef.referenceAngle=referenceAngle;
+        prismaticJointDef.lowerTranslation=lowerTranslation;
+        prismaticJointDef.upperTranslation=upperTranslation;
+        prismaticJointDef.maxMotorForce=maxMotorForce;
+        prismaticJointDef.motorSpeed=motorSpeed;
+        return (PrismaticJoint) physics.world.createJoint(prismaticJointDef);
+    }
+
+    /**
+     * build a prismatic joint between two physical sprites
+     * 
+     * @param spriteA
+     * @param spriteB
+     * @return
+     */
+    public PrismaticJoint buildPrismaticJoint(PhysicalSprite spriteA, PhysicalSprite spriteB){
+        return buildPrismaticJoint(spriteA.body,spriteB.body);
+    }
+
+    /**
      * Build a rope joint between two bodies. Use it to keep a chain from breaking. Attach user data later if needed.
      *
      * @param bodyA Body
@@ -364,7 +474,7 @@ public class JointBuilder {
         ropeJointDef.maxLength=maxLength;
         return (RopeJoint) physics.world.createJoint(ropeJointDef);
     }
-    
+
     /**
      * Build a rope joint between two physical bodies. Use it to keep a chain from breaking. Attach user data later if needed.
      *
