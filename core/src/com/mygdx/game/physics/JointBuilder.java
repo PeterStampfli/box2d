@@ -448,7 +448,7 @@ public class JointBuilder {
 
     /**
      * build a prismatic joint between two physical sprites
-     * 
+     *
      * @param spriteA
      * @param spriteB
      * @return
