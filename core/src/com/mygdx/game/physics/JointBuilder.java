@@ -6,10 +6,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
+import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJoint;
 import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
+import com.badlogic.gdx.physics.box2d.joints.PulleyJoint;
+import com.badlogic.gdx.physics.box2d.joints.PulleyJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
@@ -37,13 +41,19 @@ public class JointBuilder {
     float lowerAngle;
     float referenceAngle;
     float upperAngle;
-    float maxMotorTorque;
+    float maxTorque;
     float motorSpeed;
     float maxLength;
     private Vector2 localAxisA=new Vector2();
     private float lowerTranslation;
     private float upperTranslation;
-    private float maxMotorForce;
+    private float maxForce;
+    private Vector2 groundAnchorA=new Vector2();
+    private Vector2 groundAnchorB=new Vector2();
+    private float lengthA;
+    private float lengthB;
+    private float ratio;
+
 
 
     private DistanceJointDef distanceJointDef;
@@ -51,6 +61,8 @@ public class JointBuilder {
     private RevoluteJointDef revoluteJointDef;
     private RopeJointDef ropeJointDef;
     private PrismaticJointDef prismaticJointDef;
+    private FrictionJointDef frictionJointDef;
+    private PulleyJointDef pulleyJointDef;
 
     /**
      * Create a joint builder with access to physics.
@@ -82,8 +94,8 @@ public class JointBuilder {
         setLowerAngle(-MathUtils.PI);
         setUpperAngle(MathUtils.PI);
         setReferenceAngle(0);
-        setMaxMotorTorque(10000);
-        setMaxMotorForce(10000);
+        setMaxTorque(10000);
+        setMaxForce(10000);
         setRotatingMotorSpeed(0);
         return this;
     }
@@ -313,13 +325,14 @@ public class JointBuilder {
     }
 
     /**
-     * Set the maximum motor torque of a joint in graphics units: kg pixels² /sec² instead of Nm.
+     * Set the maximum torque of a joint in graphics units: kg pixels² /sec² instead of Nm.
+     * (MaxMotorTorque)
      *
      * @param torque float,limit
      * @return
      */
-    public JointBuilder setMaxMotorTorque(float torque) {
-        maxMotorTorque=torque/(Physics.PIXELS_PER_METER*Physics.PIXELS_PER_METER);
+    public JointBuilder setMaxTorque(float torque) {
+        maxTorque=torque/(Physics.PIXELS_PER_METER*Physics.PIXELS_PER_METER);
         return this;
     }
 
@@ -368,7 +381,8 @@ public class JointBuilder {
     }
 
     /**
-     * sets the local axis at body A of a prismatic joint. (will be normalized)
+     * sets the local axis at body A of a prismatic joint.
+     * (Units are irrelevant, will be normalized)
      *
      * @param x
      * @param y
@@ -391,12 +405,88 @@ public class JointBuilder {
     }
 
     /**
-     * set the maximum motor force of a prismatic joint (in kg pixels/sec² instead of N)
+     * set the maximum force of a joint (in kg pixels/sec² instead of N)
+     *  (MotorForce for a prismatic joint)
      * @param force
      * @return
      */
-    public JointBuilder setMaxMotorForce(float force){
-        maxMotorForce=force/Physics.PIXELS_PER_METER;
+    public JointBuilder setMaxForce(float force){
+        maxForce=force/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * Set a ground anchor for connection to body A in pixel units.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public JointBuilder setGroundAnchorA(float x,float y){
+        groundAnchorA.set(x, y).scl(1f/Physics.PIXELS_PER_METER);
+        return this;
+    }
+
+    /**
+     * Set a ground anchor for connection to body A in pixel units.
+     *
+     * @param position
+     * @return
+     */
+    public JointBuilder setGroundAnchorA(Vector2 position){
+        return setGroundAnchorA(position.x,position.y);
+    }
+
+    /**
+     * Set a ground anchor for connection to body B in pixel units.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public JointBuilder setGroundAnchorB(float x,float y){
+        groundAnchorB.set(x, y).scl(1f/Physics.PIXELS_PER_METER);
+        return this;
+    }
+
+    /**
+     * Set a ground anchor for connection to body B in pixel units.
+     *
+     * @param position
+     * @return
+     */
+    public JointBuilder setGroundAnchorB(Vector2 position){
+        return setGroundAnchorB(position.x,position.y);
+    }
+
+    /**
+     * set reference length for connection to body A in pixel units.
+     * @param length
+     * @return
+     */
+    public JointBuilder setLengthA(float length){
+        lengthA=length/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * set reference length for connection to body B in pixel units.
+     * @param length
+     * @return
+     */
+    public JointBuilder setLengthB(float length){
+        lengthB=length/Physics.PIXELS_PER_METER;
+        return this;
+    }
+
+    /**
+     * Set the ratio of a pulley joint
+     *
+     * @param x
+     * @return
+     */
+    public JointBuilder setRatio(float x){
+        ratio=x;
         return this;
     }
 
@@ -422,6 +512,69 @@ public class JointBuilder {
     }
 
     /**
+     * build a pulley joint between two bodies
+     *
+     * @param bodyA
+     * @param bodyB
+     * @return
+     */
+    public PulleyJoint buildPulleyJoint(Body bodyA, Body bodyB) {
+        if (pulleyJointDef == null) {
+            pulleyJointDef = new PulleyJointDef();
+        }
+        setBodiesAndAnchors(pulleyJointDef, bodyA, bodyB);
+        pulleyJointDef.localAnchorA.set(localAnchorA);
+        pulleyJointDef.localAnchorB.set(localAnchorB);
+        pulleyJointDef.groundAnchorA.set(groundAnchorA);
+        pulleyJointDef.groundAnchorB.set(groundAnchorB);
+        pulleyJointDef.lengthA=lengthA;
+        pulleyJointDef.lengthB=lengthB;
+        pulleyJointDef.ratio=ratio;
+        return (PulleyJoint) physics.world.createJoint(pulleyJointDef);
+    }
+
+    /**
+     * build a pulley joint between two physical sprites
+     *
+     * @param spriteA
+     * @param spriteB
+     * @return
+     */
+    public PulleyJoint buildPulleyJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
+        return buildPulleyJoint(spriteA.body,spriteB.body);
+    }
+
+    /**
+     * build a friction joint between two bodies
+     *
+     * @param bodyA
+     * @param bodyB
+     * @return
+     */
+    public FrictionJoint buildFrictionJoint(Body bodyA, Body bodyB) {
+        if (frictionJointDef == null) {
+            frictionJointDef = new FrictionJointDef();
+        }
+        setBodiesAndAnchors(frictionJointDef, bodyA, bodyB);
+        frictionJointDef.localAnchorA.set(localAnchorA);
+        frictionJointDef.localAnchorB.set(localAnchorB);
+        frictionJointDef.maxForce=maxForce;
+        frictionJointDef.maxTorque=maxTorque;
+        return (FrictionJoint) physics.world.createJoint(prismaticJointDef);
+    }
+
+    /**
+     * build a friction joint between two physical sprites
+     *
+     * @param spriteA
+     * @param spriteB
+     * @return
+     */
+    public FrictionJoint buildFrictionJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
+        return buildFrictionJoint(spriteA.body,spriteB.body);
+    }
+
+    /**
      * build a prismatic joint between two bodies
      *
      * @param bodyA
@@ -441,7 +594,7 @@ public class JointBuilder {
         prismaticJointDef.referenceAngle=referenceAngle;
         prismaticJointDef.lowerTranslation=lowerTranslation;
         prismaticJointDef.upperTranslation=upperTranslation;
-        prismaticJointDef.maxMotorForce=maxMotorForce;
+        prismaticJointDef.maxMotorForce=maxForce;
         prismaticJointDef.motorSpeed=motorSpeed;
         return (PrismaticJoint) physics.world.createJoint(prismaticJointDef);
     }
@@ -506,7 +659,7 @@ public class JointBuilder {
         revoluteJointDef.lowerAngle=lowerAngle;
         revoluteJointDef.referenceAngle=referenceAngle;
         revoluteJointDef.upperAngle=upperAngle;
-        revoluteJointDef.maxMotorTorque=maxMotorTorque;
+        revoluteJointDef.maxMotorTorque=maxTorque;
         revoluteJointDef.motorSpeed=motorSpeed;
         return (RevoluteJoint) physics.world.createJoint(revoluteJointDef);
     }
