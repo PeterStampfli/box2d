@@ -76,13 +76,13 @@ public abstract class Lattice {
     }
 
     /**
-     * Set position of bottom left corner of lowest cell at left. With chaining.
+     * Set position of center of lowest cell at left. With chaining.
      *
      * @param left
      * @param bottom
      * @return this, for chaining
      */
-    public Lattice setLeftBottomPosition(float left, float bottom) {
+    public Lattice setLeftBottomCenter(float left, float bottom) {
         this.left = left;
         this.bottom = bottom;
         return this;

@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class RectangularLattice extends Lattice {
 
     /**
-     * Create with given cell size (square lattice)
+     * Create lattice with given cell size (square lattice)
      *
      * @param size
      */
@@ -19,7 +19,7 @@ public class RectangularLattice extends Lattice {
     }
 
     /**
-     * Create with given cell width and height
+     * Create lattice with given cell width and height
      *
      * @param width
      * @param height
@@ -30,14 +30,14 @@ public class RectangularLattice extends Lattice {
 
     @Override
     public void addressOfPosition(Vector2 address, float x, float y) {
-        address.x=xxxxxxxxxxxxxx(float)Math.floor((x-left)/cellWidth);
-        address.y=(float)Math.floor((y-bottom)/cellHeight);
+        address.x=Math.round((x-left)/cellWidth);
+        address.y=Math.round((y-bottom)/cellHeight);
     }
 
     @Override
     public void positionOfAddress(Vector2 vector, float i, float j) {
-        vector.x=left+cellWidth*(0.5f+i);
-        vector.y=bottom+cellHeight*(0.5f+j);
+        vector.x=left+cellWidth*i;
+        vector.y=bottom+cellHeight*j;
     }
 
     @Override

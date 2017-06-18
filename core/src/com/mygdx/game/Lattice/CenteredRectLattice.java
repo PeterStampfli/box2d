@@ -33,8 +33,8 @@ public class CenteredRectLattice extends Lattice {
 
     @Override
     public void positionOfAddress(Vector2 vector, float i, float j) {
-        vector.x=left+cellWidth*(i+0.5f*(Math.round(j)&1+1));
-        vector.y=bottom+cellHeight*0.5f*(j+1);
+        vector.x=left+cellWidth*(i+0.5f*(Math.round(j)&1));
+        vector.y=bottom+cellHeight*0.5f*j;
     }
 
     @Override
@@ -46,13 +46,39 @@ public class CenteredRectLattice extends Lattice {
 
     @Override
     public void addressOfPosition(Vector2 address, float x, float y) {
-        //  using "floor because I am subtracting left/lower border of unit cell
-        // get indices of center
+        // using "floor because I am subtracting position of left/lower lattice point,
+        // which is at the border of the unit cell
+        int iCorner;
+        int jCorner;
         int iCenter=(int) Math.floor((x-left)/cellWidth);
-        int jCenter=(int) Math.floor((y-bottom)/cellHeight)*2+1;
+        int jCenter=(int) Math.floor((y-bottom)/cellHeight)*2+1; // get indices of center
         // position relative to center
-        x-=(iCenter+0.5f)*cellWidth;
-        y-=(jCenter+0.5f)*cellHeight;
-        float len2FromCenter
+        x-=left+cellWidth*(iCenter+0.5f);
+        y-=bottom+0.5f*cellHeight*jCenter;
+        float len2FromCenter=Vector2.len2(x, y);
+        if (x>0){
+            x-=0.5f*cellWidth;
+            iCorner=iCenter+1;
+        }
+        else {
+            x+=0.5f*cellWidth;
+            iCorner=iCenter;
+        }
+        if (y>0){
+            y-=0.5f*cellHeight;
+            jCorner=jCenter+1;
+        }
+        else {
+            y+=0.5f*cellHeight;
+            jCorner=jCenter-1;
+        }
+        if (len2FromCenter<Vector2.len2(x, y)){
+            address.x=iCenter;
+            address.y=iCenter;
+        }
+        else {
+            address.x=iCorner;
+            address.y=jCorner;
+        }
     }
 }
