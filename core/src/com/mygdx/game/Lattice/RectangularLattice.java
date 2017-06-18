@@ -83,7 +83,6 @@ public class RectangularLattice extends Lattice {
         address.x--;
     }
 
-
     /**
      * Make a step upwards and left in the address.
      *
