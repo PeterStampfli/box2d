@@ -28,6 +28,7 @@ public class DrawLines {
 
     TextureRegion discImage;
     TextureRegion lineImage;
+    SpriteBatch batch;
     final private int defaultImageSize = 20;
     private float regionSize;
     public int discImageSizeReduction=3;
@@ -35,11 +36,12 @@ public class DrawLines {
     /**
      * Load images for disc and line, if not present create them.
      *
-     * @param device        Device with BasicAssets for loading
+     * @param device        Device with BasicAssets for loading and spriteBatch
      * @param discImageName
      * @param lineImageName
      */
     public DrawLines(Device device, String discImageName, String lineImageName) {
+        batch=device.spriteBatch;
         BasicAssets basicAssets = device.basicAssets;
         discImage = basicAssets.getTextureRegion(discImageName);
         lineImage = basicAssets.getTextureRegion(lineImageName);
@@ -98,12 +100,10 @@ public class DrawLines {
 
     /**
      * Draw a disc fitting the line width at given position with coordinates (x,y)
-     *
-     * @param batch
-     * @param x
+     *  @param x
      * @param y
      */
-    public void drawDisc(SpriteBatch batch, float x, float y) {
+    public void drawDisc(float x, float y) {
         float reducedSize=regionSize-discImageSizeReduction;
         batch.draw(discImage, x - 0.5f * reducedSize, y - 0.5f * reducedSize,
                    reducedSize, reducedSize);
@@ -116,19 +116,17 @@ public class DrawLines {
      * @param position
      */
     public void drawDisc(SpriteBatch batch, Vector2 position) {
-        drawDisc(batch,position.x,position.y);
+        drawDisc(position.x,position.y);
     }
 
     /**
      * Draw a smooth line between points (x1,y1) and (x2,y2)
-     *
-     * @param batch
-     * @param x1
+     *  @param x1
      * @param y1
      * @param x2
      * @param y2
      */
-    public void drawLine(SpriteBatch batch, float x1, float y1, float x2, float y2) {
+    public void drawLine(float x1, float y1, float x2, float y2) {
         float dx = x2 - x1;
         float dy = y2 - y1;
         float lineLength = (float) Math.sqrt(dx * dx + dy * dy);
@@ -141,77 +139,69 @@ public class DrawLines {
 
     /**
      * Draw a smooth line between points (x1,y1) and (x2,y2)
-     *
-     * @param batch
-     * @param a
+     *  @param a
      * @param b
      */
-    public void drawLine(SpriteBatch batch, Vector2 a,Vector2 b) {
-        drawLine(batch,a.x,a.x,b.x,b.y);
+    public void drawLine(Vector2 a, Vector2 b) {
+        drawLine(a.x,a.x,b.x,b.y);
     }
 
     /**
      * draw lines and dots for a series of points given as coordinate pairs.
      * Connects first and last point with a line if isLoop.
-     *
-     * @param batch
-     * @param isLoop
+     *  @param isLoop
      * @param coordinates
      */
-    public void draw(SpriteBatch batch, boolean isLoop, float... coordinates) {
+    public void draw(boolean isLoop, float... coordinates) {
         int length = coordinates.length;
         int i;
         for (i = 0; i < length; i += 2) {
-            drawDisc(batch, coordinates[i], coordinates[i + 1]);
+            drawDisc(coordinates[i], coordinates[i + 1]);
         }
         for (i = 2; i < length; i += 2) {
-            drawLine(batch, coordinates[i - 2], coordinates[i - 1], coordinates[i], coordinates[i + 1]);
+            drawLine(coordinates[i - 2], coordinates[i - 1], coordinates[i], coordinates[i + 1]);
         }
         if (isLoop) {
-            drawLine(batch, coordinates[0], coordinates[1], coordinates[length - 2], coordinates[length - 1]);
+            drawLine(coordinates[0], coordinates[1], coordinates[length - 2], coordinates[length - 1]);
         }
     }
 
     /**
      * draw lines and dots for a series of points given as coordinate pairs.
      *
-     * @param batch
      * @param coordinates
      */
-    public void draw(SpriteBatch batch, float... coordinates) {
-        draw(batch, false, coordinates);
+    public void draw(float... coordinates) {
+        draw(false, coordinates);
     }
 
     /**
      * draw lines and dots for a series of points given as coordinate pairs.
      * Connects first and last point with a line if isLoop.
-     *
-     * @param batch
-     * @param isLoop
+     *  @param isLoop
      * @param coordinates
      */
-    public void draw(SpriteBatch batch, boolean isLoop, FloatArray coordinates) {
+    public void draw(boolean isLoop, FloatArray coordinates) {
         int length = coordinates.size;
         int i;
         for (i = 0; i < length; i += 2) {
-            drawDisc(batch, coordinates.get(i), coordinates.get(i+1));
+            drawDisc(coordinates.get(i), coordinates.get(i+1));
         }
         for (i = 2; i < length; i += 2) {
-            drawLine(batch, coordinates.get(i - 2), coordinates.get(i - 1), coordinates.get(i ), coordinates.get(i +1));
+            drawLine(coordinates.get(i - 2), coordinates.get(i - 1), coordinates.get(i ), coordinates.get(i +1));
         }
         if (isLoop) {
-            drawLine(batch, coordinates.get(0), coordinates.get(1), coordinates.get(length-2), coordinates.get(length-1));
+            drawLine(coordinates.get(0), coordinates.get(1), coordinates.get(length-2), coordinates.get(length-1));
         }
     }
 
     /**
      * draw lines and dots for a series of points given as coordinate pairs.
      *
-     * @param batch
      * @param coordinates
      */
-    public void draw(SpriteBatch batch, FloatArray coordinates) {
-        draw(batch, false, coordinates);
+    public void draw(FloatArray coordinates) {
+        draw(false, coordinates);
     }
 
     /**
@@ -229,122 +219,112 @@ public class DrawLines {
             drawDisc(batch, points[i]);
         }
         for (i = 1; i < length; i++) {
-            drawLine(batch, points[i-1], points[i]);
+            drawLine(points[i-1], points[i]);
         }
         if (isLoop) {
-            drawLine(batch, points[0], points[length-1]);
+            drawLine(points[0], points[length-1]);
         }
     }
 
     /**
      * draw lines and dots for a series of points given as Vector2 objects.
      *
-     * @param batch
      * @param points
      */
-    public void draw(SpriteBatch batch, Vector2... points) {
+    public void draw(Vector2... points) {
         draw(batch,false,points);
     }
 
     /**
      * draw lines and dots for a series of points given as Vector2 objects.
      * Connects first and last point with a line if isLoop.
-     *
-     * @param batch
-     * @param isLoop
+     *  @param isLoop
      * @param points
      */
-    public void draw(SpriteBatch batch, boolean isLoop, Array<Vector2> points) {
+    public void draw(boolean isLoop, Array<Vector2> points) {
         int length = points.size;
         int i;
         for (i = 0; i < length; i++) {
             drawDisc(batch, points.get(i));
         }
         for (i = 1; i < length; i++) {
-            drawLine(batch, points.get(i-1), points.get(i));
+            drawLine(points.get(i-1), points.get(i));
         }
         if (isLoop) {
-            drawLine(batch, points.get(0), points.get(length-1));
+            drawLine(points.get(0), points.get(length-1));
         }
     }
 
     /**
      * draw lines and dots for a series of points given as Vector2 objects.
      *
-     * @param batch
      * @param points
      */
-    public void draw(SpriteBatch batch, Array<Vector2> points) {
-        draw(batch,false,points);
+    public void draw(Array<Vector2> points) {
+        draw(false,points);
     }
 
     /**
      * draw the lines of a polypoint object
      *
-     * @param batch
      * @param polypoint
      */
-    public void draw(SpriteBatch batch,Polypoint polypoint){
-        draw(batch,polypoint.isLoop,polypoint.coordinates);
+    public void draw(Polypoint polypoint){
+        draw(polypoint.isLoop,polypoint.coordinates);
     }
 
     /**
      * draw the lines of a polyline object. Is not a closed loop.
      *
-     * @param batch
      * @param polyline
      */
-    public void draw(SpriteBatch batch, Polyline polyline){
-        draw(batch,false,polyline.getTransformedVertices());
+    public void draw(Polyline polyline){
+        draw(false,polyline.getTransformedVertices());
     }
 
     /**
      * draw the lines of a polygon object. Is a closed loop.
      *
-     * @param batch
      * @param polygon
      */
-    public void draw(SpriteBatch batch, Polygon polygon){
-        draw(batch,true,polygon.getTransformedVertices());
+    public void draw(Polygon polygon){
+        draw(true,polygon.getTransformedVertices());
     }
 
     /**
      * draw the lines of a chain object. May be a closed loop or not.
      *
-     * @param batch
      * @param chain
      */
-    public void draw(SpriteBatch batch, Chain chain){
-        draw(batch,chain.isLoop,chain.coordinates);
+    public void draw(Chain chain){
+        draw(chain.isLoop,chain.coordinates);
     }
 
     /**
      * draw the line of an edge object.
      *
-     * @param batch
      * @param edge
      */
-    public void draw(SpriteBatch batch, Edge edge){
-        draw(batch,false,edge.aX, edge.aY, edge.bX, edge.bY);
+    public void draw(Edge edge){
+        draw(false,edge.aX, edge.aY, edge.bX, edge.bY);
     }
 
     /**
      * draw lines and dots for a Shape2DdotsAndLines object.
      *
-     * @param batch
      * @param dotsAndLines
      */
-    public void draw(SpriteBatch batch,DotsAndLines dotsAndLines){
+    public void draw(DotsAndLines dotsAndLines){
         Circle circle;
         float[] vertices;
         for (Shape2D shape:dotsAndLines.shapes2D){
             if (shape instanceof Circle){
                 circle=(Circle) shape;
-                drawDisc(batch,circle.x,circle.y);
+                drawDisc(circle.x,circle.y);
             }
             else if (shape instanceof Polygon){
                 vertices=((Polygon)shape).getTransformedVertices();
-                draw(batch,0.5f*(vertices[0]+vertices[2]),0.5f*(vertices[1]+vertices[3]),
+                draw(0.5f*(vertices[0]+vertices[2]),0.5f*(vertices[1]+vertices[3]),
                         0.5f*(vertices[4]+vertices[6]),0.5f*(vertices[5]+vertices[7]));
             }
         }
@@ -355,29 +335,29 @@ public class DrawLines {
      *
      * @param shape Shape2D to draw
      */
-    public void draw(SpriteBatch batch,Shape2D shape){
+    public void draw(Shape2D shape){
         if (shape instanceof Polygon){
-            draw(batch,(Polygon)shape);
+            draw((Polygon)shape);
         }
         else if (shape instanceof Polypoint){
-            draw(batch,(Polypoint)shape);
+            draw((Polypoint)shape);
         }
         else if (shape instanceof Polyline){
-            draw(batch,(Polyline) shape);
+            draw((Polyline) shape);
         }
         else if (shape instanceof Edge){
-            draw(batch,(Edge) shape);
+            draw((Edge) shape);
         }
         else if (shape instanceof Chain){
-            draw(batch,(Chain) shape);
+            draw((Chain) shape);
         }
         else if (shape instanceof DotsAndLines){
-            draw(batch,(DotsAndLines) shape);
+            draw((DotsAndLines) shape);
         }
         else if (shape instanceof Shape2DCollection){         // without DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
             for (Shape2D subShape:shapes.shapes2D){
-                draw(batch,subShape);
+                draw(subShape);
             }
         }
     }
