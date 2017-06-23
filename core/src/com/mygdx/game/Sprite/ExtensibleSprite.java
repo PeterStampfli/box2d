@@ -48,6 +48,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
         setKeepVisible(null);
         setTouchBegin(null);
         setTouchEnd(null);
+        setScroll(null);
     }
 
     /**

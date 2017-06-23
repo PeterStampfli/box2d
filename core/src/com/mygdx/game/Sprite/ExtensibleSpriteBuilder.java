@@ -167,6 +167,7 @@ public class ExtensibleSpriteBuilder {
         sprite.setTouchBegin(masterTouchBegin);
         sprite.setTouchDrag(masterTouchDrag);
         sprite.setTouchEnd(masterTouchEnd);
+        sprite.setScroll(masterScroll);
     }
 
     /**
