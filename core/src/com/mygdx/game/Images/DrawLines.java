@@ -1,5 +1,6 @@
 package com.mygdx.game.Images;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -22,16 +23,20 @@ import com.mygdx.game.utilities.L;
  * We get smoother lines if lineImage has half the width of the line.
  * Adjust value of discImageSizeReduction to get good line end joins.
  * Smoothing only works if images are blown up.
+ *
+ * By default lines are white. Use other colors with device.spriteBatch.setColor(...)
  */
 
 public class DrawLines {
 
-    TextureRegion discImage;
-    TextureRegion lineImage;
+    public TextureRegion discImage;
+    public TextureRegion lineImage;
     SpriteBatch batch;
     final private int defaultImageSize = 20;
     private float regionSize;
-    public int discImageSizeReduction=3;
+    float width;
+    public int discImageSizeReduction=-0;
+    public Shape2DRenderer shape2DRenderer;
 
     /**
      * Load images for disc and line, if not present create them.
@@ -48,15 +53,18 @@ public class DrawLines {
         if (discImage == null) {
             L.og("*** creating discImage: " + discImageName);
             discImage = makeDiscImage(defaultImageSize-discImageSizeReduction);
+            //discImage = makeDiscImage(10);
             Basic.linearInterpolation(discImage);
 
         }
         if (lineImage == null) {
             L.og("*** creating lineImage: " + lineImageName);
             lineImage = makeLineImage(defaultImageSize/2);
-            Basic.linearInterpolation(lineImage);
+         //   Basic.linearInterpolation(lineImage);
         }
         regionSize = discImage.getRegionWidth()+discImageSizeReduction;
+        width=defaultImageSize;
+        shape2DRenderer=device.shape2DRenderer;
     }
 
     /**
@@ -68,7 +76,7 @@ public class DrawLines {
     static public TextureRegion makeDiscImage(int size) {
         Mask mask = new Mask(size + 2, size + 2);
         float radius=size*0.5f;
-        mask.fillCircle(0.5f * size + 1, 0.5f * size + 1, radius);
+        mask.fillCircle(0.5f * size +1, 0.5f * size +1, radius);
         return mask.createTransparentWhiteTextureRegion();
     }
 
@@ -105,8 +113,11 @@ public class DrawLines {
      */
     public void drawDisc(float x, float y) {
         float reducedSize=regionSize-discImageSizeReduction;
+        batch.setColor(Color.FIREBRICK);
         batch.draw(discImage, x - 0.5f * reducedSize, y - 0.5f * reducedSize,
                    reducedSize, reducedSize);
+        batch.setColor(Color.YELLOW);
+        shape2DRenderer.circle(x,y,reducedSize/2);
     }
 
     /**
@@ -130,11 +141,13 @@ public class DrawLines {
         float dx = x2 - x1;
         float dy = y2 - y1;
         float lineLength = (float) Math.sqrt(dx * dx + dy * dy);
-        float lineAngle = MathUtils.radiansToDegrees * MathUtils.atan2(dy, dx);
+        float lineAngle =  (float) Math.atan2(dy, dx);
         batch.draw(lineImage,
                 x1 + 0.5f * (dx - lineLength), y1 + 0.5f * (dy - regionSize),
                 0.5f * lineLength, 0.5f * regionSize, lineLength, regionSize,
-                1, 1, lineAngle);
+                1, 1, MathUtils.radiansToDegrees *lineAngle);
+
+
     }
 
     /**

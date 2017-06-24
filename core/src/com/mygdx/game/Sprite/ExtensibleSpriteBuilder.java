@@ -22,7 +22,7 @@ public class ExtensibleSpriteBuilder {
     public SpriteScroll masterScroll;
 
     /**
-     * Create the builder with a device that has glyphlayout and sprite pools.
+     * Create the builder with a device that has glyphLayout and sprite pools.
      * Set minimal default actions.
      *
      * @param device Device, with pools.
