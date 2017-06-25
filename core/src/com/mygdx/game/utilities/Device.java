@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Sprite.ExtensibleSprite;
@@ -43,6 +44,7 @@ public class Device implements Disposable {
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
+    public ScreenViewport screenViewport;
 
     /**
      * Create an assetManager, pools and basic assets.
@@ -200,6 +202,18 @@ public class Device implements Disposable {
             shape2DRenderer = new Shape2DRenderer();
             disposer.add(shape2DRenderer, "device shapeRenderer");
         }
+        return this;
+    }
+
+    /**
+     * Create a device.screenViewport
+     *
+     * @return Device, for chaining
+     */
+    public Device createScreenViewport() {
+        if (screenViewport == null) {
+            screenViewport = new ScreenViewport();
+            addViewport(screenViewport);        }
         return this;
     }
 
