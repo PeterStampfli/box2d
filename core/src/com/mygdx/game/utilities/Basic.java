@@ -1,8 +1,11 @@
 package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -184,5 +187,89 @@ public class Basic {
             scaledVertices[i] = scale * vertices[i];
         }
         return scaledVertices;
+    }
+
+    /**
+     * create a file handle to an internal file in android assets. read only
+     *
+     * @param path
+     * @return
+     */
+    static public FileHandle createInternalFileHandle(String path){
+        return Gdx.files.internal(path);
+    }
+
+    /**
+     * create a file handle to an local file.
+     *
+     * @param path
+     * @return
+     */
+    static public FileHandle createLocalFileHandle(String path){
+        return Gdx.files.local(path);
+    }
+
+    /**
+     * create a file handle to an external file.
+     *
+     * @param path
+     * @return
+     */
+    static public FileHandle createExternalFileHandle(String path){
+        return Gdx.files.external(path);
+    }
+
+    /**
+     * check if external storage exists
+     *
+     * @return
+     */
+    static public boolean isExternalStorageAvailable(){
+        return Gdx.files.isExternalStorageAvailable();
+    }
+
+    /**
+     * check if local storage exists
+     *
+     * @return
+     */
+    static public boolean isLocalStorageAvailable(){
+        return Gdx.files.isLocalStorageAvailable();
+    }
+
+    /**
+     * get the external storage path
+     *
+     * @return
+     */
+    static public String getExternalStoragePath(){
+        return Gdx.files.getExternalStoragePath();
+    }
+
+    /**
+     * get the local storage path
+     *
+     * @return
+     */
+    static public String getLocalStoragePath(){
+        return Gdx.files.getLocalStoragePath();
+    }
+
+    /**
+     * Write pixmap as a png file
+     * @param file the fileHandle
+     * @param pixmap
+     */
+    static public void writePNG(FileHandle file, Pixmap pixmap){
+        PixmapIO.writePNG(file,pixmap);
+    }
+
+    /**
+     * Write pixmap as a png file on external storage
+     * @param path
+     * @param pixmap
+     */
+    static public void writeExternalPNG(String path, Pixmap pixmap){
+        PixmapIO.writePNG(Basic.createExternalFileHandle(path),pixmap);
     }
 }
