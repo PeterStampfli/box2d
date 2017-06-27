@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Simple static routines with mnemonic simple meaningful interfaces for obscure libgdx calls.
@@ -83,6 +85,18 @@ public class Basic {
      */
     public static void linearInterpolation(Texture texture) {
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    }
+
+    /**
+     * Fill the screen with a background image, adjusted to fill.
+     * Clear background and Call batch.begin() before and set tint.
+     *
+     * @param img
+     */
+    public static void clearBackground(SpriteBatch batch, Viewport viewport, TextureRegion img){
+        float scale=Math.max(viewport.getWorldWidth()/img.getRegionWidth(),
+                            viewport.getWorldHeight()/img.getRegionHeight());
+        batch.draw(img,0,0,scale*img.getRegionWidth(),scale*img.getRegionHeight());
     }
 
     /**

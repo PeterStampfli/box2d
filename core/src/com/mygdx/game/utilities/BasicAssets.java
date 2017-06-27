@@ -261,7 +261,7 @@ public class BasicAssets {
      * I can override the masterTextureRegion in the atlas region with a simple masterTextureRegion
      *
      * @param name
-     * @return
+     * @return the textureRegion or null (if nothing found)
      */
     public TextureRegion getTextureRegion(String name) {
         TextureRegion result;

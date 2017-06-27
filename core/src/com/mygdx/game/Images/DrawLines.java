@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -29,13 +28,14 @@ import com.mygdx.game.utilities.L;
 
 public class DrawLines {
 
+    public TextureRegion pixelImage;
     public TextureRegion discImage;
     public TextureRegion lineImage;
     SpriteBatch batch;
-    final private int defaultImageSize = 20;
-    private float regionSize;
-    float width;
-    public int discImageSizeReduction=-0;
+    int imageWidth;
+    float lineWidth;
+    float imageSize;
+    public int discImageSizeReduction=1;
     public Shape2DRenderer shape2DRenderer;
 
     /**
@@ -45,26 +45,42 @@ public class DrawLines {
      * @param discImageName
      * @param lineImageName
      */
-    public DrawLines(Device device, String discImageName, String lineImageName) {
+    public DrawLines(Device device,String pixelImageName, String discImageName, String lineImageName, int width) {
+        imageWidth=width;
+        lineWidth=width;
         batch=device.spriteBatch;
         BasicAssets basicAssets = device.basicAssets;
+        pixelImage = basicAssets.getTextureRegion(pixelImageName);
         discImage = basicAssets.getTextureRegion(discImageName);
         lineImage = basicAssets.getTextureRegion(lineImageName);
+        if (pixelImage==null){
+            L.og("*** creating pixelImage: " + pixelImageName);
+            pixelImage=makePixelImage();
+        }
         if (discImage == null) {
             L.og("*** creating discImage: " + discImageName);
-            discImage = makeDiscImage(defaultImageSize-discImageSizeReduction);
+            discImage = makeDiscImage(width);
             //discImage = makeDiscImage(10);
             Basic.linearInterpolation(discImage);
 
         }
         if (lineImage == null) {
             L.og("*** creating lineImage: " + lineImageName);
-            lineImage = makeLineImage(defaultImageSize/2);
-         //   Basic.linearInterpolation(lineImage);
+            lineImage = makeLineImage(width);
+            Basic.linearInterpolation(lineImage);
         }
-        regionSize = discImage.getRegionWidth()+discImageSizeReduction;
-        width=defaultImageSize;
+        imageSize=discImage.getRegionWidth();
         shape2DRenderer=device.shape2DRenderer;
+    }
+
+    /**
+     * Make an TextureRegion which is a single white pixel
+     * @return TextureRegion
+     */
+    static public TextureRegion makePixelImage() {
+        Mask mask = new Mask(1,1);
+        mask.invert();
+        return mask.createTransparentWhiteTextureRegion();
     }
 
     /**
@@ -74,9 +90,9 @@ public class DrawLines {
      * @return TextureRegion
      */
     static public TextureRegion makeDiscImage(int size) {
-        Mask mask = new Mask(size + 2, size + 2);
+        Mask mask = new Mask(size + 4, size + 4);
         float radius=size*0.5f;
-        mask.fillCircle(0.5f * size +1, 0.5f * size +1, radius);
+        mask.fillCircle(0.5f * size +2, 0.5f * size +2, radius);
         return mask.createTransparentWhiteTextureRegion();
     }
 
@@ -87,10 +103,12 @@ public class DrawLines {
      * @return
      */
     static public TextureRegion makeLineImage(int size) {
-        Mask mask = new Mask(1, size + 2);
+        Mask mask = new Mask(1, size + 4);
         mask.invert();
         mask.alpha[0] = 0;
-        mask.alpha[size + 1] = 0;
+        mask.alpha[1] = 0;
+        mask.alpha[size + 2] = 0;
+        mask.alpha[size + 3] = 0;
         return mask.createTransparentWhiteTextureRegion();
     }
 
@@ -101,8 +119,7 @@ public class DrawLines {
      * @return
      */
     public DrawLines setLineWidth(float width) {
-        float size = discImage.getRegionWidth() +discImageSizeReduction - 2f;
-        regionSize = (size + 2f) * width / size;
+        lineWidth=width;
         return this;
     }
 
@@ -112,12 +129,9 @@ public class DrawLines {
      * @param y
      */
     public void drawDisc(float x, float y) {
-        float reducedSize=regionSize-discImageSizeReduction;
-        batch.setColor(Color.FIREBRICK);
-        batch.draw(discImage, x - 0.5f * reducedSize, y - 0.5f * reducedSize,
-                   reducedSize, reducedSize);
-        batch.setColor(Color.YELLOW);
-        shape2DRenderer.circle(x,y,reducedSize/2);
+        float reducedSize=discImageSizeReduction*lineWidth;
+        batch.draw(discImage, x - 0.5f * imageSize, y - 0.5f * imageSize,
+                   imageSize, imageSize);
     }
 
     /**
@@ -143,11 +157,9 @@ public class DrawLines {
         float lineLength = (float) Math.sqrt(dx * dx + dy * dy);
         float lineAngle =  (float) Math.atan2(dy, dx);
         batch.draw(lineImage,
-                x1 + 0.5f * (dx - lineLength), y1 + 0.5f * (dy - regionSize),
-                0.5f * lineLength, 0.5f * regionSize, lineLength, regionSize,
+                x1 + 0.5f * (dx - lineLength), y1 + 0.5f * (dy - imageSize),
+                0.5f * lineLength, 0.5f * imageSize, lineLength, imageSize,
                 1, 1, MathUtils.radiansToDegrees *lineAngle);
-
-
     }
 
     /**
