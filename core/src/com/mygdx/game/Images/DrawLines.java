@@ -386,4 +386,24 @@ public class DrawLines {
             }
         }
     }
+
+    /**
+     * Draw a vertical or horizontal line with square ends.
+     * Depending on which coordinate difference is greater.
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void drawVerticalHorizontalLine(float x1, float y1,float x2,float y2){
+        if (Math.abs(x2-x1)<Math.abs(y2-y1)) {
+            batch.draw(pixelImage, x1 - lineWidth * 0.5f, Math.min(y1, y2) - lineWidth * 0.5f,
+                    lineWidth, Math.abs(y2 - y1) + lineWidth);
+        }
+        else {
+            batch.draw(pixelImage, Math.min(x1,x2)-lineWidth*0.5f,y1-lineWidth*0.5f,
+                    Math.abs(x2-x1)+lineWidth,lineWidth);
+        }
+    }
 }
