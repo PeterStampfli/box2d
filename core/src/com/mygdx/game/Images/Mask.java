@@ -2,7 +2,6 @@ package com.mygdx.game.Images;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
@@ -451,51 +450,32 @@ public class Mask {
      * @return Pixmap
      */
     public Pixmap cutFromPixmap(Pixmap input, int offsetX, int offsetY) {
-        Pixmap result = createPixmap();
-        result.drawPixmap(input, -offsetX, -offsetY);
-        setPixmapAlpha(result);
-        return result;
+        Pixmap pixmap = createPixmap();
+        pixmap.drawPixmap(input, -offsetX, -offsetY);
+        setPixmapAlpha(pixmap);
+        return pixmap;
     }
 
     /**
-     * Create a white textureRegion with transparency resulting from the mask.
-     * Sets linear interpolation to get smoothing.
+     * Create a white pixmap with transparency resulting from the mask.
      *
-     * @return TextureRegion
+     * @return pixmap
      */
-    public TextureRegion createTransparentWhiteTextureRegion() {
+    public Pixmap createWhitePixmap() {
         Pixmap pixmap = createPixmap();
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         setPixmapAlpha(pixmap);
-        TextureRegion result=new TextureRegion(new Texture(pixmap));
-        pixmap.dispose();
-        return result;
+        return pixmap;
     }
 
     /**
-     * Create an opaque black and white textureRegion for diagnostics.
-     * Transparent pixel-byte shown as black. Opaque as white.
+     * Create a white textureRegion with transparency resulting from the mask.
      *
      * @return TextureRegion
      */
-    public TextureRegion createBlackWhiteTextureRegion() {
-        Pixmap pixmap = createPixmap();
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        ByteBuffer pixels = pixmap.getPixels();
-        int length = alpha.length;
-        int index = 0;
-        for (int i = 0; i < length; i++) {
-            pixels.put(index++, alpha[i]);
-            pixels.put(index++, alpha[i]);
-            pixels.put(index++, alpha[i]);
-            pixels.put(index++, (byte) 255);
-        }
-        pixels.rewind();
-        TextureRegion result=new TextureRegion(new Texture(pixmap));
-        pixmap.dispose();
-        return result;
+    public TextureRegion createWhiteTextureRegion() {
+        return Basic.textureRegionFromPixmap(createWhitePixmap());
     }
 }
 

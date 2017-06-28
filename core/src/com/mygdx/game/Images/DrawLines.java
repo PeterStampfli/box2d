@@ -1,5 +1,6 @@
 package com.mygdx.game.Images;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -28,39 +29,34 @@ import com.mygdx.game.utilities.L;
 
 public class DrawLines {
 
-    public TextureRegion pixelImage;
     public TextureRegion discImage;
     public TextureRegion lineImage;
     SpriteBatch batch;
     int imageWidth;
     float lineWidth;
     float imageSize;
-    public int discImageSizeReduction=1;
+    public float discImageSizeReduction=0.9f;
     public Shape2DRenderer shape2DRenderer;
 
     /**
-     * Load images for disc and line, if not present create them.
+     * Load images for disc and line, if not present create them with given width for lines.
+     * Actual line width results from image sizes.
      *
      * @param device        Device with BasicAssets for loading and spriteBatch
      * @param discImageName
      * @param lineImageName
+     * @param width
      */
-    public DrawLines(Device device,String pixelImageName, String discImageName, String lineImageName, int width) {
+    public DrawLines(Device device,String discImageName, String lineImageName, int width) {
         imageWidth=width;
         lineWidth=width;
         batch=device.spriteBatch;
         BasicAssets basicAssets = device.basicAssets;
-        pixelImage = basicAssets.getTextureRegion(pixelImageName);
         discImage = basicAssets.getTextureRegion(discImageName);
         lineImage = basicAssets.getTextureRegion(lineImageName);
-        if (pixelImage==null){
-            L.og("*** creating pixelImage: " + pixelImageName);
-            pixelImage=makePixelImage();
-        }
         if (discImage == null) {
             L.og("*** creating discImage: " + discImageName);
             discImage = makeDiscImage(width);
-            //discImage = makeDiscImage(10);
             Basic.linearInterpolation(discImage);
 
         }
@@ -74,26 +70,42 @@ public class DrawLines {
     }
 
     /**
-     * Make an TextureRegion which is a single white pixel
-     * @return TextureRegion
+     * Make an pixmap with a white disc surrounded by transparent white pixels
+     *
+     * @param size int diameter of the disc, region size is size+4
+     * @return Pixmap
      */
-    static public TextureRegion makePixelImage() {
-        Mask mask = new Mask(1,1);
-        mask.invert();
-        return mask.createTransparentWhiteTextureRegion();
+    static public Pixmap makeDiscPixmap(int size) {
+        Mask mask = new Mask(size + 4, size + 4);
+        float radius=size*0.5f;
+        mask.fillCircle(0.5f * size +2, 0.5f * size +2, radius);
+        return mask.createWhitePixmap();
     }
 
     /**
      * Make an TextureRegion with a white disc surrounded by transparent white pixels
      *
-     * @param size int diameter of the disc, region size is size+2
+     * @param size int diameter of the disc, region size is size+4
      * @return TextureRegion
      */
     static public TextureRegion makeDiscImage(int size) {
-        Mask mask = new Mask(size + 4, size + 4);
-        float radius=size*0.5f;
-        mask.fillCircle(0.5f * size +2, 0.5f * size +2, radius);
-        return mask.createTransparentWhiteTextureRegion();
+        return Basic.textureRegionFromPixmap(makeDiscPixmap(size));
+    }
+
+    /**
+     * Make a pixmap as a strip of white pixels, with transparent ends
+     *
+     * @param size
+     * @return
+     */
+    static public Pixmap makeLinePixmap(int size) {
+        Mask mask = new Mask(1, size + 4);
+        mask.invert();
+        mask.alpha[0] = 0;
+        mask.alpha[1] = 0;
+        mask.alpha[size + 2] = 0;
+        mask.alpha[size + 3] = 0;
+        return mask.createWhitePixmap();
     }
 
     /**
@@ -103,13 +115,7 @@ public class DrawLines {
      * @return
      */
     static public TextureRegion makeLineImage(int size) {
-        Mask mask = new Mask(1, size + 4);
-        mask.invert();
-        mask.alpha[0] = 0;
-        mask.alpha[1] = 0;
-        mask.alpha[size + 2] = 0;
-        mask.alpha[size + 3] = 0;
-        return mask.createTransparentWhiteTextureRegion();
+        return Basic.textureRegionFromPixmap(makeLinePixmap(size));
     }
 
     /**
@@ -129,24 +135,23 @@ public class DrawLines {
      * @param y
      */
     public void drawDisc(float x, float y) {
-        float reducedSize=discImageSizeReduction*lineWidth;
-        batch.draw(discImage, x - 0.5f * imageSize, y - 0.5f * imageSize,
-                   imageSize, imageSize);
+        float reducedSize=discImageSizeReduction*imageSize;
+        batch.draw(discImage, x - 0.5f * reducedSize, y - 0.5f * reducedSize,
+                   reducedSize, reducedSize);
     }
 
     /**
      * Draw a disc fitting the line width at given Vector2 positio
      *
-     * @param batch
      * @param position
      */
-    public void drawDisc(SpriteBatch batch, Vector2 position) {
+    public void drawDisc(Vector2 position) {
         drawDisc(position.x,position.y);
     }
 
     /**
      * Draw a smooth line between points (x1,y1) and (x2,y2)
-     *  @param x1
+     * @param x1
      * @param y1
      * @param x2
      * @param y2
@@ -164,11 +169,11 @@ public class DrawLines {
 
     /**
      * Draw a smooth line between points (x1,y1) and (x2,y2)
-     *  @param a
+     * @param a
      * @param b
      */
     public void drawLine(Vector2 a, Vector2 b) {
-        drawLine(a.x,a.x,b.x,b.y);
+        drawLine(a.x,a.y,b.x,b.y);
     }
 
     /**
@@ -232,16 +237,14 @@ public class DrawLines {
     /**
      * draw lines and dots for a series of points given as Vector2 objects.
      * Connects first and last point with a line if isLoop.
-     *
-     * @param batch
-     * @param isLoop
+     *  @param isLoop
      * @param points
      */
-    public void draw(SpriteBatch batch, boolean isLoop, Vector2... points) {
+    public void draw(boolean isLoop, Vector2... points) {
         int length = points.length;
         int i;
         for (i = 0; i < length; i++) {
-            drawDisc(batch, points[i]);
+            drawDisc(points[i]);
         }
         for (i = 1; i < length; i++) {
             drawLine(points[i-1], points[i]);
@@ -257,7 +260,7 @@ public class DrawLines {
      * @param points
      */
     public void draw(Vector2... points) {
-        draw(batch,false,points);
+        draw(false,points);
     }
 
     /**
@@ -270,7 +273,7 @@ public class DrawLines {
         int length = points.size;
         int i;
         for (i = 0; i < length; i++) {
-            drawDisc(batch, points.get(i));
+            drawDisc(points.get(i));
         }
         for (i = 1; i < length; i++) {
             drawLine(points.get(i-1), points.get(i));
@@ -398,12 +401,23 @@ public class DrawLines {
      */
     public void drawVerticalHorizontalLine(float x1, float y1,float x2,float y2){
         if (Math.abs(x2-x1)<Math.abs(y2-y1)) {
-            batch.draw(pixelImage, x1 - lineWidth * 0.5f, Math.min(y1, y2) - lineWidth * 0.5f,
-                    lineWidth, Math.abs(y2 - y1) + lineWidth);
+            batch.draw(lineImage, x1 + imageSize * 0.5f, Math.min(y1, y2) - lineWidth * 0.5f,0,0,
+                    Math.abs(y2 - y1) + lineWidth,imageSize,1,1,90);
         }
         else {
-            batch.draw(pixelImage, Math.min(x1,x2)-lineWidth*0.5f,y1-lineWidth*0.5f,
-                    Math.abs(x2-x1)+lineWidth,lineWidth);
+            batch.draw(lineImage, Math.min(x1,x2)-lineWidth*0.5f,y1-imageSize*0.5f,
+                    Math.abs(x2-x1)+lineWidth,imageSize);
         }
+    }
+
+    /**
+     * Draw a vertical or horizontal line with square ends.
+     * Depending on which coordinate difference is greater.
+     *
+     * @param a
+     * @param b 
+     */
+    public void drawVerticalHorizontalLine(Vector2 a,Vector2 b) {
+        drawVerticalHorizontalLine(a.x,a.y,b.x,b.y);
     }
 }

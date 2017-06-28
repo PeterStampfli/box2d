@@ -100,6 +100,18 @@ public class Basic {
     }
 
     /**
+     * Create a texture region from a pixmap and dispose the pixmap
+     *
+     * @param pixmap will be disposed
+     * @return
+     */
+    public static TextureRegion textureRegionFromPixmap(Pixmap pixmap){
+        TextureRegion result=new TextureRegion(new Texture(pixmap));
+        pixmap.dispose();
+        return result;
+    }
+
+    /**
      * Set the texture of a TextureRegion to linear interpolation.
      *
      * @param textureRegion
@@ -270,20 +282,12 @@ public class Basic {
     }
 
     /**
-     * Write pixmap as a png file
-     * @param file the fileHandle
-     * @param pixmap
-     */
-    static public void writePNG(FileHandle file, Pixmap pixmap){
-        PixmapIO.writePNG(file,pixmap);
-    }
-
-    /**
-     * Write pixmap as a png file on external storage
+     * Write pixmap as a png file on external storage. dispose pixmap.
      * @param path
-     * @param pixmap
+     * @param pixmap will be disposed
      */
-    static public void writeExternalPNG(String path, Pixmap pixmap){
+    static public void writePNG(String path, Pixmap pixmap){
         PixmapIO.writePNG(Basic.createExternalFileHandle(path),pixmap);
+        pixmap.dispose();
     }
 }
