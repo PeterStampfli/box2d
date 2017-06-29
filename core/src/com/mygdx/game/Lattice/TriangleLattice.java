@@ -1,6 +1,7 @@
 package com.mygdx.game.Lattice;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.utilities.Basic;
 
 /**
  * Created by peter on 6/29/17.
@@ -20,7 +21,7 @@ public class TriangleLattice extends Lattice {
     public TriangleLattice(float sideLength){
         super(sideLength);
         side=sideLength;
-        sideRt3=(float) (sideLength*Math.sqrt(3));
+        sideRt3=(float) (sideLength* Basic.rt3);
     }
 
     /**
@@ -55,13 +56,13 @@ public class TriangleLattice extends Lattice {
         }
         // at left or right: correct address i
         if (x>0){
-            if (x*sideRt3-y*side<0){
-                j++;
+            if (y<x*Basic.rt3){
+                i++;
             }
         }
         else  {
-            if (x*sideRt3+y*side<0){
-                j--;
+            if (y<-x*Basic.rt3){
+                i--;
             }
         }
         address.x=i;

@@ -45,37 +45,37 @@ public class CenteredRectLattice extends Lattice {
 
     @Override
     public void addressOfPosition(Vector2 address, float x, float y) {
-        // using "floor because I am subtracting position of left/lower lattice point,
-        // which is at the border of the unit cell
-        int iCorner;
-        int jCorner;
-        int iCenter = (int) Math.floor((x - left) / cellWidth);
-        int jCenter = (int) Math.floor((y - bottom) / cellHeight) * 2 + 1; // get indices of center
-        // position relative to center
-        x -= left + cellWidth * (iCenter + 0.5f);
-        y -= bottom + 0.5f * cellHeight * jCenter;
-        float len2FromCenter = Vector2.len2(x, y);
-        if (x > 0) {
-            x -= 0.5f * cellWidth;
-            iCorner = iCenter + 1;
-        } else {
-            x += 0.5f * cellWidth;
-            iCorner = iCenter;
+        x-=left;
+        y-=bottom;
+        // address of bottom left corner
+        int i=Math.round(x/cellHeight);
+        int j=Math.round(y/cellWidth);
+        // reduce to coordinates around bootom left corner
+        x-=i*cellWidth;
+        y-=j*cellHeight;
+        // two j per unit cell
+        j*=2;
+        float yRef=0.25f*cellHeight-cellWidth/cellHeight*(Math.abs(x)-0.25f*cellWidth);
+        if (x>0){
+            if (y>yRef){
+                j++;
+            }
+            else if (y<-yRef){
+                j--;
+            }
         }
-        if (y > 0) {
-            y -= 0.5f * cellHeight;
-            jCorner = jCenter + 1;
-        } else {
-            y += 0.5f * cellHeight;
-            jCorner = jCenter - 1;
+        else {
+            if (y>yRef){
+                j++;
+                i--;
+            }
+            else if (y<-yRef){
+                j--;
+                i--;
+            }
         }
-        if (len2FromCenter < Vector2.len2(x, y)) {
-            address.x = iCenter;
-            address.y = iCenter;
-        } else {
-            address.x = iCorner;
-            address.y = jCorner;
-        }
+        address.x=i;
+        address.y=j;
     }
 
     /**

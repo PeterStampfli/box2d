@@ -24,6 +24,7 @@ public class Basic {
     private static int numberOfRenderCalls;
     private static float timeOfLastFrame = 10;
     public static final float epsilon=0.1f;
+    public static final float rt3=(float)Math.sqrt(3);
 
 
     /**
