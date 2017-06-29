@@ -415,7 +415,7 @@ public class DrawLines {
      * Depending on which coordinate difference is greater.
      *
      * @param a
-     * @param b 
+     * @param b
      */
     public void drawVerticalHorizontalLine(Vector2 a,Vector2 b) {
         drawVerticalHorizontalLine(a.x,a.y,b.x,b.y);

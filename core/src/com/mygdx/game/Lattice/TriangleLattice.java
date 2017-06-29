@@ -1,0 +1,89 @@
+package com.mygdx.game.Lattice;
+
+import com.badlogic.gdx.math.Vector2;
+
+/**
+ * Created by peter on 6/29/17.
+ * A lattice of triangles.
+ */
+
+public class TriangleLattice extends Lattice {
+    float side;
+    float sideRt3;
+
+
+    /**
+     * Create triangle lattice with length for side of triangles
+     *
+     * @param sideLength
+     */
+    public TriangleLattice(float sideLength){
+        super(sideLength);
+        side=sideLength;
+        sideRt3=(float) (sideLength*Math.sqrt(3));
+    }
+
+    /**
+     * Set position of center of lowest cell at left. With chaining.
+     *
+     * @param left
+     * @param bottom
+     * @return this, for chaining
+     */
+    @Override
+    public Lattice setLeftBottomCenter(float left, float bottom) {
+        this.left = left;
+        this.bottom = bottom-sideRt3/3.0f;
+        return this;
+    }
+
+    @Override
+    public void addressOfPosition(Vector2 address, float x, float y) {
+        x-=left;
+        y-=bottom;
+        int i=Math.round(x/side);
+        int j=Math.round(y/sideRt3);
+        x-=i*side;
+        y-=j*sideRt3;
+        // address of triangle at (0,side/sqrt(3))
+        i*=2;
+        j*=2;
+        // below: correct address j and mirror at x-axis
+        if (y<0){
+            j--;
+            y=-y;
+        }
+        // at left or right: correct address i
+        if (x>0){
+            if (x*sideRt3-y*side<0){
+                j++;
+            }
+        }
+        else  {
+            if (x*sideRt3+y*side<0){
+                j--;
+            }
+        }
+        address.x=i;
+        address.y=j;
+    }
+
+    @Override
+    public void positionOfAddress(Vector2 position, float i, float j) {
+        position.x=left+0.5f*side*i;
+        position.y=bottom+0.25f*sideRt3*(1+2*j);
+        if ((Math.round(i+j)&1)==0){
+            position.y+=0.16666f*sideRt3;
+        }
+        else {
+            position.y+=0.16666f*sideRt3;
+        }
+    }
+
+    @Override
+    public boolean positionIsInside(float x, float y) {
+        return false;
+    }
+
+
+}
