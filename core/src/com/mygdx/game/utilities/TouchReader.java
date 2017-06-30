@@ -72,6 +72,7 @@ public class TouchReader implements Resizable{
 
     /**
      * Get touch event. Using a mouse you have to press the left button to get a touch event.
+     * Touch implies left button press.
      *
      * @return boolean, true if the screen/window has been touched
      */

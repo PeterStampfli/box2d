@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * An extended shapeRenderer that draws Shape2D shapes including collections, Chains,
@@ -60,6 +61,25 @@ public class Shape2DRenderer extends ShapeRenderer{
     public void point(float x,float y){
         setColor(pointColor);
         circle(x,y,nullRadius);
+    }
+
+    /**
+     * Draw a point in the 2d plane as a small circle of nullRadius.
+     *
+     * @param p
+     */
+    public void point(Vector2 p){
+        point(p.x,p.y);
+    }
+
+    /**
+     * Draw a circle, center given by vector2 object
+     *
+     * @param center
+     * @param radius
+     */
+    public void circle(Vector2 center, float radius){
+        circle(center.x,center.y,radius);
     }
 
     /**

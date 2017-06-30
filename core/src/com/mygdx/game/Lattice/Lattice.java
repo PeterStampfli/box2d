@@ -97,14 +97,13 @@ public abstract class Lattice {
      * @param address Vector2, will be determined from position (x,y)
      * @param x float, x-component
      * @param y float, y-component
-     * @return the changed address for chaining
      */
     abstract public void addressOfPosition(Vector2 address,float x,float y);
 
     /**
      * set address depending on position
      *
-     * @param address
+     * @param address Vector2, will be set to the address
      * @param vector
      * @return the changed address for chaining
      */
@@ -124,7 +123,7 @@ public abstract class Lattice {
     abstract public void positionOfAddress(Vector2 vector,float i,float j);
 
     /**
-     * set position depending on address
+     * set position depending on address.
      *
      * @param vector
      * @param address

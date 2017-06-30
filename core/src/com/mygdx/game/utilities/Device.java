@@ -47,7 +47,7 @@ public class Device implements Disposable {
     public ScreenViewport screenViewport;
 
     /**
-     * Create an assetManager, pools and basic assets.
+     * Create with an assetManager, pools and basic assets.
      */
     public Device() {
         disposer = new Disposer("Device");
@@ -91,7 +91,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * Resize the resizables and update viewports
+     * Resize the resizables and update viewports.
      * Call this in the main resize method.
      *
      * @param width
