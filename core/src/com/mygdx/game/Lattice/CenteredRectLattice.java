@@ -39,12 +39,6 @@ public class CenteredRectLattice extends Lattice {
     }
 
     @Override
-    // cutting to a rectangle - rough test
-    public boolean positionIsInside(float x,float y) {
-        return (x>=left)&&(x<=left+cellWidth* addressWidth)&&(y>=bottom)&&(y<=bottom+0.5f*cellHeight* addressHeight);
-    }
-
-    @Override
     public Vector2 addressOfPosition(Vector2 address, float x, float y) {
         x-=left;
         y-=bottom;
@@ -77,7 +71,6 @@ public class CenteredRectLattice extends Lattice {
                 i--;
             }
         }
-
         address.x=i;
         address.y=j;
         return address;

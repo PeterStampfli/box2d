@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Lattice.LatticeVector;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -18,7 +19,6 @@ public class TouchReader implements Resizable{
 
     private Vector3 spacePositionOfTouch=new Vector3();    // x,y-components give touch position
     private int screenWidth,screenHeight;
-    private Vector2 position=new Vector2();
 
     /**
      * Update screen/window size for limiting the mouse position.
@@ -49,11 +49,11 @@ public class TouchReader implements Resizable{
     /**
      * Get the touch position. Unprojected to the world seen by the camera.
      *
+     * @param position Vector2 object, will be set to position
      * @param camera for unprojecting into the graphics world
      * @return Vector2 position, unprojected. Same Vector2 instance for every call
      */
-
-    public Vector2 getPosition(Camera camera){
+    public Vector2 getPositionBasic(Vector2 position,Camera camera){
         spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
         camera.unproject(spacePositionOfTouch);
         position.set(spacePositionOfTouch.x,spacePositionOfTouch.y);
@@ -61,13 +61,49 @@ public class TouchReader implements Resizable{
     }
 
     /**
+     * Get the touch position. Unprojected to the world seen by the camera.
+     *
+     * @param position Vector2 object, will be set to position
+     * @param camera for unprojecting into the graphics world
+     * @return Vector2 position, unprojected. Same Vector2 instance for every call
+     */
+    public Vector2 getPosition(Vector2 position,Camera camera){
+        return getPositionBasic(position, camera);
+    }
+
+    /**
      * Get the touch position. Unprojected to the world seen by the camera of a viewport.
      *
+     * @param position Vector2 object, will be set to position
      * @param viewport with the camera for unprojecting
      * @return position, unprojected according to viewport, will be overwritten at next call
      */
-    public Vector2 getPosition(Viewport viewport){
-        return getPosition(viewport.getCamera());
+    public Vector2 getPosition(Vector2 position, Viewport viewport){
+        return getPositionBasic(position, viewport.getCamera());
+    }
+
+    /**
+     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
+     *
+     * @param position LatticeVector2 object, will be set to position
+     * @param viewport with the camera for unprojecting
+     * @return position, unprojected according to viewport, will be overwritten at next call
+     */
+    public LatticeVector getPosition(LatticeVector position, Viewport viewport){
+        getPositionBasic(position, viewport.getCamera());
+        return position;
+    }
+
+    /**
+     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
+     *
+     * @param position LatticeVector2 object, will be set to position
+     * @param camera for unprojecting
+     * @return position, unprojected according to viewport, will be overwritten at next call
+     */
+    public LatticeVector getPosition(LatticeVector position, Camera camera){
+        getPositionBasic(position, camera);
+        return position;
     }
 
     /**

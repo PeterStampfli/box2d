@@ -82,11 +82,4 @@ public class TriangleLattice extends Lattice {
         }
         return position;
     }
-
-    @Override
-    public boolean positionIsInside(float x, float y) {
-        return false;
-    }
-
-
 }

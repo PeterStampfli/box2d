@@ -42,11 +42,6 @@ public class RectangularLattice extends Lattice {
         return vector;
     }
 
-    @Override
-    public boolean positionIsInside(float x,float y) {
-        return (x>=left)&&(x<=left+cellWidth* addressWidth)&&(y>=bottom)&&(y<=bottom+cellHeight* addressHeight);
-    }
-
     /**
      * Make a step upwards in the address.
      *

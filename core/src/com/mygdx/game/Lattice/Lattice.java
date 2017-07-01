@@ -11,7 +11,6 @@ public abstract class Lattice {
     public float bottom;
     public float cellWidth;
     public float cellHeight;
-    public int addressWidth, addressHeight;
 
     /**
      * default constructor ...
@@ -59,19 +58,6 @@ public abstract class Lattice {
      */
     public Lattice setCellSize(float size) {
         return setCellSize(size,size);
-    }
-
-    /**
-     * Set maximum indices.
-     *
-     * @param iWidth
-     * @param iHeight
-     * @return
-     */
-    public Lattice setAddressRange(int iWidth, int iHeight) {
-        this.addressWidth = iWidth;
-        this.addressHeight = iHeight;
-        return this;
     }
 
     /**
@@ -161,47 +147,6 @@ public abstract class Lattice {
      */
     public Vector2 adjust(Vector2 vector){
         return positionOfAddress(addressOfPosition(vector));
-    }
-
-    /**
-     * Check if position is inside lattice part defined by latticeData.
-     *
-     * @param x float, x-component of position
-     * @param y float, y-component of position
-     * @return boolean
-     */
-    abstract public boolean positionIsInside(float x,float y);
-
-    /**
-     * Check if position is inside lattice part defined by latticeData.
-     *
-     * @param vector Vector2, to check
-     * @return boolean
-     */
-    public boolean positionIsInside(Vector2 vector){
-        return positionIsInside(vector.x,vector.y);
-    }
-
-    /**
-     * Check if address is inside lattice part defined by latticeData.
-     * Simple default implementation for rectangular array.
-     *
-     * @param i int, x-component of address
-     * @param j int, y-component of address
-     * @return boolean
-     */
-    public boolean addressIsInside(float i, float j) {
-        return (i>=0)&&(i< addressWidth)&&(j>=0)&&(j< addressHeight);
-    }
-
-    /**
-     * Check if address is inside lattice part defined by latticeData.
-     *
-     * @param address Address, to check
-     * @return boolean
-     */
-    public boolean addressIsInside(Vector2 address){
-        return addressIsInside(address.x,address.y);
     }
 
     // stepping around, methods that do nothing, to override

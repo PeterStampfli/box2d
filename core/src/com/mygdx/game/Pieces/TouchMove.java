@@ -25,6 +25,7 @@ public class TouchMove extends InputAdapter {
     // if there was touch in previous call, we need this because we do polling
     private boolean wasTouching = false;
     //  positions of last touch and new touch
+    public Vector2 scrollPosition;
 
     /**
      * Create a TouchMove controller.
@@ -41,6 +42,7 @@ public class TouchMove extends InputAdapter {
         newTouchPosition = new Vector2();
         touchPosition = new Vector2();
         deltaTouchPosition = new Vector2();
+        scrollPosition=new Vector2();
     }
 
     /**
@@ -77,11 +79,11 @@ public class TouchMove extends InputAdapter {
         }
         // update touch positions
         if (isTouching && !wasTouching) {                                     // new touch - oldPosition is invalid
-            newTouchPosition.set(touchReader.getPosition(camera));
+            newTouchPosition.set(touchReader.getPosition(newTouchPosition,camera));
             oldTouchPosition.set(newTouchPosition);
         } else if (isTouching && wasTouching) {                         // continue touching
             oldTouchPosition.set(newTouchPosition);
-            newTouchPosition.set(touchReader.getPosition(camera));
+            newTouchPosition.set(touchReader.getPosition(newTouchPosition,camera));
         } else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
             oldTouchPosition.set(newTouchPosition);
         }
@@ -125,7 +127,7 @@ public class TouchMove extends InputAdapter {
      */
     @Override
     public boolean scrolled(int amount) {
-        return piece.scroll(touchReader.getPosition(camera), amount);
+        return piece.scroll(touchReader.getPosition(scrollPosition,camera), amount);
     }
 
 }
