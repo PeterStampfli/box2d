@@ -82,4 +82,52 @@ public class TriangleLattice extends Lattice {
         }
         return position;
     }
+
+    //  walking around
+    // left and right is trivial
+
+    /**
+     * Make a step right in the address.
+     *
+     * @param address Vector2, to transform
+     */
+    @Override
+    public void stepRight(Vector2 address) {
+        address.x++;
+    }
+
+    /**
+     * Make a step left in the address.
+     *
+     * @param address Vector2, to transform
+     */
+    public void stepLeft(Vector2 address) {
+        address.x--;
+    }
+
+    // up and down always if close to next
+
+    /**
+     * Make a step upwards in the address.
+     *
+     * @param address Vector2, to transform
+     */
+    @Override
+    public void stepUp(Vector2 address) {
+        if ((Math.round(address.x+address.y)&1)==0){
+            address.y++;
+        }
+    }
+
+    /**
+     * Make a step downwards in the address.
+     *
+     * @param address Vector2, to transform
+     */
+    @Override
+    public void stepDown(Vector2 address) {
+        if ((Math.round(address.x+address.y)&1)==1){
+            address.y--;
+        }
+    }
 }
