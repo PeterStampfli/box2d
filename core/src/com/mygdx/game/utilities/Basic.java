@@ -101,7 +101,7 @@ public class Basic {
     }
 
     /**
-     * Create a texture region from a pixmap and dispose the pixmap
+     * Create a texture region from a pixmap and dispose the pixmap. Make linear interpolation.
      *
      * @param pixmap will be disposed
      * @return
@@ -109,6 +109,7 @@ public class Basic {
     public static TextureRegion textureRegionFromPixmap(Pixmap pixmap){
         TextureRegion result=new TextureRegion(new Texture(pixmap));
         pixmap.dispose();
+        linearInterpolation(result);
         return result;
     }
 

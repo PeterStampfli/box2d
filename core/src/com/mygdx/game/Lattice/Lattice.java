@@ -12,7 +12,6 @@ public abstract class Lattice {
     public float cellWidth;
     public float cellHeight;
     public int addressWidth, addressHeight;
-    public  Vector2 intermediate=new Vector2();
 
     /**
      * default constructor ...
@@ -97,8 +96,9 @@ public abstract class Lattice {
      * @param address Vector2, will be determined from position (x,y)
      * @param x float, x-component
      * @param y float, y-component
+     * @return the address, for chaining
      */
-    abstract public void addressOfPosition(Vector2 address,float x,float y);
+    abstract public Vector2 addressOfPosition(Vector2 address,float x,float y);
 
     /**
      * set address depending on position
@@ -107,8 +107,8 @@ public abstract class Lattice {
      * @param vector
      * @return the changed address for chaining
      */
-    public void addressOfPosition(Vector2 address,Vector2 vector){
-        addressOfPosition(address,vector.x,vector.y);
+    public Vector2 addressOfPosition(Vector2 address,Vector2 vector){
+        return addressOfPosition(address,vector.x,vector.y);
     }
 
     /**
@@ -120,7 +120,7 @@ public abstract class Lattice {
      * @param j int, y-component of address
      * @return Vector2 position for chaining
      */
-    abstract public void positionOfAddress(Vector2 vector,float i,float j);
+    abstract public Vector2 positionOfAddress(Vector2 vector,float i,float j);
 
     /**
      * set position depending on address.
@@ -129,8 +129,8 @@ public abstract class Lattice {
      * @param address
      * @return Vector2 position for chaining
      */
-    public void positionOfAddress(Vector2 vector,Vector2 address){
-        positionOfAddress(vector,address.x,address.y);
+    public Vector2 positionOfAddress(Vector2 vector,Vector2 address){
+        return positionOfAddress(vector,address.x,address.y);
     }
 
     /**
@@ -140,9 +140,7 @@ public abstract class Lattice {
      * @return Vector2, adjusted vector, for chaining
      */
     public Vector2 adjust(Vector2 vector){
-        addressOfPosition(intermediate,vector);
-        positionOfAddress(vector,intermediate);
-        return vector;
+        return positionOfAddress(vector,addressOfPosition(vector,vector));
     }
 
     /**

@@ -39,7 +39,7 @@ public class TriangleLattice extends Lattice {
     }
 
     @Override
-    public void addressOfPosition(Vector2 address, float x, float y) {
+    public Vector2 addressOfPosition(Vector2 address, float x, float y) {
         x-=left;
         y-=bottom;
         int i=Math.round(x/side);
@@ -67,18 +67,20 @@ public class TriangleLattice extends Lattice {
         }
         address.x=i;
         address.y=j;
+        return address;
     }
 
     @Override
-    public void positionOfAddress(Vector2 position, float i, float j) {
+    public Vector2 positionOfAddress(Vector2 position, float i, float j) {
         position.x=left+0.5f*side*i;
         position.y=bottom+0.25f*sideRt3*(1+2*j);
         if ((Math.round(i+j)&1)==0){
-            position.y+=0.16666f*sideRt3;
+            position.y+=0.083333f*sideRt3;
         }
         else {
-            position.y+=0.16666f*sideRt3;
+            position.y-=0.083333f*sideRt3;
         }
+        return position;
     }
 
     @Override

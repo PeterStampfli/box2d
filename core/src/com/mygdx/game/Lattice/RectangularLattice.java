@@ -29,15 +29,17 @@ public class RectangularLattice extends Lattice {
     }
 
     @Override
-    public void addressOfPosition(Vector2 address, float x, float y) {
+    public Vector2 addressOfPosition(Vector2 address, float x, float y) {
         address.x=Math.round((x-left)/cellWidth);
         address.y=Math.round((y-bottom)/cellHeight);
+        return address;
     }
 
     @Override
-    public void positionOfAddress(Vector2 vector, float i, float j) {
+    public Vector2 positionOfAddress(Vector2 vector, float i, float j) {
         vector.x=left+cellWidth*i;
         vector.y=bottom+cellHeight*j;
+        return vector;
     }
 
     @Override

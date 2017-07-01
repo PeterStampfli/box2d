@@ -32,9 +32,10 @@ public class CenteredRectLattice extends Lattice {
     }
 
     @Override
-    public void positionOfAddress(Vector2 vector, float i, float j) {
+    public Vector2 positionOfAddress(Vector2 vector, float i, float j) {
         vector.x=left+cellWidth*(i+0.5f*(Math.round(j)&1));
         vector.y=bottom+cellHeight*0.5f*j;
+        return vector;
     }
 
     @Override
@@ -44,17 +45,19 @@ public class CenteredRectLattice extends Lattice {
     }
 
     @Override
-    public void addressOfPosition(Vector2 address, float x, float y) {
+    public Vector2 addressOfPosition(Vector2 address, float x, float y) {
         x-=left;
         y-=bottom;
         // address of bottom left corner
-        int i=Math.round(x/cellHeight);
-        int j=Math.round(y/cellWidth);
+        int i=Math.round(x/cellWidth);
+        int j=Math.round(y/cellHeight);
+
         // reduce to coordinates around bootom left corner
         x-=i*cellWidth;
         y-=j*cellHeight;
         // two j per unit cell
         j*=2;
+
         float yRef=0.25f*cellHeight-cellWidth/cellHeight*(Math.abs(x)-0.25f*cellWidth);
         if (x>0){
             if (y>yRef){
@@ -74,8 +77,10 @@ public class CenteredRectLattice extends Lattice {
                 i--;
             }
         }
+
         address.x=i;
         address.y=j;
+        return address;
     }
 
     /**
