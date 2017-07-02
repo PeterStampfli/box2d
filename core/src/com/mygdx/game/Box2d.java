@@ -17,8 +17,11 @@ import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Lattice.Lattice;
-import com.mygdx.game.Lattice.TriangleLattice;
+import com.mygdx.game.Lattice.LatticeOfTouchables;
+import com.mygdx.game.Lattice.LatticeVector;
+import com.mygdx.game.Lattice.RectangularLattice;
 import com.mygdx.game.Pieces.TouchMove;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
@@ -55,6 +58,7 @@ public class Box2d extends ApplicationAdapter {
 	ScreenViewport screenViewport;
 	Lattice lattice;
 	TouchReader touchReader;
+	LatticeOfTouchables<ExtensibleSprite> latticeOfTouchables;
 
 	@Override
 	public void create () {
@@ -67,7 +71,7 @@ public class Box2d extends ApplicationAdapter {
 		device.createScreenViewport();
 		screenViewport=device.screenViewport;
 
-		int viewportSize=100;
+		int viewportSize=500;
 		viewport= device.createExtendViewport(viewportSize,viewportSize,camera);
 
 
@@ -84,12 +88,21 @@ public class Box2d extends ApplicationAdapter {
 		mask.invert();
 		square= mask.createWhiteTextureRegion();
 
-		L.og(device.basicAssets.getTextureRegion("nixda"));
 		img=device.basicAssets.getTextureRegion("badlogic");
 		img=DrawLines.makeDiscImage(5);
-		lattice=new TriangleLattice(60);
+
+		lattice=new RectangularLattice(40,50);
+
 		lattice.setLeftBottomCenter(20,20);
 		touchReader=device.touchReader;
+		ExecuterTest executerTest=new ExecuterTest();
+		executerTest.execute("Hallllllo");
+		latticeOfTouchables=new LatticeOfTouchables<ExtensibleSprite>(5,20);
+		L.og(latticeOfTouchables.items.size);
+		latticeOfTouchables.items.set(34,new ExtensibleSprite());
+		L.og(latticeOfTouchables.items.size);
+		latticeOfTouchables.resize(10,30);
+		L.og(latticeOfTouchables.items.size);
 	}
 
 	@Override
@@ -124,7 +137,7 @@ public class Box2d extends ApplicationAdapter {
 		spriteBatch.setColor(Color.WHITE);
 		spriteBatch.setColor(Color.RED);
 
-		Vector2 a=new Vector2();
+		LatticeVector a=new LatticeVector(lattice);
 		Vector2 b=new Vector2();
 
 		for (int i=0;i<5;i++){
@@ -135,10 +148,16 @@ public class Box2d extends ApplicationAdapter {
 		}
 
 		shapeRenderer.setColor(Color.BLACK);
-		shapeRenderer.circle(device.touchReader.getPosition(viewport),5);
-		shapeRenderer.circle(lattice.adjust(device.touchReader.getPosition(viewport)),20);
+		shapeRenderer.circle(device.touchReader.getPosition(a,viewport),5);
+		shapeRenderer.setColor(Color.BROWN);
+		//shapeRenderer.circle(lattice.adjust(device.touchReader.getPosition(a,viewport)),20);
 		//spriteBatch.draw(img,0,0);
 		shapeRenderer.point(20,20);
+		shapeRenderer.setColor(Color.RED);
+		device.touchReader.getPosition(a,viewport).addressOfPosition().stepUpRight().positionOfAddress();
+		//lattice.stepDown(a);
+		shapeRenderer.circle(a,30);
+
 		spriteBatch.end();
 
 		//shapeRenderer.setColor(Color.BLACK);
