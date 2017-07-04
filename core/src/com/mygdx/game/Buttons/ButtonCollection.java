@@ -1,6 +1,5 @@
 package com.mygdx.game.Buttons;
 
-import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
@@ -8,45 +7,19 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
  * Collect interacting buttons. They are sprites with button extensions.
  */
 
-public class ButtonCollection extends TouchableCollection {
+public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
 
     /**
-     * Check if a touchable is an ExtensibleSprite with a ButtonExtension
+     * Add items to the list. For buttons set their ButtonExtension to reference to this collection.
      *
-     * @param touchable Touchable, to check
-     * @return boolean, true if it is a button
-     */
-    boolean isButton(Touchable touchable){
-        if (touchable instanceof ExtensibleSprite){
-            return ((ExtensibleSprite)touchable).buttonExtension!=null;
-        }
-        return  false;
-    }
-
-    /**
-     * Get buttonExtension of an extensibleSprite. Null else.
-     *
-     * @param touchable Touchable, to check
-     * @return ButtonExtension, of a "button", null else
-     */
-    ButtonExtension getButtonExtension(Touchable touchable){
-        if (touchable instanceof ExtensibleSprite){
-            return ((ExtensibleSprite)touchable).buttonExtension;
-        }
-        return null;
-    }
-
-    /**
-     * Add touchables to the list. For buttons set their ButtonExtension to reference to this collection.
-     *
-     * @param touchables Touchable... or Touchable[]
+     * @param sprites
      */
     @Override
-    public void add(Touchable... touchables){
+    public void add(ExtensibleSprite... sprites){
+        super.add(sprites);
         ButtonExtension buttonExtension;
-        for (Touchable touchable : touchables) {
-            this.touchables.add(touchable);
-            buttonExtension=getButtonExtension(touchable);
+        for (ExtensibleSprite sprite:sprites) {
+            buttonExtension=sprite.buttonExtension;
             if (buttonExtension!=null){
                 buttonExtension.collection=this;
             }
@@ -57,12 +30,12 @@ public class ButtonCollection extends TouchableCollection {
      * Remove a given touchable object, using identity. Searches all. Removes multiple occurencies.
      * If it is a button sets its buttonExtension collection to null.
      *
-     * @param toRemove Touchable, to remove
+     * @param sprite to remove
      * @return true if something has been removed
      */
-    public boolean remove(Touchable toRemove) {
-        boolean success = super.remove(toRemove);
-        ButtonExtension buttonExtension=getButtonExtension(toRemove);
+    public boolean remove(ExtensibleSprite sprite) {
+        boolean success = super.remove(sprite);
+        ButtonExtension buttonExtension=sprite.buttonExtension;
         if (buttonExtension!=null){
             buttonExtension.collection=null;
         }
@@ -74,8 +47,8 @@ public class ButtonCollection extends TouchableCollection {
      */
     public void setStatesUp(){
         ButtonExtension buttonExtension;
-        for (Touchable touchable : touchables) {
-            buttonExtension=getButtonExtension(touchable);
+        for (ExtensibleSprite sprite : items) {
+            buttonExtension=sprite.buttonExtension;
             if (buttonExtension!=null){
                 buttonExtension.setStateUp();
             }
@@ -88,8 +61,8 @@ public class ButtonCollection extends TouchableCollection {
      * @param buttonExtension ButtonExtension of the button to select
      */
     public void select(ButtonExtension buttonExtension){
-        setStatesUp();
         if (buttonExtension!=null){
+            setStatesUp();
             buttonExtension.setStatePressed();
         }
     }

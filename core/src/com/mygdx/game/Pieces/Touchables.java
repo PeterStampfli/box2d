@@ -7,16 +7,21 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 7/2/17.
+ * Does collect items or subclass. Makes touchable actions on items.
  */
 
 public class Touchables<T extends Touchable> implements Touchable {
 
+    public Array<T> items = new Array<T>();
 
-
-
-
-    public Array<T> touchables = new Array<T>();
-
+    /**
+     * set all array elements to null.
+     */
+    public void setNull(){
+        for (int i = items.size - 1; i >= 0; i--) {
+            items.set(i,null);
+        }
+    }
 
     /**
      * Call the draw method, going from last to first object. The painter algorithm: back to front.
@@ -26,16 +31,15 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public void draw(Batch batch, Camera camera) {
-        int length = touchables.size;
-        for (int i = length - 1; i >= 0; i--) {
-            touchables.get(i).draw(batch, camera);
+        for (int i = items.size - 1; i >= 0; i--) {
+            items.get(i).draw(batch, camera);
         }
     }
 
     /**
      * Check if a touchable contains the touch position.
      * Goes from first to last object.
-     * The first touchable that contains the point will become the first element of the touchables array.
+     * The first touchable that contains the point will become the first element of the items array.
      *
      * @param x float, x-coordinate of (touch) position
      * @param y float, y-coordinate of (touch) position
@@ -43,10 +47,10 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean contains(float x, float y) {
-        int length = touchables.size;
+        int length = items.size;
         for (int i = 0; i < length; i++) {
-            if (touchables.get(i).contains(x, y)) {
-                touchables.insert(0, touchables.removeIndex(i));   // put piece to top
+            if (items.get(i).contains(x, y)) {
+                items.insert(0, items.removeIndex(i));   // put piece to top
                 return true;
             }
         }
@@ -55,7 +59,7 @@ public class Touchables<T extends Touchable> implements Touchable {
 
     /**
      * Check if a touchable contains the touch position. Goes from first to last object.
-     * The first touchable that contains the point will become the first element of the touchables array.
+     * The first touchable that contains the point will become the first element of the items array.
      *
      * @param position Vector2, the (touch) position
      * @return true if the collection contains the point
@@ -75,8 +79,8 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean touchBegin(Vector2 position) {
-        if (touchables.size > 0) {
-            return touchables.get(0).touchBegin(position);
+        if (items.size > 0) {
+            return items.get(0).touchBegin(position);
         }
         return false;
     }
@@ -93,8 +97,8 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
-        if (touchables.size > 0) {
-            return touchables.get(0).touchDrag(position, deltaPosition, camera);
+        if (items.size > 0) {
+            return items.get(0).touchDrag(position, deltaPosition, camera);
         }
         return false;
     }
@@ -109,8 +113,8 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean touchEnd(Vector2 position) {
-        if (touchables.size > 0) {
-            return touchables.get(0).touchEnd(position);
+        if (items.size > 0) {
+            return items.get(0).touchEnd(position);
         }
         return false;
     }
@@ -125,7 +129,7 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        for (Touchable touchable : touchables) {
+        for (Touchable touchable : items) {
             if (touchable.scroll(position, amount)) {
                 return true;
             }
@@ -142,7 +146,7 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean keepVisible(Camera camera) {
         boolean somethingChanged = false;
-        for (Touchable touchable : touchables) {
+        for (Touchable touchable : items) {
             if (touchable.keepVisible(camera)) {
                 somethingChanged = true;
             }
