@@ -186,4 +186,10 @@ public class LatticeOfTouchables<T extends Touchable> extends Touchables<T> {
             }
         }
     }
+
+    // set elements of one latticeOfTouchables depending on another one
+
+    public void transform(Transformation<T,? extends Touchable> transformation,LatticeOfTouchables<? extends Touchable> latticeOfTouchables){
+
+    }
 }
