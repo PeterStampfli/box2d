@@ -7,7 +7,7 @@ package com.mygdx.game.Pieces;
  *
  */
 
-public class TouchableCollection<T extends Touchable> extends Touchables<T> {
+public class TouchableCollection<T extends Touchable> extends Touchables {
 
 
 
@@ -47,15 +47,18 @@ public class TouchableCollection<T extends Touchable> extends Touchables<T> {
     }
 
     /**
-     * Get element with given index. or null if index is negative.
+     * Get element with given index. or null if index is negative or wrong class.
      *
      * @param i
      * @return Touchable, of index i, or null
      */
     public T get(int i){
-        if (i<0){
-            return null;
+        if (i>=0){
+            Object item=items.get(i);
+       //     if (item instanceof T){
+
+         //   }
         }
-        return items.get(i);
+        return null;
     }
 }

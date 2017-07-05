@@ -7,21 +7,12 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 7/2/17.
- * Does collect items or subclass. Makes touchable actions on items.
+ * Has an array of objects. Makes touchable actions on touchable items.
  */
 
-public class Touchables<T extends Touchable> implements Touchable {
+public class Touchables<T> implements Touchable {
 
-    public Array<T> items = new Array<T>();
-
-    /**
-     * set all array elements to null.
-     */
-    public void setNull(){
-        for (int i = items.size - 1; i >= 0; i--) {
-            items.set(i,null);
-        }
-    }
+    public Array<Object> items = new Array<Object>();
 
     /**
      * Call the draw method, going from last to first object. The painter algorithm: back to front.
@@ -31,8 +22,12 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public void draw(Batch batch, Camera camera) {
+        Object item;
         for (int i = items.size - 1; i >= 0; i--) {
-            items.get(i).draw(batch, camera);
+            item=items.get(i);
+            if (item instanceof  Touchable){
+                ((Touchable) item).draw(batch, camera);
+            }
         }
     }
 
@@ -48,8 +43,10 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean contains(float x, float y) {
         int length = items.size;
+        Object item;
         for (int i = 0; i < length; i++) {
-            if (items.get(i).contains(x, y)) {
+            item=items.get(i);
+            if ((item instanceof Touchable)&&((Touchable)item).contains(x, y)) {
                 items.insert(0, items.removeIndex(i));   // put piece to top
                 return true;
             }
@@ -80,7 +77,10 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean touchBegin(Vector2 position) {
         if (items.size > 0) {
-            return items.get(0).touchBegin(position);
+            Object item=items.first();
+            if (item instanceof Touchable) {
+                return ((Touchable) item).touchBegin(position);
+            }
         }
         return false;
     }
@@ -98,7 +98,10 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
         if (items.size > 0) {
-            return items.get(0).touchDrag(position, deltaPosition, camera);
+            Object item=items.first();
+            if (item instanceof Touchable) {
+                return ((Touchable) item).touchDrag(position, deltaPosition, camera);
+            }
         }
         return false;
     }
@@ -114,7 +117,10 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean touchEnd(Vector2 position) {
         if (items.size > 0) {
-            return items.get(0).touchEnd(position);
+            Object item=items.first();
+            if (item instanceof Touchable) {
+                return ((Touchable) item).touchEnd(position);
+            }
         }
         return false;
     }
@@ -129,8 +135,8 @@ public class Touchables<T extends Touchable> implements Touchable {
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        for (Touchable touchable : items) {
-            if (touchable.scroll(position, amount)) {
+        for (Object item : items) {
+            if ((item instanceof  Touchable)&&((Touchable) item).scroll(position, amount)) {
                 return true;
             }
         }
@@ -146,8 +152,8 @@ public class Touchables<T extends Touchable> implements Touchable {
     @Override
     public boolean keepVisible(Camera camera) {
         boolean somethingChanged = false;
-        for (Touchable touchable : items) {
-            if (touchable.keepVisible(camera)) {
+        for (Object item : items) {
+            if ((item instanceof  Touchable)&&((Touchable) item).keepVisible(camera)) {
                 somethingChanged = true;
             }
         }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Buttons.ButtonCollection;
@@ -16,11 +17,15 @@ import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Lattice.ActionIJ;
 import com.mygdx.game.Lattice.Lattice;
 import com.mygdx.game.Lattice.LatticeOfTouchables;
 import com.mygdx.game.Lattice.LatticeVector;
 import com.mygdx.game.Lattice.RectangularLattice;
+import com.mygdx.game.Lattice.Transformation;
 import com.mygdx.game.Pieces.TouchMove;
+import com.mygdx.game.Pieces.Touchable;
+import com.mygdx.game.Pieces.Touchables;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
@@ -95,15 +100,57 @@ public class Box2d extends ApplicationAdapter {
 
 		lattice.setLeftBottomCenter(20,20);
 		touchReader=device.touchReader;
-		ExecuterTest executerTest=new ExecuterTest();
-		executerTest.execute("Hallllllo");
-		latticeOfTouchables=new LatticeOfTouchables<ExtensibleSprite>(5,20);
+
+		latticeOfTouchables=new LatticeOfTouchables<ExtensibleSprite>(lattice,5,20).resize(3,3);
 		L.og(latticeOfTouchables.items.size);
-		latticeOfTouchables.items.set(34,new ExtensibleSprite());
+		//latticeOfTouchables.items.set(34,new ExtensibleSprite());
 		L.og(latticeOfTouchables.items.size);
-		latticeOfTouchables.resize(10,30);
-		L.og(latticeOfTouchables.items.size);
+	/*	latticeOfTouchables.create(new Creation<ExtensibleSprite>() {
+			@Override
+			public ExtensibleSprite create() {
+				return new ExtensibleSprite();
+			}
+		});
+		*/
+		ExtensibleSprite sprite=latticeOfTouchables.getAtAddress(1,1);
+		L.og(sprite);
+		latticeOfTouchables.act(new ActionIJ<ExtensibleSprite>() {
+			@Override
+			public void act(ExtensibleSprite sprite, int i, int j) {
+				L.og(i+","+j);
+			}
+		});
+		LatticeOfTouchables<Touchable> touchableLatticeOfTouchables=new LatticeOfTouchables<Touchable>(lattice,3,3);
+		touchableLatticeOfTouchables.transform(new Transformation<Touchable, ExtensibleSprite>() {
+			@Override
+			public Touchable transform(ExtensibleSprite sprite1) {
+				return null;
+			}
+		},latticeOfTouchables);
+		L.og(null instanceof ExtensibleSprite);
+		Object item=new ExtensibleSprite();
+		L.og(item);
+		L.og("*"+Basic.convertInstanceOfObject(item,TouchMove.class));
+		Touchables touchables=new Touchables();
+		touchables.items=new Array<ExtensibleSprite>();
 	}
+	/*
+
+	public static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
+        try {
+            return clazz.cast(o);
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
+    public static void main(String[] args) {
+        String k = convertInstanceOfObject(345435.34, String.class);
+        System.out.println(k);
+    }
+
+
+
+	*/
 
 	@Override
 	public void resize(int w,int h){

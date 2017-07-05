@@ -45,7 +45,7 @@ public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
     /**
      * set state of all buttons to up, except if they are locked.
      */
-    public void setStatesUp(){
+/*    public void setStatesUp(){
         ButtonExtension buttonExtension;
         for (ExtensibleSprite sprite : items) {
             buttonExtension=sprite.buttonExtension;
@@ -54,7 +54,7 @@ public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
             }
         }
     }
-
+*/
     /**
      * Make that all buttons go to up, except locked buttons. The selected button is set to pressed.
      *
@@ -62,7 +62,7 @@ public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
      */
     public void select(ButtonExtension buttonExtension){
         if (buttonExtension!=null){
-            setStatesUp();
+            //setStatesUp();
             buttonExtension.setStatePressed();
         }
     }

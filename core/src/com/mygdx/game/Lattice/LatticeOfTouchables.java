@@ -1,18 +1,21 @@
 package com.mygdx.game.Lattice;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.Pieces.Touchables;
 
 /**
- * Created by peter on 7/2/17.
+ * has objects in matrix. Set and get specific objects, iterate. Create, act and transform.
  */
 
-public class LatticeOfTouchables<T extends Touchable> extends Touchables<T> {
+public class LatticeOfTouchables<T> {
 
     public int width,height;
     public Lattice lattice;
     private Vector2 address=new Vector2();
+
+    public Array<T> items=new Array<T>();
 
     /**
      * create for given size
@@ -23,6 +26,16 @@ public class LatticeOfTouchables<T extends Touchable> extends Touchables<T> {
     public LatticeOfTouchables (Lattice lattice,int w,int h){
         setLattice(lattice);
         resize(w, h);
+        Touchables touchables=new Touchables<T>();
+    }
+
+    /**
+     * set all array elements to null.
+     */
+    public void setNull(){
+        for (int i = items.size - 1; i >= 0; i--) {
+            items.set(i,null);
+        }
     }
 
     /**
@@ -162,13 +175,15 @@ public class LatticeOfTouchables<T extends Touchable> extends Touchables<T> {
     }
 
     /**
-     * Act/transform all item elements independent of address
+     * Act/transform all item elements independent of address. only non-null elements
      *
      * @param action with an act method for objects of class T
      */
     public void act(Action<T> action) {
         for (T t:items) {
-            action.act(t);
+            if (t!=null){
+                action.act(t);
+            }
         }
     }
 
@@ -180,16 +195,38 @@ public class LatticeOfTouchables<T extends Touchable> extends Touchables<T> {
     public void act(ActionIJ<T> actionIJ){
         int i,j;
         int index=0;
+        T t;
         for (j=0;j<height;j++){
             for (i=0;i<width;i++){
-                actionIJ.act(items.get(index++),i,j);
+                t=items.get(index++);
+                if (t!=null) {
+                    actionIJ.act(t, i, j);
+                }
             }
         }
     }
 
-    // set elements of one latticeOfTouchables depending on another one
+    /**
+     * set elements of one latticeOfTouchables depending on the elements of another one. independent of address.
+     *
+     * @param transformation
+     * @param latticeOfTouchables
+     * @param <U>
+     */
 
-    public void transform(Transformation<T,? extends Touchable> transformation,LatticeOfTouchables<? extends Touchable> latticeOfTouchables){
-
+    public <U extends Touchable> void transform(Transformation<T,U> transformation,
+                          LatticeOfTouchables<U> latticeOfTouchables){
+        int i,j;
+        int index=0;
+        U u;
+        for (j=0;j<height;j++){
+            for (i=0;i<width;i++){
+                u=latticeOfTouchables.items.get(index);
+                if (u!=null) {
+                    items.set(index,transformation.transform(u));
+                }
+                index++;
+            }
+        }
     }
 }

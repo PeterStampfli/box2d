@@ -26,6 +26,20 @@ public class Basic {
     public static final float epsilon=0.1f;
     public static final float rt3=(float)Math.sqrt(3);
 
+    /**
+     * Convert object to given class or interface class.
+     *
+     * @param o  some object
+     * @param clazz  Class.class or Interface.class
+     * @return object converted to class/instance clazz, or null if not possible
+     */
+    public static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
+        try {
+            return clazz.cast(o);
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
 
     /**
      * Switch continuous rendering on or off. (Input events always trigger rendering!)
