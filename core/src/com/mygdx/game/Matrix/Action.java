@@ -1,4 +1,4 @@
-package com.mygdx.game.Lattice;
+package com.mygdx.game.Matrix;
 
 /**
  * Created by peter on 7/4/17.
