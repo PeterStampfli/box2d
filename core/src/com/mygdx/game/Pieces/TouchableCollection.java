@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
  * Or puts selected on top and adds and removes.
  */
 
-public class Touchables<T> implements Touchable {
+public class TouchableCollection<T> implements Touchable {
 
     public Array<T> items;
     boolean fixedOrder;
@@ -25,7 +25,7 @@ public class Touchables<T> implements Touchable {
      *
      * @param order
      */
-    public Touchables(boolean order){
+    public TouchableCollection(boolean order){
         items=new Array<T>();
         fixedOrder=order;
     }
@@ -33,7 +33,7 @@ public class Touchables<T> implements Touchable {
     /**
      * Create with new item array and no ordering.
      */
-    public Touchables(){
+    public TouchableCollection(){
         this(false);
     }
 
@@ -42,7 +42,7 @@ public class Touchables<T> implements Touchable {
      *
      * @param items
      */
-    public Touchables(Array<T> items, boolean order){
+    public TouchableCollection(Array<T> items, boolean order){
         this.items=items;
         fixedOrder=order;
     }

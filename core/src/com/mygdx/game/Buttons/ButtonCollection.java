@@ -1,13 +1,13 @@
 package com.mygdx.game.Buttons;
 
-import com.mygdx.game.Pieces.Touchables;
+import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Collect interacting buttons. They are sprites with button extensions.
  */
 
-public class ButtonCollection extends Touchables<ExtensibleSprite> {
+public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
 
     /**
      * Add items to the end of the list. For buttons set their ButtonExtension to reference to this collection.
