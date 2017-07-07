@@ -2,8 +2,8 @@ package com.mygdx.game.Matrix;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Lattice.Transformation;
 import com.mygdx.game.Pieces.Touchable;
+import com.mygdx.game.Pieces.TouchableCollection;
 
 /**
  * has objects in matrix. Set and get specific objects, iterate. Create, act and transform.
@@ -23,6 +23,15 @@ public class Matrix<T> {
      */
     public Matrix(int w, int h){
         resize(w, h);
+    }
+
+    /**
+     * Wrap a new touchableCollection around the matrix items.
+     *
+     * @return
+     */
+    public TouchableCollection<T> createTouchableCollection(){
+        return new TouchableCollection<T>(items,true);
     }
 
     /**
@@ -152,7 +161,7 @@ public class Matrix<T> {
             for (i=0;i<width;i++){
                 t=items.get(index++);
                 if (t!=null) {
-                    actionIJ.act(t, i, j);
+                    actionIJ.act(i,j,t);
                 }
             }
         }
@@ -166,15 +175,33 @@ public class Matrix<T> {
      * @param <U>
      */
     public <U extends Touchable> void transform(Transformation<T,U> transformation,
-                          Matrix<U> matrix){
+                                                Matrix<U> matrix){
+        U u;
+        for (int index=items.size-1;index>=0;index--){
+            u= matrix.items.get(index);
+            if (u!=null) {
+                items.set(index,transformation.transform(u));
+            }
+        }
+    }
+
+    /**
+     * set elements of one latticeOfTouchables depending on the elements of another one and of address.
+     *
+     * @param transformation
+     * @param matrix
+     * @param <U>
+     */
+    public <U extends Touchable> void transformIJ(TransformationIJ<T,U> transformation,
+                                                Matrix<U> matrix){
+        U u;
         int i,j;
         int index=0;
-        U u;
         for (j=0;j<height;j++){
             for (i=0;i<width;i++){
                 u= matrix.items.get(index);
                 if (u!=null) {
-                    items.set(index,transformation.transform(u));
+                    items.set(index,transformation.transform(i,j,u));
                 }
                 index++;
             }
