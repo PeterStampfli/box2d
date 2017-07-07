@@ -1,22 +1,21 @@
 package com.mygdx.game.Buttons;
 
-import com.mygdx.game.Pieces.TouchableCollection;
+import com.mygdx.game.Pieces.Touchables;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Collect interacting buttons. They are sprites with button extensions.
  */
 
-public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {
+public class ButtonCollection extends Touchables<ExtensibleSprite> {
 
     /**
-     * Add items to the list. For buttons set their ButtonExtension to reference to this collection.
+     * Add items to the end of the list. For buttons set their ButtonExtension to reference to this collection.
      *
      * @param sprites
      */
-    @Override
     public void add(ExtensibleSprite... sprites){
-        super.add(sprites);
+        super.addLast(sprites);
         ButtonExtension buttonExtension;
         for (ExtensibleSprite sprite:sprites) {
             buttonExtension=sprite.buttonExtension;

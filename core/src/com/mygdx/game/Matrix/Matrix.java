@@ -2,7 +2,6 @@ package com.mygdx.game.Matrix;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Lattice.Lattice;
 import com.mygdx.game.Lattice.Transformation;
 import com.mygdx.game.Pieces.Touchable;
 
@@ -22,7 +21,7 @@ public class Matrix<T> {
      * @param w
      * @param h
      */
-    public Matrix(Lattice lattice, int w, int h){
+    public Matrix(int w, int h){
         resize(w, h);
     }
 
@@ -66,7 +65,7 @@ public class Matrix<T> {
      * @param j
      * @param t
      */
-    public void setAtAddress(int i,int j,T t){
+    public void set(int i, int j, T t){
         checkIndices(i, j);
         items.set(j*width+i,t);
     }
@@ -76,8 +75,8 @@ public class Matrix<T> {
      * @param address
      * @param t
      */
-    public void setAtAddress(Vector2 address,T t){
-        setAtAddress(Math.round(address.x),Math.round(address.y),t);
+    public void set(Vector2 address, T t){
+        set(Math.round(address.x),Math.round(address.y),t);
     }
 
     /**
@@ -85,7 +84,7 @@ public class Matrix<T> {
      * @param i
      * @param j
      */
-    public T getAtAddress(int i,int j){
+    public T get(int i, int j){
         checkIndices(i, j);
         return items.get(j*width+i);
     }
@@ -94,8 +93,8 @@ public class Matrix<T> {
      * Get element with given address vector.
      * @param address
      */
-    public T getAtAddress(Vector2 address){
-        return getAtAddress(Math.round(address.x),Math.round(address.y));
+    public T get(Vector2 address){
+        return get(Math.round(address.x),Math.round(address.y));
     }
 
     // iteration
@@ -127,7 +126,8 @@ public class Matrix<T> {
     }
 
     /**
-     * Act/transform all item elements independent of address. only non-null elements
+     * Act/transform all item elements independent of address. only non-null elements.
+     * Only changes values of object fields.
      *
      * @param action with an act method for objects of class T
      */
@@ -165,7 +165,6 @@ public class Matrix<T> {
      * @param matrix
      * @param <U>
      */
-
     public <U extends Touchable> void transform(Transformation<T,U> transformation,
                           Matrix<U> matrix){
         int i,j;
