@@ -168,7 +168,7 @@ public class Matrix<T> {
     }
 
     /**
-     * set elements of one latticeOfTouchables depending on the elements of another one. independent of address.
+     * set elements of one matrix depending on the elements of another one. independent of address.
      *
      * @param transformation
      * @param matrix
@@ -186,7 +186,7 @@ public class Matrix<T> {
     }
 
     /**
-     * set elements of one latticeOfTouchables depending on the elements of another one and of address.
+     * set elements of one matrix depending on the elements of another one and of address.
      *
      * @param transformation
      * @param matrix

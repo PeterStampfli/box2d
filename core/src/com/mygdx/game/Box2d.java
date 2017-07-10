@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Buttons.ButtonCollection;
@@ -17,15 +18,14 @@ import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Mask;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DRenderer;
-import com.mygdx.game.Lattice.ActionIJ;
 import com.mygdx.game.Lattice.Lattice;
-import com.mygdx.game.Lattice.LatticeOfTouchables;
-import com.mygdx.game.Lattice.LatticeVector;
 import com.mygdx.game.Lattice.RectangularLattice;
-import com.mygdx.game.Lattice.Transformation;
+import com.mygdx.game.Matrix.Transformation;
+import com.mygdx.game.Matrix.ActionIJ;
+import com.mygdx.game.Matrix.Matrix;
 import com.mygdx.game.Pieces.TouchMove;
 import com.mygdx.game.Pieces.Touchable;
-import com.mygdx.game.Pieces.Touchables;
+import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
@@ -63,7 +63,7 @@ public class Box2d extends ApplicationAdapter {
 	ScreenViewport screenViewport;
 	Lattice lattice;
 	TouchReader touchReader;
-	LatticeOfTouchables<ExtensibleSprite> latticeOfTouchables;
+	Matrix<ExtensibleSprite> matrix;
 
 	@Override
 	public void create () {
@@ -94,17 +94,17 @@ public class Box2d extends ApplicationAdapter {
 		square= mask.createWhiteTextureRegion();
 
 		img=device.basicAssets.getTextureRegion("badlogic");
-		img=DrawLines.makeDiscImage(5);
+		//img=DrawLines.makeDiscImage(5);
 
 		lattice=new RectangularLattice(40,50);
 
 		lattice.setLeftBottomCenter(20,20);
 		touchReader=device.touchReader;
 
-		latticeOfTouchables=new LatticeOfTouchables<ExtensibleSprite>(lattice,5,20).resize(3,3);
-		L.og(latticeOfTouchables.items.size);
+		matrix =new Matrix<ExtensibleSprite>(5,20).resize(3,3);
+		L.og(matrix.items.size);
 		//latticeOfTouchables.items.set(34,new ExtensibleSprite());
-		L.og(latticeOfTouchables.items.size);
+		L.og(matrix.items.size);
 	/*	latticeOfTouchables.create(new Creation<ExtensibleSprite>() {
 			@Override
 			public ExtensibleSprite create() {
@@ -112,45 +112,29 @@ public class Box2d extends ApplicationAdapter {
 			}
 		});
 		*/
-		ExtensibleSprite sprite=latticeOfTouchables.getAtAddress(1,1);
+		ExtensibleSprite sprite= matrix.get(1,1);
 		L.og(sprite);
-		latticeOfTouchables.act(new ActionIJ<ExtensibleSprite>() {
+		matrix.act(new ActionIJ<ExtensibleSprite>() {
 			@Override
-			public void act(ExtensibleSprite sprite, int i, int j) {
+			public void act( int i, int j,ExtensibleSprite sprite) {
 				L.og(i+","+j);
 			}
 		});
-		LatticeOfTouchables<Touchable> touchableLatticeOfTouchables=new LatticeOfTouchables<Touchable>(lattice,3,3);
-		touchableLatticeOfTouchables.transform(new Transformation<Touchable, ExtensibleSprite>() {
+		Matrix<Touchable> touchableMatrix =new Matrix<Touchable>(3,3);
+		touchableMatrix.transform(new Transformation<Touchable, ExtensibleSprite>() {
 			@Override
 			public Touchable transform(ExtensibleSprite sprite1) {
 				return null;
 			}
-		},latticeOfTouchables);
+		}, matrix);
 		L.og(null instanceof ExtensibleSprite);
 		Object item=new ExtensibleSprite();
 		L.og(item);
 		L.og("*"+Basic.convertInstanceOfObject(item,TouchMove.class));
-		Touchables touchables=new Touchables();
-		touchables.items=new Array<ExtensibleSprite>();
+		TouchableCollection touchableCollection =new TouchableCollection(false);
+		touchableCollection.items=new Array<ExtensibleSprite>();
 	}
-	/*
 
-	public static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
-        try {
-            return clazz.cast(o);
-        } catch (ClassCastException e) {
-            return null;
-        }
-    }
-    public static void main(String[] args) {
-        String k = convertInstanceOfObject(345435.34, String.class);
-        System.out.println(k);
-    }
-
-
-
-	*/
 
 	@Override
 	public void resize(int w,int h){
@@ -161,58 +145,15 @@ public class Box2d extends ApplicationAdapter {
 	@Override
 	public void render () {
 		Basic.setContinuousRendering(false);
-
-
-
-		viewport.apply(true);
-		screenViewport.apply(true);
-		Basic.clearBackground(Color.WHITE);
-
-		//Vector2 position=device.touchReader.getPosition(viewport);
-
-//		touchMove.update();
-		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-		//spriteBatch.setProjectionMatrix(screenViewport.getCamera().combined);
+		Basic.clearBackground(Color.BLUE);
+		viewport.apply();
+		viewport.getCamera().position.set(((ExtendViewport)viewport).getMinWorldWidth()/2,viewport.getWorldHeight()/2,0);
+		Basic.setProjection(spriteBatch,viewport);
 		spriteBatch.begin();
-		spriteBatch.setColor(Color.GRAY);
-		//Basic.clearBackground(spriteBatch,viewport,img);
-
-		shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
-		shapeRenderer.begin();
-		//extensibleSprite.draw(spriteBatch, viewport.getCamera());
-		//buttonCollection.draw(spriteBatch,viewport.getCamera());
-		spriteBatch.setColor(Color.WHITE);
-		spriteBatch.setColor(Color.RED);
-
-		LatticeVector a=new LatticeVector(lattice);
-		Vector2 b=new Vector2();
-
-		for (int i=0;i<5;i++){
-			for (int j=0;j<5;j++) {
-				lattice.positionOfAddress(a,i,j);
-				spriteBatch.draw(img,a.x-img.getRegionWidth()/2,a.y-img.getRegionHeight()/2);
-			}
-		}
-
-		shapeRenderer.setColor(Color.BLACK);
-		shapeRenderer.circle(device.touchReader.getPosition(a,viewport),5);
-		shapeRenderer.setColor(Color.BROWN);
-		//shapeRenderer.circle(lattice.adjust(device.touchReader.getPosition(a,viewport)),20);
-		//spriteBatch.draw(img,0,0);
-		shapeRenderer.point(20,20);
-		shapeRenderer.setColor(Color.RED);
-		device.touchReader.getPosition(a,viewport).addressOfPosition().stepUpRight().positionOfAddress();
-		//lattice.stepDown(a);
-		shapeRenderer.circle(a,30);
-
+		spriteBatch.draw(img,0,0);
 		spriteBatch.end();
 
-		//shapeRenderer.setColor(Color.BLACK);
-		//shapeRenderer.draw(new Circle(20,20,2));
 
-		shapeRenderer.end();
-
-		//physics.debugRender(viewport);
 	}
 	
 	@Override

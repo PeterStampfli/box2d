@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -91,6 +92,16 @@ public class Basic {
      */
     public static void clearBackground(Color color) {
         clearBackground(color.r, color.g, color.b);
+    }
+
+    /**
+     * set the projection (matrix) of a batch based on a viewport
+     *
+     * @param batch
+     * @param viewport
+     */
+    public static void setProjection(Batch batch, Viewport viewport){
+        batch.setProjectionMatrix(viewport.getCamera().combined);
     }
 
     /**
