@@ -110,7 +110,7 @@ public class Device implements Disposable {
 
     /**
      * Create an extended viewport
-     * with a supplied OrthographicCamera (followCamera ...). Sets the camera
+     * with a supplied OrthographicCamera (followCamera ...). Sets the camera to center of minimum world region.
      * Add to the list of viewports for resizing.
      *
      * @param minWidth  float, minimum width of the camera viewport in virtual pixels.
@@ -126,7 +126,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * create an extended viewport with a new orthographic camera.
+     * create an extended viewport with a new orthographic camera. Sets the camera to center of minimum world region.
      *
      * @param minWidth  float, minimum width of the camera viewport in virtual pixels.
      * @param minHeight float, minimum height of the camera viewport in virtual pixels.
@@ -137,7 +137,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * Create a fit viewport
+     * Create a fit viewport. Sets the camera to center of minimum world region.
      * with a supplied OrthographicCamera (followCamera ...).
      * Add to the list of viewports for resizing.
      *
@@ -154,7 +154,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * Create a fit viewport with its own orthographic camera
+     * Create a fit viewport with its own orthographic camera. Sets the camera to center of minimum world region.
      *
      * @param minWidth  float, minimum width of the camera viewport in virtual pixels.
      * @param minHeight float, minimum height of the camera viewport in virtual pixels.

@@ -105,6 +105,16 @@ public class Basic {
     }
 
     /**
+     * Set the viewport camera to the center of the viewports visible world. For extendViewport
+     * the left bottom corner of the screen will have coordinates (0,0)
+     *
+     * @param viewport
+     */
+    public static void center(Viewport viewport){
+        viewport.getCamera().position.set(0.5f*viewport.getWorldWidth(),0.5f*viewport.getWorldHeight(),0);
+    }
+
+    /**
      * set texture to linear interpolation
      *
      * @param texture
