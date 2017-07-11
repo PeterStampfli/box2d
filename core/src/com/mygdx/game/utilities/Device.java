@@ -47,10 +47,12 @@ public class Device implements Disposable {
     public ScreenViewport screenViewport;
 
     /**
-     * Create with an assetManager, pools and basic assets.
+     * Create with an assetManager, spriteBatch, pools and basic assets.
      */
     public Device() {
         disposer = new Disposer("Device");
+        spriteBatch = new SpriteBatch();
+        disposer.add(spriteBatch, "device spriteBatch");
         assetManager = new AssetManager();
         disposer.add(assetManager, "assetManager");
         basicAssets = new BasicAssets(this);
@@ -162,21 +164,6 @@ public class Device implements Disposable {
      */
     public Viewport createFitViewport(float minWidth, float minHeight) {
         return createFitViewport(minWidth, minHeight, new OrthographicCamera());
-    }
-
-    // create renderer and related things
-
-    /**
-     * Create a spritebatch and add it to the disposer.
-     *
-     * @return Device, for chaining
-     */
-    public Device createSpriteBatch() {
-        if (spriteBatch == null) {
-            spriteBatch = new SpriteBatch();
-            disposer.add(spriteBatch, "device spriteBatch");
-        }
-        return this;
     }
 
     /**
