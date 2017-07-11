@@ -2,6 +2,7 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -105,13 +106,22 @@ public class Basic {
     }
 
     /**
+     * Set the camera to the center of its visible world.
+     *
+     * @param camera
+     */
+    public static void center(Camera camera){
+        camera.position.set(0.5f*camera.viewportWidth,0.5f*camera.viewportHeight,0);
+    }
+
+    /**
      * Set the viewport camera to the center of the viewports visible world. For extendViewport
      * the left bottom corner of the screen will have coordinates (0,0)
      *
      * @param viewport
      */
     public static void center(Viewport viewport){
-        viewport.getCamera().position.set(0.5f*viewport.getWorldWidth(),0.5f*viewport.getWorldHeight(),0);
+        center(viewport.getCamera());
     }
 
     /**

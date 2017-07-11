@@ -14,7 +14,7 @@ import com.mygdx.game.Sprite.SpriteContains;
 public class PhysicalSpriteActions extends SpriteActions {
 
     /**
-     * An object that implements SpriteContains:
+     * An object that implements SpriteContains especially for physics:
      * Contains a position if one of its body fixtures contains it.
      * Check only fixtures that are not sensors.
      * Does not check the region of the sprite image because the full shapes define the physics.
