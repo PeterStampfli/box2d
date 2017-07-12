@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Sprite.ExtensibleSprite;
@@ -44,7 +43,6 @@ public class Device implements Disposable {
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
-    public ScreenViewport screenViewport;
 
     /**
      * Create with an assetManager, spriteBatch, pools and basic assets.
@@ -63,12 +61,10 @@ public class Device implements Disposable {
     }
 
     /**
-     * Set logging of the disposer on or off (default is off).
-     *
-     * @param logging boolean, true to switch logging on
+     * Set logging of the disposer on.
      */
-    public Device setLogging(boolean logging) {
-        disposer.setLogging(logging);
+    public Device logging() {
+        disposer.logging();
         return this;
     }
 
@@ -169,39 +165,27 @@ public class Device implements Disposable {
     /**
      * Create a default bitmap masterFont for debugging. Add to the disposer.
      *
-     * @return Device, for chaining
+     * @return the bitmapFont
      */
-    public Device createDefaultBitmapFont() {
+    public BitmapFont createDefaultBitmapFont() {
         if (bitmapFont == null) {
             bitmapFont = new BitmapFont();
             disposer.add(bitmapFont, "device defaultBitmapFont");
         }
-        return this;
+        return bitmapFont;
     }
 
     /**
      * Create an extended shapeRenderer for debugging shape2D's. Add to disposer.
      *
-     * @return Device, for chaining
+     * @return the shape2DRenderer
      */
-    public Device createShape2DRenderer() {
+    public Shape2DRenderer createShape2DRenderer() {
         if (shape2DRenderer == null) {
             shape2DRenderer = new Shape2DRenderer();
             disposer.add(shape2DRenderer, "device shapeRenderer");
         }
-        return this;
-    }
-
-    /**
-     * Create a device.screenViewport
-     *
-     * @return Device, for chaining
-     */
-    public Device createScreenViewport() {
-        if (screenViewport == null) {
-            screenViewport = new ScreenViewport();
-            addViewport(screenViewport);        }
-        return this;
+        return shape2DRenderer;
     }
 
     /**

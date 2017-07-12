@@ -40,12 +40,10 @@ public class Disposer implements Disposable {
     }
 
     /**
-     * Switches logging on or off (default is off).
-     *
-     * @param logging boolean, true to switch logging on.
+     * Switches logging on(default is off).
      */
-    public void setLogging(boolean logging){
-        this.logging=logging;
+    public void logging(){
+        this.logging=true;
     }
 
     /**
