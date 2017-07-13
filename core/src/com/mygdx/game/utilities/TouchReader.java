@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.Lattice.LatticeVector;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -19,14 +18,34 @@ public class TouchReader implements Resizable{
 
     private Vector3 spacePositionOfTouch=new Vector3();    // x,y-components give touch position
     private int screenWidth,screenHeight;
+    public Camera camera;
 
     /**
-     * Update screen/window size for limiting the mouse position.
+     * Update screen/window size for limiting the mouse position. call in resize.
      */
     public void resize(int width,int height){
         screenWidth=width;
         screenHeight=height;
     }
+
+    /**
+     * Set the camera. Call in show() method of screens. Or render if using more than one camera/viewport.
+     *
+     * @param camera
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    /**
+     * Set the camera using the camera of a viewport. Call in show() method of screens.
+     *
+     * @param viewport
+     */
+    public void setCamera(Viewport viewport) {
+        this.camera = viewport.getCamera();
+    }
+
 
     /**
      * Get the x-coordinate of the touch position on the screen. Limited to the window for mouse.
@@ -49,66 +68,17 @@ public class TouchReader implements Resizable{
     /**
      * Get the touch position. Unprojected to the world seen by the camera.
      *
-     * @param position Vector2 object, will be set to position
-     * @param camera for unprojecting into the graphics world
-     * @return Vector2 position, unprojected. Same Vector2 instance for every call
+     * @param position Vector2 object, will be set to position.
      */
-    public Vector2 getPositionBasic(Vector2 position,Camera camera){
+    public void getPosition(Vector2 position){
         spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
         camera.unproject(spacePositionOfTouch);
         position.set(spacePositionOfTouch.x,spacePositionOfTouch.y);
-        return position;
-    }
-
-    /**
-     * Get the touch position. Unprojected to the world seen by the camera.
-     *
-     * @param position Vector2 object, will be set to position
-     * @param camera for unprojecting into the graphics world
-     * @return Vector2 position, unprojected. Same Vector2 instance for every call
-     */
-    public Vector2 getPosition(Vector2 position,Camera camera){
-        return getPositionBasic(position, camera);
-    }
-
-    /**
-     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
-     *
-     * @param position Vector2 object, will be set to position
-     * @param viewport with the camera for unprojecting
-     * @return position, unprojected according to viewport, will be overwritten at next call
-     */
-    public Vector2 getPosition(Vector2 position, Viewport viewport){
-        return getPositionBasic(position, viewport.getCamera());
-    }
-
-    /**
-     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
-     *
-     * @param position LatticeVector2 object, will be set to position
-     * @param viewport with the camera for unprojecting
-     * @return position, unprojected according to viewport, will be overwritten at next call
-     */
-    public LatticeVector getPosition(LatticeVector position, Viewport viewport){
-        getPositionBasic(position, viewport.getCamera());
-        return position;
-    }
-
-    /**
-     * Get the touch position. Unprojected to the world seen by the camera of a viewport.
-     *
-     * @param position LatticeVector2 object, will be set to position
-     * @param camera for unprojecting
-     * @return position, unprojected according to viewport, will be overwritten at next call
-     */
-    public LatticeVector getPosition(LatticeVector position, Camera camera){
-        getPositionBasic(position, camera);
-        return position;
     }
 
     /**
      * Get touch event. Using a mouse you have to press the left button to get a touch event.
-     * Touch implies left button press.
+     * Touch on touchscreen is always left button press.
      *
      * @return boolean, true if the screen/window has been touched
      */

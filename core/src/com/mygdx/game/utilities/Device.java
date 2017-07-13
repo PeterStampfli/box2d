@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Shape2DRenderer;
+import com.mygdx.game.Pieces.TouchMover;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
@@ -40,6 +41,7 @@ public class Device implements Disposable {
     public AssetManager assetManager;
     public BasicAssets basicAssets;
     public TouchReader touchReader;
+    public TouchMover touchMover;
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
@@ -56,6 +58,7 @@ public class Device implements Disposable {
         basicAssets = new BasicAssets(this);
         touchReader = new TouchReader();
         addResizable(touchReader);
+        touchMover=new TouchMover(touchReader);
         extensibleSpritePool = Pools.get(ExtensibleSprite.class);
         glyphLayoutPool = Pools.get(GlyphLayout.class);
     }
