@@ -148,13 +148,13 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * For the builder only. Set the sprite data.
+     * For the builders only. Set the sprite data.
      *
      * @param sprite ExtensibleSprite, or subtype, to set up.
      * @param textureRegion TextureRegion, image
      * @param shape Shape2D, shape
      */
-    private void setup(ExtensibleSprite sprite, TextureRegion textureRegion, Shape2D shape){
+    public void setup(ExtensibleSprite sprite, TextureRegion textureRegion, Shape2D shape){
         sprite.setRegion(textureRegion);
         sprite.setColor(Color.WHITE);
         sprite.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());

@@ -1,11 +1,9 @@
 package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -18,7 +16,16 @@ public class TouchReader implements Resizable{
 
     private Vector3 spacePositionOfTouch=new Vector3();    // x,y-components give touch position
     private int screenWidth,screenHeight;
-    public Camera camera;
+    public Device device;
+
+    /**
+     * TouchReader has access to device for the actual camera.
+     *
+     * @param device
+     */
+    public TouchReader(Device device){
+        this.device=device;
+    }
 
     /**
      * Update screen/window size for limiting the mouse position. call in resize.
@@ -27,25 +34,6 @@ public class TouchReader implements Resizable{
         screenWidth=width;
         screenHeight=height;
     }
-
-    /**
-     * Set the camera. Call in show() method of screens. Or render if using more than one camera/viewport.
-     *
-     * @param camera
-     */
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
-    /**
-     * Set the camera using the camera of a viewport. Call in show() method of screens.
-     *
-     * @param viewport
-     */
-    public void setCamera(Viewport viewport) {
-        this.camera = viewport.getCamera();
-    }
-
 
     /**
      * Get the x-coordinate of the touch position on the screen. Limited to the window for mouse.
@@ -72,7 +60,7 @@ public class TouchReader implements Resizable{
      */
     public void getPosition(Vector2 position){
         spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
-        camera.unproject(spacePositionOfTouch);
+        device.camera.unproject(spacePositionOfTouch);
         position.set(spacePositionOfTouch.x,spacePositionOfTouch.y);
     }
 

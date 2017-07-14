@@ -2,6 +2,7 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -40,6 +41,7 @@ public class Device implements Disposable {
     public Shape2DRenderer shape2DRenderer;
     public AssetManager assetManager;
     public BasicAssets basicAssets;
+    public Camera camera;
     public TouchReader touchReader;
     public TouchMover touchMover;
     public Array<Resizable> resizables = new Array<Resizable>();
@@ -56,9 +58,9 @@ public class Device implements Disposable {
         assetManager = new AssetManager();
         disposer.add(assetManager, "assetManager");
         basicAssets = new BasicAssets(this);
-        touchReader = new TouchReader();
+        touchReader = new TouchReader(this);
         addResizable(touchReader);
-        touchMover=new TouchMover(touchReader);
+        touchMover=new TouchMover(this);
         extensibleSpritePool = Pools.get(ExtensibleSprite.class);
         glyphLayoutPool = Pools.get(GlyphLayout.class);
     }
@@ -70,6 +72,25 @@ public class Device implements Disposable {
         disposer.logging();
         return this;
     }
+
+    /**
+     * Set the camera. Call in show() method of screens. Or render if using more than one camera/viewport.
+     *
+     * @param camera
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    /**
+     * Set the camera using the camera of a viewport. Call in show() method of screens.
+     *
+     * @param viewport
+     */
+    public void setCamera(Viewport viewport) {
+        this.camera = viewport.getCamera();
+    }
+
 
     // keep track of everything to resize, and do resize on demand
 

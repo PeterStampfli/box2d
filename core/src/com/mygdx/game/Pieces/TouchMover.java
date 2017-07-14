@@ -3,7 +3,7 @@ package com.mygdx.game.Pieces;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.utilities.TouchReader;
+import com.mygdx.game.utilities.Device;
 
 /**
  * Poll touch events and transmit to touchable objects. Touchable piece is typically a TouchableCollection.
@@ -11,7 +11,7 @@ import com.mygdx.game.utilities.TouchReader;
 
 public class TouchMover extends InputAdapter {
     private Touchable piece;
-    public TouchReader touchReader;
+    public Device device;
     //  touchPosition of touch as average (dragging) and displacement
     public Vector2 touchPosition=new Vector2();
     public Vector2 deltaTouchPosition=new Vector2();
@@ -25,10 +25,10 @@ public class TouchMover extends InputAdapter {
 
     /**
      * Create a TouchMove controller with its touch reader
-     * @param touchReader for reading the touch Position
+     * @param device with camera and touch reader
      */
-    public TouchMover(TouchReader touchReader) {
-        this.touchReader = touchReader;
+    public TouchMover(Device device) {
+        this.device=device;
     }
 
     /**
@@ -59,18 +59,18 @@ public class TouchMover extends InputAdapter {
      * @return boolean, true if something changed and redraw is needed
      */
     public boolean update() {
-        boolean isTouching = touchReader.isTouching();
+        boolean isTouching = device.touchReader.isTouching();
         boolean somethingChanged = false;
         if (!isTouching && !wasTouching) {
             return false;                                     // totally out of touch
         }
         // update touch positions
         if (isTouching && !wasTouching) {                                     // new touch - oldPosition is invalid
-            touchReader.getPosition(newTouchPosition);
+            device.touchReader.getPosition(newTouchPosition);
             oldTouchPosition.set(newTouchPosition);
         } else if (isTouching && wasTouching) {                         // continue touching
             oldTouchPosition.set(newTouchPosition);
-            touchReader.getPosition(newTouchPosition);
+            device.touchReader.getPosition(newTouchPosition);
         } else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
             oldTouchPosition.set(newTouchPosition);
         }
@@ -87,7 +87,7 @@ public class TouchMover extends InputAdapter {
                 somethingChanged = piece.touchBegin(touchPosition);
             } else if (isTouching && wasTouching) {
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition, touchReader.camera);
+                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition, device.camera);
                 }
             } else {                     // !isTouching&&wasTouching
                 somethingChanged = piece.touchEnd(touchPosition);
@@ -114,7 +114,7 @@ public class TouchMover extends InputAdapter {
      */
     @Override
     public boolean scrolled(int amount) {
-        touchReader.getPosition(scrollPosition);
+        device.touchReader.getPosition(scrollPosition);
         return piece.scroll(scrollPosition, amount);
     }
 
