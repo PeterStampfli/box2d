@@ -1,7 +1,5 @@
 package com.mygdx.game.Sprite;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
@@ -64,7 +62,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param theText String, text to set
      */
     public void setText(String theText){
-        textExtension.setText(theText,this);
+        textExtension.setText(theText);
     }
     /**
      * Get the angle of the sprite.
@@ -251,24 +249,13 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
-     * A hook to the draw method of the superclass Sprite.
-     *
-     * @param batch Batch, for drawing
-     */
-    public void superDraw(Batch batch) {
-        super.draw(batch);
-    }
-
-    /**
      * Draw the extended sprite with the draw method of the spriteDraw object.
      * Can use the decorator pattern.
      *
-     * @param batch Batch, for drawing
-     * @param camera Camera, to keep sprite visible.
      */
     @Override
-    public void draw(Batch batch, Camera camera) {
-        spriteDraw.draw(this, batch, camera);
+    public void drawExtended() {
+        spriteDraw.draw(this);
     }
 
     /**
@@ -283,12 +270,11 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     /**
      * Keep the sprite visible using the keepVisible method of the spriteKeepVisible object.
      *
-     * @param camera Camera, current in use. To decide of sprite is visible and to determine repositioning of the sprite.
      * @return
      */
     @Override
-    public boolean keepVisible(Camera camera) {
-        return spriteKeepVisible.keepVisible(this, camera);
+    public boolean keepVisible() {
+        return spriteKeepVisible.keepVisible(this);
     }
 
     /**
@@ -326,13 +312,12 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      *
      * @param position      Vector2, position of touch.
      * @param deltaPosition Vector2, change in the position of touch.
-     * @param camera        Camera current in use. For keeping the sprite visible.
      * @return boolean, true if something changed
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
+    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
         boolean changed= spriteTouchDrag.touchDrag(this, position, deltaPosition);
-        keepVisible(camera);
+        keepVisible();
         return changed;
     }
 

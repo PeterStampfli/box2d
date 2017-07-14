@@ -1,9 +1,5 @@
 package com.mygdx.game.Buttons;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.mygdx.game.Sprite.ExtensibleSprite;
-
 /**
  * Basic button methods
  */
@@ -16,9 +12,9 @@ public class ButtonActions {
      */
     public ButtonDraw drawTinted=new ButtonDraw() {
         @Override
-        public void draw(ButtonExtension buttonExtension, ExtensibleSprite sprite, Batch batch, Camera camera) {
+        public void draw(ButtonExtension buttonExtension) {
             buttonExtension.tintSprite();
-            buttonExtension.previousDraw.draw(sprite, batch, camera);
+            buttonExtension.doBasicSpriteDraw();
         }
     };
 

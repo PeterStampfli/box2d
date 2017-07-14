@@ -1,7 +1,5 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
@@ -24,18 +22,15 @@ public interface Touchable extends Shape2D {
     /**
      * Draws itself
      *
-     * @param batch  SpriteBatch, of the Device
-     * @param camera Camera, current in use. To decide of sprite is visible.
      */
-    void draw(Batch batch, Camera camera);
+    void drawExtended();
 
     /**
      * make that the sprite stays visible.
      *
-     * @param camera Camera, current in use. To decide of sprite is visible and to determine repositioning of the sprite.
      * @return boolean, true if something changed and redraw needed.
      */
-    boolean keepVisible(Camera camera);
+    boolean keepVisible();
 
     /**
      * Action for touch begin.
@@ -50,10 +45,9 @@ public interface Touchable extends Shape2D {
      *
      * @param position      Vector2, position of touch.
      * @param deltaPosition Vector2, change in the position of touch.
-     * @param camera        Camera current in use. For keeping the sprite visible.
      * @return boolean, true if something changed and redraw needed.
      */
-    boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera);
+    boolean touchDrag(Vector2 position, Vector2 deltaPosition);
 
     /**
      * Action for touch end.

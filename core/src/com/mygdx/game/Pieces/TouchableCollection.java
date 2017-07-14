@@ -1,7 +1,5 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -123,16 +121,14 @@ public class TouchableCollection<T> implements Touchable {
     /**
      * Call the draw method, going from last to first object. The painter algorithm: back to front.
      *
-     * @param batch  SpriteBatch, of the Device
-     * @param camera Camera, current in use. To decide of sprite is visible.
      */
     @Override
-    public void draw(Batch batch, Camera camera) {
+    public void drawExtended() {
         Object item;
         for (int i = items.size - 1; i >= 0; i--) {
             item=items.get(i);
             if (item instanceof  Touchable){
-                ((Touchable) item).draw(batch, camera);
+                ((Touchable) item).drawExtended();
             }
         }
     }
@@ -205,15 +201,14 @@ public class TouchableCollection<T> implements Touchable {
      *
      * @param position      Vector2 touch position
      * @param deltaPosition Vector2, change in the touch position
-     * @param camera        Camera in use. To keep the object visible
      * @return true if something changed
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
+    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
         if (items.size > 0) {
             Object item=items.get(iSelected);
             if (item instanceof Touchable) {
-                return ((Touchable) item).touchDrag(position, deltaPosition, camera);
+                return ((Touchable) item).touchDrag(position, deltaPosition);
             }
         }
         return false;
@@ -259,14 +254,13 @@ public class TouchableCollection<T> implements Touchable {
     /**
      * Call the keep visible method on all elements.
      *
-     * @param camera Camera, in use to see if sprite is visible
      * @return true if something changed
      */
     @Override
-    public boolean keepVisible(Camera camera) {
+    public boolean keepVisible() {
         boolean somethingChanged = false;
         for (Object item : items) {
-            if ((item instanceof  Touchable)&&((Touchable) item).keepVisible(camera)) {
+            if ((item instanceof  Touchable)&&((Touchable) item).keepVisible()) {
                 somethingChanged = true;
             }
         }

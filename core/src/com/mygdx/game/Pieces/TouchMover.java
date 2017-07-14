@@ -87,7 +87,7 @@ public class TouchMover extends InputAdapter {
                 somethingChanged = piece.touchBegin(touchPosition);
             } else if (isTouching && wasTouching) {
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition, device.camera);
+                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
                 }
             } else {                     // !isTouching&&wasTouching
                 somethingChanged = piece.touchEnd(touchPosition);

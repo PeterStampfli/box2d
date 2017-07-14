@@ -1,8 +1,7 @@
 package com.mygdx.game.TextSprite;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -33,7 +32,7 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
      * @param sprite          ExtensibleSprite, the text will be attached to this sprite
      */
     public BigTextExtension(Device device, BitmapFont font, ExtensibleSprite sprite) {
-        super(device, font, sprite);
+        super(font, sprite);
         sprite.setTouchDrag(this);
         sprite.setScroll(this);
     }
@@ -52,11 +51,10 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
     /**
      * Set the text of the sprite using its glyphLayout.
      * Depends on the width of the sprite.
+     *  @param text   String, to show in the sprite
      *
-     * @param text   String, to show in the sprite
-     * @param sprite ExtensibleSprite
      */
-    public void setText(String text, ExtensibleSprite sprite) {
+    public void setText(String text) {
         glyphLayout.setText(font, text, font.getColor(), sprite.getWidth() - 2 * margin, Align.left, true);
         textShift = 0;
         textShiftMax = glyphLayout.height - sprite.getHeight() + 4 * margin;
@@ -65,18 +63,17 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
     /**
      * Uses the decorator pattern.
      * First draw the sprite. Then draw the text, clipped to the sprite rectangle.
+     *  @param sprite Extensible Sprite
      *
-     * @param sprite Extensible Sprite
-     * @param batch  Batch
-     * @param camera Camera, used here for clipping
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
-        previousDraw.draw(sprite, batch, camera);
+    public void draw(ExtensibleSprite sprite) {
+        doBasicSpriteDraw();
+        SpriteBatch batch=sprite.device.spriteBatch;
         textShift = MathUtils.clamp(textShift, 0, textShiftMax);
         bounds.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
         batch.flush();
-        ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), bounds, scissors);
+        ScissorStack.calculateScissors(sprite.device.camera, batch.getTransformMatrix(), bounds, scissors);
         ScissorStack.pushScissors(scissors);
         font.draw(batch, glyphLayout, sprite.getX() + margin,
                 sprite.getY() + sprite.getHeight() - margin - margin + textShift);

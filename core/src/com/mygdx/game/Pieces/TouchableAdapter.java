@@ -1,7 +1,5 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -11,11 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TouchableAdapter implements Touchable {
     @Override
-    public void draw(Batch batch, Camera camera) {
+    public void drawExtended() {
     }
 
     @Override
-    public boolean keepVisible(Camera camera) {
+    public boolean keepVisible() {
         return false;
     }
 
@@ -35,7 +33,7 @@ public class TouchableAdapter implements Touchable {
     }
 
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition, Camera camera) {
+    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
         return false;
     }
 

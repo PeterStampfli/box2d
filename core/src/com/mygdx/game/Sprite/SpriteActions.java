@@ -1,7 +1,6 @@
 package com.mygdx.game.Sprite;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -92,26 +91,28 @@ public class SpriteActions {
      */
     public SpriteDraw drawNull = new SpriteDraw() {
         @Override
-        public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
+        public void draw(ExtensibleSprite sprite) {
         }
     };
+
     /**
      * An object that implements SpriteDraw:
      * Draws the basic sprite without extras.
      */
     public SpriteDraw drawSuper = new SpriteDraw() {
         @Override
-        public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
-            sprite.superDraw(batch);
+        public void draw(ExtensibleSprite sprite) {
+            sprite.draw(sprite.device.spriteBatch);
         }
     };
+
     /**
      * An object that implements SpriteKeepVisible:
      * Does nothing and returns false.
      */
     public SpriteKeepVisible keepVisibleNull = new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite, Camera camera) {
+        public boolean keepVisible(ExtensibleSprite sprite) {
             return false;
         }
     };
@@ -122,7 +123,8 @@ public class SpriteActions {
      */
     public SpriteKeepVisible keepVisibleOrigin = new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite, Camera camera) {
+        public boolean keepVisible(ExtensibleSprite sprite) {
+            Camera camera=sprite.device.camera;
             float diff = sprite.getWorldOriginX() - camera.position.x;
             float half = 0.5f * camera.viewportWidth;
             boolean somethingChanged = false;

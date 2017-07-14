@@ -1,8 +1,6 @@
 package com.mygdx.game.Buttons;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteDraw;
@@ -26,14 +24,14 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     public ButtonTouchEnd buttonTouchEnd;
 
     public int state;
-    SpriteDraw previousDraw;
+    SpriteDraw basicSpriteDraw;
 
 
     public ButtonExtension(ExtensibleSprite sprite){
         state=UP;
         this.sprite=sprite;
         sprite.buttonExtension=this;
-        previousDraw=sprite.spriteDraw;
+        basicSpriteDraw =sprite.spriteDraw;
         sprite.setDraw(this);
         sprite.setTouchBegin(this);
         sprite.setTouchEnd(this);
@@ -108,17 +106,22 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     }
 
     /**
+     * draw the basic sprite without the button extension addons
+     */
+    public void doBasicSpriteDraw(){
+        basicSpriteDraw.draw(sprite);
+    }
+
+    /**
      * Drawing the sprite: Uses the decorator pattern.
      * First choose a tint,then draw the sprite.
      * Override for something more fancy.
+     *  @param sprite Extensible Sprite
      *
-     * @param sprite Extensible Sprite
-     * @param batch  Batch
-     * @param camera Camera
      */
     @Override
-    public void draw(ExtensibleSprite sprite, Batch batch, Camera camera) {
-        buttonDraw.draw(this,sprite,batch,camera);
+    public void draw(ExtensibleSprite sprite) {
+        buttonDraw.draw(this);
     }
 
     /**
