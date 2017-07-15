@@ -123,12 +123,12 @@ public class TouchableCollection<T> implements Touchable {
      *
      */
     @Override
-    public void drawExtended() {
+    public void draw() {
         Object item;
         for (int i = items.size - 1; i >= 0; i--) {
             item=items.get(i);
             if (item instanceof  Touchable){
-                ((Touchable) item).drawExtended();
+                ((Touchable) item).draw();
             }
         }
     }

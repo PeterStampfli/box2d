@@ -254,7 +254,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      *
      */
     @Override
-    public void drawExtended() {
+    public void draw() {
         spriteDraw.draw(this);
     }
 

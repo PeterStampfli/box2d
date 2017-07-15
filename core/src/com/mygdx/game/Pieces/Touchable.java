@@ -10,12 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 public interface Touchable extends Shape2D {
 
     /**
-     * Returns whether a point with the given coordinates is contained within the shape.
+     * Returns whether a point with the given coordinates is contained within the shape. (Shape2D)
      */
     boolean contains(float x, float y);
 
     /**
-     * Returns whether the given point is contained within the shape.
+     * Returns whether the given point is contained within the shape. (Shape2D)
      */
     boolean contains(Vector2 point);
 
@@ -23,7 +23,7 @@ public interface Touchable extends Shape2D {
      * Draws itself
      *
      */
-    void drawExtended();
+    void draw();
 
     /**
      * make that the sprite stays visible.

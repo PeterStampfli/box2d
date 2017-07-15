@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.utilities.Basic;
@@ -21,6 +22,7 @@ public class Box2d extends ApplicationAdapter {
 	Vector2 vector=new Vector2();
 	Screen screen;
 	ExtensibleSprite sprite;
+	TouchableCollection collection;
 
 	@Override
 	public void create () {
@@ -28,11 +30,13 @@ public class Box2d extends ApplicationAdapter {
 		spriteBatch=device.spriteBatch;
 		int size=500;
 		viewport=device.createExtendViewport(size,size);
-		device.touchReader.setCamera(viewport);
+		device.setCamera(viewport);
 		img=device.basicAssets.getTextureRegion("badlogic");
 		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
 
 		sprite=extensibleSpriteBuilder.build(img);
+		collection=new TouchableCollection();
+		collection.addLast(sprite);
 
 	}
 
@@ -52,7 +56,7 @@ public class Box2d extends ApplicationAdapter {
 
 		Basic.setProjection(spriteBatch,viewport);
 		spriteBatch.begin();
-		//sprite.d
+		collection.draw();
 		spriteBatch.end();
 		device.touchReader.getPosition(vector);
 		L.og(vector);
