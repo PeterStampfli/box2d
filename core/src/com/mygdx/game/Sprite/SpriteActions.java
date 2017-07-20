@@ -99,7 +99,7 @@ public class SpriteActions {
      * An object that implements SpriteDraw:
      * Draws the basic sprite without extras.
      */
-    public SpriteDraw drawSuper = new SpriteDraw() {
+    public SpriteDraw draw = new SpriteDraw() {
         @Override
         public void draw(ExtensibleSprite sprite) {
             sprite.draw(sprite.device.spriteBatch);
@@ -216,7 +216,7 @@ public class SpriteActions {
      * Returns true if sprite contains the mouse position, but does nothing.
      * This prevents a scroll on sprites lying behind this sprite.
      */
-    public SpriteScroll nullScroll = new SpriteScroll() {
+    public SpriteScroll scrollNull = new SpriteScroll() {
         @Override
         public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
             if (sprite.contains(position.x, position.y)) {

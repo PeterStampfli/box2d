@@ -31,12 +31,12 @@ public class ExtensibleSpriteBuilder {
         this.device=device;
         spriteActions=new SpriteActions();
         setContains(spriteActions.containsTransRotate);
-        setDraw(spriteActions.drawSuper);
+        setDraw(spriteActions.draw);
         setKeepVisible(spriteActions.keepVisibleNull);
         setTouchBegin(spriteActions.touchBeginNull);
         setTouchEnd(spriteActions.touchEndNull);
         setTouchDrag(spriteActions.touchDragNull);
-        setScroll(spriteActions.nullScroll);
+        setScroll(spriteActions.scrollNull);
     }
 
     /**
@@ -123,11 +123,11 @@ public class ExtensibleSpriteBuilder {
     public ExtensibleSpriteBuilder setTransRotate(){
         setContains(spriteActions.containsTransRotate);
         setKeepVisible(spriteActions.keepVisibleOrigin);
-        setDraw(spriteActions.drawSuper);
+        setDraw(spriteActions.draw);
         setTouchBegin(spriteActions.touchBeginNull);
         setTouchDrag(spriteActions.touchDragTransRotate);
         setTouchEnd(spriteActions.touchEndNull);
-        setScroll(spriteActions.nullScroll);
+        setScroll(spriteActions.scrollNull);
         return this;
     }
 
@@ -139,11 +139,27 @@ public class ExtensibleSpriteBuilder {
     public ExtensibleSpriteBuilder setTranslate(){
         setContains(spriteActions.containsTranslate);
         setKeepVisible(spriteActions.keepVisibleOrigin);
-        setDraw(spriteActions.drawSuper);
+        setDraw(spriteActions.draw);
         setTouchBegin(spriteActions.touchBeginNull);
         setTouchDrag(spriteActions.touchDragTranslate);
         setTouchEnd(spriteActions.touchEndNull);
-        setScroll(spriteActions.nullScroll);
+        setScroll(spriteActions.scrollNull);
+        return this;
+    }
+
+    /**
+     * Set sprite actions for an only drawing sprite. Keeping it visible.
+     *
+     * @return this, for chaining.
+     */
+    public ExtensibleSpriteBuilder setDrawOnly(){
+        setContains(spriteActions.containsTranslate);
+        setKeepVisible(spriteActions.keepVisibleNull);
+        setDraw(spriteActions.draw);
+        setTouchBegin(spriteActions.touchBeginNull);
+        setTouchDrag(spriteActions.touchDragNull);
+        setTouchEnd(spriteActions.touchEndNull);
+        setScroll(spriteActions.scrollNull);
         return this;
     }
 
