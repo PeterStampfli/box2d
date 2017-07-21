@@ -56,11 +56,31 @@ public class ButtonBuilder {
     }
 
     /**
-     * Build simple press buttons.
+     * set the button collection for new buttons
+     *
+     * @param buttonCollection
+     */
+    public ButtonBuilder setButtonCollection(ButtonCollection buttonCollection) {
+        this.buttonCollection = buttonCollection;
+        return this;
+    }
+
+    /**
+     * set null button collection. New buttons will not be in any collection.
+     *
+     */
+    public ButtonBuilder setNullButtonCollection() {
+        this.buttonCollection = null;
+        return this;
+    }
+
+    /**
+     * Build simple single press buttons.
      *
      * @return ButtonBuilder, for chaining
      */
     public ButtonBuilder setPressButton(){
+        setNullButtonCollection();
         buttonTouchBegin=buttonActions.touchBeginPressed;
         buttonTouchEnd=buttonActions.touchEndUp;
         return this;
@@ -73,7 +93,7 @@ public class ButtonBuilder {
      * @return ButtonBuilder, for chaining
      */
     public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
-        this.buttonCollection=buttonCollection;
+        setButtonCollection(buttonCollection);
         buttonTouchBegin=buttonActions.touchBeginSelect;
         buttonTouchEnd=buttonActions.touchEndNull;
         return this;
@@ -90,7 +110,7 @@ public class ButtonBuilder {
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
-        if (buttonTouchBegin==buttonActions.touchBeginSelect){
+        if (buttonCollection!=null){
             buttonCollection.add(sprite);
         }
         return buttonExtension;

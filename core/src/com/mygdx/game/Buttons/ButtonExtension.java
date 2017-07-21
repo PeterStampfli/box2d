@@ -92,6 +92,15 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     }
 
     /**
+     * Switch on to pressed, and inverse.
+     */
+    public void toggleState(){
+        if (state!=LOCKED) {
+            state = 3 - state;
+        }
+    }
+
+    /**
      * Set the tint of the sprite depending on the button state.
      */
     public void tintSprite(){
@@ -122,13 +131,6 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     @Override
     public void draw(ExtensibleSprite sprite) {
         buttonDraw.draw(this);
-    }
-
-    /**
-     * Switch on to pressed, and inverse.
-     */
-    public void toggleState(){
-        state=3-state;
     }
 
     /**

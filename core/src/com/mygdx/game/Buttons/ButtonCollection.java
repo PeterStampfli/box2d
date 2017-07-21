@@ -5,6 +5,7 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Collect interacting buttons. They are sprites with button extensions.
+ * All buttons interact. There can be simple sprites without extension too.
  */
 
 public class ButtonCollection extends TouchableCollection<ExtensibleSprite> {

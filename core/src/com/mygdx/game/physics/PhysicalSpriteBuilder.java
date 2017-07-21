@@ -45,11 +45,11 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         mouseJointMover.useStaticBodies=useStaticBodies;
         setContains(physicalSpriteActions.bodyContains);
         setKeepVisible(spriteActions.keepVisibleNull);
-        setDraw(spriteActions.drawSuper);
+        setDraw(spriteActions.draw);
         setTouchBegin(mouseJointMover);
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
-        setScroll(spriteActions.nullScroll);
+        setScroll(spriteActions.scrollNull);
     }
 
     /**
