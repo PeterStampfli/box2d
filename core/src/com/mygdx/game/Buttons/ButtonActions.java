@@ -1,7 +1,7 @@
 package com.mygdx.game.Buttons;
 
 /**
- * Basic button methods
+ * Basic static button methods
  */
 
 public class ButtonActions {

@@ -172,7 +172,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchDrag:
      * Translates the sprite without rotation.
      */
-    public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
+    static public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
         @Override
         public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             sprite.translate(deltaPosition.x, deltaPosition.y);

@@ -15,6 +15,9 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     static final public int LOCKED=0;
     static final public int UP=1;
     static final public int PRESSED=2;
+    static public Color COLOR_LOCKED=Color.GRAY;
+    static public Color COLOR_UP=Color.WHITE;
+    static public Color COLOR_PRESSED=Color.GOLD;
 
     public ExtensibleSprite sprite;
     public ButtonCollection collection;
@@ -105,11 +108,11 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      */
     public void tintSprite(){
         switch (state){
-            case LOCKED: sprite.setColor(Color.GRAY);
+            case LOCKED: sprite.setColor(COLOR_LOCKED);
                 break;
-            case UP: sprite.setColor(Color.WHITE);
+            case UP: sprite.setColor(COLOR_UP);
                 break;
-            case PRESSED: sprite.setColor(Color.YELLOW);
+            case PRESSED: sprite.setColor(COLOR_PRESSED);
                 break;
         }
     }
