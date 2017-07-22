@@ -7,18 +7,18 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
  */
 
 public class ButtonBuilder {
-    ButtonActions buttonActions;
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
+    ButtonAct buttonAct;
     ButtonCollection buttonCollection;
 
     /**
      * Create the buttonBuilder, with default methods for a simple button.
      */
     public ButtonBuilder(){
-        buttonActions=new ButtonActions();
-        buttonDraw=buttonActions.drawTinted;
+        buttonDraw=ButtonActions.drawTinted;
+        buttonAct=ButtonActions.actNull;
         setPressButton();
     }
 
@@ -81,8 +81,8 @@ public class ButtonBuilder {
      */
     public ButtonBuilder setPressButton(){
         setNullButtonCollection();
-        buttonTouchBegin=buttonActions.touchBeginPressed;
-        buttonTouchEnd=buttonActions.touchEndUp;
+        buttonTouchBegin=ButtonActions.touchBeginPressed;
+        buttonTouchEnd=ButtonActions.touchEndUp;
         return this;
     }
 
@@ -94,8 +94,8 @@ public class ButtonBuilder {
      */
     public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
         setButtonCollection(buttonCollection);
-        buttonTouchBegin=buttonActions.touchBeginSelect;
-        buttonTouchEnd=buttonActions.touchEndNull;
+        buttonTouchBegin=ButtonActions.touchBeginSelect;
+        buttonTouchEnd=ButtonActions.touchEndNull;
         return this;
     }
 
@@ -110,6 +110,7 @@ public class ButtonBuilder {
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
+        buttonExtension.setButtonAct(buttonAct);
         if (buttonCollection!=null){
             buttonCollection.add(sprite);
         }

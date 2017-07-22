@@ -12,5 +12,5 @@ public interface ButtonTouchBegin {
      * @param buttonExtension ButtonExtension, calling this method
      * @return boolean, true if something changed
      */
-    boolean touchBegin(ButtonExtension buttonExtension);
+    void touchBegin(ButtonExtension buttonExtension);
 }

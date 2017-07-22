@@ -16,7 +16,7 @@ public class SpriteActions {
      * Does NOT check if the point is inside the sprite. Always returns false.
      * For sprites that do not interact.
      */
-    public SpriteContains containsNull = new SpriteContains() {
+    static public SpriteContains containsNull = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             return false;
@@ -33,7 +33,7 @@ public class SpriteActions {
      * @param y      float, y-coordinate of the point
      * @return boolean, true if the sprite contains the point
      */
-    public SpriteContains containsTransRotate = new SpriteContains() {
+    static public SpriteContains containsTransRotate = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             // shift that "origin" is at (0,0)
@@ -71,7 +71,7 @@ public class SpriteActions {
      * @param y      float, y-coordinate of the point
      * @return boolean, true if the sprite contains the point
      */
-    public SpriteContains containsTranslate = new SpriteContains() {
+    static public SpriteContains containsTranslate = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite, float x, float y) {
             // shift that "origin" is at (0,0)
@@ -89,7 +89,7 @@ public class SpriteActions {
      * An object that implements SpriteDraw:
      * Does not draw anything.
      */
-    public SpriteDraw drawNull = new SpriteDraw() {
+    static public SpriteDraw drawNull = new SpriteDraw() {
         @Override
         public void draw(ExtensibleSprite sprite) {
         }
@@ -99,7 +99,7 @@ public class SpriteActions {
      * An object that implements SpriteDraw:
      * Draws the basic sprite without extras.
      */
-    public SpriteDraw draw = new SpriteDraw() {
+    static public SpriteDraw draw = new SpriteDraw() {
         @Override
         public void draw(ExtensibleSprite sprite) {
             sprite.draw(sprite.device.spriteBatch);
@@ -110,7 +110,7 @@ public class SpriteActions {
      * An object that implements SpriteKeepVisible:
      * Does nothing and returns false.
      */
-    public SpriteKeepVisible keepVisibleNull = new SpriteKeepVisible() {
+    static public SpriteKeepVisible keepVisibleNull = new SpriteKeepVisible() {
         @Override
         public boolean keepVisible(ExtensibleSprite sprite) {
             return false;
@@ -121,7 +121,7 @@ public class SpriteActions {
      * Makes that the origin of the sprite can be seen by the camera.
      * Shifts the sprite back if it is too far outside.
      */
-    public SpriteKeepVisible keepVisibleOrigin = new SpriteKeepVisible() {
+    static public SpriteKeepVisible keepVisibleOrigin = new SpriteKeepVisible() {
         @Override
         public boolean keepVisible(ExtensibleSprite sprite) {
             Camera camera=sprite.device.camera;
@@ -151,7 +151,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchBegin:
      * Does nothing and returns false.
      */
-    public SpriteTouchBegin touchBeginNull = new SpriteTouchBegin() {
+    static public SpriteTouchBegin touchBeginNull = new SpriteTouchBegin() {
         @Override
         public boolean touchBegin(ExtensibleSprite sprite, Vector2 position) {
             return false;
@@ -161,7 +161,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchDrag:
      * Does nothing and returns false.
      */
-    public SpriteTouchDrag touchDragNull = new SpriteTouchDrag() {
+    static public SpriteTouchDrag touchDragNull = new SpriteTouchDrag() {
         @Override
         public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             return false;
@@ -183,7 +183,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchDrag:
      * Translates and rotates the sprite.
      */
-    public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
+    static public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
         @Override
         public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
             float centerTouchX = touchPosition.x - sprite.getWorldOriginX();
@@ -205,7 +205,7 @@ public class SpriteActions {
      * An object that implements SpriteTouchEnd:
      * Does nothing and returns false.
      */
-    public SpriteTouchEnd touchEndNull = new SpriteTouchEnd() {
+    static public SpriteTouchEnd touchEndNull = new SpriteTouchEnd() {
         @Override
         public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
             return false;
@@ -216,7 +216,7 @@ public class SpriteActions {
      * Returns true if sprite contains the mouse position, but does nothing.
      * This prevents a scroll on sprites lying behind this sprite.
      */
-    public SpriteScroll scrollNull = new SpriteScroll() {
+    static public SpriteScroll scrollNull = new SpriteScroll() {
         @Override
         public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
             if (sprite.contains(position.x, position.y)) {

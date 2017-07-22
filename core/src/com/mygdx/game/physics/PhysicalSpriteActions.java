@@ -20,7 +20,7 @@ public class PhysicalSpriteActions extends SpriteActions {
      * Does not check the region of the sprite image because the full shapes define the physics.
      * Use only shapes/fixtures that do not go outside the sprite's image.
      */
-    public SpriteContains bodyContains = new SpriteContains() {
+    static public SpriteContains bodyContains = new SpriteContains() {
         @Override
         public boolean contains(com.mygdx.game.Sprite.ExtensibleSprite sprite,  float positionX, float positionY) {
             PhysicalSprite physicalSprite= (PhysicalSprite) sprite;

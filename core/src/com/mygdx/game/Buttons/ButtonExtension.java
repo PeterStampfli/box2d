@@ -8,7 +8,7 @@ import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
 
 /**
- * Extension to give button functions to a sprite. Without the actual button effect.
+ * Extension to give button functions to a sprite. Use buttonbuilder to make buttons.
  */
 
 public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchEnd {
@@ -25,6 +25,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
     public ButtonTouchEnd buttonTouchEnd;
+    public ButtonAct buttonAct;
 
     public int state;
     SpriteDraw basicSpriteDraw;
@@ -65,6 +66,14 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      */
     public void setButtonTouchEnd(ButtonTouchEnd buttonTouchEnd) {
         this.buttonTouchEnd = buttonTouchEnd;
+    }
+
+    /**
+     * set object that has the act-method for the effective action of the button
+     * @param buttonAct
+     */
+    public void setButtonAct(ButtonAct buttonAct) {
+        this.buttonAct = buttonAct;
     }
 
     /**
@@ -118,16 +127,15 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     }
 
     /**
-     * draw the basic sprite without the button extension addons
+     * Draw the basic sprite without the button extension addons.
+     * For the draw-method of the buttonDraw object.
      */
     public void doBasicSpriteDraw(){
         basicSpriteDraw.draw(sprite);
     }
 
     /**
-     * Drawing the sprite: Uses the decorator pattern.
-     * First choose a tint,then draw the sprite.
-     * Override for something more fancy.
+     * Drawing the sprite: Uses the decorator pattern. And an object with a draw method.
      *  @param sprite Extensible Sprite
      *
      */
@@ -144,21 +152,39 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      * @param touchPosition
      * @return boolean, true if something changes
      */
+    @Override
     public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
         if (state== LOCKED){
             return false;
         }
-        return buttonTouchBegin.touchBegin(this);
+        buttonTouchBegin.touchBegin(this);
+        return true;
     }
 
+    /**
+     * Method for calling the buttonAct object that does what the button is supposed to do.
+     */
+    public void act(){
+        buttonAct.act(this);
+    }
 
+    /**
+     * Touch end on the sprite: only this action. No decorator.
+     * Calls the effective button act.
+     *
+     * @param sprite   ExtensibleSprite
+     * @param position Vector2, position of touch
+     * @return
+     */
     @Override
     public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
         if (state== LOCKED){
             return false;
         }
-        return buttonTouchEnd.touchEnd(this);
+        buttonTouchEnd.touchEnd(this);
+        return true;
     }
+
 
     /**
      * Free resources if sprite gets freed.

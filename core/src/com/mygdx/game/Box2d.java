@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Buttons.ButtonAct;
+import com.mygdx.game.Buttons.ButtonBuilder;
+import com.mygdx.game.Buttons.ButtonExtension;
 import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
@@ -34,9 +37,22 @@ public class Box2d extends ApplicationAdapter {
 		img=device.basicAssets.getTextureRegion("badlogic");
 		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
 
+		extensibleSpriteBuilder.setTranslate();
+
 		sprite=extensibleSpriteBuilder.build(img);
 		collection=new TouchableCollection();
+
 		collection.addLast(sprite);
+		ButtonBuilder buttonBuilder=new ButtonBuilder();
+		ButtonExtension button=buttonBuilder.build(sprite);
+		button.setButtonAct(new ButtonAct() {
+			@Override
+			public void act(ButtonExtension buttonExtension) {
+				L.og("Hallo");
+			}
+		});
+
+		device.touchMover.setPiece(collection);
 
 	}
 
@@ -50,6 +66,8 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+
+		device.touchMover.update();
 		Basic.setContinuousRendering(false);
 		Basic.clearBackground(Color.BLUE);
 		viewport.apply();
@@ -58,8 +76,7 @@ public class Box2d extends ApplicationAdapter {
 		spriteBatch.begin();
 		collection.draw();
 		spriteBatch.end();
-		device.touchReader.getPosition(vector);
-		L.og(vector);
+
 
 	}
 	

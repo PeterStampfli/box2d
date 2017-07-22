@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
+import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.utilities.Device;
 
 /**
@@ -44,12 +45,12 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         }
         mouseJointMover.useStaticBodies=useStaticBodies;
         setContains(physicalSpriteActions.bodyContains);
-        setKeepVisible(spriteActions.keepVisibleNull);
-        setDraw(spriteActions.draw);
+        setKeepVisible(SpriteActions.keepVisibleNull);
+        setDraw(SpriteActions.draw);
         setTouchBegin(mouseJointMover);
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
-        setScroll(spriteActions.scrollNull);
+        setScroll(SpriteActions.scrollNull);
     }
 
     /**

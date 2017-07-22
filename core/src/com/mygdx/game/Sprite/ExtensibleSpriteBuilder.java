@@ -12,7 +12,6 @@ import com.mygdx.game.utilities.Device;
 
 public class ExtensibleSpriteBuilder {
     public Device device;
-    public SpriteActions spriteActions;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -29,14 +28,13 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSpriteBuilder(Device device){
         this.device=device;
-        spriteActions=new SpriteActions();
-        setContains(spriteActions.containsTransRotate);
-        setDraw(spriteActions.draw);
-        setKeepVisible(spriteActions.keepVisibleNull);
-        setTouchBegin(spriteActions.touchBeginNull);
-        setTouchEnd(spriteActions.touchEndNull);
-        setTouchDrag(spriteActions.touchDragNull);
-        setScroll(spriteActions.scrollNull);
+        setContains(SpriteActions.containsTransRotate);
+        setDraw(SpriteActions.draw);
+        setKeepVisible(SpriteActions.keepVisibleNull);
+        setTouchBegin(SpriteActions.touchBeginNull);
+        setTouchEnd(SpriteActions.touchEndNull);
+        setTouchDrag(SpriteActions.touchDragNull);
+        setScroll(SpriteActions.scrollNull);
     }
 
     /**
@@ -121,13 +119,13 @@ public class ExtensibleSpriteBuilder {
      * @return this, for chaining.
      */
     public ExtensibleSpriteBuilder setTransRotate(){
-        setContains(spriteActions.containsTransRotate);
-        setKeepVisible(spriteActions.keepVisibleOrigin);
-        setDraw(spriteActions.draw);
-        setTouchBegin(spriteActions.touchBeginNull);
-        setTouchDrag(spriteActions.touchDragTransRotate);
-        setTouchEnd(spriteActions.touchEndNull);
-        setScroll(spriteActions.scrollNull);
+        setContains(SpriteActions.containsTransRotate);
+        setKeepVisible(SpriteActions.keepVisibleOrigin);
+        setDraw(SpriteActions.draw);
+        setTouchBegin(SpriteActions.touchBeginNull);
+        setTouchDrag(SpriteActions.touchDragTransRotate);
+        setTouchEnd(SpriteActions.touchEndNull);
+        setScroll(SpriteActions.scrollNull);
         return this;
     }
 
@@ -137,13 +135,13 @@ public class ExtensibleSpriteBuilder {
      * @return this, for chaining.
      */
     public ExtensibleSpriteBuilder setTranslate(){
-        setContains(spriteActions.containsTranslate);
-        setKeepVisible(spriteActions.keepVisibleOrigin);
-        setDraw(spriteActions.draw);
-        setTouchBegin(spriteActions.touchBeginNull);
-        setTouchDrag(spriteActions.touchDragTranslate);
-        setTouchEnd(spriteActions.touchEndNull);
-        setScroll(spriteActions.scrollNull);
+        setContains(SpriteActions.containsTranslate);
+        setKeepVisible(SpriteActions.keepVisibleOrigin);
+        setDraw(SpriteActions.draw);
+        setTouchBegin(SpriteActions.touchBeginNull);
+        setTouchDrag(SpriteActions.touchDragTranslate);
+        setTouchEnd(SpriteActions.touchEndNull);
+        setScroll(SpriteActions.scrollNull);
         return this;
     }
 
@@ -153,13 +151,13 @@ public class ExtensibleSpriteBuilder {
      * @return this, for chaining.
      */
     public ExtensibleSpriteBuilder setDrawOnly(){
-        setContains(spriteActions.containsTranslate);
-        setKeepVisible(spriteActions.keepVisibleNull);
-        setDraw(spriteActions.draw);
-        setTouchBegin(spriteActions.touchBeginNull);
-        setTouchDrag(spriteActions.touchDragNull);
-        setTouchEnd(spriteActions.touchEndNull);
-        setScroll(spriteActions.scrollNull);
+        setContains(SpriteActions.containsTranslate);
+        setKeepVisible(SpriteActions.keepVisibleNull);
+        setDraw(SpriteActions.draw);
+        setTouchBegin(SpriteActions.touchBeginNull);
+        setTouchDrag(SpriteActions.touchDragNull);
+        setTouchEnd(SpriteActions.touchEndNull);
+        setScroll(SpriteActions.scrollNull);
         return this;
     }
 
