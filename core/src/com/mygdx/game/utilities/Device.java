@@ -20,9 +20,11 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Buttons.ButtonBuilder;
 import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.TouchMover;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 
 /**
  * Created by peter on 11/26/16.
@@ -44,6 +46,8 @@ public class Device implements Disposable {
     public Camera camera;
     public TouchReader touchReader;
     public TouchMover touchMover;
+    public ExtensibleSpriteBuilder extensibleSpriteBuilder;
+    public ButtonBuilder buttonBuilder;
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
@@ -61,6 +65,8 @@ public class Device implements Disposable {
         touchReader = new TouchReader(this);
         addResizable(touchReader);
         touchMover=new TouchMover(this);
+        extensibleSpriteBuilder=new ExtensibleSpriteBuilder(this);
+        buttonBuilder=new ButtonBuilder(extensibleSpriteBuilder);
         extensibleSpritePool = Pools.get(ExtensibleSprite.class);
         glyphLayoutPool = Pools.get(GlyphLayout.class);
     }

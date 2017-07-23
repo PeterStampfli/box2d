@@ -35,6 +35,14 @@ public class ButtonActions {
     };
 
     /**
+     * ButtonTouchEnd: does nothing on button, calls action.
+     */
+    static public ButtonTouchEnd touchEndAct=new ButtonTouchEnd(){
+        @Override
+        public void touchEnd(ButtonExtension buttonExtension){buttonExtension.act();}
+    };
+
+    /**
      * TouchBegin: Make that button appears pressed
      */
     static public ButtonTouchBegin touchBeginPressed=new ButtonTouchBegin() {
@@ -60,19 +68,14 @@ public class ButtonActions {
     static public ButtonTouchBegin touchBeginToggle=new ButtonTouchBegin() {
         @Override
         public void touchBegin(ButtonExtension buttonExtension) {
-            if (buttonExtension.state==ButtonExtension.UP){
-                buttonExtension.setStatePressed();
-            }
-            else {
-                buttonExtension.setStateUp();                   // does not changed if locked
-            }
+            buttonExtension.toggleState();
         }
     };
 
     /**
      * button touch end: make action and put button to up. For single event buttons.
      */
-    static public ButtonTouchEnd touchEndUp=new ButtonTouchEnd() {
+    static public ButtonTouchEnd touchEndUpAct =new ButtonTouchEnd() {
         @Override
         public void touchEnd(ButtonExtension buttonExtension) {
             buttonExtension.setStateUp();

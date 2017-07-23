@@ -185,6 +185,15 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
         return true;
     }
 
+    /**
+     * do a button press (to choose first button pressed of a collection)
+     */
+    public void press(){
+        if (state!=LOCKED){
+            buttonTouchBegin.touchBegin(this);
+            buttonTouchEnd.touchEnd(this);
+        }
+    }
 
     /**
      * Free resources if sprite gets freed.

@@ -146,11 +146,11 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * Set sprite actions for an only drawing sprite. Keeping it visible.
+     * Set sprite actions for a sprite that does not move.
      *
      * @return this, for chaining.
      */
-    public ExtensibleSpriteBuilder setDrawOnly(){
+    public ExtensibleSpriteBuilder setNoMovement(){
         setContains(SpriteActions.containsTranslate);
         setKeepVisible(SpriteActions.keepVisibleNull);
         setDraw(SpriteActions.draw);

@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Buttons.ButtonAct;
 import com.mygdx.game.Buttons.ButtonBuilder;
+import com.mygdx.game.Buttons.ButtonCollection;
 import com.mygdx.game.Buttons.ButtonExtension;
-import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.utilities.Basic;
@@ -25,34 +25,38 @@ public class Box2d extends ApplicationAdapter {
 	Vector2 vector=new Vector2();
 	Screen screen;
 	ExtensibleSprite sprite;
-	TouchableCollection collection;
+	ButtonCollection collection;
 
 	@Override
 	public void create () {
 		device=new Device().logging();
 		spriteBatch=device.spriteBatch;
-		int size=500;
+		int size=512;
 		viewport=device.createExtendViewport(size,size);
 		device.setCamera(viewport);
 		img=device.basicAssets.getTextureRegion("badlogic");
-		ExtensibleSpriteBuilder extensibleSpriteBuilder=new ExtensibleSpriteBuilder(device);
+		ExtensibleSpriteBuilder extensibleSpriteBuilder=device.extensibleSpriteBuilder;
 
 		extensibleSpriteBuilder.setTranslate();
 
-		sprite=extensibleSpriteBuilder.build(img);
-		collection=new TouchableCollection();
+		collection=new ButtonCollection();
 
-		collection.addLast(sprite);
-		ButtonBuilder buttonBuilder=new ButtonBuilder();
-		ButtonExtension button=buttonBuilder.build(sprite);
-		button.setButtonAct(new ButtonAct() {
+		ButtonBuilder buttonBuilder=device.buttonBuilder.setSelectionButton(collection);
+		ExtensibleSprite button=buttonBuilder.build(img);
+		ExtensibleSprite button2=buttonBuilder.build(img);
+		ExtensibleSprite button3=buttonBuilder.build(img);
+		button2.setPosition(256,0);
+		button3.setPosition(256,256);
+
+		button.buttonExtension.setButtonAct(new ButtonAct() {
 			@Override
 			public void act(ButtonExtension buttonExtension) {
-				L.og("Hallo");
+				L.og("Hallo "+buttonExtension.state);
 			}
 		});
 
 		device.touchMover.setPiece(collection);
+		button.buttonExtension.press();
 
 	}
 

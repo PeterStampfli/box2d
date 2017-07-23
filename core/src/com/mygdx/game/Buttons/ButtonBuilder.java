@@ -1,12 +1,16 @@
 package com.mygdx.game.Buttons;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 
 /**
- * Make a button based on an extensibleSprite
+ * Add a button function to an extensibleSprite
  */
 
 public class ButtonBuilder {
+    ExtensibleSpriteBuilder extensibleSpriteBuilder;
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
@@ -16,7 +20,8 @@ public class ButtonBuilder {
     /**
      * Create the buttonBuilder, with default methods for a simple button.
      */
-    public ButtonBuilder(){
+    public ButtonBuilder(ExtensibleSpriteBuilder extensibleSpriteBuilder){
+        this.extensibleSpriteBuilder=extensibleSpriteBuilder;
         buttonDraw=ButtonActions.drawTinted;
         buttonAct=ButtonActions.actNull;
         setPressButton();
@@ -82,7 +87,19 @@ public class ButtonBuilder {
     public ButtonBuilder setPressButton(){
         setNullButtonCollection();
         buttonTouchBegin=ButtonActions.touchBeginPressed;
-        buttonTouchEnd=ButtonActions.touchEndUp;
+        buttonTouchEnd=ButtonActions.touchEndUpAct;
+        return this;
+    }
+
+    /**
+     * Build simple buttons that change state.
+     *
+     * @return ButtonBuilder, for chaining
+     */
+    public ButtonBuilder setToggleButton(){
+        setNullButtonCollection();
+        buttonTouchBegin=ButtonActions.touchBeginToggle;
+        buttonTouchEnd=ButtonActions.touchEndAct;
         return this;
     }
 
@@ -95,7 +112,7 @@ public class ButtonBuilder {
     public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
         setButtonCollection(buttonCollection);
         buttonTouchBegin=ButtonActions.touchBeginSelect;
-        buttonTouchEnd=ButtonActions.touchEndNull;
+        buttonTouchEnd=ButtonActions.touchEndAct;
         return this;
     }
 
@@ -105,7 +122,7 @@ public class ButtonBuilder {
      * @param sprite ExtensibleSprite, to make a button out of it
      * @return ButtonExtension
      */
-    public ButtonExtension build(ExtensibleSprite sprite){
+    public ExtensibleSprite build(ExtensibleSprite sprite){
         ButtonExtension buttonExtension=new ButtonExtension(sprite);
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
@@ -114,6 +131,15 @@ public class ButtonBuilder {
         if (buttonCollection!=null){
             buttonCollection.add(sprite);
         }
-        return buttonExtension;
+        return sprite;
+    }
+
+    public ExtensibleSprite build(TextureRegion image, Shape2D shape2D){
+        extensibleSpriteBuilder.setNoMovement();
+        return build(extensibleSpriteBuilder.build(image, shape2D));
+    }
+
+    public ExtensibleSprite build(TextureRegion image){
+        return build(image,null);
     }
 }
