@@ -37,6 +37,7 @@ public class ExtensibleSpriteBuilder {
         setTouchEnd(SpriteActions.touchEndNull);
         setTouchDrag(SpriteActions.touchDragNull);
         setScroll(SpriteActions.scrollNull);
+        noSpriteCollection();
     }
 
     /**

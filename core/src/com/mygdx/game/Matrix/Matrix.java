@@ -1,19 +1,15 @@
 package com.mygdx.game.Matrix;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.Pieces.TouchableCollection;
 
 /**
  * has objects in matrix. Set and get specific objects, iterate. Create, act and transform.
- * Reference to items can be exported to buttonCollection of touchables.
  */
 
-public class Matrix<T> {
-
+public class Matrix<T> extends TouchableCollection<T> {
     private int width,height;
-    public Array<T> items=new Array<T>();
 
     /**
      * create for given size
@@ -22,16 +18,16 @@ public class Matrix<T> {
      * @param h
      */
     public Matrix(int w, int h){
+        super();
         resize(w, h);
     }
 
     /**
-     * Wrap a new touchableCollection around the matrix items.
+     * create (default size)
      *
-     * @return
      */
-    public TouchableCollection<T> createTouchableCollection(){
-        return new TouchableCollection<T>(items,true);
+    public Matrix(){
+        this(1, 1);
     }
 
     /**

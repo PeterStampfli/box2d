@@ -1,14 +1,14 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 7/2/17.
  * Has an array of objects. Makes touchable actions on touchable items.
- * Either keeps order of items and does not add or remove.
- * The items should then be fixed and not able to move.
  *
+ * At selection does not change order
  * Or puts selected on top and adds and removes.
  */
 
@@ -47,26 +47,22 @@ public class TouchableCollection<T> implements Touchable {
 
     // adding, getting and removing items
     /**
-     * Add one or more touchable objects at the end. Does nothing if fixed order.
+     * Add one or more touchable objects at the end. Be careful if fixed order.
      *
      * @param ts T... or T[]
      */
     public void addLast(T... ts) {
-        if (!fixedOrder) {
-                this.items.addAll(ts);
-        }
+        this.items.addAll(ts);
     }
 
     /**
-     * Add one or more touchable objects at the beginning. Does nothing if fixed order.
+     * Add one or more touchable objects at the beginning. Be responsible if fixed order.
      *
      * @param ts T... or T[]
      */
     public void addFirst(T... ts) {
-        if (!fixedOrder) {
-            for (T t : ts) {
-                this.items.insert(0,t);
-            }
+        for (T t : ts) {
+            this.items.insert(0,t);
         }
     }
 
@@ -79,10 +75,8 @@ public class TouchableCollection<T> implements Touchable {
      */
     public boolean remove(T t) {
         boolean success = false;
-        if (!fixedOrder) {
-            while (items.removeValue(t, true)) {
-                success = true;
-            }
+        while (items.removeValue(t, true)) {
+            success = true;
         }
         return success;
     }
@@ -127,8 +121,8 @@ public class TouchableCollection<T> implements Touchable {
         Object item;
         for (int i = items.size - 1; i >= 0; i--) {
             item=items.get(i);
-            if (item instanceof  Touchable){
-                ((Touchable) item).draw();
+            if (item instanceof  Drawable){
+                ((Drawable) item).draw();
             }
         }
     }
@@ -149,7 +143,7 @@ public class TouchableCollection<T> implements Touchable {
         Object item;
         for (int i = 0; i < length; i++) {
             item=items.get(i);
-            if ((item instanceof Touchable)&&((Touchable)item).contains(x, y)) {
+            if ((item instanceof Shape2D)&&((Shape2D)item).contains(x, y)) {
                 if (fixedOrder){
                     iSelected=i;
                 }

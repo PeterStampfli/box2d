@@ -7,23 +7,23 @@ import com.badlogic.gdx.math.Vector2;
  * Objects that can draw themselves, tell if they contain a point and implement touch and scroll methods.
  */
 
-public interface Touchable extends Shape2D {
+public interface Touchable extends Drawable,Shape2D {
 
     /**
      * Returns whether a point with the given coordinates is contained within the shape. (Shape2D)
      */
-    boolean contains(float x, float y);
+    //boolean contains(float x, float y);
 
     /**
      * Returns whether the given point is contained within the shape. (Shape2D)
      */
-    boolean contains(Vector2 point);
+    //boolean contains(Vector2 point);
 
     /**
-     * Draws itself
+     * Draws itself (Drawable)
      *
      */
-    void draw();
+    //void draw();
 
     /**
      * make that the sprite stays visible.
