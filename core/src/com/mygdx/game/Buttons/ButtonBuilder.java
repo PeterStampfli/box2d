@@ -15,7 +15,7 @@ public class ButtonBuilder {
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
     ButtonAct buttonAct;
-    ButtonCollection buttonCollection;
+    boolean makeSelectionButtons;
 
     /**
      * Create the buttonBuilder, with default methods for a simple button.
@@ -61,31 +61,12 @@ public class ButtonBuilder {
     }
 
     /**
-     * set the button collection for new buttons
-     *
-     * @param buttonCollection
-     */
-    public ButtonBuilder setButtonCollection(ButtonCollection buttonCollection) {
-        this.buttonCollection = buttonCollection;
-        return this;
-    }
-
-    /**
-     * set null button collection. New buttons will not be in any collection.
-     *
-     */
-    public ButtonBuilder setNullButtonCollection() {
-        this.buttonCollection = null;
-        return this;
-    }
-
-    /**
      * Build simple single press buttons.
      *
      * @return ButtonBuilder, for chaining
      */
     public ButtonBuilder setPressButton(){
-        setNullButtonCollection();
+        makeSelectionButtons =false;
         buttonTouchBegin=ButtonActions.touchBeginPressed;
         buttonTouchEnd=ButtonActions.touchEndUpAct;
         return this;
@@ -97,7 +78,7 @@ public class ButtonBuilder {
      * @return ButtonBuilder, for chaining
      */
     public ButtonBuilder setToggleButton(){
-        setNullButtonCollection();
+        makeSelectionButtons =false;
         buttonTouchBegin=ButtonActions.touchBeginToggle;
         buttonTouchEnd=ButtonActions.touchEndAct;
         return this;
@@ -110,7 +91,7 @@ public class ButtonBuilder {
      * @return ButtonBuilder, for chaining
      */
     public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
-        setButtonCollection(buttonCollection);
+        makeSelectionButtons =true;
         buttonTouchBegin=ButtonActions.touchBeginSelect;
         buttonTouchEnd=ButtonActions.touchEndAct;
         return this;
@@ -128,8 +109,11 @@ public class ButtonBuilder {
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
         buttonExtension.setButtonAct(buttonAct);
-        if (buttonCollection!=null){
-            buttonCollection.add(sprite);
+        if (makeSelectionButtons){
+            buttonExtension.collection=extensibleSpriteBuilder.collection;
+
+
+
         }
         return sprite;
     }

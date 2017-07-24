@@ -3,6 +3,7 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
+import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.utilities.Device;
 
 /**
@@ -12,6 +13,7 @@ import com.mygdx.game.utilities.Device;
 
 public class ExtensibleSpriteBuilder {
     public Device device;
+    public TouchableCollection<ExtensibleSprite> collection;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -35,6 +37,31 @@ public class ExtensibleSpriteBuilder {
         setTouchEnd(SpriteActions.touchEndNull);
         setTouchDrag(SpriteActions.touchDragNull);
         setScroll(SpriteActions.scrollNull);
+    }
+
+    /**
+     * set the touchable collection of extensible sprites
+     * @param collection
+     */
+    public void setCollection(TouchableCollection<ExtensibleSprite> collection) {
+        this.collection = collection;
+    }
+
+    /**
+     * create the touchable collection of extensible sprites
+     * @return  collection
+     */
+    public TouchableCollection<ExtensibleSprite> newCollection() {
+        collection = new TouchableCollection<ExtensibleSprite>();
+        return collection;
+    }
+
+    /**
+     * void (null) the touchable collection of extensible sprites
+     * @return  collection
+     */
+    public void noCollection() {
+        collection = null;
     }
 
     /**
@@ -193,6 +220,9 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
+        if (collection!=null){
+            collection.addLast(sprite);
+        }
         setup(sprite,textureRegion,shape);
         return sprite;
     }

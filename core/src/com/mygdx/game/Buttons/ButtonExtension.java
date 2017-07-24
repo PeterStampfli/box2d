@@ -2,6 +2,7 @@ package com.mygdx.game.Buttons;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteDraw;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
@@ -20,7 +21,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     static public Color COLOR_PRESSED=Color.GOLD;
 
     public ExtensibleSprite sprite;
-    public ButtonCollection collection;
+    public TouchableCollection<ExtensibleSprite> collection;
 
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
