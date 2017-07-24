@@ -13,7 +13,7 @@ import com.mygdx.game.utilities.Device;
 
 public class ExtensibleSpriteBuilder {
     public Device device;
-    public TouchableCollection<ExtensibleSprite> collection;
+    public TouchableCollection<ExtensibleSprite> spriteCollection;
     public SpriteContains masterContains;
     public SpriteDraw masterDraw;
     public SpriteKeepVisible masterKeepVisible;
@@ -40,28 +40,28 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * set the touchable collection of extensible sprites
-     * @param collection
+     * set the touchable buttonCollection of extensible sprites
+     * @param spriteCollection
      */
-    public void setCollection(TouchableCollection<ExtensibleSprite> collection) {
-        this.collection = collection;
+    public void setSpriteCollection(TouchableCollection<ExtensibleSprite> spriteCollection) {
+        this.spriteCollection = spriteCollection;
     }
 
     /**
-     * create the touchable collection of extensible sprites
-     * @return  collection
+     * create the touchable buttonCollection of extensible sprites
+     * @return  buttonCollection
      */
-    public TouchableCollection<ExtensibleSprite> newCollection() {
-        collection = new TouchableCollection<ExtensibleSprite>();
-        return collection;
+    public TouchableCollection<ExtensibleSprite> newSpriteCollection() {
+        spriteCollection = new TouchableCollection<ExtensibleSprite>();
+        return spriteCollection;
     }
 
     /**
-     * void (null) the touchable collection of extensible sprites
-     * @return  collection
+     * void (null) the touchable buttonCollection of extensible sprites
+     * @return  buttonCollection
      */
-    public void noCollection() {
-        collection = null;
+    public void noSpriteCollection() {
+        spriteCollection = null;
     }
 
     /**
@@ -220,8 +220,8 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
-        if (collection!=null){
-            collection.addLast(sprite);
+        if (spriteCollection !=null){
+            spriteCollection.addLast(sprite);
         }
         setup(sprite,textureRegion,shape);
         return sprite;

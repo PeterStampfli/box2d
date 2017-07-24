@@ -85,12 +85,11 @@ public class ButtonBuilder {
     }
 
     /**
-     * Build selection buttons that are part of the same collection.
+     * Build selection buttons that are part of the same buttonCollection.
      *
-     * @param buttonCollection ButtonCollection, for the interacting buttons
      * @return ButtonBuilder, for chaining
      */
-    public ButtonBuilder setSelectionButton(ButtonCollection buttonCollection){
+    public ButtonBuilder setSelectionButton(){
         makeSelectionButtons =true;
         buttonTouchBegin=ButtonActions.touchBeginSelect;
         buttonTouchEnd=ButtonActions.touchEndAct;
@@ -109,12 +108,7 @@ public class ButtonBuilder {
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
         buttonExtension.setButtonAct(buttonAct);
-        if (makeSelectionButtons){
-            buttonExtension.collection=extensibleSpriteBuilder.collection;
-
-
-
-        }
+        buttonExtension.buttonCollection =extensibleSpriteBuilder.spriteCollection;
         return sprite;
     }
 

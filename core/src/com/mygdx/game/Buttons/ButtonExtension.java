@@ -21,7 +21,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     static public Color COLOR_PRESSED=Color.GOLD;
 
     public ExtensibleSprite sprite;
-    public TouchableCollection<ExtensibleSprite> collection;
+    public TouchableCollection<ExtensibleSprite> buttonCollection;
 
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
@@ -187,7 +187,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     }
 
     /**
-     * do a button press (to choose first button pressed of a collection)
+     * do a button press (to choose first button pressed of a buttonCollection)
      */
     public void press(){
         if (state!=LOCKED){

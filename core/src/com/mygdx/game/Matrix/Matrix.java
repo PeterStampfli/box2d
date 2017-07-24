@@ -7,7 +7,7 @@ import com.mygdx.game.Pieces.TouchableCollection;
 
 /**
  * has objects in matrix. Set and get specific objects, iterate. Create, act and transform.
- * Reference to items can be exported to collection of touchables.
+ * Reference to items can be exported to buttonCollection of touchables.
  */
 
 public class Matrix<T> {

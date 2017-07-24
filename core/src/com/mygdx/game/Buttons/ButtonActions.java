@@ -1,5 +1,8 @@
 package com.mygdx.game.Buttons;
 
+import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Sprite.ExtensibleSprite;
+
 /**
  * Basic static button methods
  */
@@ -53,12 +56,22 @@ public class ButtonActions {
     };
 
     /**
-     * Makes that this button is the only pressed one in a collection. For selection buttons.
+     * Makes that this button is the only pressed one in a buttonCollection. For selection buttons.
      */
     static public ButtonTouchBegin touchBeginSelect=new ButtonTouchBegin() {
         @Override
         public void touchBegin(ButtonExtension buttonExtension) {
-            buttonExtension.collection.select(buttonExtension);
+            if (buttonExtension.state!=ButtonExtension.LOCKED) {
+                Array<ExtensibleSprite> buttonSprites=buttonExtension.buttonCollection.items;
+                ButtonExtension button;
+                for (ExtensibleSprite sprite:buttonSprites){
+                    button=sprite.buttonExtension;
+                    if (button!=null){
+                        button.setStateUp();
+                    }
+                }
+                buttonExtension.setStatePressed();
+            }
         }
     };
 
