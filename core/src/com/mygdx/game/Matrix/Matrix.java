@@ -136,7 +136,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param action with an act method for objects of class T
      */
-    public void act(com.mygdx.game.Matrix.Action<T> action) {
+    public void action(com.mygdx.game.Matrix.Action<T> action) {
         for (T t:items) {
             if (t!=null){
                 action.act(t);

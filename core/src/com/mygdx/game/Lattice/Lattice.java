@@ -11,6 +11,7 @@ public abstract class Lattice {
     public float bottom;
     public float cellWidth;
     public float cellHeight;
+    private Vector2 result=new Vector2();
 
     /**
      * default constructor ...
@@ -98,10 +99,21 @@ public abstract class Lattice {
     }
 
     /**
-     * set address depending on position
+     * get address depending on position
      *
-     * @param vector Vector2, will be set to the address
-     * @return the changed address for chaining
+     * @param x
+     * @param y
+     * @return the address for chaining, will be overwritten
+     */
+    public Vector2 addressOfPosition(float x,float y){
+        return addressOfPosition(result,x,y);
+    }
+
+    /**
+     * get address depending on position
+     *
+     * @param vector, will be changed
+     * @return the address for chaining
      */
     public Vector2 addressOfPosition(Vector2 vector){
         return addressOfPosition(vector,vector.x,vector.y);
@@ -122,11 +134,21 @@ public abstract class Lattice {
      * set position depending on address.
      *
      * @param vector will be set to position
-     * @param address
-     * @return Vector2 position for chaining
+     * @return Vector2 position for chaining, will be overwritten
      */
     public Vector2 positionOfAddress(Vector2 vector,Vector2 address){
         return positionOfAddress(vector,address.x,address.y);
+    }
+
+    /**
+     * set position depending on address.
+     *
+     * @param i
+     * @param j
+     * @return Vector2 position for chaining, will be overwritten
+     */
+    public Vector2 positionOfAddress(float i,float j){
+        return positionOfAddress(result,i,j);
     }
 
     /**

@@ -64,6 +64,16 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     public void setText(String theText){
         textExtension.setText(theText);
     }
+
+    /**
+     * set the position of the lower left corner
+     *
+     * @param position as Vector2
+     */
+    public void setPosition(Vector2 position){
+        setPosition(position.x,position.y);
+    }
+
     /**
      * Get the angle of the sprite.
      *
