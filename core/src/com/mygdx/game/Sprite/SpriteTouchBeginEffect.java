@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpriteTouchBeginEffect implements SpriteTouchBegin {
     SpriteTouchBegin previousTouchBegin;
-    SpriteEffect effect;
+    SpriteAct effect;
 
     /**
      * Create a SpriteTouchBegin object with an effect and add it as a decoration to a sprite.
@@ -16,7 +16,7 @@ public class SpriteTouchBeginEffect implements SpriteTouchBegin {
      * @param sprite ExtensibleSprite, to which we attach the effect
      * @param effect SpriteEffect
      */
-    public SpriteTouchBeginEffect(ExtensibleSprite sprite, SpriteEffect effect){
+    public SpriteTouchBeginEffect(ExtensibleSprite sprite, SpriteAct effect){
         previousTouchBegin=sprite.getTouchBegin();
         sprite.setTouchBegin(this);
         this.effect=effect;
@@ -31,7 +31,7 @@ public class SpriteTouchBeginEffect implements SpriteTouchBegin {
      */
     public boolean touchBegin(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position){
         boolean changed=previousTouchBegin.touchBegin(sprite,position);
-        if (effect.effect(sprite)) {
+        if (effect.act(sprite)) {
             changed = true;
         }
         return changed;

@@ -65,7 +65,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      *
      * @param textureRegion TextureRegion, the sprites image
      * @param shape Shape2D shape for the sprite and the body.
-     * @param body
+     * @param body may be static, dynamical or kinematic, without fixtures (related to shape)
      * @return
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
@@ -76,7 +76,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         body.setUserData(sprite);
         physics.fixtureBuilder.setIsSensor(false).build(body,shape);
         sprite.setLocalOrigin();
-        if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)){
+        if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)&&(mouseJointMover.useStaticBodies)){
             body.setType(BodyDef.BodyType.StaticBody);
         }
         return sprite;

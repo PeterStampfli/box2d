@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpriteTouchDragEffect implements SpriteTouchDrag {
     SpriteTouchDrag  previousTouchDrag;
-    SpriteEffect effect;
+    SpriteAct effect;
 
     /**
      * Create a SpriteTouchDrag object with an effect and add it as a decoration to a sprite.
@@ -16,7 +16,7 @@ public class SpriteTouchDragEffect implements SpriteTouchDrag {
      * @param sprite ExtensibleSprite, to which we attach the effect
      * @param effect SpriteEffect
      */
-    public SpriteTouchDragEffect(ExtensibleSprite sprite, SpriteEffect effect){
+    public SpriteTouchDragEffect(ExtensibleSprite sprite, SpriteAct effect){
         previousTouchDrag=sprite.getTouchDrag();
         sprite.setTouchDrag(this);
         this.effect=effect;
@@ -31,7 +31,7 @@ public class SpriteTouchDragEffect implements SpriteTouchDrag {
      */
     public boolean touchDrag(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position,Vector2 deltaPosition){
         boolean changed=previousTouchDrag.touchDrag(sprite,position,deltaPosition);
-        if (effect.effect(sprite)) {
+        if (effect.act(sprite)) {
             changed = true;
         }
         return changed;

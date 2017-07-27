@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpriteTouchEndEffect implements SpriteTouchEnd {
     SpriteTouchEnd previousTouchEnd;
-    SpriteEffect effect;
+    SpriteAct effect;
 
     /**
      * Create a SpriteTouchEnd object with an effect and add it as a decoration to a sprite.
@@ -16,7 +16,7 @@ public class SpriteTouchEndEffect implements SpriteTouchEnd {
      * @param sprite ExtensibleSprite, to which we attach the effect
      * @param effect SpriteEffect
      */
-    public SpriteTouchEndEffect(ExtensibleSprite sprite, SpriteEffect effect){
+    public SpriteTouchEndEffect(ExtensibleSprite sprite, SpriteAct effect){
         previousTouchEnd=sprite.getTouchEnd();
         sprite.setTouchEnd(this);
         this.effect=effect;
@@ -31,7 +31,7 @@ public class SpriteTouchEndEffect implements SpriteTouchEnd {
      */
     public boolean touchEnd(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position){
         boolean changed=previousTouchEnd.touchEnd(sprite,position);
-        if (effect.effect(sprite)) {
+        if (effect.act(sprite)) {
             changed = true;
         }
         return changed;

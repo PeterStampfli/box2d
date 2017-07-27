@@ -178,3 +178,10 @@ public class FixtureBuilder {
     }
 
 }
+
+/*
+ int fixtureCount = body.getFixtureList().size;
+ for(int i=0;i<fixtureCount;i++){
+ body.destroyFixture(body.getFixtureList().get(0));
+ }
+ */

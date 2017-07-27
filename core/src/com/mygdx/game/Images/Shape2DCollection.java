@@ -54,7 +54,7 @@ public class Shape2DCollection extends Shape2DAdapter {
     }
 
     /**
-     * Clear all shapes. For reuse.
+     * Clear all shapes. For reuse. For resize.
      */
     public void clear(){
         shapes2D.clear();

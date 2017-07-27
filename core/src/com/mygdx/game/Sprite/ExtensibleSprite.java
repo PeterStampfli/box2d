@@ -392,7 +392,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param effect SpriteEffect object with the effect method
      * @return ExtensibleSprite, for chaining
      */
-    public ExtensibleSprite addTouchBeginEffect(SpriteEffect effect){
+    public ExtensibleSprite addTouchBeginEffect(SpriteAct effect){
         new SpriteTouchBeginEffect(this,effect);
         return this;
     }
@@ -407,7 +407,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param effect SpriteEffect object with the effect method
      * @return ExtensibleSprite, for chaining
      */
-    public ExtensibleSprite addTouchDragEffect(SpriteEffect effect){
+    public ExtensibleSprite addTouchDragEffect(SpriteAct effect){
         new SpriteTouchDragEffect(this,effect);
         return this;
     }
@@ -421,7 +421,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param effect SpriteEffect object with the effect method
      * @return ExtensibleSprite, for chaining
      */
-    public ExtensibleSprite addTouchEndEffect(SpriteEffect effect){
+    public ExtensibleSprite addTouchEndEffect(SpriteAct effect){
         new SpriteTouchEndEffect(this,effect);
         return this;
     }
