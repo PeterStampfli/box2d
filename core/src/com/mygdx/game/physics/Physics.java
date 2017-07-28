@@ -27,6 +27,7 @@ public class Physics implements Disposable {
     public FixtureBuilder fixtureBuilder;
     public JointBuilder jointBuilder;
     Pool<PhysicalSprite> physicalSpritePool;
+    Pool<BodyGraphicsInterface> bodyGraphicsInterfacePool;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera debugCamera;
     float physicsTime;
@@ -56,6 +57,7 @@ public class Physics implements Disposable {
         fixtureBuilder=new FixtureBuilder();
         jointBuilder=new JointBuilder(this);
         physicalSpritePool= Pools.get(PhysicalSprite.class);
+        bodyGraphicsInterfacePool=Pools.get(BodyGraphicsInterface.class);
     }
 
     /**

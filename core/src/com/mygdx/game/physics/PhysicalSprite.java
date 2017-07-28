@@ -4,18 +4,21 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * A sprite with a body, using physics for motion
  */
 
-public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
+public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Pool.Poolable{
     Physics physics;
     public Body body;
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyPositionX, newBodyPositionX;   // using pixel units
     private float previousBodyPositionY, newBodyPositionY;
+
+    private BodyGraphicsInterface bodyGraphicsInterface;
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -175,7 +178,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * Set the origin (center of rotation and scaling) of the sprite
      * and the center of mass of the body.
      *
-     * Implicitely also overrides the setWorldOrigin(Vector2 position) method.
+     * Implicitly also overrides the setWorldOrigin(Vector2 position) method.
      *		L.og(extensibleSprite.body.getWorldVector(new Vector2(1,0)).toString());
 
      * @param worldOriginPositionX float, x-coordinate of the origin
@@ -251,4 +254,15 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
         super.setAngle(angle);
     }
 
+    public void readBodyGraphicsInterface(){
+        float angle=bodyGraphicsInterface.getGraphicsAngle();
+        float sinAngle=MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        super.setWorldOriginX(bodyGraphicsInterface.getGraphicsPositionX()
+                +cosAngle*getOriginX()-sinAngle*getOriginY());
+        super.setWorldOriginY(bodyGraphicsInterface.getGraphicsPositionY()
+                +sinAngle*getOriginX()+cosAngle*getOriginY());
+        super.setAngle(angle);
+
+    }
 }
