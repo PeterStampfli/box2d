@@ -4,7 +4,7 @@ package com.mygdx.game.Matrix;
  * Created by peter on 7/4/17.
  */
 
-public interface CreationIJ<T> {
+public interface ActIJ<T> {
 
-    public T create(int i,int j);
+    public void act(int i,int j,T t);
 }

@@ -31,6 +31,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         super(device);
         this.physics=physics;
         physicalSpriteActions=new PhysicalSpriteActions();
+        setContains(physicalSpriteActions.bodyContains);
     }
 
     /**

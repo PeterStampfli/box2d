@@ -6,6 +6,7 @@ import com.mygdx.game.Pieces.TouchableCollection;
 
 /**
  * has objects in matrix. Set and get specific objects, iterate. Create, act and transform.
+ * Use lattice object to find address of a selected item.
  */
 
 public class Matrix<T> extends TouchableCollection<T> {
@@ -109,7 +110,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param creation with a create method for objects of class T
      */
-    public void create(com.mygdx.game.Matrix.Creation<T> creation) {
+    public void create(Create<T> creation) {
         for (int i = items.size - 1; i >= 0; i--) {
             items.set(i, creation.create());
         }
@@ -120,7 +121,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param creationIJ
      */
-    public void create(com.mygdx.game.Matrix.CreationIJ<T> creationIJ){
+    public void create(CreateIJ<T> creationIJ){
         int i,j;
         int index=0;
         for (j=0;j<height;j++){
@@ -136,7 +137,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param action with an act method for objects of class T
      */
-    public void action(com.mygdx.game.Matrix.Action<T> action) {
+    public void act(Act<T> action) {
         for (T t:items) {
             if (t!=null){
                 action.act(t);
@@ -149,7 +150,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param actionIJ
      */
-    public void act(com.mygdx.game.Matrix.ActionIJ<T> actionIJ){
+    public void act(ActIJ<T> actionIJ){
         int i,j;
         int index=0;
         T t;
@@ -170,7 +171,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      * @param matrix
      * @param <U>
      */
-    public <U extends Touchable> void transform(Transformation<T,U> transformation,
+    public <U extends Touchable> void transform(Transform<T,U> transformation,
                                                 Matrix<U> matrix){
         U u;
         for (int index=items.size-1;index>=0;index--){
@@ -188,7 +189,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      * @param matrix
      * @param <U>
      */
-    public <U extends Touchable> void transformIJ(TransformationIJ<T,U> transformation,
+    public <U extends Touchable> void transformIJ(TransformIJ<T,U> transformation,
                                                 Matrix<U> matrix){
         U u;
         int i,j;
