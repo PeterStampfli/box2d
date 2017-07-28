@@ -177,11 +177,14 @@ public class FixtureBuilder {
         build(body, shape2D,null);
     }
 
+    /**
+     * Clear a body of all fixtures
+     *
+     * @param body
+     */
+    public void clear(Body body){
+        for(int i=body.getFixtureList().size;i>0;i--){
+            body.destroyFixture(body.getFixtureList().first());
+        }
+    }
 }
-
-/*
- int fixtureCount = body.getFixtureList().size;
- for(int i=0;i<fixtureCount;i++){
- body.destroyFixture(body.getFixtureList().get(0));
- }
- */

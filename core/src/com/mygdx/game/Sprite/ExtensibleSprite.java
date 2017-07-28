@@ -386,43 +386,12 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
         return spriteTouchBegin;
     }
 
-    /**
-     * Add an effect to touchBegin
-     *
-     * @param effect SpriteEffect object with the effect method
-     * @return ExtensibleSprite, for chaining
-     */
-    public ExtensibleSprite addTouchBeginEffect(SpriteAct effect){
-        new SpriteTouchBeginEffect(this,effect);
-        return this;
-    }
-
     public SpriteTouchDrag getTouchDrag() {
         return spriteTouchDrag;
     }
 
-    /**
-     * Add an effect to touchDrag
-     *
-     * @param effect SpriteEffect object with the effect method
-     * @return ExtensibleSprite, for chaining
-     */
-    public ExtensibleSprite addTouchDragEffect(SpriteAct effect){
-        new SpriteTouchDragEffect(this,effect);
-        return this;
-    }
     public SpriteTouchEnd getTouchEnd() {
         return spriteTouchEnd;
     }
 
-    /**
-     * Add an effect to touchEnd
-     *
-     * @param effect SpriteEffect object with the effect method
-     * @return ExtensibleSprite, for chaining
-     */
-    public ExtensibleSprite addTouchEndEffect(SpriteAct effect){
-        new SpriteTouchEndEffect(this,effect);
-        return this;
-    }
 }
