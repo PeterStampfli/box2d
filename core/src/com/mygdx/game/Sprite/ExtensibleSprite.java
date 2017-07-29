@@ -134,25 +134,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param center Vector2, position of the origin
      */
     public void setLocalOrigin(Vector2 center) {
-        setLocalOrigin(center.x, center.y);
-    }
-
-    /**
-     * Hook to the setX() method of sprite, safe from override
-     *
-     * @param x x-coordinate of position
-     */
-    public void superSetX(float x){
-        super.setX(x);
-    }
-
-    /**
-     * Hook to the setY() method of sprite, safe from override
-     *
-     * @param y y-coordinate of position
-     */
-    public void superSetY(float y){
-        super.setY(y);
+        setOrigin(center.x, center.y);
     }
 
     /**
@@ -170,7 +152,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param x  float, x-coordinate of the origin
      */
     public void setWorldOriginX(float x) {
-        superSetX(x - getOriginX());
+        setX(x - getOriginX());
     }
 
     /**
@@ -188,7 +170,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param y float, y-coordinate of the origin
      */
     public void setWorldOriginY(float y) {
-        superSetY(y - getOriginY());
+        setY(y - getOriginY());
     }
 
     /**

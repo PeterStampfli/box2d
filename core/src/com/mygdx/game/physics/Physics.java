@@ -16,20 +16,22 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.Device;
 
 /**
  * Setting up the physics world and debugCamera. Advancing physics.
  */
 
 public class Physics implements Disposable {
+    Device device;
     public World world;
+    Box2DDebugRenderer debugRenderer;
+    OrthographicCamera debugCamera;
     public BodyBuilder bodyBuilder;
     public FixtureBuilder fixtureBuilder;
     public JointBuilder jointBuilder;
     Pool<PhysicalSprite> physicalSpritePool;
-    Pool<BodyGraphicsInterface> bodyGraphicsInterfacePool;
-    Box2DDebugRenderer debugRenderer;
-    OrthographicCamera debugCamera;
+    public PhysicalSpriteBuilder physicalSpriteBuilder;
     float physicsTime;
     float graphicsTime;
     Array<Body> bodies;
@@ -44,9 +46,10 @@ public class Physics implements Disposable {
     /**
      * Initialize box2D and debugRenderer.
      *
+     * @param device
      * @param debug boolean, true for creating a debugRenderer
      */
-    public Physics(boolean debug) {
+    public Physics(Device device, boolean debug) {
         bodies = new Array<Body>();
         if (debug) {
             debugRenderer = new Box2DDebugRenderer();
@@ -57,7 +60,7 @@ public class Physics implements Disposable {
         fixtureBuilder=new FixtureBuilder();
         jointBuilder=new JointBuilder(this);
         physicalSpritePool= Pools.get(PhysicalSprite.class);
-        bodyGraphicsInterfacePool=Pools.get(BodyGraphicsInterface.class);
+        physicalSpriteBuilder=new PhysicalSpriteBuilder(device,this);
     }
 
     /**

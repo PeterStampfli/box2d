@@ -14,11 +14,15 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Pool.Poolable{
     Physics physics;
     public Body body;
+
+    private float earlierAngle,laterAngle;
+    private Vector2 earlierCenterOfMass=new Vector2();
+    private Vector2 laterCenterOfMass=new Vector2();
+
+
     private float previousBodyAngle, newBodyAngle;
     private float previousBodyPositionX, newBodyPositionX;   // using pixel units
     private float previousBodyPositionY, newBodyPositionY;
-
-    private BodyGraphicsInterface bodyGraphicsInterface;
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -26,6 +30,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     @Override
     public void reset(){
         super.reset();
+        earlierCenterOfMass.setZero();
+        laterCenterOfMass.setZero();
         if (body!=null) {
             physics.world.destroyBody(body);
             body=null;
@@ -42,6 +48,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     }
 
     /**
+     * Set the local origin of the sprite based on the local center of the body with its fixtures.
+     *
      * Usually we first create the sprite with its shapes. Then the body and its fixtures. This
      * determines the center of mass for the body.
      * Thus we set the origin (center of rotation and scaling) of the sprite equal to center of mass of the body.
@@ -68,7 +76,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      * Set the angle of the body equal to the sprite's. The bodies center of mass should
      * be at the sprites "origin" for rotation. Convert lengths.
      * Sets the body data used for interpolation.
-     * Note that the local center (of mass) rotates with the body around it's "position".
+     * Note that the "position" of the body rotates around the center of mass.
+     *
      * Attention: For static bodies worldCenter==position, localCenter==0.
      */
     public void setPositionAngleOfBody(){
@@ -83,6 +92,39 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
         readPositionAngleOfBody();
     }
 
+    /**
+     * Reads and stores position and angle of the body. Position is converted into pixel units.
+     * Used for making the body move the sprite.
+     */
+    public void readPositionAngleOfBody(){
+        previousBodyAngle = newBodyAngle;
+        previousBodyPositionX = newBodyPositionX;
+        previousBodyPositionY = newBodyPositionY;
+        newBodyAngle =body.getAngle();
+        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
+        newBodyPositionX =bodyPosition.x;
+        newBodyPositionY =bodyPosition.y;
+    }
+
+    /**
+     * set angle and position of sprite from linear interpolation
+     * between previous and new data of the body. Take into account rotated origin (body mass center).
+     *
+     * progress=1 for graphics time equal to time of new physics data
+     * progress=0 for graphics time equal to time of previous physics data
+     *
+     * @param progress float, progress between previous to new data, from 0 to 1
+     */
+    public void interpolatePositionAngleOfBody(float progress){
+        float angle=MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress);
+        float sinAngle=MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress)
+                +cosAngle*getOriginX()-sinAngle*getOriginY());
+        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress)
+                +sinAngle*getOriginX()+cosAngle*getOriginY());
+        super.setAngle(angle);
+    }
     /**
      * Set the Angle of the sprite and body using radians.
      *
@@ -123,7 +165,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      */
     @Override
     public void setX(float x){
-        superSetX(x);
+        super.setX(x);
         setPositionAngleOfBody();
     }
 
@@ -134,7 +176,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      */
     @Override
     public void setY(float y){
-        superSetY(y);
+        super.setY(y);
         setPositionAngleOfBody();
     }
 
@@ -220,49 +262,4 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
         setPositionAngleOfBody();
     }
 
-    /**
-     * Reads and stores position and angle of the body. Position is converted into pixel units.
-     * Used for making the body move the sprite.
-     */
-    public void readPositionAngleOfBody(){
-        previousBodyAngle = newBodyAngle;
-        previousBodyPositionX = newBodyPositionX;
-        previousBodyPositionY = newBodyPositionY;
-        newBodyAngle =body.getAngle();
-        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
-        newBodyPositionX =bodyPosition.x;
-        newBodyPositionY =bodyPosition.y;
-    }
-
-    /**
-     * set angle and position of sprite from linear interpolation
-     * between previous and new data of the body. Take into account rotated origin (body mass center).
-     *
-     * progress=1 for graphics time equal to time of new physics data
-     * progress=0 for graphics time equal to time of previous physics data
-     *
-     * @param progress float, progress between previous to new data, from 0 to 1
-     */
-    public void interpolatePositionAngleOfBody(float progress){
-        float angle=MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress);
-        float sinAngle=MathUtils.sin(angle);
-        float cosAngle=MathUtils.cos(angle);
-        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress)
-                              +cosAngle*getOriginX()-sinAngle*getOriginY());
-        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress)
-                              +sinAngle*getOriginX()+cosAngle*getOriginY());
-        super.setAngle(angle);
-    }
-
-    public void readBodyGraphicsInterface(){
-        float angle=bodyGraphicsInterface.getGraphicsAngle();
-        float sinAngle=MathUtils.sin(angle);
-        float cosAngle=MathUtils.cos(angle);
-        super.setWorldOriginX(bodyGraphicsInterface.getGraphicsPositionX()
-                +cosAngle*getOriginX()-sinAngle*getOriginY());
-        super.setWorldOriginY(bodyGraphicsInterface.getGraphicsPositionY()
-                +sinAngle*getOriginX()+cosAngle*getOriginY());
-        super.setAngle(angle);
-
-    }
 }
