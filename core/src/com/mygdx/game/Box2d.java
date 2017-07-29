@@ -18,6 +18,7 @@ import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.L;
 
 public class Box2d extends ApplicationAdapter {
 	Device device;
@@ -56,6 +57,7 @@ public class Box2d extends ApplicationAdapter {
 		TextureRegion circleImage=DrawLines.makeDiscImage(20);
 		physicalSprite=physics.physicalSpriteBuilder.buildPhysical(circleImage,new Circle(10,10,10));
 		physicalSprite.setPosition(400,400);
+		L.og(Physics.getLocalCenterOfBody(physicalSprite.body));
 		physics.start();
 
 	}
