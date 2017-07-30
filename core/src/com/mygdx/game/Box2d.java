@@ -51,13 +51,14 @@ public class Box2d extends ApplicationAdapter {
 		device.setCamera(viewport);
 		img=device.basicAssets.getTextureRegion("badlogic");
 		groundBody=physics.bodyBuilder.buildStaticBody(null);
-		physics.bodyBuilder.setPosition(200,300);
+		physics.bodyBuilder.setPosition(200,400);
 		physics.fixtureBuilder.setFriction(0.01f).setRestitution(1f);
-		Body body=physics.bodyBuilder.buildDynamicalBody(new Circle(0,0,10));
-		TextureRegion circleImage=DrawLines.makeDiscImage(20);
-		physicalSprite=physics.physicalSpriteBuilder.buildPhysical(circleImage,new Circle(10,10,10));
-		physicalSprite.setPosition(400,400);
-		L.og(Physics.getLocalCenterOfBody(physicalSprite.body));
+		Body body=physics.bodyBuilder.buildDynamicalBody(new Circle(10,10,10));
+		TextureRegion circleImage=DrawLines.makeDiscImage(60);
+		physics.bodyBuilder.setPosition(100,400);
+		physicalSprite=physics.physicalSpriteBuilder.buildPhysical(circleImage,new Circle(32,32,30));
+		//physicalSprite.setPosition(400,400);
+		L.og(Physics.getLocalCenter(physicalSprite.body));
 		physics.start();
 
 	}
@@ -76,7 +77,7 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		physics.step();
+		physics.advance();
 
 		device.touchMover.update();
 		//Basic.setContinuousRendering(false);

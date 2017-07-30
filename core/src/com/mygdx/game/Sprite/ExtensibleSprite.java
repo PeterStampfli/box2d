@@ -84,21 +84,12 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
-     * Hook to the bare setRotation method of Sprite, safe from override.
-     *
-     * @param degrees float, set the sprite angle in degrees
-     */
-    public void superSetRotation(float degrees){
-        super.setRotation(degrees);
-    }
-
-    /**
      * Set the Angle of the sprite using radians.
      *
      * @param angle float, in radians
      */
     public void setAngle(float angle) {
-        superSetRotation(angle * MathUtils.radiansToDegrees);
+        super.setRotation(angle * MathUtils.radiansToDegrees);
     }
 
     /**
@@ -107,7 +98,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param n int, number of different sprite orientations
      */
     public void quantizeAngle(int n) {
-        superSetRotation(360f / n * Math.round(n * getRotation() / 360f));
+        super.setRotation(360f / n * Math.round(n * getRotation() / 360f));
     }
 
     /**
@@ -152,7 +143,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param x  float, x-coordinate of the origin
      */
     public void setWorldOriginX(float x) {
-        setX(x - getOriginX());
+        super.setX(x - getOriginX());
     }
 
     /**
@@ -170,7 +161,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param y float, y-coordinate of the origin
      */
     public void setWorldOriginY(float y) {
-        setY(y - getOriginY());
+        super.setY(y - getOriginY());
     }
 
     /**

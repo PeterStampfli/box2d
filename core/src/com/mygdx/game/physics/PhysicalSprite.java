@@ -15,9 +15,9 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     Physics physics;
     public Body body;
 
-    private float earlierAngle,laterAngle;
-    private Vector2 earlierCenterOfMass=new Vector2();
-    private Vector2 laterCenterOfMass=new Vector2();
+    private float angle1, angle2;
+    private Vector2 centerOfMass1 =new Vector2();
+    private Vector2 centerOfMass2 =new Vector2();
 
 
     private float previousBodyAngle, newBodyAngle;
@@ -30,8 +30,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     @Override
     public void reset(){
         super.reset();
-        earlierCenterOfMass.setZero();
-        laterCenterOfMass.setZero();
+        centerOfMass1.setZero();
+        centerOfMass2.setZero();
         if (body!=null) {
             physics.world.destroyBody(body);
             body=null;

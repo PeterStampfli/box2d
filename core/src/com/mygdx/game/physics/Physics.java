@@ -3,6 +3,7 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -99,6 +100,8 @@ public class Physics implements Disposable {
         }
     }
 
+    // forces and torques
+
     /**
      * Get the reaction torque of a joint in graphics units: kg pixels² /sec² instead of Nm.
      *
@@ -118,6 +121,66 @@ public class Physics implements Disposable {
     public Vector2 getReactionForce(Joint joint) {
         return joint.getReactionForce(1.0f / TIME_STEP).scl(PIXELS_PER_METER);
     }
+
+    // instead of extending the body class: special methods
+
+    /**
+     * Get the bodies local center of mass in graphics units.
+     *
+     * @param body can be any bodyType
+     * @return Vector2, for the center of mass, always the same instance
+     */
+    static public Vector2 getLocalCenter(Body body){
+        BodyDef.BodyType bodyType=body.getType();
+        if (bodyType!= BodyDef.BodyType.DynamicBody){
+            body.setType(BodyDef.BodyType.DynamicBody);
+        }
+        Vector2 bodyCenter=body.getLocalCenter().scl(PIXELS_PER_METER);
+        if (bodyType!= BodyDef.BodyType.DynamicBody){
+            body.setType(bodyType);
+        }
+        return bodyCenter;
+    }
+
+    /**
+     * Get the center of mass of the body. Reading its position and using the rotated local origin
+     * of the sprite.
+     *
+     * @param body
+     * @param originX
+     * @param originY
+     * @return Vector2, for center of mass, always the same instance
+     */
+    static public Vector2 getCenterOfMass(Body body,float originX, float originY){
+        float angle=body.getAngle();
+        float sinAngle= MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
+        bodyPosition.x+=cosAngle*originX-sinAngle*originY;
+        bodyPosition.y+=sinAngle*originX+cosAngle*originY;
+        return bodyPosition;
+    }
+
+    /**
+     * Set the position of body and angle. Position results from center of mass and rotated sprites origin.
+     *
+     * @param body
+     * @param centerX
+     * @param centerY
+     * @param angle
+     * @param originX
+     * @param originY
+     */
+    static public void setCenterOfMassAngle(Body body,float centerX,float centerY,float angle,
+                                            float originX,float originY){
+        float sinAngle=MathUtils.sin(angle);
+        float cosAngle=MathUtils.cos(angle);
+        body.setTransform((centerX-cosAngle*originX+sinAngle*originY)/PIXELS_PER_METER,
+                         (centerY-sinAngle*originX-cosAngle*originY)/PIXELS_PER_METER,
+                        angle);
+    }
+
+    // doing the physics ....
 
     /**
      * Start the physics. Sets the physics time equal to current time.

@@ -83,7 +83,8 @@ public class DrawLines {
     }
 
     /**
-     * Make an TextureRegion with a white disc surrounded by transparent white pixels
+     * Make an TextureRegion with a white disc surrounded by a border of transparent white pixels.
+     * The border is 2 pixels wide
      *
      * @param size int diameter of the disc, region size is size+4
      * @return TextureRegion
@@ -93,7 +94,7 @@ public class DrawLines {
     }
 
     /**
-     * Make a pixmap as a strip of white pixels, with transparent ends
+     * Make a pixmap as a strip of white pixels, with additional 2 transparent pixels at each end.
      *
      * @param size
      * @return
