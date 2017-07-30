@@ -127,8 +127,15 @@ public class Physics implements Disposable {
     /**
      * Get the bodies local center of mass in graphics units.
      *
+     * Usually we first create the sprite with its shapes. Then the body and its fixtures. This
+     * determines the center of mass for the body.
+     * Thus we set the origin (center of rotation and scaling) of the sprite equal to center of mass of the body.
+     * In local coordinates. Zero is left bottom corner of the TextureRegion.
+     * Scales from physics dimensions to graphics. Call after creating all fixtures.
+     * Note that the local origin does not depend on translation and rotation.
+     *
      * @param body can be any bodyType
-     * @return Vector2, for the center of mass, always the same instance
+     * @return Vector2, for the center of mass, BEWARE: always the same instance
      */
     static public Vector2 getLocalCenter(Body body){
         BodyDef.BodyType bodyType=body.getType();
@@ -165,7 +172,7 @@ public class Physics implements Disposable {
      * Set the position of body and angle. Position results from center of mass and rotated sprites origin.
      *
      * @param body
-     * @param centerX
+     * @param centerX    center of mass
      * @param centerY
      * @param angle
      * @param originX
@@ -176,8 +183,22 @@ public class Physics implements Disposable {
         float sinAngle=MathUtils.sin(angle);
         float cosAngle=MathUtils.cos(angle);
         body.setTransform((centerX-cosAngle*originX+sinAngle*originY)/PIXELS_PER_METER,
-                         (centerY-sinAngle*originX-cosAngle*originY)/PIXELS_PER_METER,
-                        angle);
+                (centerY-sinAngle*originX-cosAngle*originY)/PIXELS_PER_METER,
+                angle);
+    }
+
+    /**
+     * Set the position of body and angle. Position results from center of mass and rotated sprites origin.
+     *
+     * @param body
+     * @param center
+     * @param angle
+     * @param originX
+     * @param originY
+     */
+    static public void setCenterOfMassAngle(Body body,Vector2 center,float angle,
+                                            float originX,float originY){
+        setCenterOfMassAngle(body,center.x,center.y,angle,originX,originY);
     }
 
     // doing the physics ....

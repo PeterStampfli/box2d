@@ -165,6 +165,17 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
+     * get world origin as vector
+     *
+     * @param vector will be set to world origin
+     * @return vector, for chaining
+     */
+    public Vector2 getWorldOrigin(Vector2 vector){
+        vector.set(getWorldOriginX(),getWorldOriginY());
+        return vector;
+    }
+
+    /**
      * Set the position of the sprite such that the origin (center of rotation and scaling)
      * lies at a given world position.
      *

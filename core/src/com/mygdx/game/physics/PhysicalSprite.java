@@ -3,7 +3,6 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
@@ -50,24 +49,9 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     /**
      * Set the local origin of the sprite based on the local center of the body with its fixtures.
      *
-     * Usually we first create the sprite with its shapes. Then the body and its fixtures. This
-     * determines the center of mass for the body.
-     * Thus we set the origin (center of rotation and scaling) of the sprite equal to center of mass of the body.
-     * In local coordinates. Zero is left bottom corner of the TextureRegion.
-     * Scales from physics dimensions to graphics. Call after creating all fixtures.
-     * Note that the local origin does not depend on translation and rotation.
-     * Attention: Only valid for dynamical bodies. For other bodies switch to dynamical body and back.
      */
-    public void setLocalOrigin(){
-        BodyDef.BodyType bodyType=body.getType();
-        if (bodyType!= BodyDef.BodyType.DynamicBody){
-            body.setType(BodyDef.BodyType.DynamicBody);
-        }
-        Vector2 bodyCenter=body.getLocalCenter();
-        setLocalOrigin(bodyCenter.x*Physics.PIXELS_PER_METER,bodyCenter.y*Physics.PIXELS_PER_METER);
-        if (bodyType!= BodyDef.BodyType.DynamicBody){
-            body.setType(bodyType);
-        }
+    public void setLocalOriginFromBody(){
+        setLocalOrigin(Physics.getLocalCenter(body));
     }
 
     // placing and rotating the sprite: Do same for the body!
@@ -81,13 +65,11 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      * Attention: For static bodies worldCenter==position, localCenter==0.
      */
     public void setPositionAngleOfBody(){
-        float angle=getAngle();
-        float sinAngle=MathUtils.sin(angle);
-        float cosAngle=MathUtils.cos(angle);
-        float bodyPositionX=getWorldOriginX()-cosAngle*getOriginX()+sinAngle*getOriginY();
-        float bodyPositionY=getWorldOriginY()-sinAngle*getOriginX()-cosAngle*getOriginY();
-        body.setTransform(bodyPositionX/Physics.PIXELS_PER_METER,
-                          bodyPositionY/Physics.PIXELS_PER_METER,angle);
+        angle2=getAngle();
+        angle1=angle2;
+        getWorldOrigin(centerOfMass2);
+        centerOfMass1.set(centerOfMass2);
+        Physics.setCenterOfMassAngle(body,centerOfMass2,angle2,getOriginX(),getOriginY());
         // set interpolation data (newAngle and newPosition)
         readPositionAngleOfBody();
     }
@@ -97,6 +79,11 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      * Used for making the body move the sprite.
      */
     public void readPositionAngleOfBody(){
+        angle1=angle2;
+        angle2=body.getAngle();
+        centerOfMass1.set(centerOfMass2);
+        centerOfMass2.set(Physics.getCenterOfMass(body,getOriginX(),getOriginY()));
+
         previousBodyAngle = newBodyAngle;
         previousBodyPositionX = newBodyPositionX;
         previousBodyPositionY = newBodyPositionY;
@@ -189,6 +176,41 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
     @Override
     public void setPosition(float x,float y){
         super.setPosition(x,y);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the position of sprite and body
+     *
+     * @param vector
+     */
+    @Override
+    public void setPosition(Vector2 vector){
+        super.setPosition(vector.x,vector.y);
+        setPositionAngleOfBody();    }
+
+    /**
+     * Set the position of sprite and body
+     *
+     * @param x float, x-coordinate of the position
+     * @param y float, y-coordinate of the position
+     * @param angle
+     */
+    public void setPositionAngle(float x,float y,float angle){
+        super.setPosition(x,y);
+        super.setAngle(angle);
+        setPositionAngleOfBody();
+    }
+
+    /**
+     * Set the position of sprite and body
+     *
+     * @param vector
+     * @param angle
+     */
+    public void setPositionAngle(Vector2 vector,float angle){
+        super.setPosition(vector.x,vector.y);
+        super.setAngle(angle);
         setPositionAngleOfBody();
     }
 
