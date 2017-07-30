@@ -3,25 +3,19 @@ package com.mygdx.game.physics;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.utilities.L;
 
 /**
  * A sprite with a body, using physics for motion
  */
 
-public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Pool.Poolable{
+public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     Physics physics;
     public Body body;
-
     private float angle1, angle2;
     private Vector2 centerOfMass1 =new Vector2();
     private Vector2 centerOfMass2 =new Vector2();
-
-
-    private float previousBodyAngle, newBodyAngle;
-    private float previousBodyPositionX, newBodyPositionX;   // using pixel units
-    private float previousBodyPositionY, newBodyPositionY;
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -36,6 +30,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
             body=null;
             physics.bodiesNeedUpdate = true;
         }
+        L.og("reset");
     }
 
     /**
@@ -70,8 +65,6 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
         getWorldOrigin(centerOfMass2);
         centerOfMass1.set(centerOfMass2);
         Physics.setCenterOfMassAngle(body,centerOfMass2,angle2,getOriginX(),getOriginY());
-        // set interpolation data (newAngle and newPosition)
-        readPositionAngleOfBody();
     }
 
     /**
@@ -83,14 +76,6 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
         angle2=body.getAngle();
         centerOfMass1.set(centerOfMass2);
         centerOfMass2.set(Physics.getCenterOfMass(body,getOriginX(),getOriginY()));
-
-        previousBodyAngle = newBodyAngle;
-        previousBodyPositionX = newBodyPositionX;
-        previousBodyPositionY = newBodyPositionY;
-        newBodyAngle =body.getAngle();
-        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
-        newBodyPositionX =bodyPosition.x;
-        newBodyPositionY =bodyPosition.y;
     }
 
     /**
@@ -103,15 +88,11 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower, Po
      * @param progress float, progress between previous to new data, from 0 to 1
      */
     public void interpolatePositionAngleOfBody(float progress){
-        float angle=MathUtils.lerpAngle(previousBodyAngle, newBodyAngle,progress);
-        float sinAngle=MathUtils.sin(angle);
-        float cosAngle=MathUtils.cos(angle);
-        super.setWorldOriginX(MathUtils.lerp(previousBodyPositionX, newBodyPositionX,progress)
-                +cosAngle*getOriginX()-sinAngle*getOriginY());
-        super.setWorldOriginY(MathUtils.lerp(previousBodyPositionY, newBodyPositionY,progress)
-                +sinAngle*getOriginX()+cosAngle*getOriginY());
-        super.setAngle(angle);
+        super.setWorldOriginX(MathUtils.lerp(centerOfMass1.x,centerOfMass2.x,progress));
+        super.setWorldOriginY(MathUtils.lerp(centerOfMass1.y,centerOfMass2.y,progress));
+        super.setAngle(MathUtils.lerpAngle(angle1, angle2,progress));
     }
+
     /**
      * Set the Angle of the sprite and body using radians.
      *

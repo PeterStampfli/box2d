@@ -118,7 +118,6 @@ public class Mask {
         return this;
     }
 
-
     /**
      * For drawing, the mask will always be set to the larger value of both the existing mask byte and the
      * new opacity value.
