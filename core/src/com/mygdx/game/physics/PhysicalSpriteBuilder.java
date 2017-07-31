@@ -20,6 +20,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     Physics physics;
     public PhysicalSpriteActions physicalSpriteActions;
     private MouseJointMover mouseJointMover;
+    private KinematicTranslate kinematicTranslate;
 
     /**
      * Create the builder with a device that has glyphlayout pool.
@@ -55,10 +56,26 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     }
 
     /**
+     * Use a kinematic body to move the sprite, and a kinematicTranslate instance
+     */
+    public void setKinematicTranslate(){
+        if (kinematicTranslate==null){
+            kinematicTranslate=new KinematicTranslate();
+        }
+        setContains(physicalSpriteActions.bodyContains);
+        setKeepVisible(SpriteActions.keepVisibleNull);
+        setDraw(SpriteActions.draw);
+        setTouchBegin(kinematicTranslate);
+        setTouchDrag(kinematicTranslate);
+        setTouchEnd(kinematicTranslate);
+        setScroll(SpriteActions.scrollNull);
+    }
+
+    /**
      * Get a physical sprite from the sprite pool. Set image and other data.
      * Attach a body and create its fixtures from shape.
      * Set local origin of the sprite from center of mass of the body.
-     * Position and angle of sprite and body will be set afterwards.
+     * Position and angle of sprite results from body (BodyBuilder).
      * If body has mouseJointMover then make it static.
      *
      * Note: We can't set the position of the origin without knowing the center of
@@ -77,9 +94,13 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         body.setUserData(sprite);
         physics.fixtureBuilder.setIsSensor(false).build(body,shape);
         sprite.setLocalOriginFromBody();
-        sprite.setPositionAngleOfBody();
+        sprite.readPositionAngleOfBody();
+        sprite.interpolatePositionAngleOfBody(1);
         if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)&&(mouseJointMover.useStaticBodies)){
             body.setType(BodyDef.BodyType.StaticBody);
+        }
+        if ((kinematicTranslate!=null)&&(masterTouchBegin==kinematicTranslate)){
+            body.setType(BodyDef.BodyType.KinematicBody);
         }
         return sprite;
     }

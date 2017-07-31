@@ -210,6 +210,27 @@ public class Physics implements Disposable {
         setCenterOfMassAngle(body,center.x,center.y,angle,originX,originY);
     }
 
+    /**
+     * set the velocity (of a kinematic body). Given in pixels/sec
+     *
+     * @param body
+     * @param vx
+     * @param vy
+     */
+    static public void setVelocity(Body body,float vx,float vy){
+        body.setLinearVelocity(vx/PIXELS_PER_METER,vy/PIXELS_PER_METER);
+    }
+
+    /**
+     * set the velocity (of a kinematic body). Given in pixels/sec
+     *
+     * @param body
+     * @param v
+     */
+    static public void setVelocity(Body body,Vector2 v){
+        body.setLinearVelocity(v.x/PIXELS_PER_METER,v.y/PIXELS_PER_METER);
+    }
+
     // doing the physics ....
 
     /**
