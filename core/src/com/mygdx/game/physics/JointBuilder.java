@@ -723,7 +723,7 @@ public class JointBuilder {
     public MouseJoint buildMouseJoint(Body body,Vector2 target) {
         if (mouseJointDef==null){
             mouseJointDef=new MouseJointDef();
-            dummyBody=physics.bodyBuilder.reset().setPosition(10000,00).buildStaticBody(null);
+            dummyBody=physics.bodyBuilder.reset().setPosition(10000,10000).buildStaticBody(null);
             physics.bodyBuilder.reset();
         }
         mouseJointDef.bodyA=dummyBody;

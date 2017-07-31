@@ -7,20 +7,27 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
+import com.mygdx.game.utilities.L;
 
 /**
  * Moving sprite with a mouse joint and touch.
- * Move methods are basic and set before others in the sprite builder.
+ * Attention: sets parameters of the JointBuilder to its own values.
+ * A stiff joint of frequencyHz=0 crashes. Thus FrequencyHz>0.
+ * A large damping is better, thus dampingRatio=1 (critical)
  * Attention: Static bodies have localCenter=0, always.
  */
 
 public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd {
     private MouseJoint mouseJoint;
+    public float maxAcceleration=5000;
+    public float frequencyHz=20;
+    public float dampingRatio=1;
     private Vector2 target=new Vector2();
     public boolean useStaticBodies=false;
 
     /**
      * Start move: Create the mouseJoint and set target.
+     * Sets parameters of JointBuilder to be safe from side effects.
      *
      * @param sprite   ExtensibleSprite, actually PhysicalSprite
      * @param touchPosition Vector2, the position of touch (in pixels)
@@ -33,6 +40,10 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
             physicalSprite.body.setType(BodyDef.BodyType.DynamicBody);
         }
         JointBuilder jointBuilder=physicalSprite.physics.jointBuilder;
+        jointBuilder.setFrequencyHz(frequencyHz);
+        jointBuilder.setDampingRatio(dampingRatio);
+        jointBuilder.setMaxAcceleration(maxAcceleration);
+        jointBuilder.setCollideConnected(false);
         mouseJoint=jointBuilder.buildMouseJoint(physicalSprite,touchPosition);
         return false;
     }
@@ -48,7 +59,9 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      */
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition,Vector2 deltaTouchPosition) {
         target.set(deltaTouchPosition).scl(0.5f).add(touchPosition).scl(1f/Physics.PIXELS_PER_METER);
+        L.og("set target");
         mouseJoint.setTarget(target);
+        L.og("t set");
         return true;
     }
 

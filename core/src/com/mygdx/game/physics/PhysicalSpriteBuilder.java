@@ -40,7 +40,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      *
      * @param useStaticBodies boolean, true for making nonmoving bodies static
      */
-    public void setMouseJoint(boolean useStaticBodies){
+    public void setMouseJointMover(boolean useStaticBodies){
         if (mouseJointMover==null){
             mouseJointMover=new MouseJointMover();
         }
