@@ -13,9 +13,9 @@ import com.mygdx.game.utilities.L;
 public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     Physics physics;
     public Body body;
-    private float angle1, angle2;
-    private Vector2 centerOfMass1 =new Vector2();
-    private Vector2 centerOfMass2 =new Vector2();
+    public float anglePreviousPhysicsTime, angleCurrentPhysicsTime;
+    public Vector2 centerMassPreviousPhysicsTime =new Vector2();
+    public Vector2 centerMassCurrentPhysicsTime =new Vector2();
 
     /**
      * Reset the sprite and put it back in the pool. Free the body !
@@ -23,8 +23,8 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     @Override
     public void reset(){
         super.reset();
-        centerOfMass1.setZero();
-        centerOfMass2.setZero();
+        centerMassPreviousPhysicsTime.setZero();
+        centerMassCurrentPhysicsTime.setZero();
         if (body!=null) {
             physics.world.destroyBody(body);
             body=null;
@@ -60,11 +60,11 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * Attention: For static bodies worldCenter==position, localCenter==0.
      */
     public void setPositionAngleOfBody(){
-        angle2=getAngle();
-        angle1=angle2;
-        getWorldOrigin(centerOfMass2);
-        centerOfMass1.set(centerOfMass2);
-        Physics.setCenterOfMassAngle(body,centerOfMass2,angle2,getOriginX(),getOriginY());
+        angleCurrentPhysicsTime =getAngle();
+        anglePreviousPhysicsTime = angleCurrentPhysicsTime;
+        getWorldOrigin(centerMassCurrentPhysicsTime);
+        centerMassPreviousPhysicsTime.set(centerMassCurrentPhysicsTime);
+        Physics.setCenterOfMassAngle(body, centerMassCurrentPhysicsTime, angleCurrentPhysicsTime,getOriginX(),getOriginY());
     }
 
     /**
@@ -72,10 +72,10 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * Used for making the body move the sprite.
      */
     public void readPositionAngleOfBody(){
-        angle1=angle2;
-        angle2=body.getAngle();
-        centerOfMass1.set(centerOfMass2);
-        centerOfMass2.set(Physics.getCenterOfMass(body,getOriginX(),getOriginY()));
+        anglePreviousPhysicsTime = angleCurrentPhysicsTime;
+        angleCurrentPhysicsTime =body.getAngle();
+        centerMassPreviousPhysicsTime.set(centerMassCurrentPhysicsTime);
+        centerMassCurrentPhysicsTime.set(Physics.getCenterOfMass(body,getOriginX(),getOriginY()));
     }
 
     /**
@@ -88,9 +88,9 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param progress float, progress between previous to new data, from 0 to 1
      */
     public void interpolatePositionAngleOfBody(float progress){
-        super.setWorldOriginX(MathUtils.lerp(centerOfMass1.x,centerOfMass2.x,progress));
-        super.setWorldOriginY(MathUtils.lerp(centerOfMass1.y,centerOfMass2.y,progress));
-        super.setAngle(MathUtils.lerpAngle(angle1, angle2,progress));
+        super.setWorldOriginX(MathUtils.lerp(centerMassPreviousPhysicsTime.x, centerMassCurrentPhysicsTime.x,progress));
+        super.setWorldOriginY(MathUtils.lerp(centerMassPreviousPhysicsTime.y, centerMassCurrentPhysicsTime.y,progress));
+        super.setAngle(MathUtils.lerpAngle(anglePreviousPhysicsTime, angleCurrentPhysicsTime,progress));
     }
 
     /**

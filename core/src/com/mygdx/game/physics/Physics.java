@@ -37,7 +37,6 @@ public class Physics implements Disposable {
     float graphicsTime;
     Array<Body> bodies;
     boolean bodiesNeedUpdate = true;
-    private float accumulator = 0f;
     static public float PIXELS_PER_METER = 30;       // default
     final float TIME_STEP = 1 / 60f;
     final float MAX_TIMEINTERVAL = 0.25f;
@@ -150,6 +149,16 @@ public class Physics implements Disposable {
     }
 
     /**
+     * Get the position of the body in graphics units.
+     *
+     * @param body
+     * @return Vector2, for center of mass, always the same instance
+     */
+    static public Vector2 getPosition(Body body){
+        return body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
+    }
+
+    /**
      * Get the center of mass of the body. Reading its position and using the rotated local origin
      * of the sprite.
      *
@@ -162,7 +171,7 @@ public class Physics implements Disposable {
         float angle=body.getAngle();
         float sinAngle= MathUtils.sin(angle);
         float cosAngle=MathUtils.cos(angle);
-        Vector2 bodyPosition=body.getPosition().scl(Physics.PIXELS_PER_METER);        // that's always the same object
+        Vector2 bodyPosition=getPosition(body);        // that's always the same object
         bodyPosition.x+=cosAngle*originX-sinAngle*originY;
         bodyPosition.y+=sinAngle*originX+cosAngle*originY;
         return bodyPosition;

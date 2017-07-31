@@ -10,6 +10,22 @@ import com.badlogic.gdx.math.Vector2;
  * Have no data to remember, thus one single object does it for all.
  */
 
+/* reuse the methods of the objects for more complicated actions. Like that:
+
+		physicalSprite.setDraw(new SpriteDraw() {
+			int count=0;
+			@Override
+			public void draw(ExtensibleSprite sprite) {
+				count++;
+				L.og("hallo "+count);
+				SpriteActions.draw.draw(sprite);
+			}
+		});
+
+    this is more explicit and flexible than using a decorator pattern on extensible sprite
+    or extending the sprite class ...
+ */
+
 public class SpriteActions {
     /**
      * An object that implements SpriteContains:
