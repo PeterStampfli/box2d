@@ -7,7 +7,6 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
-import com.mygdx.game.utilities.L;
 
 /**
  * Moving sprite with a mouse joint and touch.
@@ -59,9 +58,7 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      */
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition,Vector2 deltaTouchPosition) {
         target.set(deltaTouchPosition).scl(0.5f).add(touchPosition).scl(1f/Physics.PIXELS_PER_METER);
-        L.og("set target");
         mouseJoint.setTarget(target);
-        L.og("t set");
         return true;
     }
 
