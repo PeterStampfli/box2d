@@ -30,6 +30,13 @@ public class ExtensibleSpriteBuilder {
      */
     public ExtensibleSpriteBuilder(Device device){
         this.device=device;
+        reset();
+    }
+
+    /**
+     * reset
+     */
+    public void reset() {
         setContains(SpriteActions.containsTransRotate);
         setDraw(SpriteActions.draw);
         setKeepVisible(SpriteActions.keepVisibleNull);
@@ -53,7 +60,7 @@ public class ExtensibleSpriteBuilder {
      * @return  buttonCollection
      */
     public TouchableCollection<ExtensibleSprite> newSpriteCollection() {
-        spriteCollection = new TouchableCollection<ExtensibleSprite>();
+        this.spriteCollection = new TouchableCollection<ExtensibleSprite>();
         return spriteCollection;
     }
 

@@ -19,8 +19,10 @@ import com.mygdx.game.utilities.Device;
 public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     Physics physics;
     public PhysicalSpriteActions physicalSpriteActions;
+    public BodyDef.BodyType masterBodyType;
     private MouseJointMover mouseJointMover;
     private KinematicTranslate kinematicTranslate;
+    public PhysicalSpriteStep masterSpriteStep;
 
     /**
      * Create the builder with a device that has glyphlayout pool.
@@ -36,6 +38,33 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     }
 
     /**
+     * reset, including dynamic body
+     */
+    @Override
+    public void reset(){
+        super.reset();
+        setBodyType(BodyDef.BodyType.DynamicBody);
+        setPhysicalSpriteStep(PhysicalSpriteActions.spriteStepNull);
+    }
+
+
+    /**
+     * set the body type for future sprites
+     * @param bodyType
+     */
+    public void setBodyType(BodyDef.BodyType bodyType){
+        this.masterBodyType=bodyType;
+    }
+
+    /**
+     * set the object with the update routine for steps
+     *
+     * @param spriteStep
+     */
+    public void setPhysicalSpriteStep(PhysicalSpriteStep spriteStep){
+        masterSpriteStep=spriteStep;
+    }
+    /**
      * Use the mouseJoint to move the sprite. Use the bodies shapes for contains method.
      * Sets the basic methods for physical sprite.
      *
@@ -46,6 +75,12 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
             mouseJointMover=new MouseJointMover();
         }
         mouseJointMover.useStaticBodies=useStaticBodies;
+        if (useStaticBodies){
+            setBodyType(BodyDef.BodyType.StaticBody);
+        }
+        else {
+            setBodyType(BodyDef.BodyType.DynamicBody);
+        }
         setContains(physicalSpriteActions.bodyContains);
         setKeepVisible(SpriteActions.keepVisibleNull);
         setDraw(SpriteActions.draw);
@@ -53,6 +88,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
         setScroll(SpriteActions.scrollNull);
+        setPhysicalSpriteStep(PhysicalSpriteActions.spriteStepNull);
     }
 
     /**
@@ -62,6 +98,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         if (kinematicTranslate==null){
             kinematicTranslate=new KinematicTranslate();
         }
+        setBodyType(BodyDef.BodyType.KinematicBody);
         setContains(physicalSpriteActions.bodyContains);
         setKeepVisible(SpriteActions.keepVisibleNull);
         setDraw(SpriteActions.draw);
@@ -69,6 +106,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         setTouchDrag(kinematicTranslate);
         setTouchEnd(kinematicTranslate);
         setScroll(SpriteActions.scrollNull);
+        setPhysicalSpriteStep(kinematicTranslate);
     }
 
     /**
@@ -89,19 +127,16 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);                         // ExtensibleSprite
-        sprite.body=body;
         sprite.physics=physics;
+        sprite.spriteStep=masterSpriteStep;
+        sprite.body=body;
         body.setUserData(sprite);
+        body.setType(BodyDef.BodyType.DynamicBody);
         physics.fixtureBuilder.setIsSensor(false).build(body,shape);
         sprite.setLocalOriginFromBody();
         sprite.readPositionAngleOfBody();
         sprite.interpolatePositionAngleOfBody(1);
-        if ((mouseJointMover!=null)&&(masterTouchBegin==mouseJointMover)&&(mouseJointMover.useStaticBodies)){
-            body.setType(BodyDef.BodyType.StaticBody);
-        }
-        if ((kinematicTranslate!=null)&&(masterTouchBegin==kinematicTranslate)){
-            body.setType(BodyDef.BodyType.KinematicBody);
-        }
+        body.setType(masterBodyType);
         return sprite;
     }
 

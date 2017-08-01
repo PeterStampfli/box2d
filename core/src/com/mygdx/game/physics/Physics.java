@@ -241,15 +241,6 @@ public class Physics implements Disposable {
     }
 
     /**
-     * Make one time step. Increase physics time by the fixed time step.
-     * Override this to remove or create bodies after a world step.
-     */
-    public void step() {
-        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-        physicsTime += TIME_STEP;
-    }
-
-    /**
      * Update the bodies array if bodies have been created or destroyed.
      */
     public void updateBodies() {
@@ -257,6 +248,24 @@ public class Physics implements Disposable {
             world.getBodies(bodies);
             bodiesNeedUpdate = false;
         }
+    }
+
+    /**
+     * Call body followers to prepare a time step.
+     * Make one time step. Increase physics time by the fixed time step.
+     * Override this to remove or create bodies after a world step.
+     */
+    public void step() {
+        Object userData;
+        updateBodies();
+        for (Body body : bodies) {
+            userData = body.getUserData();
+            if (userData instanceof BodyFollower) {
+                ((BodyFollower) userData).prepareTimeStep();
+            }
+        }
+        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        physicsTime += TIME_STEP;
     }
 
     /**

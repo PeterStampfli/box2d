@@ -10,7 +10,8 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
  * Move sprite with touch as kinematic body. Translate only.
  */
 
-public class KinematicTranslate implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd {
+public class KinematicTranslate
+        implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd,PhysicalSpriteStep {
     public Vector2 bodyTargetPosition=new Vector2();
     public boolean moving=false;
     public Vector2 velocity=new Vector2();
@@ -58,4 +59,11 @@ public class KinematicTranslate implements SpriteTouchBegin,SpriteTouchDrag,Spri
         return false;
     }
 
+    @Override
+    public void update(PhysicalSprite sprite) {
+        if (moving) {
+            velocity.set(bodyTargetPosition).sub(Physics.getPosition(sprite.body)).scl(1f / Physics.TIME_STEP);
+            Physics.setVelocity(sprite.body, velocity);
+        }
+    }
 }

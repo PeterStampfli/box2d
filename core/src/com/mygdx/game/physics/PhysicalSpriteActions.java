@@ -36,4 +36,10 @@ public class PhysicalSpriteActions extends SpriteActions {
             return false;
         }
     };
+
+    static public PhysicalSpriteStep spriteStepNull=new PhysicalSpriteStep() {
+        @Override
+        public void update(PhysicalSprite sprite) {
+        }
+    };
 }
