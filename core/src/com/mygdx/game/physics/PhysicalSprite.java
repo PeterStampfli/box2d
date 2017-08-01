@@ -68,9 +68,19 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     }
 
     /**
+     * adjust body data before time step
+     */
+    @Override
+    public void prepareTimeStep() {
+
+    }
+
+
+    /**
      * Reads and stores position and angle of the body. Position is converted into pixel units.
      * Used for making the body move the sprite.
      */
+    @Override
     public void readPositionAngleOfBody(){
         anglePreviousPhysicsTime = angleCurrentPhysicsTime;
         angleCurrentPhysicsTime =body.getAngle();

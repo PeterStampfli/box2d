@@ -18,7 +18,6 @@ import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 
 public class Box2d extends ApplicationAdapter {
 	Device device;
@@ -41,7 +40,7 @@ public class Box2d extends ApplicationAdapter {
 		physics=new Physics(device,true);
 		Physics.PIXELS_PER_METER=100;
 
-		physics.createWorld(0,-100,true);
+		physics.createWorld(0,00,true);
 
 		drawLines=new DrawLines(device,"disc","line",4);
 		shape2DCollection=new Shape2DCollection();
@@ -53,13 +52,17 @@ public class Box2d extends ApplicationAdapter {
 		groundBody=physics.bodyBuilder.buildStaticBody(null);
 		physics.bodyBuilder.setPosition(200,400);
 		physics.fixtureBuilder.setFriction(0.01f).setRestitution(1f);
-		Body body=physics.bodyBuilder.buildDynamicalBody(new Circle(10,10,10));
+		Body body=physics.bodyBuilder.buildKinematicBody(new Circle(10,10,10));
 		TextureRegion circleImage=DrawLines.makeDiscImage(60);
-		physics.bodyBuilder.setPosition(100,400);
+		physics.bodyBuilder.setPosition(300,300);
+		physics.physicalSpriteBuilder.setMouseJointMover(true);
+		physics.physicalSpriteBuilder.setKinematicTranslate();
 		physicalSprite=physics.physicalSpriteBuilder.buildPhysical(circleImage,new Circle(32,32,30));
-		//physicalSprite.setPosition(400,400);
-		L.og(Physics.getLocalCenter(physicalSprite.body));
 		physics.start();
+
+		body.setAngularVelocity(1f);
+		body.setAngularDamping(0);
+		device.touchMover.setPiece(physicalSprite);
 
 	}
 
@@ -77,9 +80,9 @@ public class Box2d extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		physics.advance();
 
 		device.touchMover.update();
+		physics.advance();
 		//Basic.setContinuousRendering(false);
 		Basic.clearBackground(Color.BLUE);
 		viewport.apply();

@@ -38,7 +38,7 @@ public class Physics implements Disposable {
     Array<Body> bodies;
     boolean bodiesNeedUpdate = true;
     static public float PIXELS_PER_METER = 30;       // default
-    final float TIME_STEP = 1 / 60f;
+    static final float TIME_STEP = 1 / 60f;
     final float MAX_TIMEINTERVAL = 0.25f;
     final int VELOCITY_ITERATIONS = 8;
     final int POSITION_ITERATIONS = 3;

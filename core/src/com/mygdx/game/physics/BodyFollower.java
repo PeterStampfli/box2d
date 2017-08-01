@@ -7,6 +7,11 @@ package com.mygdx.game.physics;
 public interface BodyFollower {
 
     /**
+     * the follower might adjust something before the time step
+     */
+    void prepareTimeStep();
+
+    /**
      * The follower reads new body data and updates previous data.
      */
     void readPositionAngleOfBody();

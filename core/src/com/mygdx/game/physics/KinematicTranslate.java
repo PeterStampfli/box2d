@@ -5,39 +5,55 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
-import com.mygdx.game.utilities.Basic;
-import com.mygdx.game.utilities.L;
 
 /**
  * Move sprite with touch as kinematic body. Translate only.
  */
 
 public class KinematicTranslate implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd {
-    private Vector2 bodySubTouchPosition =new Vector2();
-    private Vector2 velocity=new Vector2();
+    public Vector2 bodyTargetPosition=new Vector2();
+    public boolean moving=false;
+    public Vector2 velocity=new Vector2();
 
+    /**
+     * determine relative position of touch to body, start motion
+     *
+     * @param sprite   ExtensibleSprite
+     * @param touchPosition
+     * @return
+     */
     @Override
     public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition) {
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
-        bodySubTouchPosition.set(physicalSprite.centerMassCurrentPhysicsTime).sub(touchPosition);
-        L.og(bodySubTouchPosition);
+        bodyTargetPosition.set(Physics.getPosition(physicalSprite.body));
+        moving=true;
         return false;
     }
 
+    /**
+     * determine the (target) position of body at end of next time steps
+     * @param sprite        ExtensibleSprite
+     * @param touchPosition
+     * @param deltaTouchPosition
+     * @return
+     */
     @Override
     public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
-        PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
-        velocity.set(touchPosition).add(bodySubTouchPosition).sub(physicalSprite.centerMassCurrentPhysicsTime)
-                .scl(1f/(Basic.getTime()-physicalSprite.physics.physicsTime));
-L.og("gra "+Basic.getTime());
-        L.og(physicalSprite.physics.physicsTime);
-        Physics.setVelocity(physicalSprite.body,velocity);
+        bodyTargetPosition.add(deltaTouchPosition);
         return false;
     }
 
+    /**
+     * stop the body
+     *
+     * @param sprite   ExtensibleSprite
+     * @param position Vector2, position of touch
+     * @return
+     */
     @Override
     public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
+        moving=false;
         physicalSprite.body.setLinearVelocity(0,0);
         return false;
     }
