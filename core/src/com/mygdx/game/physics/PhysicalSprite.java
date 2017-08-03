@@ -201,7 +201,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param angle
      */
     public void setPositionAngle(Vector2 vector,float angle){
-        super.setPosition(vector.x,vector.y);
+        super.setPosition(vector);
         super.setAngle(angle);
         setPositionAngleOfBody();
     }
@@ -242,8 +242,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      */
     @Override
     public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
-        super.setWorldOriginX(worldOriginPositionX);
-        super.setWorldOriginY(worldOriginPositionY);
+        super.setWorldOrigin(worldOriginPositionX,worldOriginPositionY);
         setPositionAngleOfBody();
     }
 
@@ -256,8 +255,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param angle float, angle in radians
      */
     public void setWorldOriginAngle(float worldOriginPositionX, float worldOriginPositionY,float angle) {
-        super.setWorldOriginX(worldOriginPositionX);
-        super.setWorldOriginY(worldOriginPositionY);
+        super.setWorldOrigin(worldOriginPositionX,worldOriginPositionY);
         super.setAngle(angle);
         setPositionAngleOfBody();
     }
@@ -270,8 +268,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param angle float, angle in radians
      */
     public void setWorldOriginAngle(Vector2 worldOrigin,float angle) {
-        super.setWorldOriginX(worldOrigin.x);
-        super.setWorldOriginY(worldOrigin.y);
+        super.setWorldOrigin(worldOrigin.x,worldOrigin.y);
         super.setAngle(angle);
         setPositionAngleOfBody();
     }

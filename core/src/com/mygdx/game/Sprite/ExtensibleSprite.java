@@ -68,10 +68,20 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     /**
      * set the position of the lower left corner
      *
+     * @param x
+     * @param y
+     */
+    public void setPosition(float x,float y){
+        super.setPosition(x,y);
+    }
+
+    /**
+     * set the position of the lower left corner
+     *
      * @param position as Vector2
      */
     public void setPosition(Vector2 position){
-        setPosition(position.x,position.y);
+        super.setPosition(position.x,position.y);
     }
 
     /**
@@ -183,8 +193,8 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param worldOriginPositionY float, y-coordinate of the origin
      */
     public void setWorldOrigin(float worldOriginPositionX, float worldOriginPositionY) {
-        setWorldOriginX(worldOriginPositionX);
-        setWorldOriginY(worldOriginPositionY);
+        super.setX(worldOriginPositionX - getOriginX());
+        super.setY(worldOriginPositionY - getOriginY());
     }
 
     /**
@@ -194,7 +204,8 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
      * @param worldOriginPosition Vector2, position for the origin
      */
     public void setWorldOrigin(Vector2 worldOriginPosition) {
-        setWorldOrigin(worldOriginPosition.x, worldOriginPosition.y);
+        super.setX(worldOriginPosition.x - getOriginX());
+        super.setY(worldOriginPosition.y - getOriginY());
     }
 
     // the composable actions: basics
