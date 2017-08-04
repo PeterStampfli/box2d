@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.utilities.ArrayU;
 import com.mygdx.game.utilities.MathU;
 import com.mygdx.game.utilities.TextureU;
 
@@ -298,7 +299,7 @@ public class Mask {
      * @param points Array<Vector2>, the vertices
      */
     public void fillPolygon(Array<Vector2> points) {
-        fillPolygon(MathU.toFloats(points));
+        fillPolygon(ArrayU.toFloats(points));
     }
 
     /**

@@ -93,12 +93,19 @@ public class FileU {
         pixmap.dispose();
     }
 
-    static public void writeIntArray(IntArray array,FileHandle fileHandle,boolean append){
+    /**
+     * write IntArray on a file as bytes
+     *
+     * @param array
+     * @param fileHandle
+     * @param append
+     */
+    static public void writeIntArray(IntArray array, FileHandle fileHandle, boolean append){
         int length=array.size;
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
-        IntBuffer intBuffer=byteBuffer.asIntBuffer();
+        IntBuffer buffer=byteBuffer.asIntBuffer();
         for (int i=0;i<length;i++) {
-            intBuffer.put(array.get(i));
+            buffer.put(array.get(i));
         }
         ByteBufferIO.write(byteBuffer,fileHandle,append);
     }
@@ -111,5 +118,23 @@ public class FileU {
     static public IntBuffer readIntBuffer(FileHandle fileHandle){
         ByteBuffer byteBuffer=ByteBufferIO.read(fileHandle);
         return byteBuffer.asIntBuffer();
+    }
+
+    /**
+     * read file of bytes, convert to integers and put in IntArray
+     *
+     * @param array   will be changed to data of file defined by fileHndle, if exists
+     * @param fileHandle
+     */
+    static public void readIntArray(IntArray array,FileHandle fileHandle){
+        if (fileHandle.exists()) {
+            IntBuffer buffer = readIntBuffer(fileHandle);
+            buffer.rewind();
+            int length = buffer.limit();
+            array.clear();
+            for (int i = 0; i < length; i++) {
+                array.add(buffer.get());
+            }
+        }
     }
 }
