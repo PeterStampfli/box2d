@@ -11,10 +11,10 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.BasicAssets;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.L;
+import com.mygdx.game.utilities.TextureU;
 
 /**
  * Draw Lines on screen, assuming that drawing the discs is not expensive.
@@ -57,13 +57,13 @@ public class DrawLines {
         if (discImage == null) {
             L.og("*** creating discImage: " + discImageName);
             discImage = makeDiscImage(width);
-            Basic.linearInterpolation(discImage);
+            TextureU.linearInterpolation(discImage);
 
         }
         if (lineImage == null) {
             L.og("*** creating lineImage: " + lineImageName);
             lineImage = makeLineImage(width);
-            Basic.linearInterpolation(lineImage);
+            TextureU.linearInterpolation(lineImage);
         }
         imageSize=discImage.getRegionWidth();
         shape2DRenderer=device.shape2DRenderer;
@@ -90,7 +90,7 @@ public class DrawLines {
      * @return TextureRegion
      */
     static public TextureRegion makeDiscImage(int size) {
-        return Basic.textureRegionFromPixmap(makeDiscPixmap(size));
+        return TextureU.textureRegionFromPixmap(makeDiscPixmap(size));
     }
 
     /**
@@ -116,7 +116,7 @@ public class DrawLines {
      * @return
      */
     static public TextureRegion makeLineImage(int size) {
-        return Basic.textureRegionFromPixmap(makeLinePixmap(size));
+        return TextureU.textureRegionFromPixmap(makeLinePixmap(size));
     }
 
     /**

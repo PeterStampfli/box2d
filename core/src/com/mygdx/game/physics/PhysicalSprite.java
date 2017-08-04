@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Sprite.ExtensibleSprite;
-import com.mygdx.game.utilities.L;
 
 /**
  * A sprite with a body, using physics for motion
@@ -31,7 +30,6 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
             body=null;
             physics.bodiesNeedUpdate = true;
         }
-        L.og("reset");
     }
 
     /**
@@ -189,8 +187,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param angle
      */
     public void setPositionAngle(float x,float y,float angle){
-        super.setPosition(x,y);
-        super.setAngle(angle);
+        super.setPositionAngle(x,y,angle);
         setPositionAngleOfBody();
     }
 
@@ -201,8 +198,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
      * @param angle
      */
     public void setPositionAngle(Vector2 vector,float angle){
-        super.setPosition(vector);
-        super.setAngle(angle);
+        super.setPositionAngle(vector,angle);
         setPositionAngleOfBody();
     }
 

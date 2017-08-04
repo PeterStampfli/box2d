@@ -103,6 +103,29 @@ public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable 
     }
 
     /**
+     * Set the position and angle of sprite
+     *
+     * @param x float, x-coordinate of the position
+     * @param y float, y-coordinate of the position
+     * @param angle
+     */
+    public void setPositionAngle(float x,float y,float angle){
+        super.setPosition(x,y);
+        super.setRotation(angle * MathUtils.radiansToDegrees);
+    }
+
+    /**
+     * Set the position and angle of sprite
+     *
+     * @param position
+     * @param angle
+     */
+    public void setPositionAngle(Vector2 position,float angle){
+        super.setPosition(position.x,position.y);
+        super.setRotation(angle * MathUtils.radiansToDegrees);
+    }
+
+    /**
      * Make that the sprite angle is a multiple of 360/n degrees. Use 4 for a square lattice.
      *
      * @param n int, number of different sprite orientations

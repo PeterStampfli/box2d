@@ -16,8 +16,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.TimeU;
 
 /**
  * Setting up the physics world and debugCamera. Advancing physics.
@@ -237,7 +237,7 @@ public class Physics implements Disposable {
      * Start the physics. Sets the physics time equal to current time.
      */
     public void start() {
-        physicsTime = Basic.getTime();
+        physicsTime = TimeU.getTime();
     }
 
     /**
@@ -308,7 +308,7 @@ public class Physics implements Disposable {
      * Uses interpolation for the positions and angles of sprites at graphics time.
      */
     public void advance() {
-        graphicsTime = Basic.getTime();
+        graphicsTime = TimeU.getTime();
         if (physicsTime < graphicsTime) {   // we have to advance time with fixed time step
             physicsTime = Math.max(physicsTime, graphicsTime - MAX_TIMEINTERVAL);  //prevent spiral of death
             if (physicsTime < graphicsTime - TIME_STEP) {   // we need more than one time step

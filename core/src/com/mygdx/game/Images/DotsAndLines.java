@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
-import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.MathU;
 
 /**
  * Shape2DCollection that joins points with lines and discs (collected Shape2D polygons and discs).
@@ -31,7 +31,7 @@ public class DotsAndLines extends Shape2DCollection {
     static public Polygon line(float width, float x1, float y1, float x2, float y2) {
         float halfWidth = 0.5f * width;
         float length = (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-        if (length > Basic.epsilon) {
+        if (length > MathU.epsilon) {
             float ex = (x2 - x1) / length * halfWidth;
             float ey = (y2 - y1) / length * halfWidth;
             float[] coordinates = {x1 - ey, y1 + ex, x1 + ey, y1 - ex, x2 + ey, y2 - ex, x2 - ey, y2 + ex};

@@ -10,7 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.MathU;
+import com.mygdx.game.utilities.TextureU;
 
 import java.nio.ByteBuffer;
 
@@ -47,7 +48,7 @@ public class Mask {
      * @param length float, 0 for no smoothing, 1 for minimal smooth border pixels.
      */
     public void setSmoothing(float length){
-        length=Math.max(length,Basic.epsilon);
+        length=Math.max(length, MathU.epsilon);
         smoothLengthHalf=length/2;
         smoothFactor=256/length;
     }
@@ -297,7 +298,7 @@ public class Mask {
      * @param points Array<Vector2>, the vertices
      */
     public void fillPolygon(Array<Vector2> points) {
-        fillPolygon(Basic.toFloats(points));
+        fillPolygon(MathU.toFloats(points));
     }
 
     /**
@@ -474,7 +475,7 @@ public class Mask {
      * @return TextureRegion
      */
     public TextureRegion createWhiteTextureRegion() {
-        return Basic.textureRegionFromPixmap(createWhitePixmap());
+        return TextureU.textureRegionFromPixmap(createWhitePixmap());
     }
 }
 

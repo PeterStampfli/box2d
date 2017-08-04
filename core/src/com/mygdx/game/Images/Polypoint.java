@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.FloatArray;
-import com.mygdx.game.utilities.Basic;
+import com.mygdx.game.utilities.MathU;
 
 /**
  * Create a collection of points connected by lines. Make points on circle arcs.
@@ -65,8 +65,8 @@ public class Polypoint extends Shape2DAdapter {
         int newCoordinatesLength = newCoordinates.length;
         int length = coordinates.size;
         for (int i = 0; i < newCoordinatesLength; i += 2) {
-            if ((length == 0) || (Math.abs(newCoordinates[i] - coordinates.get(length - 2)) > Basic.epsilon)
-                    || (Math.abs(newCoordinates[i + 1] - coordinates.get(length - 1)) > Basic.epsilon)) {
+            if ((length == 0) || (Math.abs(newCoordinates[i] - coordinates.get(length - 2)) > MathU.epsilon)
+                    || (Math.abs(newCoordinates[i + 1] - coordinates.get(length - 1)) > MathU.epsilon)) {
                 coordinates.add(newCoordinates[i]);
                 coordinates.add(newCoordinates[i + 1]);
                 length += 2;

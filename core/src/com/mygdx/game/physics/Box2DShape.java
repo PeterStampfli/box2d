@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
-import com.mygdx.game.utilities.Basic;
 import com.mygdx.game.utilities.L;
+import com.mygdx.game.utilities.MathU;
 
 /**
  * Static methods to create box2d shapes from Shape2D shapes.
@@ -44,7 +44,7 @@ public class Box2DShape {
      */
     static public PolygonShape ofShape2D(Polygon polygon){
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.set(Basic.scaled(polygon.getVertices(),1f/Physics.PIXELS_PER_METER));
+        polygonShape.set(MathU.scaled(polygon.getVertices(),1f/Physics.PIXELS_PER_METER));
         return polygonShape;
     }
 
@@ -73,10 +73,10 @@ public class Box2DShape {
     static public ChainShape ofShape2D(Chain chain){
         ChainShape chainShape=new ChainShape();
         if (chain.isLoop){
-            chainShape.createLoop(Basic.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
+            chainShape.createLoop(MathU.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
         }
         else {
-            chainShape.createChain(Basic.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
+            chainShape.createChain(MathU.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
             if (chain.ghostAExists){
                 chainShape.setPrevVertex(chain.ghostAX/Physics.PIXELS_PER_METER,
                                          chain.ghostAY/Physics.PIXELS_PER_METER);
