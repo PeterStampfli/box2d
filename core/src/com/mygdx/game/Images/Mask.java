@@ -422,10 +422,10 @@ public class Mask {
     public void setPixmapAlpha(Pixmap pixmap) {
         ByteBuffer pixels = pixmap.getPixels();
         int length = alpha.length;
-        int index = 3;
+        pixels.rewind();
         for (int i = 0; i < length; i++) {
-            pixels.put(index, alpha[i]);
-            index += 4;
+            pixels.position(pixels.position()+3);    // skip rgb channel bytes !!
+            pixels.put(alpha[i]);
         }
         pixels.rewind();
     }

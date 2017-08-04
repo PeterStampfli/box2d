@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.utils.IntArray;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
- * Created by peter on 8/4/17.
+ * File access, reading and writing, conversion to and from bytes
  */
 
 public class FileU {
+
     /**
      * create a file handle to an internal file in android assets. read only
      *
@@ -76,6 +81,8 @@ public class FileU {
         return Gdx.files.getLocalStoragePath();
     }
 
+    //  writing and reading
+
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
      * @param path
@@ -84,5 +91,25 @@ public class FileU {
     static public void writePNG(String path, Pixmap pixmap){
         PixmapIO.writePNG(createExternalFileHandle(path),pixmap);
         pixmap.dispose();
+    }
+
+    static public void writeIntArray(IntArray array,FileHandle fileHandle,boolean append){
+        int length=array.size;
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
+        IntBuffer intBuffer=byteBuffer.asIntBuffer();
+        for (int i=0;i<length;i++) {
+            intBuffer.put(array.get(i));
+        }
+        ByteBufferIO.write(byteBuffer,fileHandle,append);
+    }
+
+    /**
+     * create Int(eger)Buffer from reading data from file given by fileHandle
+     * @param fileHandle
+     * @return a new buffer with data
+     */
+    static public IntBuffer readIntBuffer(FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferIO.read(fileHandle);
+        return byteBuffer.asIntBuffer();
     }
 }
