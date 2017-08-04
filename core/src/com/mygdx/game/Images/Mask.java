@@ -449,7 +449,7 @@ public class Mask {
      * @param offsetY float, x-component of offset
      * @return Pixmap
      */
-    public Pixmap cutFromPixmap(Pixmap input, int offsetX, int offsetY) {
+    public Pixmap copyFromPixmap(Pixmap input, int offsetX, int offsetY) {
         Pixmap pixmap = createPixmap();
         pixmap.drawPixmap(input, -offsetX, -offsetY);
         setPixmapAlpha(pixmap);

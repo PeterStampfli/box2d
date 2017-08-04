@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.Pieces.Movable;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
 
@@ -13,7 +14,7 @@ import com.mygdx.game.utilities.Device;
  * Use the ExtensibleSpriteBuilder for creation.
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable,Pool.Poolable {
+public class ExtensibleSprite extends Sprite implements Touchable,Movable,Pool.Poolable {
 
     public Shape2D shape;
     public Device device;
