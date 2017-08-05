@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 /**
@@ -100,7 +102,7 @@ public class FileU {
      * @param fileHandle
      * @param append
      */
-    static public void writeIntArray(IntArray array, FileHandle fileHandle, boolean append){
+    static public void writeArray(IntArray array, FileHandle fileHandle, boolean append){
         int length=array.size;
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
         IntBuffer buffer=byteBuffer.asIntBuffer();
@@ -126,9 +128,54 @@ public class FileU {
      * @param array   will be changed to data of file defined by fileHndle, if exists
      * @param fileHandle
      */
-    static public void readIntArray(IntArray array,FileHandle fileHandle){
+    static public void readArray(IntArray array, FileHandle fileHandle){
         if (fileHandle.exists()) {
             IntBuffer buffer = readIntBuffer(fileHandle);
+            buffer.rewind();
+            int length = buffer.limit();
+            array.clear();
+            for (int i = 0; i < length; i++) {
+                array.add(buffer.get());
+            }
+        }
+    }
+
+    /**
+     * write FloatArray on a file as bytes
+     *
+     * @param array
+     * @param fileHandle
+     * @param append
+     */
+    static public void writeArray(FloatArray array, FileHandle fileHandle, boolean append){
+        int length=array.size;
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
+        FloatBuffer buffer=byteBuffer.asFloatBuffer();
+        for (int i=0;i<length;i++) {
+            buffer.put(array.get(i));
+        }
+        ByteBufferIO.write(byteBuffer,fileHandle,append);
+    }
+
+    /**
+     * create FloatBuffer from reading data from file given by fileHandle
+     * @param fileHandle
+     * @return a new buffer with data
+     */
+    static public FloatBuffer readFloatBuffer(FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferIO.read(fileHandle);
+        return byteBuffer.asFloatBuffer();
+    }
+
+    /**
+     * read file of bytes, convert to floats and put in FloatArray
+     *
+     * @param array   will be changed to data of file defined by fileHandle, if exists
+     * @param fileHandle
+     */
+    static public void readArray(FloatArray array, FileHandle fileHandle){
+        if (fileHandle.exists()) {
+            FloatBuffer buffer = readFloatBuffer(fileHandle);
             buffer.rewind();
             int length = buffer.limit();
             array.clear();

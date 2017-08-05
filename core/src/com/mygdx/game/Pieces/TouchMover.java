@@ -10,7 +10,7 @@ import com.mygdx.game.utilities.Device;
  */
 
 public class TouchMover extends InputAdapter {
-    private Touchable piece;
+    private Touchable touchable;
     public Device device;
     //  touchPosition of touch as average (dragging) and displacement
     public Vector2 touchPosition=new Vector2();
@@ -19,7 +19,7 @@ public class TouchMover extends InputAdapter {
     private Vector2 oldTouchPosition=new Vector2();
     private Vector2 newTouchPosition=new Vector2();
     public Vector2 scrollPosition=new Vector2();
-    private boolean pieceIsSelected = false;                                 // piece is really selected
+    private boolean isSelected = false;                                 // piece is really selected
     // if there was touch in previous call, we need this because we do polling
     private boolean wasTouching = false;
 
@@ -32,14 +32,14 @@ public class TouchMover extends InputAdapter {
     }
 
     /**
-     * set the touchable piece that will be controlled by the touchMover.
-     * Sets wasTouching to false as a reset and because this piece most probably has not been touched at call.
+     * set the touchable that will be controlled by the touchMover.
+     * Sets wasTouching to false as a reset and because this touchable most probably has not been touched at call.
      * Call this method in the show() method of screens.
      *
-     * @param piece
+     * @param touchable
      */
-    public void setPiece(Touchable piece) {
-        this.piece = piece;
+    public void setTouchable(Touchable touchable) {
+        this.touchable = touchable;
         wasTouching=false;
     }
 
@@ -79,19 +79,19 @@ public class TouchMover extends InputAdapter {
         deltaTouchPosition.set(newTouchPosition).sub(oldTouchPosition);
         // for new touch see if a touchable piece has been selected
         if (isTouching && !wasTouching) {
-            pieceIsSelected = piece.contains(touchPosition);
+            isSelected = touchable.contains(touchPosition);
         }
         // act
-        if (pieceIsSelected) {
+        if (isSelected) {
             if (isTouching && !wasTouching) {
-                somethingChanged = piece.touchBegin(touchPosition);
+                somethingChanged = touchable.touchBegin(touchPosition);
             } else if (isTouching && wasTouching) {
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = piece.touchDrag(touchPosition, deltaTouchPosition);
+                    somethingChanged = touchable.touchDrag(touchPosition, deltaTouchPosition);
                 }
             } else {                     // !isTouching&&wasTouching
-                somethingChanged = piece.touchEnd(touchPosition);
-                pieceIsSelected = false;
+                somethingChanged = touchable.touchEnd(touchPosition);
+                isSelected = false;
             }
         }
         wasTouching = isTouching;
@@ -115,7 +115,7 @@ public class TouchMover extends InputAdapter {
     @Override
     public boolean scrolled(int amount) {
         device.touchReader.getPosition(scrollPosition);
-        return piece.scroll(scrollPosition, amount);
+        return touchable.scroll(scrollPosition, amount);
     }
 
 }

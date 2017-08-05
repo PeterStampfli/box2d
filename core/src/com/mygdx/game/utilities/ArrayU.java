@@ -2,7 +2,6 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
 
 /**
  * Created by peter on 8/4/17.
@@ -10,17 +9,6 @@ import com.badlogic.gdx.utils.IntArray;
 
 public class ArrayU {
 
-    /**
-     * create an IntArray with given integers
-     *
-     * @param ints
-     * @return
-     */
-    static public IntArray intArray(int... ints){
-        IntArray array=new IntArray();
-        array.addAll(ints);
-        return array;
-    }
 
 
     /**

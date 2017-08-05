@@ -56,7 +56,7 @@ public class TouchableCollection<T> implements Touchable {
     }
 
     /**
-     * Add one or more touchable objects at the beginning. Be responsible if fixed order.
+     * Add one or more touchable objects at the beginning. Be careful if fixed order.
      *
      * @param ts T... or T[]
      */
@@ -143,7 +143,7 @@ public class TouchableCollection<T> implements Touchable {
         Object item;
         for (int i = 0; i < length; i++) {
             item=items.get(i);
-            if ((item instanceof Shape2D)&&((Shape2D)item).contains(x, y)) {
+            if ((item instanceof Shape2D)&&((Shape2D)item).contains(x, y)) {   // we need the index i
                 if (fixedOrder){
                     iSelected=i;
                 }
@@ -237,7 +237,7 @@ public class TouchableCollection<T> implements Touchable {
      */
     @Override
     public boolean scroll(Vector2 position, int amount) {
-        for (Object item : items) {
+        for (T item : items) {
             if ((item instanceof  Touchable)&&((Touchable) item).scroll(position, amount)) {
                 return true;
             }
@@ -253,7 +253,7 @@ public class TouchableCollection<T> implements Touchable {
     @Override
     public boolean keepVisible() {
         boolean somethingChanged = false;
-        for (Object item : items) {
+        for (T item : items) {
             if ((item instanceof  Touchable)&&((Touchable) item).keepVisible()) {
                 somethingChanged = true;
             }
