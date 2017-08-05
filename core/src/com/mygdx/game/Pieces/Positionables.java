@@ -2,7 +2,7 @@ package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.mygdx.game.utilities.L;
+import com.badlogic.gdx.utils.IntArray;
 
 /**
  * Created by peter on 8/5/17.
@@ -62,20 +62,52 @@ public class Positionables {
         }
     }
 
+    /**
+     * set the positions using data of a floatArray
+     *
+     * @param positionsAngles
+     */
     public  void setPositionsAngles(FloatArray positionsAngles){
         int i=0;
         int iLimit=positionsAngles.size;
         for (Positionable item : items) {
-            L.og(i);
             if (i+2<iLimit){
                 item.setPositionAngle(positionsAngles.get(i),positionsAngles.get(i+1),positionsAngles.get(i+2));
             }
             i+=3;
         }
-
-
-
-
     }
 
+    /**
+     * get index positions of the items of this collection
+     * in another TouchableCollection
+     *
+     * @param indices will be overwritten
+     * @param collection
+     */
+    public void getIndices(IntArray indices,TouchableCollection collection){
+        indices.clear();
+        for (Positionable item : items) {
+            indices.add(collection.getIndex(item));
+        }
+    }
+
+    /**
+     * write the items of this collection to Touchable collection with
+     * index positions given by IntArray indices
+     * Assumes that the touchable collection has enough place, is not mixed, not fixed order
+     *
+     * @param collection
+     * @param indices
+     */
+    public void setIndices(TouchableCollection collection,IntArray indices){
+        int i=0;
+        int iLimit=indices.size;
+        for (Positionable item : items) {
+            if (i<iLimit){
+                collection.items.set(indices.get(i),item);
+            }
+            i++;
+        }
+    }
 }
