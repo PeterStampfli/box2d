@@ -85,14 +85,20 @@ public class FileU {
 
     //  writing and reading
 
+    // instead of append=false use fileHandle.delete()
+
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
      * @param path
      * @param pixmap will be disposed
      */
-    static public void writePNG(String path, Pixmap pixmap){
+    static public void write(String path, Pixmap pixmap){
         PixmapIO.writePNG(createExternalFileHandle(path),pixmap);
         pixmap.dispose();
+    }
+
+    static public void write(ByteBuffer buffer,FileHandle fileHandle,boolean append){
+        ByteBufferIO.write(buffer,fileHandle,append);
     }
 
     /**
@@ -102,13 +108,20 @@ public class FileU {
      * @param fileHandle
      * @param append
      */
-    static public void writeArray(IntArray array, FileHandle fileHandle, boolean append){
-        int length=array.size;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
-        IntBuffer buffer=byteBuffer.asIntBuffer();
-        for (int i=0;i<length;i++) {
-            buffer.put(array.get(i));
-        }
+    static public void write(IntArray array, FileHandle fileHandle, boolean append){
+        ByteBuffer byteBuffer=ArrayU.makeByteBuffer(array);
+        ByteBufferIO.write(byteBuffer,fileHandle,append);
+    }
+
+    /**
+     * write FloatArray (size, followed by data) on a file as bytes
+     *
+     * @param array
+     * @param fileHandle
+     * @param append
+     */
+    static public void write(FloatArray array, FileHandle fileHandle, boolean append){
+        ByteBuffer byteBuffer=ArrayU.makeByteBuffer(array);
         ByteBufferIO.write(byteBuffer,fileHandle,append);
     }
 
@@ -123,41 +136,6 @@ public class FileU {
     }
 
     /**
-     * read file of bytes, convert to integers and put in IntArray
-     *
-     * @param array   will be changed to data of file defined by fileHndle, if exists
-     * @param fileHandle
-     */
-    static public void readArray(IntArray array, FileHandle fileHandle){
-        if (fileHandle.exists()) {
-            IntBuffer buffer = readIntBuffer(fileHandle);
-            buffer.rewind();
-            int length = buffer.limit();
-            array.clear();
-            for (int i = 0; i < length; i++) {
-                array.add(buffer.get());
-            }
-        }
-    }
-
-    /**
-     * write FloatArray on a file as bytes
-     *
-     * @param array
-     * @param fileHandle
-     * @param append
-     */
-    static public void writeArray(FloatArray array, FileHandle fileHandle, boolean append){
-        int length=array.size;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
-        FloatBuffer buffer=byteBuffer.asFloatBuffer();
-        for (int i=0;i<length;i++) {
-            buffer.put(array.get(i));
-        }
-        ByteBufferIO.write(byteBuffer,fileHandle,append);
-    }
-
-    /**
      * create FloatBuffer from reading data from file given by fileHandle
      * @param fileHandle
      * @return a new buffer with data
@@ -168,20 +146,28 @@ public class FileU {
     }
 
     /**
-     * read file of bytes, convert to floats and put in FloatArray
+     * read file of bytes, convert to integers and put in IntArray
+     *
+     * @param array   will be changed to data of file defined by fileHndle, if exists
+     * @param fileHandle
+     */
+    static public void read(IntArray array, FileHandle fileHandle){
+        if (fileHandle.exists()) {
+            IntBuffer buffer = readIntBuffer(fileHandle);
+            ArrayU.readByteBuffer(array,buffer);
+        }
+    }
+
+    /**
+     * read file of bytes, convert to floats (size, followed by data) and put in FloatArray
      *
      * @param array   will be changed to data of file defined by fileHandle, if exists
      * @param fileHandle
      */
-    static public void readArray(FloatArray array, FileHandle fileHandle){
+    static public void read(FloatArray array, FileHandle fileHandle){
         if (fileHandle.exists()) {
             FloatBuffer buffer = readFloatBuffer(fileHandle);
-            buffer.rewind();
-            int length = buffer.limit();
-            array.clear();
-            for (int i = 0; i < length; i++) {
-                array.add(buffer.get());
-            }
+            ArrayU.readByteBuffer(array,buffer);
         }
     }
 }

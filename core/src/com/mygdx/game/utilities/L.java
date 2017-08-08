@@ -7,6 +7,10 @@ import com.badlogic.gdx.Gdx;
  */
 
 public class L {
+
+    // limit for number of data
+    public static final int MAX_NUMBERS=10;
+
     /**
      * Log a debug message.
      *
@@ -34,7 +38,7 @@ public class L {
      *
      * @param b boolean
      */
-    public static void og(boolean b){  og(""+b);}
+    public static void og(boolean b){ og(""+b);}
 
     /**
      * Safe logging of an object. Even of a null object.
@@ -50,5 +54,26 @@ public class L {
         }
     }
 
-
+    /**
+     * logging a float array with its data
+     *
+     * @param array
+     */
+    public static void og(float[] array){
+        String message="[";
+        int length=Math.min(array.length,MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=array[i]+", ";
+        }
+        if (length>=0){
+            message+=array[length];
+        }
+        if (array.length<=MAX_NUMBERS) {
+            message += "]";
+        }
+        else {
+            message+=", ...";
+        }
+        og(message);
+    }
 }

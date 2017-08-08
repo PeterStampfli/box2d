@@ -44,7 +44,7 @@ public class Box2DShape {
      */
     static public PolygonShape ofShape2D(Polygon polygon){
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.set(ArrayU.scaled(polygon.getVertices(),1f/Physics.PIXELS_PER_METER));
+        polygonShape.set(ArrayU.scaledCopy(polygon.getVertices(),1f/Physics.PIXELS_PER_METER));
         return polygonShape;
     }
 
@@ -73,10 +73,10 @@ public class Box2DShape {
     static public ChainShape ofShape2D(Chain chain){
         ChainShape chainShape=new ChainShape();
         if (chain.isLoop){
-            chainShape.createLoop(ArrayU.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
+            chainShape.createLoop(ArrayU.scaledCopy(chain.coordinates,1f/Physics.PIXELS_PER_METER));
         }
         else {
-            chainShape.createChain(ArrayU.scaled(chain.coordinates,1f/Physics.PIXELS_PER_METER));
+            chainShape.createChain(ArrayU.scaledCopy(chain.coordinates,1f/Physics.PIXELS_PER_METER));
             if (chain.ghostAExists){
                 chainShape.setPrevVertex(chain.ghostAX/Physics.PIXELS_PER_METER,
                                          chain.ghostAY/Physics.PIXELS_PER_METER);
