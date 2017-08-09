@@ -35,17 +35,29 @@ public class ArrayU {
     }
 
     /**
+     * scale a float array.
+     *
+     * @param floats
+     * @param scale
+     */
+    static public void scale(float[] floats, float scale) {
+        for (int i = floats.length-1; i >=0; i--) {
+            floats[i] *= scale;
+        }
+    }
+
+    /**
      * Create a float array that is a scaled copy of another float array.
      *
-     * @param vertices
+     * @param floats
      * @param scale
      * @return float[], a scaled copy
      */
-    static public float[] scaledCopy(float[] vertices, float scale) {
-        int length = vertices.length;
+    static public float[] scaledCopy(float[] floats, float scale) {
+        int length = floats.length;
         float[] scaledVertices = new float[length];
         for (int i = 0; i < length; i++) {
-            scaledVertices[i] = scale * vertices[i];
+            scaledVertices[i] = scale * floats[i];
         }
         return scaledVertices;
     }
@@ -159,6 +171,21 @@ public class ArrayU {
     static public float[] floats(FloatBuffer buffer){
         int length=Math.round(buffer.get());
         float[] array=new float[length];
+        for (int i = 0; i < length; i++) {
+            array[i]=buffer.get();
+        }
+        return array;
+    }
+
+    /**
+     * read incrementally another int[] from a IntBuffer, size of array is given as first int
+     *
+     * @param buffer
+     * @return the float[] data
+     */
+    static public int[] ints(IntBuffer buffer){
+        int length=Math.round(buffer.get());
+        int[] array=new int[length];
         for (int i = 0; i < length; i++) {
             array[i]=buffer.get();
         }
