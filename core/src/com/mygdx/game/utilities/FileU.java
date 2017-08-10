@@ -108,7 +108,6 @@ public class FileU {
         byte[] bytes=new byte[nBytes];
         byteBuffer.rewind();
         byteBuffer.get(bytes);
-        L.og("bytes "+nBytes);
         fileHandle.writeBytes(bytes,true);
     }
 
@@ -147,8 +146,6 @@ public class FileU {
      */
     static public void write(FloatArray array, FileHandle fileHandle){
         ByteBuffer byteBuffer= ByteBufferU.make(array);
-        L.og("positions");
-        L.og(byteBuffer);
         write(byteBuffer,fileHandle);
     }
 
@@ -156,11 +153,16 @@ public class FileU {
     /**
      * create ByteBuffer and read data from file given by filehandle
      * @param fileHandle
-     * @return a new byteBuffer with the data
+     * @return a new byteBuffer with the data, or null if file does not exist
      */
     static ByteBuffer readByteBuffer(FileHandle fileHandle){
-        byte[] bytes=fileHandle.readBytes();
-        return ByteBuffer.wrap(bytes);
+        if (fileHandle.exists()) {
+            byte[] bytes = fileHandle.readBytes();
+            return ByteBuffer.wrap(bytes);
+        }
+        else {
+            return null;
+        }
     }
 
 

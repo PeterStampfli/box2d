@@ -1,8 +1,12 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
+import com.mygdx.game.utilities.FileU;
+
+import java.nio.ByteBuffer;
 
 /**
  * Created by peter on 8/5/17.
@@ -91,6 +95,36 @@ public class Positionables {
             indices.add(collection.getIndex(item));
         }
     }
+
+    /**
+     * append index positions of the items of this collection
+     * in another TouchableCollection
+     *
+     * @param fileHandle
+     */
+    public void writeIndices(TouchableCollection collection,FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBuffer.allocate(4*items.size);
+        for (Positionable item : items) {
+            byteBuffer.putInt(collection.getIndex(item));
+        }
+        FileU.write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append positions and angles to a file
+     *
+     * @param fileHandle
+     */
+    public void writePositionsAngles(FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBuffer.allocate(12*items.size);
+        for (Positionable item : items) {
+            byteBuffer.putFloat(item.getX());
+            byteBuffer.putFloat(item.getY());
+            byteBuffer.putFloat(item.getAngle());
+        }
+        FileU.write(byteBuffer,fileHandle);
+    }
+
 
     /**
      * write the items of this collection to Touchable collection with
