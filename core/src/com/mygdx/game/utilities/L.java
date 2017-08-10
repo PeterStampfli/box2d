@@ -76,4 +76,27 @@ public class L {
         }
         og(message);
     }
+
+    /**
+     * logging an int array with its data
+     *
+     * @param array
+     */
+    public static void og(int[] array){
+        String message="[";
+        int length=Math.min(array.length,MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=array[i]+", ";
+        }
+        if (length>=0){
+            message+=array[length];
+        }
+        if (array.length<=MAX_NUMBERS) {
+            message += "]";
+        }
+        else {
+            message+=", ...";
+        }
+        og(message);
+    }
 }
