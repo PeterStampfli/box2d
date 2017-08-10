@@ -97,33 +97,72 @@ public class FileU {
         pixmap.dispose();
     }
 
-    static public void write(ByteBuffer buffer,FileHandle fileHandle,boolean append){
-        ByteBufferIO.write(buffer,fileHandle,append);
+    /**
+     * Append a byte buffer content to a file
+     *
+     *  @param byteBuffer
+     * @param fileHandle
+     */
+    static public void write(ByteBuffer byteBuffer, FileHandle fileHandle){
+        int nBytes=byteBuffer.capacity();
+        byte[] bytes=new byte[nBytes];
+        byteBuffer.rewind();
+        byteBuffer.get(bytes);
+        L.og("bytes "+nBytes);
+        fileHandle.writeBytes(bytes,true);
     }
 
     /**
-     * write IntArray on a file as bytes
-     *
-     * @param array
+     * append a float number to a file
+     * @param f
      * @param fileHandle
-     * @param append
      */
-    static public void write(IntArray array, FileHandle fileHandle, boolean append){
-        ByteBuffer byteBuffer=ArrayU.makeByteBuffer(array);
-        ByteBufferIO.write(byteBuffer,fileHandle,append);
+    static public void write(float f,FileHandle fileHandle){
+        write(ByteBuffer.allocate(4).putFloat(f),fileHandle);
     }
 
     /**
-     * write FloatArray (size, followed by data) on a file as bytes
-     *
-     * @param array
+     * append an int number to a file
+     * @param i
      * @param fileHandle
-     * @param append
      */
-    static public void write(FloatArray array, FileHandle fileHandle, boolean append){
-        ByteBuffer byteBuffer=ArrayU.makeByteBuffer(array);
-        ByteBufferIO.write(byteBuffer,fileHandle,append);
+    static public void write(int i,FileHandle fileHandle){
+        write(ByteBuffer.allocate(4).putInt(i),fileHandle);
     }
+
+    /**
+     * append content of IntArray to a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(IntArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append content of FloatArray (size, followed by data) on a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(FloatArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        L.og("positions");
+        L.og(byteBuffer);
+        write(byteBuffer,fileHandle);
+    }
+
+
+    /**
+     * create ByteBuffer and read data from file given by filehandle
+     * @param fileHandle
+     * @return a new byteBuffer with the data
+     */
+    static ByteBuffer readByteBuffer(FileHandle fileHandle){
+        byte[] bytes=fileHandle.readBytes();
+        return ByteBuffer.wrap(bytes);
+    }
+
 
     /**
      * create Int(eger)Buffer from reading data from file given by fileHandle
@@ -131,7 +170,7 @@ public class FileU {
      * @return a new buffer with data
      */
     static public IntBuffer readIntBuffer(FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferIO.read(fileHandle);
+        ByteBuffer byteBuffer=readByteBuffer(fileHandle);
         return byteBuffer.asIntBuffer();
     }
 
@@ -141,7 +180,7 @@ public class FileU {
      * @return a new buffer with data
      */
     static public FloatBuffer readFloatBuffer(FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferIO.read(fileHandle);
+        ByteBuffer byteBuffer=readByteBuffer(fileHandle);
         return byteBuffer.asFloatBuffer();
     }
 
@@ -154,7 +193,7 @@ public class FileU {
     static public void read(IntArray array, FileHandle fileHandle){
         if (fileHandle.exists()) {
             IntBuffer buffer = readIntBuffer(fileHandle);
-            ArrayU.readByteBuffer(array,buffer);
+            ByteBufferU.readByteBuffer(array,buffer);
         }
     }
 
@@ -167,7 +206,7 @@ public class FileU {
     static public void read(FloatArray array, FileHandle fileHandle){
         if (fileHandle.exists()) {
             FloatBuffer buffer = readFloatBuffer(fileHandle);
-            ArrayU.readByteBuffer(array,buffer);
+            ByteBufferU.readByteBuffer(array,buffer);
         }
     }
 }

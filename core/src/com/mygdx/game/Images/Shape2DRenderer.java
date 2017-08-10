@@ -22,6 +22,8 @@ public class Shape2DRenderer extends ShapeRenderer{
     public Color lineColor=Color.GREEN;
     public Color polygonColor=Color.YELLOW;
 
+    // attention: create in setup method, requires libgdx initialization before creation of new instance
+
     /**
      * Create with special nullRadius.
      *
