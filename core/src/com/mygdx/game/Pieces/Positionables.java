@@ -1,10 +1,8 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
-import com.mygdx.game.utilities.FileU;
 
 import java.nio.ByteBuffer;
 
@@ -67,6 +65,20 @@ public class Positionables {
     }
 
     /**
+     * read position and angles of positionable items from a bytebuffer
+     * (previously read from a file ...)
+     *
+     * @param byteBuffer nothing happens if null
+     */
+    public void setPositionsAngles(ByteBuffer byteBuffer){
+        if (byteBuffer!=null) {
+            for (Positionable item : items) {
+                item.setPositionAngle(byteBuffer.getFloat(), byteBuffer.getFloat(),byteBuffer.getFloat());
+            }
+        }
+    }
+
+    /**
      * set the positions using data of a floatArray
      *
      * @param positionsAngles
@@ -97,32 +109,33 @@ public class Positionables {
     }
 
     /**
-     * append index positions of the items of this collection
-     * in another TouchableCollection
+     * write the index positions of the items of this collection
+     * in another TouchableCollection to a bytebuffer
      *
-     * @param fileHandle
+     * @param collection
+     * @return
      */
-    public void writeIndices(TouchableCollection collection,FileHandle fileHandle){
+    public ByteBuffer getIndices(TouchableCollection collection){
         ByteBuffer byteBuffer= ByteBuffer.allocate(4*items.size);
         for (Positionable item : items) {
             byteBuffer.putInt(collection.getIndex(item));
         }
-        FileU.write(byteBuffer,fileHandle);
+        return byteBuffer;
     }
 
     /**
-     * append positions and angles to a file
+     * write positions and angles to a bytebuffer
      *
-     * @param fileHandle
+     * @return byteBuffer
      */
-    public void writePositionsAngles(FileHandle fileHandle){
+    public ByteBuffer getPositionsAngles(){
         ByteBuffer byteBuffer= ByteBuffer.allocate(12*items.size);
         for (Positionable item : items) {
             byteBuffer.putFloat(item.getX());
             byteBuffer.putFloat(item.getY());
             byteBuffer.putFloat(item.getAngle());
         }
-        FileU.write(byteBuffer,fileHandle);
+        return byteBuffer;
     }
 
 
@@ -142,6 +155,20 @@ public class Positionables {
                 collection.items.set(indices.get(i),item);
             }
             i++;
+        }
+    }
+
+    /**
+     * set indices for the items of this collection from a bytebuffer. put them to the index positions in Touchable collection with
+     * index positions
+     * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
+     *
+     * @param collection
+     * @param byteBuffer if null nothing happens
+     */
+    public void setIndices(TouchableCollection collection, ByteBuffer byteBuffer){
+        for (Positionable item : items) {
+                collection.items.set(byteBuffer.getInt(),item);
         }
     }
 }
