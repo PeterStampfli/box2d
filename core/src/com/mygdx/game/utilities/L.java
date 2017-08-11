@@ -2,8 +2,10 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * Simplifies the logging.
@@ -12,7 +14,7 @@ import java.nio.IntBuffer;
 public class L {
 
     // limit for number of data
-    public static final int MAX_NUMBERS=10;
+    public static int MAX_NUMBERS=12;
 
     /**
      * Log a debug message.
@@ -58,7 +60,20 @@ public class L {
     }
 
     /**
-     * logging a float array with its data
+     * generate size-dependent end string for array
+     *
+     * @param length
+     * @re
+     */
+    private static String end(int length){
+        if (length<=MAX_NUMBERS) {
+            return "]";
+        }
+        return ", ...";
+    }
+
+    /**
+     * logging a float[] with its data
      *
      * @param array
      */
@@ -71,17 +86,11 @@ public class L {
         if (length>=0){
             message+=array[length];
         }
-        if (array.length<=MAX_NUMBERS) {
-            message += "]";
-        }
-        else {
-            message+=", ...";
-        }
-        og(message);
+        og(message+end(array.length));
     }
 
     /**
-     * logging an int array with its data
+     * logging an int[] with its data
      *
      * @param array
      */
@@ -94,39 +103,41 @@ public class L {
         if (length>=0){
             message+=array[length];
         }
-        if (array.length<=MAX_NUMBERS) {
-            message += "]";
-        }
-        else {
-            message+=", ...";
-        }
-        og(message);
+        og(message+end(array.length));
     }
 
     /**
-     * logging an IntBuffer with its data
+     * logging a short[] with its data
      *
-     * @param buffer
+     * @param array
      */
-    public static void og(IntBuffer buffer){
-        int position=buffer.position();
-        L.og("IntBuffer: position "+position+" remaining "+buffer.capacity());
+    public static void og(short[] array){
         String message="[";
-        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        int length=Math.min(array.length,MAX_NUMBERS)-1;
         for (int i=0;i<length;i++){
-            message+=buffer.get()+", ";
+            message+=array[i]+", ";
         }
         if (length>=0){
-            message+=buffer.get();
+            message+=array[length];
         }
-        if (buffer.capacity()<=MAX_NUMBERS) {
-            message += "]";
+        og(message+end(array.length));
+    }
+
+    /**
+     * logging a byte[] with its data
+     *
+     * @param array
+     */
+    public static void og(byte[] array){
+        String message="[";
+        int length=Math.min(array.length,MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=array[i]+", ";
         }
-        else {
-            message+=", ...";
+        if (length>=0){
+            message+=array[length];
         }
-        buffer.position(position);
-        og(message);
+        og(message+end(array.length));
     }
 
     /**
@@ -136,7 +147,7 @@ public class L {
      */
     public static void og(FloatBuffer buffer){
         int position=buffer.position();
-        L.og("FloatBuffer: position "+position+" remaining "+buffer.capacity());
+        og("FloatBuffer: position "+position+" remaining "+buffer.capacity());
         String message="[";
         int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
         for (int i=0;i<length;i++){
@@ -145,13 +156,67 @@ public class L {
         if (length>=0){
             message+=buffer.get();
         }
-        if (buffer.capacity()<=MAX_NUMBERS) {
-            message += "]";
+        buffer.position(position);
+        og(message+end(buffer.capacity()));
+    }
+
+    /**
+     * logging an IntBuffer with its data
+     *
+     * @param buffer
+     */
+    public static void og(IntBuffer buffer){
+        int position=buffer.position();
+        og("IntBuffer: position "+position+" remaining "+buffer.capacity());
+        String message="[";
+        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=buffer.get()+", ";
         }
-        else {
-            message+=", ...";
+        if (length>=0){
+            message+=buffer.get();
         }
         buffer.position(position);
-        og(message);
+        og(message+end(buffer.capacity()));
+    }
+
+    /**
+     * logging a ShortBuffer with its data
+     *
+     * @param buffer
+     */
+    public static void og(ShortBuffer buffer){
+        int position=buffer.position();
+        og("FloatBuffer: position "+position+" remaining "+buffer.capacity());
+        String message="[";
+        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=buffer.get()+", ";
+        }
+        if (length>=0){
+            message+=buffer.get();
+        }
+        buffer.position(position);
+        og(message+end(buffer.capacity()));
+    }
+
+    /**
+     * logging a ByteBuffer with its data
+     *
+     * @param buffer
+     */
+    public static void og(ByteBuffer buffer){
+        int position=buffer.position();
+        og("FloatBuffer: position "+position+" remaining "+buffer.capacity());
+        String message="[";
+        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=buffer.get()+", ";
+        }
+        if (length>=0){
+            message+=buffer.get();
+        }
+        buffer.position(position);
+        og(message+end(buffer.capacity()));
     }
 }

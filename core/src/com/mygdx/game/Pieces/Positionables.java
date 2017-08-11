@@ -1,8 +1,6 @@
 package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.IntArray;
 
 import java.nio.ByteBuffer;
 
@@ -52,61 +50,17 @@ public class Positionables {
     // set and read positions and angles in a floatarray
 
     /**
-     * get position and angles of positionable items and put in given floatArray
-     *
-     * @param positionsAngles will be cleared
-     */
-    public void getPositionsAngles(FloatArray positionsAngles){
-        positionsAngles.clear();
-        positionsAngles.ensureCapacity(3*items.size);
-        for (Positionable item : items) {
-            positionsAngles.addAll(item.getX(),item.getY(),item.getAngle());
-        }
-    }
-
-    /**
      * read position and angles of positionable items from a bytebuffer
      * starting at its current position
      * (previously read from a file ...)
      *
      * @param byteBuffer nothing happens if null
      */
-    public void setPositionsAngles(ByteBuffer byteBuffer){
+    public void positionsAngles(ByteBuffer byteBuffer){
         if (byteBuffer!=null) {
             for (Positionable item : items) {
                 item.setPositionAngle(byteBuffer.getFloat(), byteBuffer.getFloat(),byteBuffer.getFloat());
             }
-        }
-    }
-
-    /**
-     * set the positions using data of a floatArray
-     *
-     * @param positionsAngles
-     */
-
-    public  void setPositionsAngles(FloatArray positionsAngles){
-        int i=0;
-        int iLimit=positionsAngles.size;
-        for (Positionable item : items) {
-            if (i+2<iLimit){
-                item.setPositionAngle(positionsAngles.get(i),positionsAngles.get(i+1),positionsAngles.get(i+2));
-            }
-            i+=3;
-        }
-    }
-
-    /**
-     * get index positions of the items of this collection
-     * in another TouchableCollection
-     *
-     * @param indices will be overwritten
-     * @param collection
-     */
-    public void getIndices(IntArray indices,TouchableCollection collection){
-        indices.clear();
-        for (Positionable item : items) {
-            indices.add(collection.getIndex(item));
         }
     }
 
@@ -117,7 +71,7 @@ public class Positionables {
      * @param collection
      * @return
      */
-    public ByteBuffer getIndices(TouchableCollection collection){
+    public ByteBuffer indices(TouchableCollection collection){
         ByteBuffer byteBuffer= ByteBuffer.allocate(4*items.size);
         for (Positionable item : items) {
             byteBuffer.putInt(collection.getIndex(item));
@@ -130,7 +84,7 @@ public class Positionables {
      *
      * @return byteBuffer
      */
-    public ByteBuffer getPositionsAngles(){
+    public ByteBuffer positionsAngles(){
         ByteBuffer byteBuffer= ByteBuffer.allocate(12*items.size);
         for (Positionable item : items) {
             byteBuffer.putFloat(item.getX());
@@ -139,26 +93,6 @@ public class Positionables {
         }
         byteBuffer.rewind();
         return byteBuffer;
-    }
-
-
-    /**
-     * write the items of this collection to Touchable collection with
-     * index positions given by IntArray indices
-     * Assumes that the touchable collection has enough place, is not mixed, not fixed order
-     *
-     * @param collection
-     * @param indices
-     */
-    public void setIndices(TouchableCollection collection,IntArray indices){
-        int i=0;
-        int iLimit=indices.size;
-        for (Positionable item : items) {
-            if (i<iLimit){
-                collection.items.set(indices.get(i),item);
-            }
-            i++;
-        }
     }
 
     /**
@@ -170,7 +104,7 @@ public class Positionables {
      * @param collection
      * @param byteBuffer if null nothing happens
      */
-    public void setIndices(TouchableCollection collection, ByteBuffer byteBuffer){
+    public void indices(TouchableCollection collection, ByteBuffer byteBuffer){
         for (Positionable item : items) {
                 collection.items.set(byteBuffer.getInt(),item);
         }

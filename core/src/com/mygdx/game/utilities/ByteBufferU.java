@@ -1,5 +1,6 @@
 package com.mygdx.game.utilities;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
@@ -139,6 +140,21 @@ public class ByteBufferU {
     }
 
     /**
+     * make a byteBuffer with the data of a Circle object,append on a file
+     *
+     * @param circle
+     * @return
+     */
+    static public ByteBuffer make(Circle circle){
+        ByteBuffer byteBuffer=ByteBuffer.allocate(12);
+        byteBuffer.putFloat(circle.x);
+        byteBuffer.putFloat(circle.y);
+        byteBuffer.putFloat(circle.radius);
+        byteBuffer.rewind();
+        return byteBuffer;
+    }
+
+    /**
      * read incrementally another floatArray from a ByteBuffer, size of array is given as parameter
      *
      * @param array
@@ -228,4 +244,14 @@ public class ByteBufferU {
     }
 
     // for bytes use byteBuffer.get(bytes)
+
+    /**
+     * create a new circle object with data read from byteBuffer
+     *
+     * @param buffer
+     * @return
+     */
+    static public Circle circle(ByteBuffer buffer){
+        return new Circle(buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
+    }
 }

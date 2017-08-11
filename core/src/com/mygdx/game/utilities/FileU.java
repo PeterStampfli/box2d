@@ -4,12 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ShortArray;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * File access, reading and writing, conversion to and from bytes
@@ -85,8 +85,6 @@ public class FileU {
 
     //  writing and reading
 
-    // instead of append=false use fileHandle.delete()
-
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
      * @param path
@@ -95,6 +93,25 @@ public class FileU {
     static public void write(String path, Pixmap pixmap){
         PixmapIO.writePNG(createExternalFileHandle(path),pixmap);
         pixmap.dispose();
+    }
+
+    // instead of append=false use fileHandle.delete()
+    // append pieces to a file
+    // read file as a single bytebuffer, read pieces from bytebuffer
+
+    /**
+     * create ByteBuffer and read data from file given by filehandle
+     * @param fileHandle
+     * @return a new byteBuffer with the data, or null if file does not exist
+     */
+    static public ByteBuffer readByteBuffer(FileHandle fileHandle){
+        if (fileHandle.exists()) {
+            byte[] bytes = fileHandle.readBytes();
+            return ByteBuffer.wrap(bytes);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
@@ -131,6 +148,16 @@ public class FileU {
     }
 
     /**
+     * append content of FloatArray (size, followed by data) on a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(FloatArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
      * append content of IntArray to a file as bytes
      *  @param array
      * @param fileHandle
@@ -141,50 +168,63 @@ public class FileU {
     }
 
     /**
-     * append content of FloatArray (size, followed by data) on a file as bytes
+     * append content of ShortArray to a file as bytes
      *  @param array
      * @param fileHandle
      */
-    static public void write(FloatArray array, FileHandle fileHandle){
+    static public void write(ShortArray array, FileHandle fileHandle){
         ByteBuffer byteBuffer= ByteBufferU.make(array);
         write(byteBuffer,fileHandle);
     }
 
-
     /**
-     * create ByteBuffer and read data from file given by filehandle
+     * append content of ByteArray to a file as bytes
+     *  @param array
      * @param fileHandle
-     * @return a new byteBuffer with the data, or null if file does not exist
      */
-    static public ByteBuffer readByteBuffer(FileHandle fileHandle){
-        if (fileHandle.exists()) {
-            byte[] bytes = fileHandle.readBytes();
-            return ByteBuffer.wrap(bytes);
-        }
-        else {
-            return null;
-        }
-    }
-
-
-    /**
-     * create Int(eger)Buffer from reading data from file given by fileHandle
-     * @param fileHandle
-     * @return a new buffer with data
-     */
-    static public IntBuffer readIntBuffer(FileHandle fileHandle){
-        ByteBuffer byteBuffer=readByteBuffer(fileHandle);
-        return byteBuffer.asIntBuffer();
+    static public void write(ByteArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
     }
 
     /**
-     * create FloatBuffer from reading data from file given by fileHandle
+     * append content of float[] (size, followed by data) on a file as bytes
+     *  @param array
      * @param fileHandle
-     * @return a new buffer with data
      */
-    static public FloatBuffer readFloatBuffer(FileHandle fileHandle){
-        ByteBuffer byteBuffer=readByteBuffer(fileHandle);
-        return byteBuffer.asFloatBuffer();
+    static public void write(float[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append content of int[] (size, followed by data) on a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(int[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append content of short[] (size, followed by data) on a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(short[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append content of byte[] (size, followed by data) on a file as bytes
+     *  @param array
+     * @param fileHandle
+     */
+    static public void write(byte[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.make(array);
+        write(byteBuffer,fileHandle);
     }
 
 }
