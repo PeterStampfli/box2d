@@ -2,6 +2,9 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 /**
  * Simplifies the logging.
  */
@@ -97,6 +100,58 @@ public class L {
         else {
             message+=", ...";
         }
+        og(message);
+    }
+
+    /**
+     * logging an IntBuffer with its data
+     *
+     * @param buffer
+     */
+    public static void og(IntBuffer buffer){
+        int position=buffer.position();
+        L.og("IntBuffer: position "+position+" size "+buffer.capacity());
+        String message="[";
+        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=buffer.get()+", ";
+        }
+        if (length>=0){
+            message+=buffer.get();
+        }
+        if (buffer.capacity()<=MAX_NUMBERS) {
+            message += "]";
+        }
+        else {
+            message+=", ...";
+        }
+        buffer.position(position);
+        og(message);
+    }
+
+    /**
+     * logging a FloatBuffer with its data
+     *
+     * @param buffer
+     */
+    public static void og(FloatBuffer buffer){
+        int position=buffer.position();
+        L.og("FloatBuffer: position "+position+" size "+buffer.capacity());
+        String message="[";
+        int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
+        for (int i=0;i<length;i++){
+            message+=buffer.get()+", ";
+        }
+        if (length>=0){
+            message+=buffer.get();
+        }
+        if (buffer.capacity()<=MAX_NUMBERS) {
+            message += "]";
+        }
+        else {
+            message+=", ...";
+        }
+        buffer.position(position);
         og(message);
     }
 }

@@ -99,6 +99,7 @@ public class FileU {
 
     /**
      * Append a byte buffer content to a file
+     * Rewinds the buffer
      *
      *  @param byteBuffer
      * @param fileHandle
@@ -155,7 +156,7 @@ public class FileU {
      * @param fileHandle
      * @return a new byteBuffer with the data, or null if file does not exist
      */
-    static ByteBuffer readByteBuffer(FileHandle fileHandle){
+    static public ByteBuffer readByteBuffer(FileHandle fileHandle){
         if (fileHandle.exists()) {
             byte[] bytes = fileHandle.readBytes();
             return ByteBuffer.wrap(bytes);

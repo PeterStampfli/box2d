@@ -66,6 +66,7 @@ public class Positionables {
 
     /**
      * read position and angles of positionable items from a bytebuffer
+     * starting at its current position
      * (previously read from a file ...)
      *
      * @param byteBuffer nothing happens if null
@@ -83,6 +84,7 @@ public class Positionables {
      *
      * @param positionsAngles
      */
+
     public  void setPositionsAngles(FloatArray positionsAngles){
         int i=0;
         int iLimit=positionsAngles.size;
@@ -135,6 +137,7 @@ public class Positionables {
             byteBuffer.putFloat(item.getY());
             byteBuffer.putFloat(item.getAngle());
         }
+        byteBuffer.rewind();
         return byteBuffer;
     }
 
@@ -161,6 +164,7 @@ public class Positionables {
     /**
      * set indices for the items of this collection from a bytebuffer. put them to the index positions in Touchable collection with
      * index positions
+     * starting at current position of the bytebuffer
      * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
      *
      * @param collection
