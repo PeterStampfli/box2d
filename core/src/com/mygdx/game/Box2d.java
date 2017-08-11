@@ -15,6 +15,7 @@ import com.mygdx.game.Images.Shape2DRenderer;
 import com.mygdx.game.Pieces.Positionables;
 import com.mygdx.game.Pieces.TouchableCollection;
 import com.mygdx.game.Sprite.ExtensibleSprite;
+import com.mygdx.game.utilities.ByteBufferU;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.FileU;
 import com.mygdx.game.utilities.L;
@@ -62,25 +63,25 @@ public class Box2d extends ApplicationAdapter {
 		collection.addLast(sprite1,sprite2,sprite3);
 		positionables.addItems(collection);
 		device.touchMover.setTouchable(collection);
-		p.addAll(100,400,1,200,400,2,300,400,4);
-		FileHandle pf=FileU.createLocalFileHandle("p.dat");
-		FileU.read(p,pf);
-		positionables.setPositionsAngles(p);
-		positionables.getPositionsAngles(p);
-		L.og(p);
-		positionables.getIndices(is,collection);
-		pf=FileU.createLocalFileHandle("i.dat");
-		FileU.read(is,pf);
-		positionables.setIndices(collection,is);
 		ByteBuffer byteBuffer=FileU.readByteBuffer(FileU.createLocalFileHandle("dddd.dat"));
-		L.og(byteBuffer.asFloatBuffer());
 		positionables.setPositionsAngles(byteBuffer);
-		L.og(byteBuffer.asIntBuffer());
 		positionables.setIndices(collection,byteBuffer);
 
 
 		shape2DRenderer=new Shape2DRenderer();
 
+		FloatArray floatArray=new FloatArray();
+		floatArray.addAll(1.1f,2,3,4.4444f);
+
+
+
+		byteBuffer=ByteBufferU.make(floatArray);
+		L.og(byteBuffer.asFloatBuffer());
+		float[] floats=new float[2];
+		ByteBufferU.readByteBuffer(floats,byteBuffer);
+		L.og(floats);
+
+		L.og(byteBuffer.asFloatBuffer());
 	}
 
 
@@ -114,30 +115,15 @@ public class Box2d extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		device.dispose();
-		FileHandle pf=FileU.createLocalFileHandle("p.dat");
-		positionables.getPositionsAngles(p);
-		pf.delete();
-		FileU.write(p,pf);
-		L.og(p);
-		positionables.getIndices(is,collection);
-		L.og(is);
-		pf=FileU.createLocalFileHandle("i.dat");
-		pf.delete();
-		FileU.write(is,pf);
+		FileHandle pf;
 
 		pf=FileU.createLocalFileHandle("dddd.dat");
-		positionables.getPositionsAngles();
-		ByteBuffer byteBuffer=positionables.getIndices(collection);
-		L.og(byteBuffer.asIntBuffer());
-		byteBuffer.rewind();
-		L.og(byteBuffer.asIntBuffer());
-		byteBuffer=positionables.getPositionsAngles();
-		L.og(positionables.getPositionsAngles().asFloatBuffer());
+
+
 		pf.delete();
 		FileU.write(positionables.getPositionsAngles(),pf);
 		FileU.write(positionables.getIndices(collection),pf);
-		L.og(FileU.readByteBuffer(pf).asFloatBuffer());
-		L.og(FileU.readByteBuffer(pf).asIntBuffer());
+
 
 	}
 }

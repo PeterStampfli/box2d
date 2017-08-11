@@ -110,7 +110,7 @@ public class L {
      */
     public static void og(IntBuffer buffer){
         int position=buffer.position();
-        L.og("IntBuffer: position "+position+" size "+buffer.capacity());
+        L.og("IntBuffer: position "+position+" remaining "+buffer.capacity());
         String message="[";
         int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
         for (int i=0;i<length;i++){
@@ -136,7 +136,7 @@ public class L {
      */
     public static void og(FloatBuffer buffer){
         int position=buffer.position();
-        L.og("FloatBuffer: position "+position+" size "+buffer.capacity());
+        L.og("FloatBuffer: position "+position+" remaining "+buffer.capacity());
         String message="[";
         int length=Math.min(buffer.capacity(),MAX_NUMBERS)-1;
         for (int i=0;i<length;i++){

@@ -12,133 +12,120 @@ import java.nio.IntBuffer;
  */
 
 public class ByteBufferU {
+
     /**
-     * make a bytebuffer of float numbers: first number is size of floatArray,
-     * then the float numbers follow
+     * advance the position of the buffer by given amount
+     * @param buffer
+     * @param i
+     */
+    static public void advance(ByteBuffer buffer,int i){
+        buffer.position(buffer.position()+i);
+    }
+
+    /**
+     * make a byte buffer that contains content of a FloatArray
      *
      * @param array
-     * @return a byteBuffer with length of array and data, write (append) it on a file
+     * @return a byteBuffer with data, write (append) it on a file
      */
     static public ByteBuffer make(FloatArray array){
         int length=array.size;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*(length+1));
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
         FloatBuffer buffer=byteBuffer.asFloatBuffer();
-        buffer.put(length);
         for (int i=0;i<length;i++) {
-            buffer.put(array.get(i));
+            buffer.put(array.get(i));                  // does not change position of the byteBuffer
         }
         return byteBuffer;
     }
 
     /**
-     * make a bytebuffer of float numbers: first number is size of float[],
-     * then the float numbers follow
+     * make a byte buffer that contains content of a float[]
      *
-     * @param array
-     * @return a byteBuffer with length of array and data, write (append) it on a file
+     * @param floats
+     * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(float[] array){
-        int length=array.length;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*(length+1));
-        FloatBuffer buffer=byteBuffer.asFloatBuffer();
-        buffer.put(length);
-        for (float element:array) {
-            buffer.put(element);
-        }
+    static public ByteBuffer make(float[] floats){
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*floats.length);
+        byteBuffer.asFloatBuffer().put(floats);
         return byteBuffer;
     }
 
     /**
-     * make a bytebuffer of int numbers: first number is size of floatArray,
-     * then the float numbers follow
+     * make a byte buffer that contains content of an IntArray
      *
      * @param array
-     * @return a byteBuffer with length of array and data, write (append) it on a file
+     * @return a byteBuffer with data, write (append) it on a file
      */
     static public ByteBuffer make(IntArray array){
         int length=array.size;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*(length+1));
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*length);
         IntBuffer buffer=byteBuffer.asIntBuffer();
-        buffer.put(length);
         for (int i=0;i<length;i++) {
-            buffer.put(array.get(i));
+            buffer.put(array.get(i));            // does not change position of the byteBuffer
         }
         return byteBuffer;
     }
 
+
     /**
-     * make a bytebuffer of int numbers: first number is size of int[],
-     * then the float numbers follow
+     * make a byte buffer that contains content of a int[]
      *
-     * @param array
-     * @return a byteBuffer with length of array and data, write (append) it on a file
+     * @param ints
+     * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(int[] array){
-        int length=array.length;
-        ByteBuffer byteBuffer=ByteBuffer.allocate(4*(length+1));
-        IntBuffer buffer=byteBuffer.asIntBuffer();
-        buffer.put(length);
-        for (int element:array){
-            buffer.put(element);
-        }
+    static public ByteBuffer make(int[] ints){
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*ints.length);
+        byteBuffer.asIntBuffer().put(ints);    // does not change position of the byteBuffer
         return byteBuffer;
     }
 
     /**
-     * read incrementally another floatArray from a floatBuffer, size of array is given as first float
+     * read incrementally another floatArray from a ByteBuffer, size of array is given as parameter
      *
      * @param array
      * @param buffer
      */
-    static public void readByteBuffer(FloatArray array,FloatBuffer buffer){
-        int length=Math.round(buffer.get());
+    static public void readByteBuffer(FloatArray array,ByteBuffer buffer,int length){
         array.clear();
+        array.ensureCapacity(length);
+        for (int i = 0; i < length; i++) {
+            array.add(buffer.getFloat());                      // position of float buffer advances
+        }
+    }
+
+    /**
+     * read incrementally another intArray from a ByteBuffer, size of array is given as parameter
+     *
+     * @param array
+     * @param buffer
+     */
+    static public void readByteBuffer(IntArray array,ByteBuffer buffer,int length){
+        array.clear();
+        array.ensureCapacity(length);
         for (int i = 0; i < length; i++) {
             array.add(buffer.get());
         }
     }
 
     /**
-     * read incrementally another intArray from an intBuffer, size of array is given as first float
+     * read incrementally existing floats[] from a ByteBuffer
      *
-     * @param array
+     * @param floats
      * @param buffer
      */
-    static public void readByteBuffer(IntArray array,IntBuffer buffer){
-        int length=buffer.get();
-        array.clear();
-        for (int i = 0; i < length; i++) {
-            array.add(buffer.get());
-        }
+    static public void readByteBuffer(float[] floats,ByteBuffer buffer){
+        buffer.asFloatBuffer().get(floats);
+        ByteBufferU.advance(buffer,4*floats.length);
     }
 
     /**
-     * read incrementally another float[] from a floatBuffer, size of array is given as first float
+     * read incrementally existing int[] from a ByteBuffer
      *
+     * @param ints
      * @param buffer
-     * @return the float[] data
      */
-    static public float[] floats(FloatBuffer buffer){
-        int length=Math.round(buffer.get());
-        float[] array=new float[length];
-        for (int i = 0; i < length; i++) {
-            array[i]=buffer.get();
-        }
-        return array;
-    }
-
-    /**
-     * read incrementally another int[] from a IntBuffer, size of array is given as first int
-     *
-     * @param buffer
-     * @return the float[] data
-     */
-    static public int[] ints(IntBuffer buffer){
-        int length=Math.round(buffer.get());
-        int[] array=new int[length];
-        for (int i = 0; i < length; i++) {
-            array[i]=buffer.get();
-        }
-        return array;
+    static public void readByteBuffer(int[] ints,ByteBuffer buffer){
+        buffer.asIntBuffer().get(ints);
+        ByteBufferU.advance(buffer,4*ints.length);
     }
 }

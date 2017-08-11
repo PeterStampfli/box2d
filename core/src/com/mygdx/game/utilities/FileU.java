@@ -187,29 +187,4 @@ public class FileU {
         return byteBuffer.asFloatBuffer();
     }
 
-    /**
-     * read file of bytes, convert to integers and put in IntArray
-     *
-     * @param array   will be changed to data of file defined by fileHndle, if exists
-     * @param fileHandle
-     */
-    static public void read(IntArray array, FileHandle fileHandle){
-        if (fileHandle.exists()) {
-            IntBuffer buffer = readIntBuffer(fileHandle);
-            ByteBufferU.readByteBuffer(array,buffer);
-        }
-    }
-
-    /**
-     * read file of bytes, convert to floats (size, followed by data) and put in FloatArray
-     *
-     * @param array   will be changed to data of file defined by fileHandle, if exists
-     * @param fileHandle
-     */
-    static public void read(FloatArray array, FileHandle fileHandle){
-        if (fileHandle.exists()) {
-            FloatBuffer buffer = readFloatBuffer(fileHandle);
-            ByteBufferU.readByteBuffer(array,buffer);
-        }
-    }
 }
