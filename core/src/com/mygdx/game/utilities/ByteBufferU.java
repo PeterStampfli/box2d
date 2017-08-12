@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ShortArray;
+import com.mygdx.game.Images.Edge;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -27,6 +28,17 @@ public class ByteBufferU {
      */
     static public void advance(ByteBuffer buffer,int i){
         buffer.position(buffer.position()+i);
+    }
+
+    /**
+     * write float numbers on a byteBuffer, advancing the position
+     *
+     * @param buffer
+     * @param floats
+     */
+    static public void put(ByteBuffer buffer,float... floats){
+        buffer.asFloatBuffer().put(floats);
+        advance(buffer,4*floats.length);
     }
 
     /**
@@ -204,6 +216,45 @@ public class ByteBufferU {
     }
 
     /**
+     * make a byteBuffer that defines an edge object.
+     * First coordinates of points a and b
+     * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0
+     * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
+     *
+     * @param edge
+     * @return
+     */
+    static public ByteBuffer make(Edge edge){
+        int length=18;                           // two bytes plus 4 floats
+        if (edge.ghostAExists){
+            length+=8;
+        }
+        if (edge.ghostBExists){
+            length+=8;
+        }
+        ByteBuffer buffer=ByteBuffer.allocate(length);
+        put(buffer,edge.aX,edge.aY,edge.bX,edge.bY);
+        if (edge.ghostAExists){
+            buffer.put((byte) 1);
+            buffer.putFloat(edge.ghostAX);
+            buffer.putFloat(edge.ghostAY);
+        }
+        else {
+            buffer.put((byte) 0);
+        }
+        if (edge.ghostBExists){
+            buffer.put((byte) 1);
+            buffer.putFloat(edge.ghostBX);
+            buffer.putFloat(edge.ghostBY);
+        }
+        else {
+            buffer.put((byte) 0);
+        }
+        buffer.rewind();
+        return buffer;
+    }
+
+    /**
      * read incrementally another floatArray from a ByteBuffer, size of array is given as parameter
      *
      * @param array
@@ -348,5 +399,22 @@ public class ByteBufferU {
      */
     static public Polyline polyline(ByteBuffer buffer){
         return new Polyline(floats(buffer));
+    }
+
+    /**
+     * Create an edge object from data on bytebuffer
+     * first coordinates of a and b, then ghost a,then ghost b
+     * @param buffer
+     * @return
+     */
+    static public Edge edge(ByteBuffer buffer){
+        Edge edge=new Edge(buffer.getFloat(),buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
+        if (buffer.get()==1){
+            edge.addGhostA(buffer.getFloat(),buffer.getFloat());
+        }
+        if (buffer.get()==1){
+            edge.addGhostB(buffer.getFloat(),buffer.getFloat());
+        }
+        return edge;
     }
 }

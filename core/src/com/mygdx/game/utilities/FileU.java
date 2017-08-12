@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ShortArray;
+import com.mygdx.game.Images.Edge;
 
 import java.nio.ByteBuffer;
 
@@ -260,6 +261,17 @@ public class FileU {
      */
     static public void write(Polygon polygon, FileHandle fileHandle){
         ByteBuffer byteBuffer=ByteBufferU.make(polygon);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append data for an edge to a file
+     *
+     * @param edge
+     * @param fileHandle
+     */
+    static public void write(Edge edge, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.make(edge);
         write(byteBuffer,fileHandle);
     }
 }
