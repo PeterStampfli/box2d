@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
@@ -227,4 +230,36 @@ public class FileU {
         write(byteBuffer,fileHandle);
     }
 
+    /**
+     * append data for a circle to a file
+     *
+     * @param circle
+     * @param fileHandle
+     */
+    static public void write(Circle circle, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.make(circle);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append data for a rectangle to a file
+     *
+     * @param rectangle
+     * @param fileHandle
+     */
+    static public void write(Rectangle rectangle, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.make(rectangle);
+        write(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append data for a polygon to a file
+     *
+     * @param polygon
+     * @param fileHandle
+     */
+    static public void write(Polygon polygon, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.make(polygon);
+        write(byteBuffer,fileHandle);
+    }
 }

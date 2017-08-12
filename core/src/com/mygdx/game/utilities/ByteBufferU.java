@@ -1,6 +1,8 @@
 package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
@@ -96,9 +98,24 @@ public class ByteBufferU {
      * @param floats
      * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(float[] floats){
+    static public ByteBuffer make(float... floats){
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*floats.length);
         byteBuffer.asFloatBuffer().put(floats);
+        return byteBuffer;
+    }
+
+    /**
+     * make a byte buffer that contains an integer and content of a float[]
+     *
+     * @param i
+     * @param floats a float[], to avoid confusion
+     * @return a byteBuffer with data, write (append) it on a file
+     */
+    static public ByteBuffer make(int i,float[] floats){
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*floats.length+4);
+        byteBuffer.putInt(i);
+        byteBuffer.asFloatBuffer().put(floats);
+        byteBuffer.rewind();
         return byteBuffer;
     }
 
@@ -108,7 +125,7 @@ public class ByteBufferU {
      * @param ints
      * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(int[] ints){
+    static public ByteBuffer make(int... ints){
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*ints.length);
         byteBuffer.asIntBuffer().put(ints);    // does not change position of the byteBuffer
         return byteBuffer;
@@ -120,7 +137,7 @@ public class ByteBufferU {
      * @param shorts
      * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(short[] shorts){
+    static public ByteBuffer make(short... shorts){
         ByteBuffer byteBuffer=ByteBuffer.allocate(2*shorts.length);
         byteBuffer.asShortBuffer().put(shorts);    // does not change position of the byteBuffer
         return byteBuffer;
@@ -132,7 +149,7 @@ public class ByteBufferU {
      * @param bytes
      * @return a byteBuffer with data, write (append) it on a file
      */
-    static public ByteBuffer make(byte[] bytes){
+    static public ByteBuffer make(byte... bytes){
         ByteBuffer byteBuffer=ByteBuffer.allocate(bytes.length);
         byteBuffer.put(bytes);
         byteBuffer.rewind();
@@ -146,12 +163,30 @@ public class ByteBufferU {
      * @return
      */
     static public ByteBuffer make(Circle circle){
-        ByteBuffer byteBuffer=ByteBuffer.allocate(12);
-        byteBuffer.putFloat(circle.x);
-        byteBuffer.putFloat(circle.y);
-        byteBuffer.putFloat(circle.radius);
-        byteBuffer.rewind();
-        return byteBuffer;
+        return make(circle.x,circle.y,circle.radius);
+    }
+
+    /**
+     * make a byteBuffer with the data of a Rectangle object,append on a file
+     *
+     * @param rectangle
+     * @return
+     */
+    static public ByteBuffer make(Rectangle rectangle){
+        return make(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
+    }
+
+    /**
+     * make a byteBuffer with data of a polygon object
+     * first integer length of vertices array, then float[] vertices array
+     * length=2*number of vertices
+     *
+     * @param polygon
+     * @return
+     */
+    static public ByteBuffer make(Polygon polygon){
+        float[] vertices=polygon.getVertices();
+        return make(vertices.length,vertices);
     }
 
     /**
@@ -253,5 +288,29 @@ public class ByteBufferU {
      */
     static public Circle circle(ByteBuffer buffer){
         return new Circle(buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
+    }
+
+    /**
+     * create a new Rectangle object from data on a byteBuffer
+     *
+     * @param buffer
+     * @return
+     */
+    static public Rectangle rectangle(ByteBuffer buffer){
+        return new Rectangle(buffer.getFloat(),buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
+    }
+
+    /**
+     * create a new polygon object from data on a byteBuffer
+     * first int length, then float[length] vertices
+     *
+     * @param buffer
+     * @return
+     */
+    static public Polygon polygon(ByteBuffer buffer){
+        int length=buffer.getInt();
+        float[] vertices=new float[length];
+        ByteBufferU.read(vertices,buffer);
+        return new Polygon(vertices);
     }
 }
