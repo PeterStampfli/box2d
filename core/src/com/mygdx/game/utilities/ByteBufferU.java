@@ -2,6 +2,7 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
@@ -190,6 +191,19 @@ public class ByteBufferU {
     }
 
     /**
+     * make a byteBuffer with data of a polyline object
+     * first integer length of vertices array, then float[] vertices array
+     * length=2*number of vertices
+     *
+     * @param polyline
+     * @return
+     */
+    static public ByteBuffer make(Polyline polyline){
+        float[] vertices=polyline.getVertices();
+        return make(vertices.length,vertices);
+    }
+
+    /**
      * read incrementally another floatArray from a ByteBuffer, size of array is given as parameter
      *
      * @param array
@@ -257,6 +271,20 @@ public class ByteBufferU {
     }
 
     /**
+     * read an integer length from the bytebuffer, create and read a float[] of this length
+     * return the float[]
+     *
+     * @param buffer
+     * @return
+     */
+    static public float[] floats(ByteBuffer buffer){
+        int length=buffer.getInt();
+        float[] fs=new float[length];
+        ByteBufferU.read(fs,buffer);
+        return fs;
+    }
+
+    /**
      * read incrementally existing int[] from a ByteBuffer
      *
      * @param ints
@@ -308,9 +336,17 @@ public class ByteBufferU {
      * @return
      */
     static public Polygon polygon(ByteBuffer buffer){
-        int length=buffer.getInt();
-        float[] vertices=new float[length];
-        ByteBufferU.read(vertices,buffer);
-        return new Polygon(vertices);
+        return new Polygon(floats(buffer));
+    }
+
+    /**
+     * create a new polyline object from data on a byteBuffer
+     * first int length, then float[length] vertices
+     *
+     * @param buffer
+     * @return
+     */
+    static public Polyline polyline(ByteBuffer buffer){
+        return new Polyline(floats(buffer));
     }
 }
