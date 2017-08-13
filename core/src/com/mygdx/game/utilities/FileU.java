@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ShortArray;
+import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 
 import java.nio.ByteBuffer;
@@ -91,10 +92,10 @@ public class FileU {
 
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
-     * @param path
      * @param pixmap will be disposed
+     * @param path
      */
-    static public void write(String path, Pixmap pixmap){
+    static public void writePixmap(Pixmap pixmap, String path){
         PixmapIO.writePNG(createExternalFileHandle(path),pixmap);
         pixmap.dispose();
     }
@@ -125,10 +126,10 @@ public class FileU {
      *  @param byteBuffer
      * @param fileHandle
      */
-    static public void write(ByteBuffer byteBuffer, FileHandle fileHandle){
+    static public void writeBuffer(ByteBuffer byteBuffer, FileHandle fileHandle){
+        byteBuffer.rewind();
         int nBytes=byteBuffer.capacity();
         byte[] bytes=new byte[nBytes];
-        byteBuffer.rewind();
         byteBuffer.get(bytes);
         fileHandle.writeBytes(bytes,true);
     }
@@ -138,8 +139,8 @@ public class FileU {
      * @param f
      * @param fileHandle
      */
-    static public void write(float f,FileHandle fileHandle){
-        write(ByteBuffer.allocate(4).putFloat(f),fileHandle);
+    static public void writeFloat(float f, FileHandle fileHandle){
+        writeBuffer(ByteBuffer.allocate(4).putFloat(f),fileHandle);
     }
 
     /**
@@ -147,8 +148,8 @@ public class FileU {
      * @param i
      * @param fileHandle
      */
-    static public void write(int i,FileHandle fileHandle){
-        write(ByteBuffer.allocate(4).putInt(i),fileHandle);
+    static public void writeInt(int i, FileHandle fileHandle){
+        writeBuffer(ByteBuffer.allocate(4).putInt(i),fileHandle);
     }
 
     /**
@@ -156,9 +157,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(FloatArray array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeFloats(FloatArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeFloats(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -166,9 +167,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(IntArray array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeInts(IntArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeInts(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -176,9 +177,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(ShortArray array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeShorts(ShortArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeShorts(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -186,9 +187,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(ByteArray array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeBytes(ByteArray array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeBytes(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -196,9 +197,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(float[] array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeFloats(float[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeFloats(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -206,9 +207,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(int[] array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeInts(int[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeInts(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -216,9 +217,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(short[] array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeShorts(short[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeShorts(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -226,9 +227,9 @@ public class FileU {
      *  @param array
      * @param fileHandle
      */
-    static public void write(byte[] array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.make(array);
-        write(byteBuffer,fileHandle);
+    static public void writeBytes(byte[] array, FileHandle fileHandle){
+        ByteBuffer byteBuffer= ByteBufferU.makeBytes(array);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -237,9 +238,9 @@ public class FileU {
      * @param circle
      * @param fileHandle
      */
-    static public void write(Circle circle, FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferU.make(circle);
-        write(byteBuffer,fileHandle);
+    static public void writeShape(Circle circle, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(circle);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -248,9 +249,9 @@ public class FileU {
      * @param rectangle
      * @param fileHandle
      */
-    static public void write(Rectangle rectangle, FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferU.make(rectangle);
-        write(byteBuffer,fileHandle);
+    static public void writeShape(Rectangle rectangle, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(rectangle);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -259,9 +260,9 @@ public class FileU {
      * @param polygon
      * @param fileHandle
      */
-    static public void write(Polygon polygon, FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferU.make(polygon);
-        write(byteBuffer,fileHandle);
+    static public void writeShape(Polygon polygon, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(polygon);
+        writeBuffer(byteBuffer,fileHandle);
     }
 
     /**
@@ -270,8 +271,19 @@ public class FileU {
      * @param edge
      * @param fileHandle
      */
-    static public void write(Edge edge, FileHandle fileHandle){
-        ByteBuffer byteBuffer=ByteBufferU.make(edge);
-        write(byteBuffer,fileHandle);
+    static public void writeShape(Edge edge, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(edge);
+        writeBuffer(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append data for an chain to a file
+     *
+     * @param chain
+     * @param fileHandle
+     */
+    static public void writeShape(Chain chain, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(chain);
+        writeBuffer(byteBuffer,fileHandle);
     }
 }
