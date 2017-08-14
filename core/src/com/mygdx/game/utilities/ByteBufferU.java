@@ -44,6 +44,22 @@ public class ByteBufferU {
     }
 
     /**
+     * write numbers of a floatArray on a byteBuffer, advancing the position
+     * sometimes we know the length by default
+     *
+     * @param byteBuffer
+     * @param array
+     */
+    static public void putFloats(ByteBuffer byteBuffer, FloatArray array){
+        int length=array.size;
+        FloatBuffer buffer=byteBuffer.asFloatBuffer();
+        for (int i=0;i<length;i++) {
+            buffer.put(array.get(i));                  // does not change position of the byteBuffer
+        }
+        advance(byteBuffer,4*length);
+    }
+
+    /**
      * put a boolean as a byte
      *
      * @param buffer
@@ -63,10 +79,7 @@ public class ByteBufferU {
         int length=array.size;
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*length+4);
         byteBuffer.putInt(length);
-        FloatBuffer buffer=byteBuffer.asFloatBuffer();
-        for (int i=0;i<length;i++) {
-            buffer.put(array.get(i));                  // does not change position of the byteBuffer
-        }
+        putFloats(byteBuffer,array);
         return byteBuffer;
     }
 
@@ -284,20 +297,20 @@ public class ByteBufferU {
      * @param chain
      * @return
      */
-    static public ByteBuffer makeShape(Chain chain){
-        int length=1+4+4*chain.coordinates.length;
-        if (chain.ghostAExists){
-            length+=8;
+    static public ByteBuffer makeShape(Chain chain) {
+        int length = 1 + 4 + 4 * chain.coordinates.length;
+        if (chain.ghostAExists) {
+            length += 8;
         }
-        if (chain.ghostBExists){
-            length+=8;
+        if (chain.ghostBExists) {
+            length += 8;
         }
-        ByteBuffer buffer=ByteBuffer.allocate(length);
+        ByteBuffer buffer = ByteBuffer.allocate(length);
         buffer.putInt(chain.coordinates.length);
-        putFloats(buffer,chain.coordinates);
-        putBoolean(buffer,chain.isLoop);
-        putGhost(buffer,chain.ghostAExists,chain.ghostAX,chain.ghostAY);
-        putGhost(buffer,chain.ghostBExists,chain.ghostBX,chain.ghostBY);
+        putFloats(buffer, chain.coordinates);
+        putBoolean(buffer, chain.isLoop);
+        putGhost(buffer, chain.ghostAExists, chain.ghostAX, chain.ghostAY);
+        putGhost(buffer, chain.ghostBExists, chain.ghostBX, chain.ghostBY);
         buffer.rewind();
         return buffer;
     }
@@ -489,4 +502,8 @@ public class ByteBufferU {
         }
         return chain;
     }
+
+    /**
+     * polYpoint: number of coordinates, coordinates data, float maxdletaangle,boolean isLoop
+     */
 }

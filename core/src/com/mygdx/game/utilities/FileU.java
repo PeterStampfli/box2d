@@ -6,13 +6,18 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ShortArray;
 import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
+import com.mygdx.game.Images.Polypoint;
+import com.mygdx.game.Images.Shape2DCollection;
+import com.mygdx.game.Images.Shape2DType;
 
 import java.nio.ByteBuffer;
 
@@ -153,6 +158,24 @@ public class FileU {
     }
 
     /**
+     * append a short number to a file
+     * @param i
+     * @param fileHandle
+     */
+    static public void writeShort(short i, FileHandle fileHandle){
+        writeBuffer(ByteBuffer.allocate(2).putShort(i),fileHandle);
+    }
+
+    /**
+     * append a byte to a file
+     * @param i
+     * @param fileHandle
+     */
+    static public void writeByte(byte i, FileHandle fileHandle){
+        writeBuffer(ByteBuffer.allocate(1).put(i),fileHandle);
+    }
+
+    /**
      * append content of FloatArray (size, followed by data) on a file as bytes
      *  @param array
      * @param fileHandle
@@ -198,7 +221,8 @@ public class FileU {
      * @param fileHandle
      */
     static public void writeFloats(float[] array, FileHandle fileHandle){
-        ByteBuffer byteBuffer= ByteBufferU.makeFloats(array);
+        ByteBuffer byteBuffer=ByteBuffer.allocate(4*array.length);
+        byteBuffer.asFloatBuffer().put(array);
         writeBuffer(byteBuffer,fileHandle);
     }
 
@@ -266,6 +290,17 @@ public class FileU {
     }
 
     /**
+     * append data for a polyline to a file
+     *
+     * @param polyline
+     * @param fileHandle
+     */
+    static public void writeShape(Polyline polyline, FileHandle fileHandle){
+        ByteBuffer byteBuffer=ByteBufferU.makeShape(polyline);
+        writeBuffer(byteBuffer,fileHandle);
+    }
+
+    /**
      * append data for an edge to a file
      *
      * @param edge
@@ -285,5 +320,46 @@ public class FileU {
     static public void writeShape(Chain chain, FileHandle fileHandle){
         ByteBuffer byteBuffer=ByteBufferU.makeShape(chain);
         writeBuffer(byteBuffer,fileHandle);
+    }
+
+    /**
+     * append shape2DCollection
+     * number of shapes followed by the shapes: ShapeType and shape data
+     *
+     * @param collection
+     * @param fileHandle
+     */
+    static public void writeShape(Shape2DCollection collection,FileHandle fileHandle){
+        writeInt(collection.shapes2D.size,fileHandle);
+        for (Shape2D shape:collection.shapes2D) {
+            if (shape instanceof Polygon) {
+                writeByte(Shape2DType.POLYGON.toByte(),fileHandle);
+                writeShape((Polygon) shape,fileHandle);
+            } else if (shape instanceof Circle) {
+                writeByte(Shape2DType.CIRCLE.toByte(),fileHandle);
+                writeShape((Circle) shape,fileHandle);
+            } else if (shape instanceof Rectangle) {
+                writeByte(Shape2DType.RECTANGLE.toByte(),fileHandle);
+                writeShape((Rectangle) shape,fileHandle);
+            } else if (shape instanceof Polypoint) {
+                writeByte(Shape2DType.POLYPOINT.toByte(),fileHandle);
+              //  writeShape((Polypoint) shape,fileHandle);
+            } else if (shape instanceof Polyline) {
+                writeByte(Shape2DType.POLYLINE.toByte(),fileHandle);
+                writeShape((Polyline) shape,fileHandle);
+            } else if (shape instanceof Edge) {
+                writeByte(Shape2DType.EDGE.toByte(),fileHandle);
+                writeShape((Edge) shape,fileHandle);
+            } else if (shape instanceof Chain) {
+                writeByte(Shape2DType.CHAIN.toByte(),fileHandle);
+                writeShape((Chain) shape,fileHandle);
+            } else if (shape instanceof Shape2DCollection) {                 // includes subclass DotsAndLines
+                writeByte(Shape2DType.SHAPE2DCOLLECTION.toByte(),fileHandle);
+                writeShape((Shape2DCollection) shape,fileHandle);
+            } else {
+                Gdx.app.log(" ******************** makeShape", "unknown shape " + shape.getClass());
+            }
+        }
+
     }
 }
