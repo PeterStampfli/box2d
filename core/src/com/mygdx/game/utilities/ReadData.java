@@ -1,6 +1,10 @@
 package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.ByteArray;
+import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.ShortArray;
 
 import java.nio.ByteBuffer;
 
@@ -27,6 +31,16 @@ public class ReadData {
             return null;
         }
     }
+
+    /**
+     * advance the position of the buffer by given amount
+     * @param buffer
+     * @param i
+     */
+    static public void advance(ByteBuffer buffer,int i){
+        buffer.position(buffer.position()+i);
+    }
+
 
     /**
      * read a float from a byte buffer byte, advances buffer by 4
@@ -78,5 +92,164 @@ public class ReadData {
         return buffer.get()!=0;
     }
 
+
+    /**
+     * read incrementally another floatArray from a ByteBuffer
+     *
+     * @param array
+     * @param length
+     * @param buffer
+     */
+    static public void readFloats(FloatArray array, int length, ByteBuffer buffer){
+        array.clear();
+        array.ensureCapacity(length);
+        for (int i = 0; i < length; i++) {
+            array.add(buffer.getFloat());                      // position of float buffer advances
+        }
+    }
+
+    /**
+     * read incrementally into existing intArray from a ByteBuffer
+     *
+     * @param array
+     * @param length
+     * @param buffer
+     */
+    static public void readInts(IntArray array, int length,ByteBuffer buffer){
+        array.clear();
+        array.ensureCapacity(length);
+        for (int i = 0; i < length; i++) {
+            array.add(buffer.getInt());
+        }
+    }
+
+    /**
+     * read incrementally into existing shortArray from a ByteBuffer
+     *
+     * @param array
+     * @param length
+     * @param buffer
+     */
+    static public void readShorts(ShortArray array,int length, ByteBuffer buffer){
+        array.clear();
+        array.ensureCapacity(length);
+        for (int i = 0; i < length; i++) {
+            array.add(buffer.getShort());
+        }
+    }
+
+    /**
+     * read incrementally into existing byteArray from a ByteBuffer
+     *
+     * @param array
+     * @param length
+     * @param buffer
+     */
+    static public void readBytes(ByteArray array, int length,ByteBuffer buffer){
+        array.clear();
+        array.ensureCapacity(length);
+        for (int i = 0; i < length; i++) {
+            array.add(buffer.get());
+        }
+    }
+
+    /**
+     * read incrementally existing float[] from a ByteBuffer
+     *
+     * @param floats
+     * @param buffer
+     */
+    static public void readFloats(float[] floats, ByteBuffer buffer){
+        buffer.asFloatBuffer().get(floats);
+        advance(buffer,4*floats.length);
+    }
+
+    /**
+     * read incrementally existing int[] from a ByteBuffer
+     *
+     * @param ints
+     * @param buffer
+     */
+    static public void readInts(int[] ints, ByteBuffer buffer){
+        buffer.asIntBuffer().get(ints);
+        advance(buffer,4*ints.length);
+    }
+
+    /**
+     * read incrementally existing short[] from a ByteBuffer
+     *
+     * @param shorts
+     * @param buffer
+     */
+    static public void readShorts(short[] shorts, ByteBuffer buffer){
+        buffer.asShortBuffer().get(shorts);
+        advance(buffer,2*shorts.length);
+    }
+
+    /**
+     * read incrementally existing bytes[] from a ByteBuffer
+     *
+     * @param bytes
+     * @param buffer
+     */
+    static public void readBytes(byte[] bytes, ByteBuffer buffer){
+        buffer.get(bytes);
+    }
+
+    /**
+     * read an integer length from the bytebuffer, create and read a float[] of this length
+     * return the float[]
+     *
+     * @param buffer
+     * @return
+     */
+    static public float[] getFloats(ByteBuffer buffer){
+        int length=buffer.getInt();
+        float[] fs=new float[length];
+        readFloats(fs,buffer);
+        return fs;
+    }
+
+    /**
+     * read an integer length from the bytebuffer, create and read an int[] of this length
+     * return the int[]
+     *
+     * @param buffer
+     * @return
+     */
+    static public int[] getInts(ByteBuffer buffer){
+        int length=buffer.getInt();
+        int[] is=new int[length];
+        readInts(is,buffer);
+        return is;
+    }
+
+    /**
+     * read an integer length from the bytebuffer, create and read an short[] of this length
+     * return the short[]
+     *
+     * @param buffer
+     * @return
+     */
+    static public short[] getShorts(ByteBuffer buffer){
+        int length=buffer.getInt();
+        short[] is=new short[length];
+        readShorts(is,buffer);
+        return is;
+    }
+
+    /**
+     * read an integer length from the bytebuffer, create and read an byte[] of this length
+     * return the byte[]
+     *
+     * @param buffer
+     * @return
+     */
+    static public byte[] getBytes(ByteBuffer buffer){
+        int length=buffer.getInt();
+        byte[] is=new byte[length];
+        readBytes(is,buffer);
+        return is;
+    }
 
 }
