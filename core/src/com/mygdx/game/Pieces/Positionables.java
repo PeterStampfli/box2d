@@ -105,8 +105,10 @@ public class Positionables {
      * @param byteBuffer if null nothing happens
      */
     public void indices(TouchableCollection collection, ByteBuffer byteBuffer){
-        for (Positionable item : items) {
-                collection.items.set(byteBuffer.getInt(),item);
+        if (byteBuffer!=null) {
+            for (Positionable item : items) {
+                collection.items.set(byteBuffer.getInt(), item);
+            }
         }
     }
 }

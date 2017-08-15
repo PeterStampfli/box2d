@@ -66,7 +66,7 @@ public class ByteBufferU {
      * @param boo
      */
     static public void putBoolean(ByteBuffer buffer, boolean boo){
-        buffer.put(MathU.toByte(boo));
+
     }
 
     /**
@@ -316,7 +316,7 @@ public class ByteBufferU {
     }
 
     public static boolean readBoolean(ByteBuffer buffer){
-        return MathU.toBoolean(buffer.get());
+        return true;
     }
 
     /**

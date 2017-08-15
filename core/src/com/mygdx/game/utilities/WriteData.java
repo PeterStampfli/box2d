@@ -1,6 +1,8 @@
 package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
@@ -17,6 +19,16 @@ import java.nio.ShortBuffer;
 
 public class WriteData {
 
+
+    /**
+     * Write pixmap as a png file on external storage. dispose pixmap.
+     * @param pixmap will be disposed
+     * @param path
+     */
+    static public void writePixmap(Pixmap pixmap, String path){
+        PixmapIO.writePNG(FileU.createExternalFileHandle(path),pixmap);
+        pixmap.dispose();
+    }
 
     /**
      * Append a byte buffer content to a file
