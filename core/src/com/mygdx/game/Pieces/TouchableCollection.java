@@ -2,7 +2,6 @@ package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by peter on 7/2/17.
@@ -12,9 +11,8 @@ import com.badlogic.gdx.utils.Array;
  * Or puts selected on top and adds and removes.
  */
 
-public class TouchableCollection<T> implements Touchable {
+public class TouchableCollection<T> extends Collection<T> implements Touchable {
 
-    public Array<T> items;
     boolean fixedOrder;
     int iSelected=-1;
 
@@ -24,7 +22,7 @@ public class TouchableCollection<T> implements Touchable {
      * @param order
      */
     public TouchableCollection(boolean order){
-        items=new Array<T>();
+        super();
         fixedOrder=order;
     }
 
@@ -35,80 +33,6 @@ public class TouchableCollection<T> implements Touchable {
         this(false);
     }
 
-    /**
-     * create Touchables wrapping an existing items array.
-     *
-     * @param items
-     */
-    public TouchableCollection(Array<T> items, boolean order){
-        this.items=items;
-        fixedOrder=order;
-    }
-
-    // adding, getting and removing items
-    /**
-     * Add one or more touchable objects at the end. Be careful if fixed order.
-     *
-     * @param ts T... or T[]
-     */
-    public void addLast(T... ts) {
-        this.items.addAll(ts);
-    }
-
-    /**
-     * Add one or more touchable objects at the beginning. Be careful if fixed order.
-     *
-     * @param ts T... or T[]
-     */
-    public void addFirst(T... ts) {
-        for (T t : ts) {
-            this.items.insert(0,t);
-        }
-    }
-
-    /**
-     * Remove a given (sub)touchable object, using identity.Removes multiple occurrences.
-     * Does not check elements that are inside collections.
-     *
-     * @param t  to remove
-     * @return true if something has been removed
-     */
-    public boolean remove(T t) {
-        boolean success = false;
-        while (items.removeValue(t, true)) {
-            success = true;
-        }
-        return success;
-    }
-
-    /**
-     * Get first index of an element in the array.
-     * @param t
-     * @return int, first index of t or -1 if not found
-     */
-    public int getIndex(T t){
-        return items.indexOf(t,true);
-    }
-
-    /**
-     * Get element with given index. Simple shortcut.
-     *
-     * @param i
-     * @return Touchable, of index i
-     */
-    public T get(int i){
-        return items.get(i);
-    }
-
-    /**
-     * Set element with given index. Simple shortcut.
-     *
-     * @param i
-     * @param item
-     */
-    public void set(int i,T item){
-        items.set(i,item);
-    }
 
     // the Touchable methods
 

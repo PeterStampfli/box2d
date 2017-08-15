@@ -1,40 +1,18 @@
 package com.mygdx.game.Pieces;
 
-import com.badlogic.gdx.utils.Array;
-
 import java.nio.ByteBuffer;
 
 /**
  * Created by peter on 8/5/17.
  */
 
-public class Positionables {
-    public Array<Positionable> items=new Array<Positionable>();
+public class Positionables extends Collection<Positionable>{
 
 
-    // adding, getting and removing items
-    /**
-     * Add one or more touchable objects at the end. Be careful if fixed order.
-     *
-     * @param ts T... or T[]
-     */
-    public void addLast(Positionable... ts) {
-        this.items.addAll(ts);
-    }
-
-    /**
-     * Add one or more touchable objects at the beginning. Be careful if fixed order.
-     *
-     * @param ts T... or T[]
-     */
-    public void addFirst(Positionable... ts) {
-        for (Positionable t : ts) {
-            this.items.insert(0,t);
-        }
-    }
 
     /**
      * add all Positionable items of a touchable collection to items of this
+     * (can't do that in generic superclass because of type erasure)
      *
      * @param collection
      */
@@ -45,9 +23,6 @@ public class Positionables {
             }
         }
     }
-
-
-    // set and read positions and angles in a floatarray
 
     /**
      * read position and angles of positionable items from a bytebuffer
@@ -100,7 +75,8 @@ public class Positionables {
      * index positions
      * starting at current position of the bytebuffer
      * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
-     *
+     * uses that both positionables and touchableCollection contain only references
+     * 
      * @param collection
      * @param byteBuffer if null nothing happens
      */
