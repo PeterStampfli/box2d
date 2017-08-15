@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Polypoint;
 
@@ -58,6 +59,12 @@ public class ReadShape {
         return new Polyline(ReadData.getFloats(buffer));
     }
 
+    /**
+     * create a new polyPoint object from data on byte buffer
+     * first int length, then coordinates, then boolean isLoop
+     * @param buffer
+     * @return
+     */
     static public Polypoint polypoint(ByteBuffer buffer){
         return new Polypoint(ReadData.getFloats(buffer),ReadData.getBoolean(buffer));
     }
@@ -77,6 +84,24 @@ public class ReadShape {
             edge.addGhostB(buffer.getFloat(),buffer.getFloat());
         }
         return edge;
+    }
+
+    /**
+     * Create an chain object from data on byteBuffer
+     * first length of coordinates, then coordinates , then isLoop, then ghost a,then ghost b
+     * @param buffer
+     * @return
+     */
+    static public Chain chain(ByteBuffer buffer){
+        Chain chain=new Chain(ReadData.getFloats(buffer));
+        chain.setIsLoop(ReadData.getBoolean(buffer));
+        if (ReadData.getBoolean(buffer)){
+            chain.addGhostA(buffer.getFloat(),buffer.getFloat());
+        }
+        if (ReadData.getBoolean(buffer)){
+            chain.addGhostB(buffer.getFloat(),buffer.getFloat());
+        }
+        return chain;
     }
 
 

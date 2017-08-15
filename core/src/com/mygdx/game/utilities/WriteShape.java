@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Polypoint;
 
@@ -105,6 +106,25 @@ public class WriteShape {
         WriteData.appendFloats(fileHandle,edge.aX,edge.aY,edge.bX,edge.bY);
         appendGhost(fileHandle,edge.ghostAExists,edge.ghostAX,edge.ghostAY);
         appendGhost(fileHandle,edge.ghostBExists,edge.ghostBX,edge.ghostBY);
+    }
+
+    /**
+     * append a chain object.
+     * First int length and coordinates
+     * then boolean isLoop
+     * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0
+     * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
+     *
+     * @param fileHandle
+     * @param chain
+     * @return
+     */
+    static public void  appendChain(FileHandle fileHandle,Chain chain){
+        WriteData.appendInt(fileHandle,chain.coordinates.length);
+        WriteData.appendFloats(fileHandle,chain.coordinates);
+        WriteData.appendBoolean(fileHandle,chain.isLoop);
+        appendGhost(fileHandle,chain.ghostAExists,chain.ghostAX,chain.ghostAY);
+        appendGhost(fileHandle,chain.ghostBExists,chain.ghostBX,chain.ghostBY);
     }
 
 }
