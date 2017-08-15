@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Images.Edge;
+import com.mygdx.game.Images.Polypoint;
 
 /**
  * Created by peter on 8/15/17.
@@ -62,5 +64,47 @@ public class WriteShape {
         WriteData.appendFloats(fileHandle,vertices);
     }
 
+    /**
+     * append a polypoint:
+     * first int number of coordinates, then float[] coordinates, then boolean isLop
+     * @param fileHandle
+     * @param polypoint
+     */
+    static public void appendPolypoint(FileHandle fileHandle, Polypoint polypoint){
+        WriteData.appendInt(fileHandle,polypoint.coordinates.size);
+        WriteData.appendFloats(fileHandle,polypoint.coordinates);
+        WriteData.appendBoolean(fileHandle,polypoint.isLoop);
+    }
+
+    /**
+     * appending a ghost depending if it exists
+     *
+     * @param fileHandle
+     * @param exists
+     * @param x
+     * @param y
+     */
+    static private void appendGhost(FileHandle fileHandle, boolean exists, float x, float y){
+        WriteData.appendBoolean(fileHandle,exists);
+        if (exists){
+            WriteData.appendFloats(fileHandle,x,y);
+        }
+    }
+
+    /**
+     * append an edge object.
+     * First coordinates of points a and b
+     * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0
+     * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
+     *
+     * @param fileHandle
+     * @param edge
+     * @return
+     */
+    static public void  appendEdge(FileHandle fileHandle,Edge edge){
+        WriteData.appendFloats(fileHandle,edge.aX,edge.aY,edge.bX,edge.bY);
+        appendGhost(fileHandle,edge.ghostAExists,edge.ghostAX,edge.ghostAY);
+        appendGhost(fileHandle,edge.ghostBExists,edge.ghostBX,edge.ghostBY);
+    }
 
 }

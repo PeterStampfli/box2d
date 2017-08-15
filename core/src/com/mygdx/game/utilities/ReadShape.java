@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Images.Edge;
+import com.mygdx.game.Images.Polypoint;
 
 import java.nio.ByteBuffer;
 
@@ -55,5 +57,27 @@ public class ReadShape {
     static public Polyline polyline(ByteBuffer buffer){
         return new Polyline(ReadData.getFloats(buffer));
     }
+
+    static public Polypoint polypoint(ByteBuffer buffer){
+        return new Polypoint(ReadData.getFloats(buffer),ReadData.getBoolean(buffer));
+    }
+
+    /**
+     * Create an edge object from data on byteBuffer
+     * first coordinates of a and b, then ghost a,then ghost b
+     * @param buffer
+     * @return
+     */
+    static public Edge edge(ByteBuffer buffer){
+        Edge edge=new Edge(buffer.getFloat(),buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
+        if (ReadData.getBoolean(buffer)){
+            edge.addGhostA(buffer.getFloat(),buffer.getFloat());
+        }
+        if (ReadData.getBoolean(buffer)){
+            edge.addGhostB(buffer.getFloat(),buffer.getFloat());
+        }
+        return edge;
+    }
+
 
 }

@@ -12,9 +12,26 @@ import com.mygdx.game.utilities.MathU;
 
 public class Polypoint extends Shape2DAdapter {
 
-    public FloatArray coordinates = new FloatArray();
+    public FloatArray coordinates;
     public float maxDeltaAngle = 0.1f;
     public boolean isLoop = false;
+
+    /**
+     * default creator, for polypoint with empty coordinates
+     */
+    public Polypoint(){
+        coordinates = new FloatArray();
+    }
+
+    /**
+     * creator for known coordinates and if it is a loop
+     *
+     * @param coordinates
+     */
+    public Polypoint(float[] coordinates, boolean isLoop){
+        this.coordinates=new FloatArray(coordinates);
+        this.isLoop=isLoop;
+    }
 
     /**
      * Clear for reuse. Deletes the points (their coordinates).

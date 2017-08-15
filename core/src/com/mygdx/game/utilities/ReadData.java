@@ -48,7 +48,7 @@ public class ReadData {
      * @param buffer
      * @return
      */
-    public static float aFloat(ByteBuffer buffer){
+    public static float getFloat(ByteBuffer buffer){
         return buffer.getFloat();
     }
 
@@ -58,7 +58,7 @@ public class ReadData {
      * @param buffer
      * @return
      */
-    public static int anInt(ByteBuffer buffer){
+    public static int getInt(ByteBuffer buffer){
         return buffer.getInt();
     }
 
@@ -68,7 +68,7 @@ public class ReadData {
      * @param buffer
      * @return
      */
-    public static short aShort(ByteBuffer buffer){
+    public static short getShort(ByteBuffer buffer){
         return buffer.getShort();
     }
 
@@ -78,7 +78,7 @@ public class ReadData {
      * @param buffer
      * @return
      */
-    public static byte aByte(ByteBuffer buffer){
+    public static byte getByte(ByteBuffer buffer){
         return buffer.get();
     }
 
@@ -88,7 +88,7 @@ public class ReadData {
      * @param buffer
      * @return
      */
-    public static boolean aBoolean(ByteBuffer buffer){
+    public static boolean getBoolean(ByteBuffer buffer){
         return buffer.get()!=0;
     }
 
