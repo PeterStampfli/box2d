@@ -192,7 +192,8 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param shape Shape2D to draw
      */
     public void shape2D(Shape2D shape){
-        if (shape instanceof Polygon){
+        if (shape==null){}
+        else if (shape instanceof Polygon){
             polygon((Polygon)shape);
         }
         else if (shape instanceof Circle){

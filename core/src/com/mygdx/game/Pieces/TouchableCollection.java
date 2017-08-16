@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
  * Or puts selected on top and adds and removes.
  */
 
-public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<T> implements Touchable {
+public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<T> implements Touchable,Drawable,Shape2D {
 
     boolean fixedOrder;
     int iSelected=-1;
@@ -35,7 +35,7 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
     }
 
 
-    // the Touchable methods
+    // the drawable methods
 
     /**
      * Call the draw method, going from last to first object. The painter algorithm: back to front.
@@ -51,6 +51,8 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
             }
         }
     }
+
+    // the Touchable methods
 
     /**
      * Check if a touchable contains the touch position.

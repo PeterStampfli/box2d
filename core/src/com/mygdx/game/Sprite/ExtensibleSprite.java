@@ -5,17 +5,17 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.Pieces.Drawable;
 import com.mygdx.game.Pieces.Positionable;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 
 /**
  * A basic sprite that can be extended. With the strategy pattern for the basic actions.
  * Use the ExtensibleSpriteBuilder for creation.
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable,Positionable,Pool.Poolable {
+public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape2D,Positionable,Pool.Poolable {
 
     public Shape2D shape;
     public Device device;
@@ -112,7 +112,6 @@ public class ExtensibleSprite extends Sprite implements Touchable,Positionable,P
      * @param angle
      */
     public void setPositionAngle(float x,float y,float angle){
-        L.og("setting "+y);
         super.setPosition(x,y);
         super.setRotation(angle * MathUtils.radiansToDegrees);
     }
