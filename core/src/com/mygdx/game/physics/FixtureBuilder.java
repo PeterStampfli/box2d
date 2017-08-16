@@ -155,7 +155,7 @@ public class FixtureBuilder {
     public void build(Body body, Shape2D shape2D,Object userData){
         if (shape2D instanceof Shape2DCollection){
             Shape2DCollection shape2DCollection=(Shape2DCollection) shape2D;
-            for (Shape2D subShape2D:shape2DCollection.shapes2D){
+            for (Shape2D subShape2D:shape2DCollection.items){
                 build(body,subShape2D,userData);
             }
         }

@@ -1,7 +1,7 @@
 package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.mygdx.game.utilities.WriteData;
+import com.mygdx.game.utilities.*;
 
 import java.nio.ByteBuffer;
 
@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  * Created by peter on 8/5/17.
  */
 
-public class Positionables extends Collection<Positionable>{
+public class Positionables extends com.mygdx.game.utilities.Collection<Positionable> {
 
 
 

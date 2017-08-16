@@ -132,6 +132,19 @@ public class WriteShape {
     }
 
     /**
+     * append a shape2DCollection, first int number of subshapes, then the subshapes
+     *
+     * @param fileHandle
+     * @param collection
+     */
+    static public void appendShape2DCollection(FileHandle fileHandle,Shape2DCollection collection){
+        WriteData.appendInt(fileHandle,collection.items.size);
+        for (Shape2D subShape:collection.items){
+            appendShape(fileHandle,subShape);
+        }
+    }
+
+    /**
      * append a byte for the shape type to a file
      *
      * @param fileHandle
@@ -178,13 +191,11 @@ public class WriteShape {
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             appendType(fileHandle,Shape2DType.COLLECTION);
-            Shape2DCollection collection=(Shape2DCollection) shape;
-            for (Shape2D subShape:collection.shapes2D){
-                appendShape(fileHandle,subShape);
-            }
+            appendShape2DCollection(fileHandle,(Shape2DCollection) shape);
         }
         else {
             Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
         }
     }
+
 }

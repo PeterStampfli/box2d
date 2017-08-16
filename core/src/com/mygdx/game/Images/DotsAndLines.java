@@ -172,7 +172,7 @@ public class DotsAndLines extends Shape2DCollection {
      * @return
      */
     public DotsAndLines add(DotsAndLines dotsAndLines){
-        super.add(dotsAndLines.shapes2D);
+        super.add(dotsAndLines.items);
         return this;
     }
 
@@ -203,7 +203,7 @@ public class DotsAndLines extends Shape2DCollection {
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
-            for (Shape2D subShape:shapes.shapes2D){
+            for (Shape2D subShape:shapes.items){
                 add(subShape);
             }
         }

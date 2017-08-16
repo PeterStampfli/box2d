@@ -5,13 +5,14 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 7/2/17.
+ * A touchable collection.
  * Has an array of objects. Makes touchable actions on touchable items.
  *
  * At selection does not change order
  * Or puts selected on top and adds and removes.
  */
 
-public class TouchableCollection<T> extends Collection<T> implements Touchable {
+public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<T> implements Touchable {
 
     boolean fixedOrder;
     int iSelected=-1;

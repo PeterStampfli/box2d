@@ -18,7 +18,7 @@ import com.mygdx.game.utilities.TextureU;
 
 /**
  * Draw Lines on screen, assuming that drawing the discs is not expensive.
- * Uses positions at time of rendering. Use for shapes2D and for arrays of vector2.
+ * Uses positions at time of rendering. Use for items and for arrays of vector2.
  *
  * We get smoother lines if lineImage has half the width of the line.
  * Adjust value of discImageSizeReduction to get good line end joins.
@@ -346,7 +346,7 @@ public class DrawLines {
     public void draw(DotsAndLines dotsAndLines){
         Circle circle;
         float[] vertices;
-        for (Shape2D shape:dotsAndLines.shapes2D){
+        for (Shape2D shape:dotsAndLines.items){
             if (shape instanceof Circle){
                 circle=(Circle) shape;
                 drawDisc(circle.x,circle.y);
@@ -385,7 +385,7 @@ public class DrawLines {
         }
         else if (shape instanceof Shape2DCollection){         // without DotsAndLines
             Shape2DCollection shapes=(Shape2DCollection) shape;
-            for (Shape2D subShape:shapes.shapes2D){
+            for (Shape2D subShape:shapes.items){
                 draw(subShape);
             }
         }

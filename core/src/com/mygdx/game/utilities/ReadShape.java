@@ -4,9 +4,12 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Polypoint;
+import com.mygdx.game.Images.Shape2DCollection;
+import com.mygdx.game.Images.Shape2DType;
 
 import java.nio.ByteBuffer;
 
@@ -103,6 +106,50 @@ public class ReadShape {
         }
         return chain;
     }
+
+    /**
+     * create a shap2dCollection object from a byteBuffer
+     * @param buffer
+     * @return
+     */
+    static public Shape2DCollection shape2DCollection(ByteBuffer buffer){
+        Shape2DCollection collection=new Shape2DCollection();
+        int numberOfShapes=ReadData.getInt(buffer);
+        for (int i=0;i<numberOfShapes;i++){
+            collection.items.add(shape2D(buffer));
+        }
+        return collection;
+    }
+
+    /**
+     * create and read a shape2D from buffer.
+     * first type of shape, then shape data
+     *
+     * @param buffer
+     * @return
+     */
+    static public Shape2D shape2D(ByteBuffer buffer){
+        switch (Shape2DType.ofByte(ReadData.getByte(buffer))){
+            case CIRCLE:
+                return circle(buffer);
+            case RECTANGLE:
+                return rectangle(buffer);
+            case  POLYGON:
+                return polygon(buffer);
+            case POLYPOINT:
+                return polypoint(buffer);
+            case POLYLINE:
+                return polyline(buffer);
+            case EDGE:
+                return edge(buffer);
+            case CHAIN:
+                return chain(buffer);
+            case COLLECTION:
+                return shape2DCollection(buffer);
+        }
+        return null;
+    }
+
 
 
 }

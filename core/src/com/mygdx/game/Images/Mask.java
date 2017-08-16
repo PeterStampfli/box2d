@@ -358,7 +358,7 @@ public class Mask {
             fillRect((Rectangle) shape);
         } else if (shape instanceof Shape2DCollection) {
             Shape2DCollection shapes = (Shape2DCollection) shape;
-            for (Shape2D subShape : shapes.shapes2D) {
+            for (Shape2D subShape : shapes.items) {
                 fill(subShape);
             }
         }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
  */
 
 public class Shape2DCollection extends Shape2DAdapter {
-    public Array<Shape2D> shapes2D = new Array<Shape2D>();
+    public Array<Shape2D> items = new Array<Shape2D>();
 
     /**
      * check if one of the shapes contains a given point
@@ -19,7 +19,7 @@ public class Shape2DCollection extends Shape2DAdapter {
      */
     @Override
     public boolean contains(float x, float y) {
-        for (Shape2D shape2D : shapes2D) {
+        for (Shape2D shape2D : items) {
             if (shape2D.contains(x, y)) {
                 return true;
             }
@@ -35,7 +35,7 @@ public class Shape2DCollection extends Shape2DAdapter {
     public void add(Shape2D... shapes2D) {
         for (Shape2D shape2D : shapes2D) {
             if (shape2D != null) {
-                this.shapes2D.add(shape2D);
+                this.items.add(shape2D);
             }
         }
     }
@@ -48,7 +48,7 @@ public class Shape2DCollection extends Shape2DAdapter {
     public void add(Array<Shape2D> shapes2D) {
         for (Shape2D shape2D : shapes2D) {
             if (shape2D != null) {
-                this.shapes2D.add(shape2D);
+                this.items.add(shape2D);
             }
         }
     }
@@ -57,6 +57,6 @@ public class Shape2DCollection extends Shape2DAdapter {
      * Clear all shapes. For reuse. For resize.
      */
     public void clear(){
-        shapes2D.clear();
+        items.clear();
     }
 }

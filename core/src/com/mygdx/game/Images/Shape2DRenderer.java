@@ -89,7 +89,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param polygon Polygon object to draw as outline of surface
      */
-    public void draw(Polygon polygon){
+    public void polygon(Polygon polygon){
         setColor(polygonColor);
         polygon(polygon.getTransformedVertices());
     }
@@ -99,7 +99,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param polyline Polyline object to draw as lines.
      */
-    public void draw(Polyline polyline){
+    public void polyline(Polyline polyline){
         setColor(lineColor);
         polyline(polyline.getTransformedVertices());
     }
@@ -109,7 +109,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param polypoint Polypoint, to draw as a collection of points
      */
-    public void draw(Polypoint polypoint){
+    public void polypoint(Polypoint polypoint){
         for (int i=polypoint.coordinates.size-2;i>=0;i-=2){
             point(polypoint.coordinates.get(i),polypoint.coordinates.get(i+1));
         }
@@ -120,7 +120,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param circle Circle to draw as a line.
      */
-    public void draw(Circle circle){
+    public void circle(Circle circle){
         setColor(lineColor);
         circle(circle.x,circle.y,circle.radius);
     }
@@ -130,7 +130,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param rectangle Rectangle to draw as outline of a polygon.
      */
-    public void draw(Rectangle rectangle){
+    public void rectangle(Rectangle rectangle){
         setColor(polygonColor);
         rect(rectangle.x,rectangle.y, rectangle.width,rectangle.height);
     }
@@ -140,7 +140,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param edge Edge, to draw as a single line with ghost points.
      */
-    public void draw(Edge edge){
+    public void edge(Edge edge){
         line(edge.aX,edge.aY,edge.bX,edge.bY);
         if (edge.ghostAExists){
             point(edge.ghostAX,edge.ghostAY);
@@ -156,7 +156,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param chain Chain to draw as a polyline with ghost points.
      */
-    public void draw(Chain chain){
+    public void chain(Chain chain){
         int length=chain.coordinates.length;
         setColor(lineColor);
         for (int i=0;i<length-3;i+=2){
@@ -176,37 +176,46 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
+     *     draw a shape2DCollection (including dots and lines)
+     *
+     * @param collection
+     */
+    public void shape2DCollection(Shape2DCollection collection){
+        for (Shape2D subShape:collection.items){
+            shape2D(subShape);
+        }
+    }
+
+    /**
      * Draw any Shape2D shape, including collections.
      *
      * @param shape Shape2D to draw
      */
-    public void draw(Shape2D shape){
+    public void shape2D(Shape2D shape){
         if (shape instanceof Polygon){
-            draw((Polygon)shape);
+            polygon((Polygon)shape);
         }
         else if (shape instanceof Circle){
-            draw((Circle) shape);
+            circle((Circle) shape);
         }
         else if (shape instanceof Rectangle){
-            draw((Rectangle) shape);
+            rectangle((Rectangle) shape);
         }
         else if (shape instanceof Polypoint){
-            draw((Polypoint)shape);
+            polypoint((Polypoint)shape);
         }
         else if (shape instanceof Polyline){
-            draw((Polyline) shape);
+            polyline((Polyline) shape);
         }
         else if (shape instanceof Edge){
-            draw((Edge) shape);
+            edge((Edge) shape);
         }
         else if (shape instanceof Chain){
-            draw((Chain) shape);
+            chain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            Shape2DCollection shapes=(Shape2DCollection) shape;
-            for (Shape2D subShape:shapes.shapes2D){
-                draw(subShape);
-            }
+            shape2DCollection((Shape2DCollection) shape);
+
         }
         else {
             Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
