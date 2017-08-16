@@ -1,13 +1,17 @@
 package com.mygdx.game.utilities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Polypoint;
+import com.mygdx.game.Images.Shape2DCollection;
+import com.mygdx.game.Images.Shape2DType;
 
 /**
  * Created by peter on 8/15/17.
@@ -127,4 +131,60 @@ public class WriteShape {
         appendGhost(fileHandle,chain.ghostBExists,chain.ghostBX,chain.ghostBY);
     }
 
+    /**
+     * append a byte for the shape type to a file
+     *
+     * @param fileHandle
+     * @param type
+     */
+    static private void appendType(FileHandle fileHandle, Shape2DType type){
+        WriteData.appendByte(fileHandle,type.toByte());
+    }
+
+    /**
+     * append any Shape2D shape, preceeded by its type, to a file, including collections.
+     *
+     * @param fileHandle
+     * @param shape Shape2D to append
+     */
+    static public void appendShape(FileHandle fileHandle,Shape2D shape){
+        if (shape instanceof Polygon){
+            appendType(fileHandle,Shape2DType.POLYGON);
+            appendPolygon(fileHandle,(Polygon)shape);
+        }
+        else if (shape instanceof Circle){
+            appendType(fileHandle,Shape2DType.CIRCLE);
+            appendCircle(fileHandle,(Circle) shape);
+        }
+        else if (shape instanceof Rectangle){
+            appendType(fileHandle,Shape2DType.RECTANGLE);
+            appendRectangle(fileHandle,(Rectangle) shape);
+        }
+        else if (shape instanceof Polypoint){
+            appendType(fileHandle,Shape2DType.POLYPOINT);
+            appendPolypoint(fileHandle,(Polypoint) shape);
+        }
+        else if (shape instanceof Polyline){
+            appendType(fileHandle,Shape2DType.POLYLINE);
+            appendPolyline(fileHandle,(Polyline) shape);
+        }
+        else if (shape instanceof Edge){
+            appendType(fileHandle,Shape2DType.EDGE);
+            appendEdge(fileHandle,(Edge) shape);
+        }
+        else if (shape instanceof Chain){
+            appendType(fileHandle,Shape2DType.CHAIN);
+            appendChain(fileHandle,(Chain) shape);
+        }
+        else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
+            appendType(fileHandle,Shape2DType.COLLECTION);
+            Shape2DCollection collection=(Shape2DCollection) shape;
+            for (Shape2D subShape:collection.shapes2D){
+                appendShape(fileHandle,subShape);
+            }
+        }
+        else {
+            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
+        }
+    }
 }

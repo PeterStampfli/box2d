@@ -1,5 +1,8 @@
 package com.mygdx.game.Pieces;
 
+import com.badlogic.gdx.files.FileHandle;
+import com.mygdx.game.utilities.WriteData;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -25,49 +28,33 @@ public class Positionables extends Collection<Positionable>{
     }
 
     /**
-     * read position and angles of positionable items from a bytebuffer
-     * starting at its current position
-     * (previously read from a file ...)
+     * append the index positions of the items of this collection
+     * in another TouchableCollection to a file
      *
-     * @param byteBuffer nothing happens if null
-     */
-    public void positionsAngles(ByteBuffer byteBuffer){
-        if (byteBuffer!=null) {
-            for (Positionable item : items) {
-                item.setPositionAngle(byteBuffer.getFloat(), byteBuffer.getFloat(),byteBuffer.getFloat());
-            }
-        }
-    }
-
-    /**
-     * write the index positions of the items of this collection
-     * in another TouchableCollection to a bytebuffer
-     *
+     * @param fileHandle
      * @param collection
-     * @return
      */
-    public ByteBuffer indices(TouchableCollection collection){
+    public void appendIndices(FileHandle fileHandle,TouchableCollection collection){
         ByteBuffer byteBuffer= ByteBuffer.allocate(4*items.size);
         for (Positionable item : items) {
             byteBuffer.putInt(collection.getIndex(item));
         }
-        return byteBuffer;
+        WriteData.appendBuffer(fileHandle,byteBuffer);
     }
 
     /**
-     * write positions and angles to a bytebuffer
+     * append positions and angles to a file
      *
-     * @return byteBuffer
+     * @param fileHandle
      */
-    public ByteBuffer positionsAngles(){
+    public void appendPositionsAngles(FileHandle fileHandle){
         ByteBuffer byteBuffer= ByteBuffer.allocate(12*items.size);
         for (Positionable item : items) {
             byteBuffer.putFloat(item.getX());
             byteBuffer.putFloat(item.getY());
             byteBuffer.putFloat(item.getAngle());
         }
-        byteBuffer.rewind();
-        return byteBuffer;
+        WriteData.appendBuffer(fileHandle,byteBuffer);
     }
 
     /**
@@ -76,15 +63,35 @@ public class Positionables extends Collection<Positionable>{
      * starting at current position of the bytebuffer
      * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
      * uses that both positionables and touchableCollection contain only references
-     * 
+     *
      * @param collection
      * @param byteBuffer if null nothing happens
      */
-    public void indices(TouchableCollection collection, ByteBuffer byteBuffer){
+    public void readIndices(TouchableCollection collection, ByteBuffer byteBuffer){
         if (byteBuffer!=null) {
+            int index;
             for (Positionable item : items) {
-                collection.items.set(byteBuffer.getInt(), item);
+                index=byteBuffer.getInt();
+                if (index >=0) {
+                    collection.items.set(index, item);
+                }
             }
         }
     }
+
+    /**
+     * read position and angles of positionable items from a bytebuffer
+     * starting at its current position
+     * (previously read from a file ...)
+     *
+     * @param byteBuffer nothing happens if null
+     */
+    public void readPositionsAngles(ByteBuffer byteBuffer){
+        if (byteBuffer!=null) {
+            for (Positionable item : items) {
+                item.setPositionAngle(byteBuffer.getFloat(), byteBuffer.getFloat(),byteBuffer.getFloat());
+            }
+        }
+    }
+
 }

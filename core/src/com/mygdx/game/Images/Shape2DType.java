@@ -5,7 +5,7 @@ package com.mygdx.game.Images;
  */
 
 public enum Shape2DType {
-    SHAPE2DCOLLECTION(0),
+    COLLECTION(0),
     CIRCLE(1),
     RECTANGLE(2),
     POLYGON(3),
