@@ -1,14 +1,14 @@
 package com.mygdx.game.Images;
 
 import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.utilities.Collection;
 
 /**
  * Collection of Shape2D shapes. Is itself a Shape2D object.
  */
 
-public class Shape2DCollection extends Shape2DAdapter {
-    public Array<Shape2D> items = new Array<Shape2D>();
+public class Shape2DCollection extends Collection<Shape2D> implements Shape2D {
 
     /**
      * check if one of the shapes contains a given point
@@ -28,35 +28,12 @@ public class Shape2DCollection extends Shape2DAdapter {
     }
 
     /**
-     * Add one or several shapes to the collection. Does nothing if a shape is null.
-     *
-     * @param shapes2D Shape2D... or Shape2D[], the shapes to add.
+     * Implementing the contains method for Vector2 argument by calling the method for components.
+     * @param point Vector2, the point
+     * @return boolean, true if shape contains the point
      */
-    public void add(Shape2D... shapes2D) {
-        for (Shape2D shape2D : shapes2D) {
-            if (shape2D != null) {
-                this.items.add(shape2D);
-            }
-        }
-    }
-
-    /**
-     * Add one or several shapes to the collection. Does nothing if a shape is null.
-     *
-     * @param shapes2D Array<Shape2D>, the shapes to add.
-     */
-    public void add(Array<Shape2D> shapes2D) {
-        for (Shape2D shape2D : shapes2D) {
-            if (shape2D != null) {
-                this.items.add(shape2D);
-            }
-        }
-    }
-
-    /**
-     * Clear all shapes. For reuse. For resize.
-     */
-    public void clear(){
-        items.clear();
+    @Override
+    public boolean contains(Vector2 point) {
+        return contains(point.x,point.y);
     }
 }

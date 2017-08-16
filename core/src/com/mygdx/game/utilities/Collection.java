@@ -10,13 +10,39 @@ public class Collection<T> {
 
     public Array<T> items=new Array<T>();
 
+
     /**
-     * Add one or more touchable objects at the end. Be careful if fixed order.
-     *
-     * @param ts T... or T[]
+     * Clear for reuse.
      */
-    public void addLast(T... ts) {
-        this.items.addAll(ts);
+    public void clear(){
+        items.clear();
+    }
+
+    /**
+     * Add one or several elements to the collection. Does nothing if is null.
+     *
+     * @param ts  t[] and t..., the shapes to add.
+     */
+    public void add(T... ts) {
+        for (T t : ts) {
+            if (t != null) {
+                this.items.add(t);
+            }
+        }
+    }
+
+
+    /**
+     * Add one or several elements to the collection. Does nothing if is null.
+     *
+     * @param ts Array<T>, the shapes to add.
+     */
+    public void add(Array<? extends T> ts) {
+        for (T t : ts) {
+            if (t != null) {
+                this.items.add(t);
+            }
+        }
     }
 
     /**

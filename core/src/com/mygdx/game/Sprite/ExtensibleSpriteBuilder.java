@@ -229,7 +229,7 @@ public class ExtensibleSpriteBuilder {
     public ExtensibleSprite build(TextureRegion textureRegion, Shape2D shape){
         ExtensibleSprite sprite=device.extensibleSpritePool.obtain();
         if (spriteCollection !=null){
-            spriteCollection.addLast(sprite);
+            spriteCollection.add(sprite);
         }
         setup(sprite,textureRegion,shape);
         return sprite;
