@@ -1,5 +1,6 @@
 package com.mygdx.game.Images;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
@@ -20,7 +21,7 @@ public class Shape2DTranslate {
      * @param dx
      * @param dy
      */
-    public void circle(Circle circle,float dx,float dy){
+    static public void circle(Circle circle,float dx,float dy){
         circle.x+=dx;
         circle.y+=dy;
     }
@@ -30,7 +31,7 @@ public class Shape2DTranslate {
      *
      * @param rectangle Rectangle to translate.
      */
-    public void rectangle(Rectangle rectangle,float dx,float dy){
+    static public void rectangle(Rectangle rectangle,float dx,float dy){
         rectangle.x+=dx;
         rectangle.y+=dy;
     }
@@ -42,11 +43,12 @@ public class Shape2DTranslate {
      * @param dx
      * @param dy
      */
-    static public void vertices(float[] coordinates,float dx,float dy){
+    static public float[] translate(float[] coordinates, float dx, float dy){
         for (int i=coordinates.length-2;i>=0;i-=2){
             coordinates[i]+=dx;
             coordinates[i+1]+=dy;
         }
+        return coordinates;
     }
 
     /**
@@ -56,131 +58,141 @@ public class Shape2DTranslate {
      * @param dx
      * @param dy
      */
-    static public void vertices(FloatArray coordinates, float dx, float dy){
+    static public FloatArray translate(FloatArray coordinates, float dx, float dy){
         for (int i=coordinates.size-2;i>=0;i-=2){
             coordinates.set(i,coordinates.get(i)+dx);
             coordinates.set(i+1,coordinates.get(i+1)+dy);
         }
+        return coordinates;
     }
 
     /**
      * translate local vertices of polygon
      *
      * @param polygon Polygon object to translate
+     * @param dx
+     * @param dy
      */
     static public void polygon(Polygon polygon,float dx,float dy){
-        float[] coordinates=polygon.getVertices();
-        vertices(coordinates,dx,dy);
-        polygon.setVertices(coordinates);
+        polygon.setVertices(translate(polygon.getVertices(),dx,dy));
     }
 
     /**
-     * Draws the Polyline with its transformed world vertices (scaled, translated and rotated).
+     * translate local vertices of polyline
      *
-     * @param polyline Polyline object to draw as lines.
+     * @param polyline Polygon object to translate
+     * @param dx
+     * @param dy
      */
-    public void polyline(Polyline polyline){
-
-
+    static public void polyline(Polyline polyline,float dx,float dy){
+        polyline.setVertices(translate(polyline.getVertices(),dx,dy));
     }
 
     /**
-     * Draw the points of a polypoint object.
+     * translate polypoint object.
      *
-     * @param polypoint Polypoint, to draw as a collection of points
+     * @param polypoint Polypoint, to translate
+     * @param dx
+     * @param dy
      */
-    public void polypoint(Polypoint polypoint){
-
-
+    static public void polypoint(Polypoint polypoint,float dx,float dy){
+        translate(polypoint.coordinates,dx,dy);
     }
 
     /**
-     * Draw an edge as a line with ghosts as points, if they exist.
+     * Translate edge, including ghosts.
      *
-     * @param edge Edge, to draw as a single line with ghost points.
+     * @param edge Edge
+     * @param dx
+     * @param dy
      */
-    public void edge(Edge edge){
-       // line(edge.aX,edge.aY,edge.bX,edge.bY);
-        if (edge.ghostAExists){
-      //      point(edge.ghostAX,edge.ghostAY);
-        }
-        if (edge.ghostBExists){
-       //     point(edge.ghostBX,edge.ghostBY);
-        }
+    static public void edge(Edge edge,float dx,float dy){
+        edge.aX+=dx;
+        edge.aY+=dy;
+        edge.bX+=dx;
+        edge.bY+=dy;
+        edge.ghostAY+=dx;
+        edge.ghostAY+=dy;
+        edge.ghostBX+=dx;
+        edge.ghostBY+=dy;
     }
 
     /**
-     * Draw an Chain as a polyline with ghosts as points, if they exist.
-     * Close the loop if the Chain is a loop.
+     * translate a chain
      *
      * @param chain Chain to draw as a polyline with ghost points.
+     * @param dx
+     * @param dy
      */
-    public void chain(Chain chain){
-        int length=chain.coordinates.length;
-       // setColor(lineColor);
-        for (int i=0;i<length-3;i+=2){
-         //   line(chain.coordinates[i],chain.coordinates[i+1],
-                  //  chain.coordinates[i+2],chain.coordinates[i+3]);
-        }
-        if (chain.isLoop){
-          //  line(chain.coordinates[0],chain.coordinates[1],
-                 //   chain.coordinates[length-2],chain.coordinates[length-1]);
-        }
-        if (chain.ghostAExists){
-         //   point(chain.ghostAX,chain.ghostAY);
-        }
-        if (chain.ghostBExists){
-         //   point(chain.ghostBX,chain.ghostBY);
-        }
+    static public void chain(Chain chain,float dx,float dy){
+        translate(chain.coordinates,dx,dy);
+        chain.ghostAY+=dx;
+        chain.ghostAY+=dy;
+        chain.ghostBX+=dx;
+        chain.ghostBY+=dy;
     }
 
     /**
-     *     draw a shape2DCollection (including dots and lines)
+     *   translate a shape2DCollection (includes dots and lines)
      *
      * @param collection
+     * @param dx
+     * @param dy
      */
-    public void shape2DCollection(Shape2DCollection collection){
+    static public void collection(Shape2DCollection collection, float dx, float dy){
         for (Shape2D subShape:collection.items){
-          //  shape2D(subShape);
+            shape(subShape,dx,dy);
         }
     }
 
     /**
-     * Draw any Shape2D shape, including collections.
+     * Translate any Shape2D shape, including collections.
      *
      * @param shape Shape2D to draw
+     * @param dx
+     * @param dy
      */
-    /*
-    public void shape2D(Shape2D shape){
+
+    static public void shape(Shape2D shape, float dx, float dy){
         if (shape==null){}
         else if (shape instanceof Polygon){
-            polygon((Polygon)shape);
+            polygon((Polygon)shape,dx,dy);
         }
         else if (shape instanceof Circle){
-            circle((Circle) shape);
+            circle((Circle) shape,dx,dy);
         }
         else if (shape instanceof Rectangle){
-            rectangle((Rectangle) shape);
+            rectangle((Rectangle) shape,dx,dy);
         }
         else if (shape instanceof Polypoint){
-            polypoint((Polypoint)shape);
+            polypoint((Polypoint)shape,dx,dy);
         }
         else if (shape instanceof Polyline){
-            polyline((Polyline) shape);
+            polyline((Polyline) shape,dx,dy);
         }
         else if (shape instanceof Edge){
-            edge((Edge) shape);
+            edge((Edge) shape,dx,dy);
         }
         else if (shape instanceof Chain){
-            chain((Chain) shape);
+            chain((Chain) shape,dx,dy);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            shape2DCollection((Shape2DCollection) shape);
+            collection((Shape2DCollection) shape,dx,dy);
 
         }
         else {
-            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
+            Gdx.app.log(" ******************** translate","unknown shape "+shape.getClass());
         }
     }
-    */
+
+    /**
+     * adjust the shape to have its lowest x- and y-coordinates at given values
+     *
+     * @param shape
+     * @param left
+     * @param bottom
+     */
+    static public void adjustLeftBottom(Shape2D shape,float left,float bottom){
+        shape(shape,left-Shape2DLimits.minXShape(shape),bottom-Shape2DLimits.minYShape(shape));
+    }
 }

@@ -180,9 +180,9 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param collection
      */
-    public void shape2DCollection(Shape2DCollection collection){
+    public void collection(Shape2DCollection collection){
         for (Shape2D subShape:collection.items){
-            shape2D(subShape);
+            shape(subShape);
         }
     }
 
@@ -191,7 +191,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param shape Shape2D to draw
      */
-    public void shape2D(Shape2D shape){
+    public void shape(Shape2D shape){
         if (shape==null){}
         else if (shape instanceof Polygon){
             polygon((Polygon)shape);
@@ -215,7 +215,7 @@ public class Shape2DRenderer extends ShapeRenderer{
             chain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            shape2DCollection((Shape2DCollection) shape);
+            collection((Shape2DCollection) shape);
 
         }
         else {

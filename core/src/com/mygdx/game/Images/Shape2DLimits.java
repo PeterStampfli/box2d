@@ -115,10 +115,10 @@ public class Shape2DLimits {
      *
      * @param collection
      */
-    static public float maxXShape2DCollection(Shape2DCollection collection){
+    static public float maxXCollection(Shape2DCollection collection){
         float x=-10000000;
         for (Shape2D subShape:collection.items){
-            x=Math.max(x,maxXShape2D(subShape));
+            x=Math.max(x, maxXShape(subShape));
         }
         return x;
     }
@@ -129,7 +129,7 @@ public class Shape2DLimits {
      * @param shape
      * @return
      */
-    static public float maxXShape2D(Shape2D shape){
+    static public float maxXShape(Shape2D shape){
 
         if (shape==null){}
         else if (shape instanceof Polygon){
@@ -154,7 +154,7 @@ public class Shape2DLimits {
             return maxXChain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            return maxXShape2DCollection((Shape2DCollection) shape);
+            return maxXCollection((Shape2DCollection) shape);
         }
         else {
             Gdx.app.log(" ******************** maxX","unknown shape "+shape.getClass());
@@ -264,10 +264,10 @@ public class Shape2DLimits {
      *
      * @param collection
      */
-    static public float maxYShape2DCollection(Shape2DCollection collection){
+    static public float maxYCollection(Shape2DCollection collection){
         float x=-10000000;
         for (Shape2D subShape:collection.items){
-            x=Math.max(x,maxYShape2D(subShape));
+            x=Math.max(x, maxYShape(subShape));
         }
         return x;
     }
@@ -278,7 +278,7 @@ public class Shape2DLimits {
      * @param shape
      * @return
      */
-    static public float maxYShape2D(Shape2D shape){
+    static public float maxYShape(Shape2D shape){
 
         if (shape==null){}
         else if (shape instanceof Polygon){
@@ -303,7 +303,7 @@ public class Shape2DLimits {
             return maxYChain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            return maxYShape2DCollection((Shape2DCollection) shape);
+            return maxYCollection((Shape2DCollection) shape);
         }
         else {
             Gdx.app.log(" ******************** maxY","unknown shape "+shape.getClass());
@@ -413,10 +413,10 @@ public class Shape2DLimits {
      *
      * @param collection
      */
-    static public float minXShape2DCollection(Shape2DCollection collection){
+    static public float minXCollection(Shape2DCollection collection){
         float x=10000000;
         for (Shape2D subShape:collection.items){
-            x=Math.min(x,minXShape2D(subShape));
+            x=Math.min(x, minXShape(subShape));
         }
         return x;
     }
@@ -427,7 +427,7 @@ public class Shape2DLimits {
      * @param shape
      * @return
      */
-    static public float minXShape2D(Shape2D shape){
+    static public float minXShape(Shape2D shape){
 
         if (shape==null){}
         else if (shape instanceof Polygon){
@@ -452,7 +452,7 @@ public class Shape2DLimits {
             return minXChain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            return minXShape2DCollection((Shape2DCollection) shape);
+            return minXCollection((Shape2DCollection) shape);
         }
         else {
             Gdx.app.log(" ******************** minX","unknown shape "+shape.getClass());
@@ -562,10 +562,10 @@ public class Shape2DLimits {
      *
      * @param collection
      */
-    static public float minYShape2DCollection(Shape2DCollection collection){
+    static public float minYCollection(Shape2DCollection collection){
         float x=10000000;
         for (Shape2D subShape:collection.items){
-            x=Math.min(x,minYShape2D(subShape));
+            x=Math.min(x, minYShape(subShape));
         }
         return x;
     }
@@ -576,7 +576,7 @@ public class Shape2DLimits {
      * @param shape
      * @return
      */
-    static public float minYShape2D(Shape2D shape){
+    static public float minYShape(Shape2D shape){
 
         if (shape==null){}
         else if (shape instanceof Polygon){
@@ -601,7 +601,7 @@ public class Shape2DLimits {
             return minYChain((Chain) shape);
         }
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            return minYShape2DCollection((Shape2DCollection) shape);
+            return minYCollection((Shape2DCollection) shape);
         }
         else {
             Gdx.app.log(" ******************** minY","unknown shape "+shape.getClass());
