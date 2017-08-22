@@ -1,12 +1,11 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * Created by peter on 8/22/17.
@@ -27,23 +26,52 @@ public class Shape2DTranslate {
     }
 
     /**
-     * Draw a rectangle.
+     * translate a rectangle.
      *
-     * @param rectangle Rectangle to draw as outline of a polygon.
+     * @param rectangle Rectangle to translate.
      */
-    public void rectangle(Rectangle rectangle){
-        setColor(polygonColor);
-        rect(rectangle.x,rectangle.y, rectangle.width,rectangle.height);
+    public void rectangle(Rectangle rectangle,float dx,float dy){
+        rectangle.x+=dx;
+        rectangle.y+=dy;
     }
 
     /**
-     * Draws the polygon with its transformed world vertices (scaled, translated and rotated).
+     * translate vertices in a float[] array
      *
-     * @param polygon Polygon object to draw as outline of surface
+     * @param coordinates
+     * @param dx
+     * @param dy
      */
-    public void polygon(Polygon polygon){
-        setColor(polygonColor);
-        polygon(polygon.getTransformedVertices());
+    static public void vertices(float[] coordinates,float dx,float dy){
+        for (int i=coordinates.length-2;i>=0;i-=2){
+            coordinates[i]+=dx;
+            coordinates[i+1]+=dy;
+        }
+    }
+
+    /**
+     * translate vertices in a floatArray
+     *
+     * @param coordinates
+     * @param dx
+     * @param dy
+     */
+    static public void vertices(FloatArray coordinates, float dx, float dy){
+        for (int i=coordinates.size-2;i>=0;i-=2){
+            coordinates.set(i,coordinates.get(i)+dx);
+            coordinates.set(i+1,coordinates.get(i+1)+dy);
+        }
+    }
+
+    /**
+     * translate local vertices of polygon
+     *
+     * @param polygon Polygon object to translate
+     */
+    static public void polygon(Polygon polygon,float dx,float dy){
+        float[] coordinates=polygon.getVertices();
+        vertices(coordinates,dx,dy);
+        polygon.setVertices(coordinates);
     }
 
     /**
@@ -52,8 +80,8 @@ public class Shape2DTranslate {
      * @param polyline Polyline object to draw as lines.
      */
     public void polyline(Polyline polyline){
-        setColor(lineColor);
-        polyline(polyline.getTransformedVertices());
+
+
     }
 
     /**
@@ -62,9 +90,8 @@ public class Shape2DTranslate {
      * @param polypoint Polypoint, to draw as a collection of points
      */
     public void polypoint(Polypoint polypoint){
-        for (int i=polypoint.coordinates.size-2;i>=0;i-=2){
-            point(polypoint.coordinates.get(i),polypoint.coordinates.get(i+1));
-        }
+
+
     }
 
     /**
@@ -73,12 +100,12 @@ public class Shape2DTranslate {
      * @param edge Edge, to draw as a single line with ghost points.
      */
     public void edge(Edge edge){
-        line(edge.aX,edge.aY,edge.bX,edge.bY);
+       // line(edge.aX,edge.aY,edge.bX,edge.bY);
         if (edge.ghostAExists){
-            point(edge.ghostAX,edge.ghostAY);
+      //      point(edge.ghostAX,edge.ghostAY);
         }
         if (edge.ghostBExists){
-            point(edge.ghostBX,edge.ghostBY);
+       //     point(edge.ghostBX,edge.ghostBY);
         }
     }
 
@@ -90,20 +117,20 @@ public class Shape2DTranslate {
      */
     public void chain(Chain chain){
         int length=chain.coordinates.length;
-        setColor(lineColor);
+       // setColor(lineColor);
         for (int i=0;i<length-3;i+=2){
-            line(chain.coordinates[i],chain.coordinates[i+1],
-                    chain.coordinates[i+2],chain.coordinates[i+3]);
+         //   line(chain.coordinates[i],chain.coordinates[i+1],
+                  //  chain.coordinates[i+2],chain.coordinates[i+3]);
         }
         if (chain.isLoop){
-            line(chain.coordinates[0],chain.coordinates[1],
-                    chain.coordinates[length-2],chain.coordinates[length-1]);
+          //  line(chain.coordinates[0],chain.coordinates[1],
+                 //   chain.coordinates[length-2],chain.coordinates[length-1]);
         }
         if (chain.ghostAExists){
-            point(chain.ghostAX,chain.ghostAY);
+         //   point(chain.ghostAX,chain.ghostAY);
         }
         if (chain.ghostBExists){
-            point(chain.ghostBX,chain.ghostBY);
+         //   point(chain.ghostBX,chain.ghostBY);
         }
     }
 
@@ -114,7 +141,7 @@ public class Shape2DTranslate {
      */
     public void shape2DCollection(Shape2DCollection collection){
         for (Shape2D subShape:collection.items){
-            shape2D(subShape);
+          //  shape2D(subShape);
         }
     }
 
@@ -123,6 +150,7 @@ public class Shape2DTranslate {
      *
      * @param shape Shape2D to draw
      */
+    /*
     public void shape2D(Shape2D shape){
         if (shape==null){}
         else if (shape instanceof Polygon){
@@ -154,4 +182,5 @@ public class Shape2DTranslate {
             Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
         }
     }
+    */
 }
