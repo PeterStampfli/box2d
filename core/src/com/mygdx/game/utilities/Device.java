@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -41,6 +42,7 @@ public class Device implements Disposable {
     public SpriteBatch spriteBatch;
     public BitmapFont bitmapFont;
     public Shape2DRenderer shape2DRenderer;
+    public EarClippingTriangulator triangulator;
     public AssetManager assetManager;
     public BasicAssets basicAssets;
     public Camera camera;
@@ -216,6 +218,18 @@ public class Device implements Disposable {
             disposer.add(shape2DRenderer, "device shapeRenderer");
         }
         return shape2DRenderer;
+    }
+
+    /**
+     * create a new earclipping triangulator
+     *
+     * @return the triangulator
+     */
+    public EarClippingTriangulator createTriangulator(){
+        if (triangulator==null){
+            triangulator=new EarClippingTriangulator();
+        }
+        return triangulator;
     }
 
     /**

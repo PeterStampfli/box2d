@@ -182,7 +182,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      */
     public void collection(Shape2DCollection collection){
         for (Shape2D subShape:collection.items){
-            shape(subShape);
+            draw(subShape);
         }
     }
 
@@ -191,7 +191,7 @@ public class Shape2DRenderer extends ShapeRenderer{
      *
      * @param shape Shape2D to draw
      */
-    public void shape(Shape2D shape){
+    public void draw(Shape2D shape){
         if (shape==null){}
         else if (shape instanceof Polygon){
             polygon((Polygon)shape);
