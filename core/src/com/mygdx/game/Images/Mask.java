@@ -27,7 +27,8 @@ public class Mask {
     public byte[] alpha;
     public int width;
     public int height;
-    public float smoothLengthHalf,smoothFactor;
+    public float smoothFactor;
+    public float smoothLengthInside, smoothLengthOutside;
 
     /**
      * Create a transparent mask of given width and height.
@@ -39,20 +40,51 @@ public class Mask {
         this.width = width;
         this.height = height;
         alpha = new byte[width * height];
-        setSmoothing(1);
+        symmetricSmoothing(1);
         clear();
     }
 
+    // create a transparent mask with a border of minimum given pixel size around a shape2D shape
+    // the shape will be translated to fit into the mask
+
+    static public Mask create(Shape2D shape,int borderWidth){
+        Shape2DTranslate.adjustLeftBottom(shape,borderWidth,borderWidth);
+        return new Mask(MathU.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
+                        MathU.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
+    }
+
     /**
-     * Set smoothing. The length of the transition region.
+     * Set lenghts for asymmetric smoothing, set smoothingInside=0 for composing triangles
+     *
+     * @param inside
+     * @param outside
+     */
+    public void setSmoothing(float inside, float outside){
+        outside=Math.max(outside,MathU.epsilon);
+        smoothLengthInside=inside;
+        smoothLengthOutside=outside;
+        smoothFactor=256f/(inside+outside);
+    }
+
+    /**
+     * Set smoothing length.Symmetric.
      *
      * @param length float, 0 for no smoothing, 1 for minimal smooth border pixels.
      */
-    public void setSmoothing(float length){
-        length=Math.max(length, MathU.epsilon);
-        smoothLengthHalf=length/2;
-        smoothFactor=256/length;
+    public void symmetricSmoothing(float length){
+        setSmoothing(0.5f*length,0.5f*length);
     }
+
+    /**
+     * Set smoothing length.Outside shapes. for composing triangles.
+     *
+     * @param length float, 0 for no smoothing, 1 for minimal smooth border pixels.
+     */
+    public void outsideSmoothing(float length){
+        setSmoothing(0f,length);
+    }
+
+
 
     /**
      * Flip the y-axis to compensate for the inversion of pixmaps. y=0 maps to y=height and inversely.
@@ -141,7 +173,7 @@ public class Mask {
      * @param distance float, measured from the boundary, positve sign inside, negative outside.
      */
     public void setOpacity(int index,float distance){
-        double newOpacity=Math.floor(128+distance*smoothFactor);
+        int newOpacity=MathU.floor((distance+smoothLengthOutside)*smoothFactor);
         if (newOpacity>=255){                 // in the transition region: fully opaque
             alpha[index]=(byte) 255;
             return;
@@ -162,9 +194,9 @@ public class Mask {
         float dx, dy2, dx2Plusdy2;
         float radiusSq=radius*radius;
         float iRadius2=0.5f/radius;
-        float outerRadius=radius+smoothLengthHalf;
+        float outerRadius=radius+smoothLengthOutside;
         float outerRadiusSq=outerRadius*outerRadius;
-        float innerRadius=radius-smoothLengthHalf;
+        float innerRadius=radius-smoothLengthInside;
         float innerRadiusSq=innerRadius*innerRadius;
         centerY = flipY(centerY);
         int iMax, iMin, jMax, jMin;
@@ -247,6 +279,7 @@ public class Mask {
 
     /**
      * Fill a convex polygon shape. Vertices have to be given in counter-clock sense.
+     * Beware of acute angles and smoothing outside ("bleeding"): Better use smoothed contour if needed.
      *
      * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
      */
@@ -266,10 +299,10 @@ public class Mask {
         }
         lines.add(new Line(coordinates[length], coordinates[length + 1], coordinates[0], coordinates[1]));
         // taking into account smooth border of with 0.5 and shift of pixel positions
-        int iMin = Math.max(0, MathUtils.floor(xMin - 1-smoothLengthHalf));
-        int iMax = Math.min(width - 1, MathUtils.ceil(xMax+smoothLengthHalf));
-        int jMin = Math.max(0, MathUtils.floor(yMin - 1-smoothLengthHalf));
-        int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthHalf));
+        int iMin = Math.max(0, MathUtils.floor(xMin - 1-smoothLengthOutside));
+        int iMax = Math.min(width - 1, MathUtils.ceil(xMax+smoothLengthOutside));
+        int jMin = Math.max(0, MathUtils.floor(yMin - 1-smoothLengthOutside));
+        int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthOutside));
         int i, j, index;
         float d;
         for (j = jMin; j <= jMax; j++) {
@@ -278,14 +311,14 @@ public class Mask {
                 d = 100000f;
                 for (Line line : lines) {
                     d = Math.min(d, line.distance(i, j));
-                    if (d < -smoothLengthHalf) {
+                    if (d < -smoothLengthOutside) {
                         break;
                     }
                 }
-                if (d > smoothLengthHalf) {
+                if (d > smoothLengthInside) {
                     alpha[index]=(byte) 255;
                 }
-                else if (d>-smoothLengthHalf){
+                else if (d>-smoothLengthOutside){
                     setOpacity(index,d);
                 }
                 index++;
@@ -450,7 +483,7 @@ public class Mask {
      * @param offsetY float, x-component of offset
      * @return Pixmap
      */
-    public Pixmap copyFromPixmap(Pixmap input, int offsetX, int offsetY) {
+    public Pixmap createImagePixmap(Pixmap input, int offsetX, int offsetY) {
         Pixmap pixmap = createPixmap();
         pixmap.drawPixmap(input, -offsetX, -offsetY);
         setPixmapAlpha(pixmap);
