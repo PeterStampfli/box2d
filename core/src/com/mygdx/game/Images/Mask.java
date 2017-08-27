@@ -267,9 +267,8 @@ public class Mask {
         float ey = by - ay;
         float length=Vector2.len(ex, ey);
         lineLength.add(length);
-        float normfactor = 1.0f / length;
-        lineEX.add(ex * normfactor);
-        lineEY.add(ey * normfactor);
+        lineEX.add(ex /length);
+        lineEY.add(ey /length);
     }
 
     /**
@@ -305,8 +304,8 @@ public class Mask {
         int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthOutside));
         int i, j, lineIndex, index;
         float pixMinAX,pixMinAY;
-        float dInside;                         // controls smoothing inside th polygon border, subtractive
-        float dOutside;                      // control smoothing outside the border, additive
+        float dInside;                         // controls smoothing inside the polygon border, minimum
+        float dOutside;                      // control smoothing outside the border, maximum
         float dLine;
         int numberOfLines= lineAX.size;
         for (j = jMin; j <= jMax; j++) {
@@ -323,7 +322,7 @@ public class Mask {
                     dLine=-(lineEX.get(lineIndex)*pixMinAY-lineEY.get(lineIndex)*pixMinAX);
                     // the distance points inside. positive values lie inside the border
                     if (dLine>0){
-                        // inside the polygon: subtractive smoothing
+                        // inside the polygon: minimum smoothing
                         dInside=Math.min(dInside,dLine);
                     }
                     else if (dLine+smoothLengthOutside<0){
@@ -333,7 +332,7 @@ public class Mask {
                     }
                     else {
                         // in the region outside, near this border line. Outside smoothing is determined by the line
-                        // smoothing is additive
+                        // smoothing is maximum
                         dInside=-smoothLengthOutside-1;
                         // get projected position
                         float t=pixMinAX*lineEX.get(lineIndex)+pixMinAY*lineEY.get(lineIndex);
@@ -348,11 +347,6 @@ public class Mask {
                         }
                         dOutside=Math.max(dOutside,dLine);
                     }
-                    // lowest value
-                   // dPolygon=Math.min(dPolygon,dLine);
-
-
-
                 }
                 dInside=Math.max(dInside,dOutside);                  // combined smoothing
                 if (dInside > smoothLengthInside) {
