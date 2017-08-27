@@ -305,13 +305,15 @@ public class Mask {
         int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthOutside));
         int i, j, lineIndex, index;
         float pixMinAX,pixMinAY;
-        float dPolygon;
+        float dInside;                         // controls smoothing inside th polygon border, subtractive
+        float dOutside;                      // control smoothing outside the border, additive
         float dLine;
         int numberOfLines= lineAX.size;
         for (j = jMin; j <= jMax; j++) {
             index = j * width+iMin;
             for (i = iMin; i <= iMax; i++) {
-                dPolygon = 100000f;
+                dInside = smoothLengthInside+1;
+                dOutside=-smoothLengthOutside-1;
                 for (lineIndex=0;lineIndex<numberOfLines;lineIndex++) {
                     // vector from point a of line to pixel.
                     // The pixel lies at (i+0.5,j+0.5).
@@ -320,22 +322,44 @@ public class Mask {
                     // determine distance from line. account for flipping the y-axis.
                     dLine=-(lineEX.get(lineIndex)*pixMinAY-lineEY.get(lineIndex)*pixMinAX);
                     // the distance points inside. positive values lie inside the border
-
-                    // lowest value
-                    dPolygon=Math.min(dPolygon,dLine);
-
-
-
-
-                    if (dPolygon < -smoothLengthOutside) {
+                    if (dLine>0){
+                        // inside the polygon: subtractive smoothing
+                        dInside=Math.min(dInside,dLine);
+                    }
+                    else if (dLine+smoothLengthOutside<0){
+                        // far outside the polygon and the smoothing region: nothing
+                        dInside=-smoothLengthOutside-1;
                         break;
                     }
+                    else {
+                        // in the region outside, near this border line. Outside smoothing is determined by the line
+                        // smoothing is additive
+                        dInside=-smoothLengthOutside-1;
+                        // get projected position
+                        float t=pixMinAX*lineEX.get(lineIndex)+pixMinAY*lineEY.get(lineIndex);
+                        if (t<0){
+                            // at the "left" of point a
+                            dLine=-Vector2.len(pixMinAX,pixMinAY);
+                        }
+                        else if (t>lineLength.get(lineIndex)){
+                            // we are at the right of point, rare event, no need to optimize
+                            dLine=-Vector2.len(pixMinAX-lineLength.get(lineIndex)*lineEX.get(lineIndex),
+                                               pixMinAY-lineLength.get(lineIndex)*lineEY.get(lineIndex));
+                        }
+                        dOutside=Math.max(dOutside,dLine);
+                    }
+                    // lowest value
+                   // dPolygon=Math.min(dPolygon,dLine);
+
+
+
                 }
-                if (dPolygon > smoothLengthInside) {
+                dInside=Math.max(dInside,dOutside);                  // combined smoothing
+                if (dInside > smoothLengthInside) {
                     alpha[index]=(byte) 255;
                 }
-                else if (dPolygon>-smoothLengthOutside){
-                    setOpacity(index,dPolygon);
+                else if (dInside>-smoothLengthOutside){
+                    setOpacity(index,dInside);
                 }
                 index++;
             }
