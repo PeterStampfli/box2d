@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 import com.mygdx.game.utilities.ArrayU;
 import com.mygdx.game.utilities.MathU;
 import com.mygdx.game.utilities.TextureU;
@@ -29,6 +30,11 @@ public class Mask {
     public int height;
     public float smoothFactor;
     public float smoothLengthInside, smoothLengthOutside;
+    public FloatArray lineAX=new FloatArray();
+    public FloatArray lineAY=new FloatArray();
+    public FloatArray lineLength=new FloatArray();
+    public FloatArray lineEX=new FloatArray();
+    public FloatArray lineEY=new FloatArray();
 
     /**
      * Create a transparent mask of given width and height.
@@ -49,8 +55,8 @@ public class Mask {
 
     static public Mask create(Shape2D shape,int borderWidth){
         Shape2DTranslate.adjustLeftBottom(shape,borderWidth,borderWidth);
-        return new Mask(MathU.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
-                        MathU.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
+        return new Mask(MathUtils.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
+                        MathUtils.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
     }
 
     /**
@@ -173,7 +179,7 @@ public class Mask {
      * @param distance float, measured from the boundary, positve sign inside, negative outside.
      */
     public void setOpacity(int index,float distance){
-        int newOpacity=MathU.floor((distance+smoothLengthOutside)*smoothFactor);
+        int newOpacity=MathUtils.floor((distance+smoothLengthOutside)*smoothFactor);
         if (newOpacity>=255){                 // in the transition region: fully opaque
             alpha[index]=(byte) 255;
             return;
@@ -234,47 +240,36 @@ public class Mask {
     }
 
     /**
-     * A line and how to calculate its distance to a point.
+     *  clear the floatArrays for the lines
      */
-    private class Line {
-        float pointX, pointY;
-        float ex, ey;
+    private void clearLines(){
+        lineAX.clear();
+        lineAY.clear();
+        lineEX.clear();
+        lineEY.clear();
+        lineLength.clear();
+    }
 
-        /**
-         * Create a line going through points A and B. The y-coordinate values are flipped
-         * to match the flipped y-axis of pixmaps.
-         *
-         * @param ax float, x-coordinate of point A
-         * @param ay float, y-coordinate of point A
-         * @param bx float, x-coordinate of point B
-         * @param by float, y-coordinate of point B
-         */
-        Line(float ax, float ay, float bx, float by) {
-            ay = flipY(ay);
-            by = flipY(by);
-            pointX = ax;
-            pointY = ay;
-            ex = bx - ax;
-            ey = by - ay;
-            float normfactor = 1.0f / Vector2.len(ex, ey);
-            ex *= normfactor;
-            ey *= normfactor;
-        }
-
-        /**
-         * Determine the distance of a pixel (i,j) from the line. The pixel lies at (i+0.5,j+0.5).
-         * Distance is positive if point is inside the polygon (Vertices are given counterclockwise
-         * and the polygon is convex).
-         *
-         * @param i int, column index of pixel
-         * @param j int, row index of pixels
-         * @return float, signed distance, positive if at the left side of the line looking from point A to point B
-         */
-        public float distance(int i, int j) {
-            float linePosition, d;
-            d = ex * (j + 0.5f - pointY) - ey * (i + 0.5f - pointX);
-            return -d;    // taking the mirroring into account that results from the y-axis flip
-        }
+    /**
+     * add line data
+     *
+     * @param ax
+     * @param ay
+     * @param bx
+     * @param by
+     */
+    private void addLine(float ax,float ay,float bx,float by){
+        ay = flipY(ay);
+        by = flipY(by);
+        lineAX.add(ax);
+        lineAY.add(ay);
+        float ex = bx - ax;
+        float ey = by - ay;
+        float length=Vector2.len(ex, ey);
+        lineLength.add(length);
+        float normfactor = 1.0f / length;
+        lineEX.add(ex * normfactor);
+        lineEY.add(ey * normfactor);
     }
 
     /**
@@ -284,42 +279,63 @@ public class Mask {
      * @param coordinates float.... of float[] of (x,y) coordinate pairs for the vertices
      */
     public void fillPolygon(float... coordinates) {
-        int length = coordinates.length - 2;
-        Array<Line> lines = new Array<Line>();
-        float xMin = coordinates[length];
+        int coordinatesLengthM2 = coordinates.length - 2;
+        clearLines();
+       // Array<Line> lines = new Array<Line>();
+        float xMin = coordinates[coordinatesLengthM2];
         float xMax = xMin;
-        float yMin = flipY(coordinates[length + 1]);
+        float yMin = flipY(coordinates[coordinatesLengthM2 + 1]);
         float yMax = yMin;
-        for (int i = 0; i < length; i += 2) {
-            lines.add(new Line(coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates[i + 3]));
+        // set up lines and determine range of coordinates
+        for (int i = 0; i < coordinatesLengthM2; i += 2) {
+           // lines.add(new Line(coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates[i + 3]));
+            addLine(coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates[i + 3]);
             xMin = Math.min(xMin, coordinates[i]);
             xMax = Math.max(xMax, coordinates[i]);
             yMin = Math.min(yMin, flipY(coordinates[i + 1]));
             yMax = Math.max(yMax, flipY(coordinates[i + 1]));
         }
-        lines.add(new Line(coordinates[length], coordinates[length + 1], coordinates[0], coordinates[1]));
-        // taking into account smooth border of with 0.5 and shift of pixel positions
+        // close the loop
+        addLine(coordinates[coordinatesLengthM2], coordinates[coordinatesLengthM2 + 1], coordinates[0], coordinates[1]);
+        // determine range of pixels that can change
+        // taking into account smooth border of given outside width and shift of pixel positions
         int iMin = Math.max(0, MathUtils.floor(xMin - 1-smoothLengthOutside));
         int iMax = Math.min(width - 1, MathUtils.ceil(xMax+smoothLengthOutside));
         int jMin = Math.max(0, MathUtils.floor(yMin - 1-smoothLengthOutside));
         int jMax = Math.min(height - 1, MathUtils.ceil(yMax+smoothLengthOutside));
-        int i, j, index;
-        float d;
+        int i, j, lineIndex, index;
+        float pixMinAX,pixMinAY;
+        float dPolygon;
+        float dLine;
+        int numberOfLines= lineAX.size;
         for (j = jMin; j <= jMax; j++) {
             index = j * width+iMin;
             for (i = iMin; i <= iMax; i++) {
-                d = 100000f;
-                for (Line line : lines) {
-                    d = Math.min(d, line.distance(i, j));
-                    if (d < -smoothLengthOutside) {
+                dPolygon = 100000f;
+                for (lineIndex=0;lineIndex<numberOfLines;lineIndex++) {
+                    // vector from point a of line to pixel.
+                    // The pixel lies at (i+0.5,j+0.5).
+                    pixMinAX=i+0.5f- lineAX.get(lineIndex);
+                    pixMinAY=j+0.5f- lineAY.get(lineIndex);
+                    // determine distance from line. account for flipping the y-axis.
+                    dLine=-(lineEX.get(lineIndex)*pixMinAY-lineEY.get(lineIndex)*pixMinAX);
+                    // the distance points inside. positive values lie inside the border
+
+                    // lowest value
+                    dPolygon=Math.min(dPolygon,dLine);
+
+
+
+
+                    if (dPolygon < -smoothLengthOutside) {
                         break;
                     }
                 }
-                if (d > smoothLengthInside) {
+                if (dPolygon > smoothLengthInside) {
                     alpha[index]=(byte) 255;
                 }
-                else if (d>-smoothLengthOutside){
-                    setOpacity(index,d);
+                else if (dPolygon>-smoothLengthOutside){
+                    setOpacity(index,dPolygon);
                 }
                 index++;
             }
