@@ -1,7 +1,7 @@
 package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.mygdx.game.utilities.*;
+import com.mygdx.game.utilities.WriteData;
 
 import java.nio.ByteBuffer;
 

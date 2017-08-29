@@ -1,4 +1,4 @@
-package com.mygdx.game.utilities;
+package com.mygdx.game.Images;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
@@ -10,6 +10,7 @@ import com.mygdx.game.Images.Edge;
 import com.mygdx.game.Images.Polypoint;
 import com.mygdx.game.Images.Shape2DCollection;
 import com.mygdx.game.Images.Shape2DType;
+import com.mygdx.game.utilities.ReadData;
 
 import java.nio.ByteBuffer;
 

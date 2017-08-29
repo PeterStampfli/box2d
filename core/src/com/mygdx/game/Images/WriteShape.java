@@ -1,4 +1,4 @@
-package com.mygdx.game.utilities;
+package com.mygdx.game.Images;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -7,11 +7,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
-import com.mygdx.game.Images.Chain;
-import com.mygdx.game.Images.Edge;
-import com.mygdx.game.Images.Polypoint;
-import com.mygdx.game.Images.Shape2DCollection;
-import com.mygdx.game.Images.Shape2DType;
+import com.mygdx.game.utilities.WriteData;
 
 /**
  * Created by peter on 8/15/17.

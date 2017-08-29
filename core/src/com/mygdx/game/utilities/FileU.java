@@ -2,9 +2,13 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 
 /**
  * File access, reading and writing, conversion to and from bytes
+ * For desktop the local storage is android_assets
+ * subdirectory: "garbage/garbage.png"
  */
 
 public class FileU {
@@ -75,5 +79,17 @@ public class FileU {
         return Gdx.files.getLocalStoragePath();
     }
 
+    /**
+     * create a pixmap from an image file in internal storage
+     *
+     * @param nameWithExtension
+     * @return
+     */
+    static public Pixmap createPixmap(String nameWithExtension){
+        return new Pixmap(createInternalFileHandle(nameWithExtension));
+    }
 
+    static public void writeLocal(String nameWithExtension,Pixmap pixmap){
+        PixmapIO.writePNG(createLocalFileHandle(nameWithExtension),pixmap);
+    }
 }
