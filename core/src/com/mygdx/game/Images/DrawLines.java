@@ -76,10 +76,8 @@ public class DrawLines {
      * @return Pixmap
      */
     static public Pixmap makeDiscPixmap(int size) {
-        Mask mask = new Mask(size + 4, size + 4);
-        float radius=size*0.5f;
-        mask.fillCircle(0.5f * size +2, 0.5f * size +2, radius);
-        return mask.createWhitePixmap();
+        Mask mask = Mask.create(new Circle(0,0,size*0.5f));
+        return mask.createColorPixmap();
     }
 
     /**
@@ -106,7 +104,7 @@ public class DrawLines {
         mask.alpha[1] = 0;
         mask.alpha[size + 2] = 0;
         mask.alpha[size + 3] = 0;
-        return mask.createWhitePixmap();
+        return mask.createColorPixmap();
     }
 
     /**

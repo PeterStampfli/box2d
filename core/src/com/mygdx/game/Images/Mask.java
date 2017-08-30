@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
  */
 
 public class Mask {
+    static public Color color=Color.WHITE;
     public byte[] alpha;
     public int width;
     public int height;
@@ -37,7 +38,7 @@ public class Mask {
     public FloatArray lineEY=new FloatArray();
 
     /**
-     * Create a transparent mask of given width and height.
+     * Create a transparent mask of given width and height. Symmetric smoothing length 1.
      *
      * @param width  int, width of the pixmap
      * @param height int, height of the pixmap
@@ -50,13 +51,22 @@ public class Mask {
         clear();
     }
 
-    // create a transparent mask with a border of minimum given pixel size around a shape2D shape
-    // the shape will be translated to fit into the mask
+    // create a mask with a border of minimum given pixel size around a shape2D shape
+    // the shape will be translated to fit into the mask, fill the shape on the mask
 
     static public Mask create(Shape2D shape,int borderWidth){
         Shape2DTranslate.adjustLeftBottom(shape,borderWidth,borderWidth);
-        return new Mask(MathUtils.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
-                        MathUtils.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
+        Mask mask= new Mask(MathUtils.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
+                            MathUtils.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
+        mask.fill(shape);
+        return mask;
+    }
+
+    // create a mask with a border of 2 pixels around a shape2D shape
+    // the shape will be translated to fit into the mask, fill the shape on the mask
+
+    static public Mask create(Shape2D shape){
+        return create(shape,2);
     }
 
     /**
@@ -512,29 +522,54 @@ public class Mask {
      * The lower left corner of the copied region is given by an offset.
      * This part is masked and returned as a new pixmap.
      *
+     * for zero offset the lower left corner of the mask and pixmap match
+     * positive values shift the mask up and right
+     * Note inversion of y-axis for pixmap, y=0 lies at top
+     *
      * @param input   Pixmap
      * @param offsetX float, x-component of offset
-     * @param offsetY float, x-component of offset
+     * @param offsetY float, y-component of offset
      * @return Pixmap
      */
     public Pixmap createImagePixmap(Pixmap input, int offsetX, int offsetY) {
         Pixmap pixmap = createPixmap();
-        pixmap.drawPixmap(input, -offsetX, -offsetY);
+        pixmap.drawPixmap(input, -offsetX, this.height-input.getHeight()+offsetY);
         setPixmapAlpha(pixmap);
         return pixmap;
     }
 
     /**
-     * Create a white pixmap with transparency resulting from the mask.
+     * create a texture region from an input pixmap, mask offset
+     *
+     * @param input
+     * @param offsetX
+     * @param offsetY
+     * @return
+     */
+    public TextureRegion createImageTextureRegion(Pixmap input, int offsetX, int offsetY){
+        return TextureU.textureRegionFromPixmap(createImagePixmap(input,offsetX,offsetY));
+    }
+
+    /**
+     * Create a pixmap with transparency resulting from the mask and given solid color.
      *
      * @return pixmap
      */
-    public Pixmap createWhitePixmap() {
+    public Pixmap createColorPixmap(Color color) {
         Pixmap pixmap = createPixmap();
-        pixmap.setColor(Color.WHITE);
+        pixmap.setColor(color);
         pixmap.fill();
         setPixmapAlpha(pixmap);
         return pixmap;
+    }
+
+    /**
+     * Create a pixmap with transparency resulting from the mask and predetermined solid color.
+     *
+     * @return pixmap
+     */
+    public Pixmap createColorPixmap() {
+        return createColorPixmap(Mask.color);
     }
 
     /**
@@ -543,7 +578,7 @@ public class Mask {
      * @return TextureRegion
      */
     public TextureRegion createWhiteTextureRegion() {
-        return TextureU.textureRegionFromPixmap(createWhitePixmap());
+        return TextureU.textureRegionFromPixmap(createColorPixmap());
     }
 }
 
