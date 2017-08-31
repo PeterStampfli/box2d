@@ -7,10 +7,9 @@ package com.mygdx.game.Buttons;
 public interface ButtonTouchEnd {
 
     /**
-     * TouchEnd action on the sprite. Does the action..
+     * TouchEnd action on the sprite. Does the action.
      *
      * @param buttonExtension ButtonExtension, calling this method
-     * @return boolean, true if something changed
      */
     void touchEnd(ButtonExtension buttonExtension);
 }

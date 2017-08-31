@@ -10,7 +10,6 @@ public interface ButtonTouchBegin {
      * TouchBegin action on the sprite. Mainly changes the state of the button.
      *
      * @param buttonExtension ButtonExtension, calling this method
-     * @return boolean, true if something changed
      */
     void touchBegin(ButtonExtension buttonExtension);
 }

@@ -373,7 +373,7 @@ public class Mask {
     /**
      * fill a convex polygon masterShape. Vertices in counter-clock sense
      *
-     * @param points Array<Vector2>, the vertices
+     * @param points Array of Vector2, the vertices
      */
     public void fillPolygon(Array<Vector2> points) {
         fillPolygon(ArrayU.toFloats(points));
@@ -384,8 +384,8 @@ public class Mask {
      *
      * @param cornerX
      * @param cornerY
-     * @param width    >0
-     * @param height>0
+     * @param width    larger than 0
+     * @param height larger than 0
      */
     public void fillRect(float cornerX, float cornerY, float width, float height) {
         fillPolygon(cornerX, cornerY, cornerX + width, cornerY, cornerX + width, cornerY + height, cornerX, cornerY + height);

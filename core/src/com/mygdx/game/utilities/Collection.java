@@ -35,7 +35,7 @@ public class Collection<T> {
     /**
      * Add one or several elements to the collection. Does nothing if is null.
      *
-     * @param ts Array<T>, the shapes to add.
+     * @param ts Array of T, the shapes to add.
      */
     public void add(Array<? extends T> ts) {
         for (T t : ts) {

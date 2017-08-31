@@ -66,7 +66,6 @@ public class ExtensibleSpriteBuilder {
 
     /**
      * void (null) the touchable buttonCollection of extensible sprites
-     * @return  buttonCollection
      */
     public void noSpriteCollection() {
         spriteCollection = null;

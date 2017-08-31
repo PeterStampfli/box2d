@@ -246,7 +246,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set the oscillation frequency of the joint, < 0.5/TIME_STEP.
+     * Set the oscillation frequency of the joint, must be less than 0.5/TIME_STEP.
      *
      * @param f float, oscillation frequency, set 0 for rigid joint (no softness)
      * @return this, for chaining

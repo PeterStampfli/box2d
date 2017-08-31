@@ -181,7 +181,7 @@ public class BasicAssets {
     /**
      * Get the texture atlases and extract the textureAtlas.AtlasRegions (extend texture region).
      * Single images in the atlas (someImage.png) result in a single AtlasRegion (region.name=someImage and region.index=-1).
-     * Multiple images (animation_01.png, animation_02.png, ...) give an Array<AtlasRegion> named animation.
+     * Multiple images (animation_01.png, animation_02.png, ...) give an Array of AtlasRegions named animation.
      * This is because animation_01.png gives region_name=animation, region_index=01 in the atlas.
      */
     public void getAllAtlases() {
@@ -245,7 +245,7 @@ public class BasicAssets {
      * For multiple images get the atlas region array of given name (for animation).
      *
      * @param name String, name of the regions
-     * @return Array<TextureAtlas.AtlasRegion>
+     * @return Array of TextureAtlas.AtlasRegion
      */
     public Array<TextureAtlas.AtlasRegion> getAtlasRegionArray(String name) {
         return atlasRegionArrayMap.get(name);

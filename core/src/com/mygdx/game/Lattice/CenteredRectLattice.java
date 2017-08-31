@@ -80,8 +80,8 @@ public class CenteredRectLattice extends Lattice {
      * Make a step upwards in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
-     */    public void stepUp(Vector2 address) {
+     */
+    public void stepUp(Vector2 address) {
         address.y+=2;
     }
 
@@ -89,8 +89,8 @@ public class CenteredRectLattice extends Lattice {
      * Make a step downwards in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
-     */    public void stepDown(Vector2 address) {
+     */
+    public void stepDown(Vector2 address) {
         address.y-=2;
     }
 
@@ -98,7 +98,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step right in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepRight(Vector2 address) {
         address.x+=2;
@@ -108,7 +107,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step left in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepLeft(Vector2 address) {
         address.x-=2;
@@ -118,7 +116,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step upwards and left in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepUpLeft(Vector2 address) {
         if ((Math.round(address.y)&1)==0){
@@ -131,7 +128,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step left and down in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepDownLeft(Vector2 address) {
         if ((Math.round(address.y)&1)==0){
@@ -144,7 +140,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step up and right in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepUpRight(Vector2 address) {
         if ((Math.round(address.y)&1)!=0){
@@ -157,7 +152,6 @@ public class CenteredRectLattice extends Lattice {
      * Make a step down and right in the address.
      *
      * @param address Vector2, to transform
-     * @return this, for chaining
      */
     public void stepDownRight(Vector2 address) {
         if ((Math.round(address.y)&1)!=0){

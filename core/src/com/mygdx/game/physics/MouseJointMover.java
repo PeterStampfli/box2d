@@ -11,7 +11,7 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
 /**
  * Moving sprite with a mouse joint and touch.
  * Attention: sets parameters of the JointBuilder to its own values.
- * A stiff joint of frequencyHz=0 crashes. Thus FrequencyHz>0.
+ * A stiff joint of frequencyHz=0 crashes. Thus FrequencyHz has to be greater than 0.
  * A large damping is better, thus dampingRatio=1 (critical)
  * Attention: Static bodies have localCenter=0, always.
  */

@@ -43,11 +43,6 @@ public class SpriteActions {
      * Check if the point is inside the rectangle of the shape TextureRegion
      * and the Shape2 shape of the sprite. If shape==null, then the shape is ignored.
      * Accounts for sprite translation, rotation and scaling.
-     *
-     * @param sprite ExtensibleSprite
-     * @param x      float, x-coordinate of the point
-     * @param y      float, y-coordinate of the point
-     * @return boolean, true if the sprite contains the point
      */
     static public SpriteContains containsTransRotate = new SpriteContains() {
         @Override
@@ -81,11 +76,6 @@ public class SpriteActions {
      * Check if the point is inside the rectangle of the shape TextureRegion
      * and the Shape2 shape of the sprite. If shape==null, then the shape is ignored.
      * For sprites that do not rotate or scale. Accounts only for sprite translation.
-     *
-     * @param sprite ExtensibleSprite
-     * @param x      float, x-coordinate of the point
-     * @param y      float, y-coordinate of the point
-     * @return boolean, true if the sprite contains the point
      */
     static public SpriteContains containsTranslate = new SpriteContains() {
         @Override
