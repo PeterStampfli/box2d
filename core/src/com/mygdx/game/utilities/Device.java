@@ -84,18 +84,18 @@ public class Device implements Disposable {
     }
 
     /**
-     * Set the camera. Call in show() method of screens. Or render if using more than one camera/viewport.
+     * Set the camera for touchReader. Call in show() method of screens. Or render if using more than one camera/viewport.
      *
-     * @param camera
+     * @param camera Camera, for TouchReader
      */
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
     /**
-     * Set the camera using the camera of a viewport. Call in show() method of screens.
+     * Set the camera for touchReader, using the camera of a viewport. Call in show() method of screens.
      *
-     * @param viewport
+     * @param viewport Viewport, with camera for TouchReader
      */
     public void setCamera(Viewport viewport) {
         this.camera = viewport.getCamera();
@@ -105,9 +105,9 @@ public class Device implements Disposable {
     // keep track of everything to resize, and do resize on demand
 
     /**
-     * Add a resizable to the list of resizables.
+     * Add a resizable to the list of Resizables.
      *
-     * @param resizable
+     * @param resizable Resizable object
      */
     public void addResizable(Resizable resizable) {
         resizables.add(resizable);
@@ -116,7 +116,7 @@ public class Device implements Disposable {
     /**
      * Add a viewport to the list of viewports to update.
      *
-     * @param viewport
+     * @param viewport ViewPort
      */
     public void addViewport(Viewport viewport) {
         viewports.add(viewport);
@@ -126,8 +126,8 @@ public class Device implements Disposable {
      * Resize the resizables and update viewports.
      * Call this in the main resize method.
      *
-     * @param width
-     * @param height
+     * @param width int, width of screen
+     * @param height int, height of screen
      */
     public void resize(int width, int height) {
         for (Resizable resizable : resizables) {
@@ -175,7 +175,7 @@ public class Device implements Disposable {
      *
      * @param minWidth  float, minimum width of the camera viewport in virtual pixels.
      * @param minHeight float, minimum height of the camera viewport in virtual pixels.
-     * @param camera
+     * @param camera OrthographicCamera, for the viewport
      * @return the FitViewport
      */
     public Viewport createFitViewport(float minWidth, float minHeight, OrthographicCamera camera) {
@@ -237,8 +237,8 @@ public class Device implements Disposable {
     /**
      * Create a renderer for a tiled map. Uses the device.spriteBatch and the camera of a given viewport.
      *
-     * @param viewport
-     * @param tiledMap
+     * @param viewport Viewport, for rendering
+     * @param tiledMap TiledMap, the map
      * @return the OrthogonalTiledMapRenderer for given viewport and map
      */
     public OrthogonalTiledMapRenderer createOrthogonalTiledMapRenderer(Viewport viewport, TiledMap tiledMap) {
@@ -265,7 +265,7 @@ public class Device implements Disposable {
     /**
      * Create a framebuffer with 8 bit rgb format and no transparency.
      *
-     * @return
+     * @return FrameBuffer
      */
     public FrameBuffer createFrameBuffer() {
         return createFrameBuffer(Pixmap.Format.RGB888);
@@ -288,13 +288,14 @@ public class Device implements Disposable {
      *
      * @param effectName String, name of the effect file
      * @param atlasName  String, name of atlas with the images
-     * @return
+     * @return ParticleEffect
      */
     public ParticleEffect createParticleEffect(String effectName, String atlasName) {
         ParticleEffect particleEffect = new ParticleEffect();
         particleEffect.load(Gdx.files.internal(effectName + ".p"), basicAssets.getAtlas(atlasName));
         return particleEffect;
     }
+
     /**
      *
      * Switch sounds on or off.

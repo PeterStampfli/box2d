@@ -54,7 +54,7 @@ public class Chain extends Shape2DAdapter {
      * set internal vertices of the chain from polypoint
      * If the polypoint object is a loop then delete ghosts and set isLoop=true.
      *
-     * @param polypoint
+     * @param polypoint Polypoint, defines the chain
      * @return this, for chaining.
      */
     public Chain set(Polypoint polypoint) {
@@ -66,6 +66,7 @@ public class Chain extends Shape2DAdapter {
     /**
      * Set that chain is a loop or not. If it is a loop then delete ghosts.
      *
+     * @param isLoop boolean, true if chain is a loop
      * @return this, for chaining
      */
     public Chain setIsLoop(boolean isLoop) {

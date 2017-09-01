@@ -16,8 +16,8 @@ public class FileU {
     /**
      * create a file handle to an internal file in android assets. read only
      *
-     * @param path
-     * @return
+     * @param path String, file name with extension, or relative directory path and file name
+     * @return FileHandle
      */
     static public FileHandle createInternalFileHandle(String path){
         return Gdx.files.internal(path);
@@ -26,8 +26,8 @@ public class FileU {
     /**
      * create a file handle to an local file.
      *
-     * @param path
-     * @return
+     * @param path String, file name with extension, or relative directory path and file name
+     * @return FileHandle
      */
     static public FileHandle createLocalFileHandle(String path){
         return Gdx.files.local(path);
@@ -36,8 +36,8 @@ public class FileU {
     /**
      * create a file handle to an external file.
      *
-     * @param path
-     * @return
+     * @param path String, file name with extension, or relative directory path and file name
+     * @return FileHandle
      */
     static public FileHandle createExternalFileHandle(String path){
         return Gdx.files.external(path);
@@ -46,7 +46,7 @@ public class FileU {
     /**
      * check if external storage exists
      *
-     * @return
+     * @return boolean, true if there is external storage
      */
     static public boolean isExternalStorageAvailable(){
         return Gdx.files.isExternalStorageAvailable();
@@ -55,7 +55,7 @@ public class FileU {
     /**
      * check if local storage exists
      *
-     * @return
+     * @return boolean, true if there is local storage
      */
     static public boolean isLocalStorageAvailable(){
         return Gdx.files.isLocalStorageAvailable();
@@ -64,7 +64,7 @@ public class FileU {
     /**
      * get the external storage path
      *
-     * @return
+     * @return String, the external storage path
      */
     static public String getExternalStoragePath(){
         return Gdx.files.getExternalStoragePath();
@@ -73,23 +73,29 @@ public class FileU {
     /**
      * get the local storage path
      *
-     * @return
+     * @return String, the local storage path
      */
     static public String getLocalStoragePath(){
         return Gdx.files.getLocalStoragePath();
     }
 
     /**
-     * create a pixmap from an image file in internal storage
+     * create a pixmap from an image file (jpeg or png) in internal storage
      *
-     * @param nameWithExtension
-     * @return
+     * @param path FileHandle, for file name and folder
+     * @return Pixmap, with the image
      */
-    static public Pixmap createPixmap(String nameWithExtension){
-        return new Pixmap(createInternalFileHandle(nameWithExtension));
+    static public Pixmap createPixmap(String path){
+        return new Pixmap(createInternalFileHandle(path));
     }
 
-    static public void writeLocal(String nameWithExtension,Pixmap pixmap){
-        PixmapIO.writePNG(createLocalFileHandle(nameWithExtension),pixmap);
+    /**
+     * write a pixmap as png file to internal starage
+     *
+     * @param path FileHandle, for file name and folder
+     * @param pixmap Pixmap to save as png.
+     */
+    static public void writeLocal(String path,Pixmap pixmap){
+        PixmapIO.writePNG(createLocalFileHandle(path),pixmap);
     }
 }

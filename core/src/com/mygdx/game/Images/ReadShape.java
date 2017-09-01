@@ -5,11 +5,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
-import com.mygdx.game.Images.Chain;
-import com.mygdx.game.Images.Edge;
-import com.mygdx.game.Images.Polypoint;
-import com.mygdx.game.Images.Shape2DCollection;
-import com.mygdx.game.Images.Shape2DType;
 import com.mygdx.game.utilities.ReadData;
 
 import java.nio.ByteBuffer;
@@ -70,7 +65,7 @@ public class ReadShape {
      * @return
      */
     static public Polypoint polypoint(ByteBuffer buffer){
-        return new Polypoint(ReadData.getFloats(buffer),ReadData.getBoolean(buffer));
+        return new Polypoint(ReadData.getBoolean(buffer), ReadData.getFloats(buffer));
     }
 
     /**

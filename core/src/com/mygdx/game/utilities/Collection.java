@@ -31,11 +31,10 @@ public class Collection<T> {
         }
     }
 
-
     /**
-     * Add one or several elements to the collection. Does nothing if is null.
+     * Add one or several elements to the collection. Does not add null elements.
      *
-     * @param ts Array of objects of type T, to add.
+     * @param ts Array of objects of type T or subtype, to add.
      */
     public void add(Array<? extends T> ts) {
         for (T t : ts) {
@@ -43,6 +42,15 @@ public class Collection<T> {
                 this.items.add(t);
             }
         }
+    }
+
+    /**
+     * Add the elements of a collection to the collection. Does not add null elements.
+     *
+     * @param collection of objects of type T or subtype, to add.
+     */
+    public void add(Collection<? extends T> collection){
+        add(collection.items);
     }
 
     /**

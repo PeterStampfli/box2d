@@ -23,7 +23,7 @@ public class WriteData {
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
      * @param pixmap Pixmap, dispose later
-     * @param path
+     * @param path String, file name and folder path
      */
     static public void writePixmap(Pixmap pixmap, String path){
         PixmapIO.writePNG(FileU.createExternalFileHandle(path),pixmap);
@@ -33,8 +33,8 @@ public class WriteData {
      * Append a byte buffer content to a file
      * Rewinds the buffer before writing for safety
      *
-     * @param fileHandle
-     *  @param byteBuffer
+     * @param fileHandle FileHandle
+     * @param byteBuffer ByteBuffer
      */
     static public void appendBuffer(FileHandle fileHandle,ByteBuffer byteBuffer){
         byteBuffer.rewind();
@@ -47,7 +47,7 @@ public class WriteData {
     /**
      * append a float number to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param f
      */
     static public void appendFloat(FileHandle fileHandle,float f){
@@ -57,7 +57,7 @@ public class WriteData {
     /**
      * append an int number to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param i
      */
     static public void appendInt(FileHandle fileHandle,int i){
@@ -67,7 +67,7 @@ public class WriteData {
     /**
      * append a short number to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param s
      */
     static public void appendShort(FileHandle fileHandle,short s){
@@ -77,7 +77,7 @@ public class WriteData {
     /**
      * append a byte to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param b
      */
     static public void appendByte(FileHandle fileHandle,byte b){
@@ -87,7 +87,7 @@ public class WriteData {
     /**
      * append a boolean as a byte to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param b
      */
     static public void appendBoolean(FileHandle fileHandle,boolean b){
@@ -97,7 +97,7 @@ public class WriteData {
     /**
      * append content of FloatArray on a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param array
      */
     static public void appendFloats(FileHandle fileHandle,FloatArray array){
@@ -114,7 +114,7 @@ public class WriteData {
      * append content of IntArray to a file
      * write size separately (keep it simple and transparent)
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      *  @param array
      */
     static public void appendInts(FileHandle fileHandle,IntArray array){
@@ -130,8 +130,8 @@ public class WriteData {
     /**
      * append content of ShortArray to a file as bytes
      *
-     * @param fileHandle
-     *  @param array
+     * @param fileHandle FileHandle
+     *  @param array ShortArray
      */
     static public void appendShorts(FileHandle fileHandle,ShortArray array){
         int length=array.size;
@@ -146,8 +146,8 @@ public class WriteData {
     /**
      * append content of ByteArray to a file as bytes
      *
-     * @param fileHandle
-     * @param array
+     * @param fileHandle FileHandle
+     * @param array ByteArray
      */
     static public void appendBytes(FileHandle fileHandle,ByteArray array){
         int length=array.size;
@@ -161,8 +161,8 @@ public class WriteData {
     /**
      * append content of float[]  on a file
      *
-     * @param fileHandle
-     * @param array
+     * @param fileHandle FileHandle
+     * @param array float... or float[]
      */
     static public void appendFloats(FileHandle fileHandle,float... array){
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*array.length);
@@ -173,8 +173,8 @@ public class WriteData {
     /**
      * append content of int[] on a file
      *
-     * @param fileHandle
-     * @param array
+     * @param fileHandle FileHandle
+     * @param array int... or int[]
      */
     static public void appendInts(FileHandle fileHandle,int... array){
         ByteBuffer byteBuffer=ByteBuffer.allocate(4*array.length);
@@ -183,10 +183,10 @@ public class WriteData {
     }
 
     /**
-     * append content of int[] on a file
+     * append content of short[] on a file
      *
-     * @param fileHandle
-     * @param array
+     * @param fileHandle FileHandle
+     * @param array short... or short[]
      */
     static public void appendShorts(FileHandle fileHandle,short... array){
         ByteBuffer byteBuffer=ByteBuffer.allocate(2*array.length);
@@ -196,8 +196,8 @@ public class WriteData {
 
     /**
      * append content of a byte[] to a file
-     * @param fileHandle
-     * @param array
+     * @param fileHandle FileHandle
+     * @param array byte... or byte[]
      */
     static public void appendBytes(FileHandle fileHandle,byte... array){
         fileHandle.writeBytes(array,true);

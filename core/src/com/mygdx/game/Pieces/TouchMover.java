@@ -36,7 +36,7 @@ public class TouchMover extends InputAdapter {
      * Sets wasTouching to false as a reset and because this touchable most probably has not been touched at call.
      * Call this method in the show() method of screens.
      *
-     * @param touchable
+     * @param touchable Touchable object, root for objects to move
      */
     public void setTouchable(Touchable touchable) {
         this.touchable = touchable;

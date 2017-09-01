@@ -20,7 +20,7 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
     /**
      * create Touchables with a new item array and choice of ordering
      *
-     * @param order
+     * @param order boolean, true if order of objects may not change
      */
     public TouchableCollection(boolean order){
         super();

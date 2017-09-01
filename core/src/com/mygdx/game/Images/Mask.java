@@ -72,8 +72,8 @@ public class Mask {
     /**
      * Set lenghts for asymmetric smoothing, set smoothingInside=0 for composing triangles
      *
-     * @param inside
-     * @param outside
+     * @param inside float, length for smoothing going inside
+     * @param outside float, length for smoothing going outside
      */
     public void setSmoothing(float inside, float outside){
         outside=Math.max(outside,MathU.epsilon);
@@ -382,10 +382,10 @@ public class Mask {
     /**
      * fill rectangle area (within set limits)
      *
-     * @param cornerX
-     * @param cornerY
-     * @param width    larger than 0
-     * @param height larger than 0
+     * @param cornerX float, x-coordinate for lower left corner
+     * @param cornerY float, y-coordinate for lower left corner
+     * @param width   float, width, larger than 0
+     * @param height float, height, larger than 0
      */
     public void fillRect(float cornerX, float cornerY, float width, float height) {
         fillPolygon(cornerX, cornerY, cornerX + width, cornerY, cornerX + width, cornerY + height, cornerX, cornerY + height);
@@ -394,7 +394,7 @@ public class Mask {
     /**
      * Draw a disc of opaque bits with a smooth border given by a Shape2D Circle.
      *
-     * @param circle
+     * @param circle Circle
      */
     public void fillCircle(Circle circle) {
         fillCircle(circle.x, circle.y, circle.radius);
@@ -403,7 +403,7 @@ public class Mask {
     /**
      * Fill a convex polygon given by a Shape2D Polygon.
      *
-     * @param polygon
+     * @param polygon Polygon
      */
     public void fillPolygon(Polygon polygon) {
         fillPolygon(polygon.getVertices());
@@ -412,7 +412,7 @@ public class Mask {
     /**
      * Fill a rectangle, defined by a Shape2D Rectangle.
      *
-     * @param rectangle
+     * @param rectangle Rectangle
      */
     public void fillRect(Rectangle rectangle) {
         fillRect(Math.round(rectangle.x), Math.round(rectangle.y),
@@ -527,9 +527,9 @@ public class Mask {
      * Note inversion of y-axis for pixmap, y=0 lies at top
      *
      * @param input   Pixmap
-     * @param offsetX float, x-component of offset
-     * @param offsetY float, y-component of offset
-     * @return Pixmap
+     * @param offsetX int, x-coordinate of the masks left bottom corner with respect to input image
+     * @param offsetY int, y-coordinate of the masks left bottom corner with respect to input image
+     * @return Pixmap, input image cut out by mask
      */
     public Pixmap createImagePixmap(Pixmap input, int offsetX, int offsetY) {
         Pixmap pixmap = createPixmap();
@@ -541,10 +541,10 @@ public class Mask {
     /**
      * create a texture region from an input pixmap, mask offset
      *
-     * @param input
-     * @param offsetX
-     * @param offsetY
-     * @return
+     * @param input Pixmap, with an input image
+     * @param offsetX int, x-coordinate of the masks left bottom corner with respect to input image
+     * @param offsetY int, y-coordinate of the masks left bottom corner with respect to input image
+     * @return TextureRegion, input image cut out by mask
      */
     public TextureRegion createImageTextureRegion(Pixmap input, int offsetX, int offsetY){
         Pixmap pixmap=createImagePixmap(input,offsetX,offsetY);

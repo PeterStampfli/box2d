@@ -14,12 +14,10 @@ import java.nio.ByteBuffer;
 
 public class ReadData {
 
-
-
     /**
      * create ByteBuffer and read data from file given by fileHandle
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @return a new byteBuffer with the data, or null if file does not exist
      */
     static public ByteBuffer byteBuffer(FileHandle fileHandle){
@@ -34,8 +32,8 @@ public class ReadData {
 
     /**
      * advance the position of the buffer by given amount
-     * @param buffer
-     * @param i
+     * @param buffer ByteBuffer
+     * @param i int i, amount of bytes to advance
      */
     static public void advance(ByteBuffer buffer,int i){
         buffer.position(buffer.position()+i);
@@ -45,8 +43,8 @@ public class ReadData {
     /**
      * read a float from a byte buffer byte, advances buffer by 4
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return float
      */
     public static float getFloat(ByteBuffer buffer){
         return buffer.getFloat();
@@ -55,8 +53,8 @@ public class ReadData {
     /**
      * read a int from a byte buffer byte, advances buffer by 4
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return int
      */
     public static int getInt(ByteBuffer buffer){
         return buffer.getInt();
@@ -65,8 +63,8 @@ public class ReadData {
     /**
      * read a short from a byte buffer byte, advances buffer by 2
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return short
      */
     public static short getShort(ByteBuffer buffer){
         return buffer.getShort();
@@ -75,8 +73,8 @@ public class ReadData {
     /**
      * read a byte from a byte buffer byte, advances buffer by 1
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return byte
      */
     public static byte getByte(ByteBuffer buffer){
         return buffer.get();
@@ -85,8 +83,8 @@ public class ReadData {
     /**
      * read a boolean from a byte buffer byte, advances buffer by 1
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return boolean
      */
     public static boolean getBoolean(ByteBuffer buffer){
         return buffer.get()!=0;
@@ -96,9 +94,9 @@ public class ReadData {
     /**
      * read incrementally another floatArray from a ByteBuffer
      *
-     * @param array
-     * @param length
-     * @param buffer
+     * @param array FloatArray, will have the data
+     * @param length int, number of floats to read
+     * @param buffer ByteBuffer
      */
     static public void readFloats(FloatArray array, int length, ByteBuffer buffer){
         array.clear();
@@ -111,9 +109,9 @@ public class ReadData {
     /**
      * read incrementally into existing intArray from a ByteBuffer
      *
-     * @param array
-     * @param length
-     * @param buffer
+     * @param array IntArray
+     * @param length int, number of floats to read
+     * @param buffer ByteBuffer
      */
     static public void readInts(IntArray array, int length,ByteBuffer buffer){
         array.clear();
@@ -126,9 +124,9 @@ public class ReadData {
     /**
      * read incrementally into existing shortArray from a ByteBuffer
      *
-     * @param array
-     * @param length
-     * @param buffer
+     * @param array ShortArray
+     * @param length int, number of floats to read
+     * @param buffer ByteBuffer
      */
     static public void readShorts(ShortArray array,int length, ByteBuffer buffer){
         array.clear();
@@ -141,9 +139,9 @@ public class ReadData {
     /**
      * read incrementally into existing byteArray from a ByteBuffer
      *
-     * @param array
-     * @param length
-     * @param buffer
+     * @param array ByteArray, gets data
+     * @param length int, number of floats to read
+     * @param buffer ByteBuffer
      */
     static public void readBytes(ByteArray array, int length,ByteBuffer buffer){
         array.clear();
@@ -156,8 +154,8 @@ public class ReadData {
     /**
      * read incrementally existing float[] from a ByteBuffer
      *
-     * @param floats
-     * @param buffer
+     * @param floats float[], will be filled with data
+     * @param buffer ByteBuffer
      */
     static public void readFloats(float[] floats, ByteBuffer buffer){
         buffer.asFloatBuffer().get(floats);
@@ -167,8 +165,8 @@ public class ReadData {
     /**
      * read incrementally existing int[] from a ByteBuffer
      *
-     * @param ints
-     * @param buffer
+     * @param ints int[], will be filled with data
+     * @param buffer ByteBuffer
      */
     static public void readInts(int[] ints, ByteBuffer buffer){
         buffer.asIntBuffer().get(ints);
@@ -178,8 +176,8 @@ public class ReadData {
     /**
      * read incrementally existing short[] from a ByteBuffer
      *
-     * @param shorts
-     * @param buffer
+     * @param shorts short[], will be filled with data
+     * @param buffer ByteBuffer
      */
     static public void readShorts(short[] shorts, ByteBuffer buffer){
         buffer.asShortBuffer().get(shorts);
@@ -189,8 +187,8 @@ public class ReadData {
     /**
      * read incrementally existing bytes[] from a ByteBuffer
      *
-     * @param bytes
-     * @param buffer
+     * @param bytes byte[], will be filled with data
+     * @param buffer ByteBuffer
      */
     static public void readBytes(byte[] bytes, ByteBuffer buffer){
         buffer.get(bytes);
@@ -200,8 +198,8 @@ public class ReadData {
      * read an integer length from the bytebuffer, create and read a float[] of this length
      * return the float[]
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return float[], length and data read from byteBuffer
      */
     static public float[] getFloats(ByteBuffer buffer){
         int length=buffer.getInt();
@@ -214,8 +212,8 @@ public class ReadData {
      * read an integer length from the bytebuffer, create and read an int[] of this length
      * return the int[]
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return int[], length and data read from byteBuffer
      */
     static public int[] getInts(ByteBuffer buffer){
         int length=buffer.getInt();
@@ -228,8 +226,8 @@ public class ReadData {
      * read an integer length from the bytebuffer, create and read an short[] of this length
      * return the short[]
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return short[], length and data read from byteBuffer
      */
     static public short[] getShorts(ByteBuffer buffer){
         int length=buffer.getInt();
@@ -239,11 +237,11 @@ public class ReadData {
     }
 
     /**
-     * read an integer length from the bytebuffer, create and read an byte[] of this length
+     * read an integer length from the byteBuffer, create and read an byte[] of this length
      * return the byte[]
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return byte[], length and data read from byteBuffer
      */
     static public byte[] getBytes(ByteBuffer buffer){
         int length=buffer.getInt();

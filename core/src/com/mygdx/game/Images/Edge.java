@@ -119,8 +119,8 @@ public class Edge extends Shape2DAdapter {
     /**
      * Set the positions of the vertices.
      *
-     * @param a
-     * @param b
+     * @param a Vector2, position of point a
+     * @param b Vector2, position of point b
      * @return this, for chaining
      */
     public Edge set(Vector2 a, Vector2 b) {

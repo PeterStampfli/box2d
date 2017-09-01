@@ -25,10 +25,10 @@ public class Polypoint extends Shape2DAdapter {
 
     /**
      * creator for known coordinates and if it is a loop
-     *
-     * @param coordinates
+     *  @param isLoop boolean, true if polypoint should be loop
+     * @param coordinates float... or float[] with coordinate pairs
      */
-    public Polypoint(float[] coordinates, boolean isLoop){
+    public Polypoint(boolean isLoop, float... coordinates){
         this.coordinates=new FloatArray(coordinates);
         this.isLoop=isLoop;
     }

@@ -11,13 +11,11 @@ import java.nio.ByteBuffer;
 
 public class Positionables extends com.mygdx.game.utilities.Collection<Positionable> {
 
-
-
     /**
      * add all Positionable items of a touchable collection to items of this
      * (can't do that in generic superclass because of type erasure)
      *
-     * @param collection
+     * @param collection TouchableCollection, add only the Positionables
      */
     public void addItems(TouchableCollection collection){
         for (Object item:collection.items){
@@ -28,11 +26,11 @@ public class Positionables extends com.mygdx.game.utilities.Collection<Positiona
     }
 
     /**
-     * append the index positions of the items of this collection
-     * in another TouchableCollection to a file
+     * append the index positions in another TouchableCollection
+     * of the items of this collection to a file
      *
-     * @param fileHandle
-     * @param collection
+     * @param fileHandle FileHandle, of the output file
+     * @param collection TouchableCollection, with different order
      */
     public void appendIndices(FileHandle fileHandle,TouchableCollection collection){
         ByteBuffer byteBuffer= ByteBuffer.allocate(4*items.size);
@@ -45,7 +43,7 @@ public class Positionables extends com.mygdx.game.utilities.Collection<Positiona
     /**
      * append positions and angles to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle, of the output file
      */
     public void appendPositionsAngles(FileHandle fileHandle){
         ByteBuffer byteBuffer= ByteBuffer.allocate(12*items.size);
@@ -64,8 +62,8 @@ public class Positionables extends com.mygdx.game.utilities.Collection<Positiona
      * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
      * uses that both positionables and touchableCollection contain only references
      *
-     * @param collection
-     * @param byteBuffer if null nothing happens
+     * @param collection TouchableCollection, put items in correct order in this collection
+     * @param byteBuffer ByteBuffer, with input data, nothing happens if null
      */
     public void readIndices(TouchableCollection collection, ByteBuffer byteBuffer){
         if (byteBuffer!=null) {
@@ -84,7 +82,7 @@ public class Positionables extends com.mygdx.game.utilities.Collection<Positiona
      * starting at its current position
      * (previously read from a file ...)
      *
-     * @param byteBuffer nothing happens if null
+     * @param byteBuffer ByteBuffer, with input data, nothing happens if null
      */
     public void readPositionsAngles(ByteBuffer byteBuffer){
         if (byteBuffer!=null) {

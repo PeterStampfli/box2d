@@ -59,6 +59,7 @@ public class DotsAndLines extends Shape2DCollection {
      *
      * @param isLoop      boolean, true if we want a loop, joining first and last point
      * @param coordinates float... or float[] pairs of coordinates of points
+     * @return this, for chaining
      */
     public DotsAndLines add(boolean isLoop, float... coordinates) {
         float radius = 0.5f * width;
@@ -82,6 +83,7 @@ public class DotsAndLines extends Shape2DCollection {
      * Make discs of same diameter at the points to make line joints and ends.
      *
      * @param coordinates float... or float[] pairs of coordinates of points
+     * @return this, for chaining
      */
     public DotsAndLines add(float... coordinates) {
         add(false, coordinates);
@@ -94,7 +96,7 @@ public class DotsAndLines extends Shape2DCollection {
      * Make discs of same diameter at the points to make line joints and ends.
      *
      * @param polypoint Polypoint object that defines the points and if it is a loop
-     * @return Shape2DCollection with the lines and discs
+     * @return this, for chaining
      */
     public DotsAndLines add(Polypoint polypoint) {
         FloatArray coordinates = polypoint.coordinates;
@@ -121,6 +123,7 @@ public class DotsAndLines extends Shape2DCollection {
      * Make discs of same diameter at the points to make line joints and ends.
      *
      * @param polygon Polygon
+     * @return this, for chaining
      */
     public DotsAndLines add(Polygon polygon) {
         add(true, polygon.getTransformedVertices());
@@ -134,6 +137,7 @@ public class DotsAndLines extends Shape2DCollection {
      * Make discs of same diameter at the points to make line joints and ends.
      *
      * @param polyline Polyline
+     * @return this, for chaining
      */
     public DotsAndLines add(Polyline polyline) {
         add(false, polyline.getTransformedVertices());
@@ -146,6 +150,7 @@ public class DotsAndLines extends Shape2DCollection {
      * Draw discs of same diameter at the points to make line joints and ends.
      *
      * @param chain Chain
+     * @return this, for chaining
      */
     public DotsAndLines add(Chain chain) {
         add(chain.isLoop, chain.coordinates);
@@ -160,16 +165,18 @@ public class DotsAndLines extends Shape2DCollection {
      * Draw discs of same diameter at the points to make line joints and ends.
      *
      * @param edge Edge
+     * @return this, for chaining
      */
     public DotsAndLines add(Edge edge) {
         add(false, edge.aX, edge.aY, edge.bX, edge.bY);
         return this;
     }
 
-    /** add elements of a dotsAndLines object
+    /**
+     * add directly elements of a dotsAndLines object. Does not transform them.
      *
-     * @param dotsAndLines
-     * @return
+     * @param dotsAndLines DotsAndLines, with objects to add
+     * @return this, for chaining
      */
     public DotsAndLines add(DotsAndLines dotsAndLines){
         super.add(dotsAndLines.items);
@@ -212,8 +219,8 @@ public class DotsAndLines extends Shape2DCollection {
     /**
      * Set the width of lines and diameter of dots.
      *
-     * @param width
-     * @return
+     * @param width float, width for lines and diameter of dots
+     * @return this, for chaining
      */
     public DotsAndLines setLineWidth(float width) {
         this.width = width;
