@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ShortArray;
-import com.mygdx.game.utilities.FileU;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -23,12 +22,11 @@ public class WriteData {
 
     /**
      * Write pixmap as a png file on external storage. dispose pixmap.
-     * @param pixmap will be disposed
+     * @param pixmap Pixmap, dispose later
      * @param path
      */
     static public void writePixmap(Pixmap pixmap, String path){
         PixmapIO.writePNG(FileU.createExternalFileHandle(path),pixmap);
-        pixmap.dispose();
     }
 
     /**
