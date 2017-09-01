@@ -20,7 +20,6 @@ public class WriteShape {
      *
      * @param fileHandle
      * @param circle
-     * @return
      */
     static public void appendCircle(FileHandle fileHandle,Circle circle){
         WriteData.appendFloats(fileHandle,circle.x,circle.y,circle.radius);
@@ -31,7 +30,6 @@ public class WriteShape {
      *
      * @param fileHandle
      * @param rectangle
-     * @return
      */
     static public void appendRectangle(FileHandle fileHandle,Rectangle rectangle){
         WriteData.appendFloats(fileHandle,rectangle.x,rectangle.y,rectangle.width,rectangle.height);
@@ -52,12 +50,11 @@ public class WriteShape {
     }
 
     /**
-     * make a byteBuffer with data of a polyline object
+     * append a polyline
      * first integer length of vertices array, then float[] vertices array
      * length=2*number of vertices
      *
      * @param polyline
-     * @return
      */
     static public void appendPolyline(FileHandle fileHandle,Polyline polyline){
         float[] vertices=polyline.getVertices();
@@ -100,7 +97,6 @@ public class WriteShape {
      *
      * @param fileHandle
      * @param edge
-     * @return
      */
     static public void  appendEdge(FileHandle fileHandle,Edge edge){
         WriteData.appendFloats(fileHandle,edge.aX,edge.aY,edge.bX,edge.bY);
@@ -117,7 +113,6 @@ public class WriteShape {
      *
      * @param fileHandle
      * @param chain
-     * @return
      */
     static public void  appendChain(FileHandle fileHandle,Chain chain){
         WriteData.appendInt(fileHandle,chain.coordinates.length);

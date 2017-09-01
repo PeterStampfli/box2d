@@ -21,7 +21,7 @@ public class TouchReader implements Resizable{
     /**
      * TouchReader has access to device for the actual camera.
      *
-     * @param device
+     * @param device Device, of the game
      */
     public TouchReader(Device device){
         this.device=device;

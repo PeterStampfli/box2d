@@ -2,12 +2,6 @@ package com.mygdx.game.utilities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.IntArray;
-
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * Created by peter on 8/4/17.
@@ -21,7 +15,7 @@ public class ArrayU {
      * Get a new float[] array from an Array of Vector2 objects.
      * For float[]s to be used as shape data
      *
-     * @param vectors
+     * @param vectors Array of Vector2 objects, to transform to float[] coordinates
      * @return new float[], with the vectors as float x,y pairs.
      */
     static public float[] toFloats(Array<Vector2> vectors) {
@@ -37,8 +31,8 @@ public class ArrayU {
     /**
      * scale a float array.
      *
-     * @param floats
-     * @param scale
+     * @param floats float[], to scale
+     * @param scale float, scale factor
      */
     static public void scale(float[] floats, float scale) {
         for (int i = floats.length-1; i >=0; i--) {
@@ -49,8 +43,8 @@ public class ArrayU {
     /**
      * Create a float array that is a scaled copy of another float array.
      *
-     * @param floats
-     * @param scale
+     * @param floats float[], to scale
+     * @param scale float, scale factor
      * @return float[], a scaled copy
      */
     static public float[] scaledCopy(float[] floats, float scale) {

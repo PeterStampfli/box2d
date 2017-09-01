@@ -48,7 +48,7 @@ public class L {
     /**
      * Safe logging of an object. Even of a null object.
      *
-     * @param object
+     * @param object Object
      */
     public static void og(Object object){
         if (object==null){
@@ -63,7 +63,7 @@ public class L {
      * generate size-dependent end string for array
      *
      * @param length
-     * @re
+     * @return String, for terminating the array log
      */
     private static String end(int length){
         if (length<=MAX_NUMBERS) {
@@ -75,7 +75,7 @@ public class L {
     /**
      * logging a float[] with its data
      *
-     * @param array
+     * @param array float[] array
      */
     public static void og(float[] array){
         String message="[";
@@ -92,7 +92,7 @@ public class L {
     /**
      * logging an int[] with its data
      *
-     * @param array
+     * @param array int[] array
      */
     public static void og(int[] array){
         String message="[";
@@ -109,7 +109,7 @@ public class L {
     /**
      * logging a short[] with its data
      *
-     * @param array
+     * @param array short[] array
      */
     public static void og(short[] array){
         String message="[";
@@ -126,7 +126,7 @@ public class L {
     /**
      * logging a byte[] with its data
      *
-     * @param array
+     * @param array byte[] array
      */
     public static void og(byte[] array){
         String message="[";
@@ -143,7 +143,7 @@ public class L {
     /**
      * logging a FloatBuffer with its data
      *
-     * @param buffer
+     * @param buffer FloatBuffer
      */
     public static void og(FloatBuffer buffer){
         int position=buffer.position();
@@ -163,7 +163,7 @@ public class L {
     /**
      * logging an IntBuffer with its data
      *
-     * @param buffer
+     * @param buffer IntBuffer
      */
     public static void og(IntBuffer buffer){
         int position=buffer.position();
@@ -183,7 +183,7 @@ public class L {
     /**
      * logging a ShortBuffer with its data
      *
-     * @param buffer
+     * @param buffer ShortBuffer
      */
     public static void og(ShortBuffer buffer){
         int position=buffer.position();
@@ -203,7 +203,7 @@ public class L {
     /**
      * logging a ByteBuffer with its data
      *
-     * @param buffer
+     * @param buffer ByteBuffer
      */
     public static void og(ByteBuffer buffer){
         int position=buffer.position();

@@ -75,6 +75,8 @@ public class Device implements Disposable {
 
     /**
      * Set logging of the disposer on.
+     *
+     * @return  this, for chaining
      */
     public Device logging() {
         disposer.logging();

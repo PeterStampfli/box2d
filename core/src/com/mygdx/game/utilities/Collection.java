@@ -21,7 +21,7 @@ public class Collection<T> {
     /**
      * Add one or several elements to the collection. Does nothing if is null.
      *
-     * @param ts  t[] and t..., the shapes to add.
+     * @param ts  objects of type T, t[] and t..., the shapes to add.
      */
     public void add(T... ts) {
         for (T t : ts) {
@@ -35,7 +35,7 @@ public class Collection<T> {
     /**
      * Add one or several elements to the collection. Does nothing if is null.
      *
-     * @param ts Array of T, the shapes to add.
+     * @param ts Array of objects of type T, to add.
      */
     public void add(Array<? extends T> ts) {
         for (T t : ts) {
@@ -48,7 +48,7 @@ public class Collection<T> {
     /**
      * Add one or more touchable objects at the beginning. Be careful if fixed order.
      *
-     * @param ts T... or T[]
+     * @param ts objects of type T, T... or T[]
      */
     public void addFirst(T... ts) {
         for (T t : ts) {
@@ -60,7 +60,7 @@ public class Collection<T> {
      * Remove a given (sub)touchable object, using identity.Removes multiple occurrences.
      * Does not check elements that are inside collections.
      *
-     * @param t  to remove
+     * @param t  object of type T, to remove
      * @return true if something has been removed
      */
     public boolean remove(T t) {
@@ -73,7 +73,8 @@ public class Collection<T> {
 
     /**
      * Get first index of an element in the array.
-     * @param t
+     *
+     * @param t object of type T, search for it (using identity)
      * @return int, first index of t or -1 if not found
      */
     public int getIndex(T t){
@@ -83,8 +84,8 @@ public class Collection<T> {
     /**
      * Get element with given index. Simple shortcut.
      *
-     * @param i
-     * @return Touchable, of index i
+     * @param i int, index for an element
+     * @return object of type T, of index i
      */
     public T get(int i){
         return items.get(i);
@@ -93,8 +94,8 @@ public class Collection<T> {
     /**
      * Set element with given index. Simple shortcut.
      *
-     * @param i
-     * @param item
+     * @param i int, index of place for item
+     * @param item object of type T, to set in the collection
      */
     public void set(int i,T item){
         items.set(i,item);

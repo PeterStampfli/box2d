@@ -34,6 +34,8 @@ public class Accelerometer {
      * Set the maximum acceleration for a mouse replacement of the accelerometer.
      * This is the absolute value of the acceleration at the border of the display or window.
      * Use smaller values for less sensitivity and more precision.
+     *
+     * @param a float, maximum absolute value for acceleration
      */
     public void setMouseAccelerometerMax(float a) {
         mouseAccelerometerMax = a;
@@ -86,6 +88,9 @@ public class Accelerometer {
 
     /**
      * Update the orientation and the mouse accelerometer scales at resize events.
+     *
+     * @param width int, width of screen
+     * @param height int, height of screen
      */
     public void resize(int width, int height) {
         mouseAccelerometerScale = 2 * mouseAccelerometerMax / Math.min(width, height);

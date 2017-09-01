@@ -547,7 +547,10 @@ public class Mask {
      * @return
      */
     public TextureRegion createImageTextureRegion(Pixmap input, int offsetX, int offsetY){
-        return TextureU.textureRegionFromPixmap(createImagePixmap(input,offsetX,offsetY));
+        Pixmap pixmap=createImagePixmap(input,offsetX,offsetY);
+        TextureRegion textureRegion=TextureU.textureRegionFromPixmap(pixmap);
+        pixmap.dispose();
+        return textureRegion;
     }
 
     /**
@@ -578,7 +581,10 @@ public class Mask {
      * @return TextureRegion
      */
     public TextureRegion createWhiteTextureRegion() {
-        return TextureU.textureRegionFromPixmap(createColorPixmap());
+        Pixmap pixmap=createColorPixmap();
+        TextureRegion textureRegion=TextureU.textureRegionFromPixmap(pixmap);
+        pixmap.dispose();
+        return textureRegion;
     }
 }
 

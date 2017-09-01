@@ -34,8 +34,8 @@ public class FollowCamera extends OrthographicCamera {
      * Set width and height of the game world, lower left corner is at (0,0). The camera shows only
      * the region x=0...width and y=0...height.
      *
-     * @param width
-     * @param height
+     * @param width float, desired width of game world
+     * @param height float, desired height of game world
      * @return this, for chaining
      */
     public FollowCamera setGameWorldSize(float width, float height) {

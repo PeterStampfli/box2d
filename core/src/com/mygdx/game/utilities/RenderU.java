@@ -71,27 +71,28 @@ public class RenderU {
     /**
      * set the projection (matrix) of a batch based on a viewport
      *
-     * @param batch
-     * @param viewport
+     * @param batch Batch, SpriteBatch,, set its projection matrix
+     * @param viewport Viewport, now in use, determines the projection matrix
      */
     public static void setProjection(Batch batch, Viewport viewport){
         batch.setProjectionMatrix(viewport.getCamera().combined);
     }
 
     /**
-     * Set the camera to the center of its visible world.
+     * Set the camera position to the center of its visible world dimensions.
+     * Makes that the camer sees the poin (0,0) at its lower left corner.
      *
-     * @param camera
+     * @param camera Camera
      */
     public static void center(Camera camera){
         camera.position.set(0.5f*camera.viewportWidth,0.5f*camera.viewportHeight,0);
     }
 
     /**
-     * Set the viewport camera to the center of the viewports visible world. For extendViewport
+     * Set the viewport camera to the center of the viewports visible world dimensions. For extendViewport
      * the left bottom corner of the screen will have coordinates (0,0)
      *
-     * @param viewport
+     * @param viewport Viewport, set its camera
      */
     public static void center(Viewport viewport){
         center(viewport.getCamera());
@@ -101,7 +102,9 @@ public class RenderU {
      * Fill the screen with a background image, adjusted to fill.
      * Clear background and Call batch.begin() before and set tint.
      *
-     * @param img
+     * @param batch SpriteBatch, for drawing
+     * @param viewport Viewport, in use now
+     * @param img TextureRegion, with the image for filling the screen
      */
     public static void fillScreen(SpriteBatch batch, Viewport viewport, TextureRegion img){
         float scale=Math.max(viewport.getWorldWidth()/img.getRegionWidth(),

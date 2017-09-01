@@ -254,13 +254,13 @@ public class BasicAssets {
 
     /**
      * To simplify debugging and production:
-     * first tries to find an masterTextureRegion *.png or *.jpg and makes it a textureregion
+     * first tries to find an masterTextureRegion *.png or *.jpg and makes it a textureRegion
      * if not found gets a textureRegion as part of an atlas,
      * Thus I do not need to have made the atlas already in debugging, can use instead simple images
      * later I can use an atlas without changing code details
      * I can override the masterTextureRegion in the atlas region with a simple masterTextureRegion
      *
-     * @param name
+     * @param name String, name of image, without extension
      * @return the textureRegion or null (if nothing found)
      */
     public TextureRegion getTextureRegion(String name) {
