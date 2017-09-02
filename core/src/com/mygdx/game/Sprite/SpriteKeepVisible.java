@@ -7,9 +7,10 @@ package com.mygdx.game.Sprite;
 public interface SpriteKeepVisible {
 
     /**
-     * Makes that the sprite stays visible. Needs a camera.
-     *  @param sprite ExtensibleSprite
+     * Makes that the sprite stays visible. Uses the camera of the device reference in the sprite.
      *
+     *  @param sprite ExtensibleSprite
+     * @return boolean, true if something changed
      */
     boolean keepVisible(ExtensibleSprite sprite);
 }

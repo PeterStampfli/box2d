@@ -6,5 +6,5 @@ package com.mygdx.game.physics;
 
 public interface PhysicalSpriteStep {
 
-    public void update(PhysicalSprite sprite);
+    void update(PhysicalSprite sprite);
 }

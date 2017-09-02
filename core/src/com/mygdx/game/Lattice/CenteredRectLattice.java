@@ -3,11 +3,12 @@ package com.mygdx.game.Lattice;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Centered rectangular lattice.
+ * Centered rectangular lattice with irregular hexagons as cells.
+ * And lattice of regular hexagon cells.
  * Address.x gives x-position of the cell
- * Address.y/2 gives y position of cell. For even address.y we have corner cells.
- * For odd address.y we have center cells.
- *
+ * Address.y/2 gives y position of cell.
+ * For even address.y we have cells at the corner of the rectangular super cell.
+ * For odd address.y we have cells at the center of the rectangular super cell.
  */
 
 public class CenteredRectLattice extends Lattice {
@@ -15,7 +16,7 @@ public class CenteredRectLattice extends Lattice {
     /**
      * Create with given cell size (square lattice)
      *
-     * @param size
+     * @param size float, width and height of the square lattice cell
      */
     public CenteredRectLattice(float size){
         super(size);
@@ -24,16 +25,16 @@ public class CenteredRectLattice extends Lattice {
     /**
      * Create with given cell width and height
      *
-     * @param width
-     * @param height
+     * @param width float, of the lattice cell
+     * @param height float, of the lattice cell
      */
     public CenteredRectLattice(float width,float height){
         super(width, height);
     }
 
     @Override
-    public Vector2 positionOfAddress(Vector2 vector, float i, float j) {
-        vector.x=left+cellWidth*(i+0.5f*(Math.round(j)&1));
+    public Vector2 positionOfAddress(Vector2 vector, int i, int j) {
+        vector.x=left+cellWidth*(i+0.5f*(j&1));
         vector.y=bottom+cellHeight*0.5f*j;
         return vector;
     }
@@ -46,7 +47,7 @@ public class CenteredRectLattice extends Lattice {
         int i=Math.round(x/cellWidth);
         int j=Math.round(y/cellHeight);
 
-        // reduce to coordinates around bootom left corner
+        // reduce to coordinates around bottom left corner
         x-=i*cellWidth;
         y-=j*cellHeight;
         // two j per unit cell

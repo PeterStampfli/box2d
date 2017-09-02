@@ -123,7 +123,7 @@ public class WriteShape {
     }
 
     /**
-     * append a shape2DCollection, first int number of subshapes, then the subshapes
+     * append a shape2DCollection, first int number of sub-shapes, then the sub-shapes
      *
      * @param fileHandle
      * @param collection
@@ -146,7 +146,7 @@ public class WriteShape {
     }
 
     /**
-     * append any Shape2D shape, preceeded by its type, to a file, including collections.
+     * append any Shape2D shape, preceded by its type, to a file, including collections.
      *
      * @param fileHandle
      * @param shape Shape2D to append

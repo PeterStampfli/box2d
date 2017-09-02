@@ -192,34 +192,27 @@ public class Shape2DRenderer extends ShapeRenderer{
      * @param shape Shape2D to draw
      */
     public void draw(Shape2D shape){
-        if (shape==null){}
-        else if (shape instanceof Polygon){
-            polygon((Polygon)shape);
-        }
-        else if (shape instanceof Circle){
-            circle((Circle) shape);
-        }
-        else if (shape instanceof Rectangle){
-            rectangle((Rectangle) shape);
-        }
-        else if (shape instanceof Polypoint){
-            polypoint((Polypoint)shape);
-        }
-        else if (shape instanceof Polyline){
-            polyline((Polyline) shape);
-        }
-        else if (shape instanceof Edge){
-            edge((Edge) shape);
-        }
-        else if (shape instanceof Chain){
-            chain((Chain) shape);
-        }
-        else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            collection((Shape2DCollection) shape);
+        if (shape!=null) {
+            if (shape instanceof Polygon) {
+                polygon((Polygon) shape);
+            } else if (shape instanceof Circle) {
+                circle((Circle) shape);
+            } else if (shape instanceof Rectangle) {
+                rectangle((Rectangle) shape);
+            } else if (shape instanceof Polypoint) {
+                polypoint((Polypoint) shape);
+            } else if (shape instanceof Polyline) {
+                polyline((Polyline) shape);
+            } else if (shape instanceof Edge) {
+                edge((Edge) shape);
+            } else if (shape instanceof Chain) {
+                chain((Chain) shape);
+            } else if (shape instanceof Shape2DCollection) {                 // includes subclass DotsAndLines
+                collection((Shape2DCollection) shape);
 
-        }
-        else {
-            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
+            } else {
+                Gdx.app.log(" ******************** draw", "unknown shape " + shape.getClass());
+            }
         }
     }
 }

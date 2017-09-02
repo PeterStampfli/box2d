@@ -38,6 +38,7 @@ public class SpriteActions {
             return false;
         }
     };
+
     /**
      * An object that implements SpriteContains:
      * Check if the point is inside the rectangle of the shape TextureRegion
@@ -71,6 +72,7 @@ public class SpriteActions {
             return isInside;
         }
     };
+
     /**
      * An object that implements SpriteContains:
      * Check if the point is inside the rectangle of the shape TextureRegion
@@ -122,6 +124,7 @@ public class SpriteActions {
             return false;
         }
     };
+
     /**
      * An object that implements SpriteKeepVisible:
      * Makes that the origin of the sprite can be seen by the camera.

@@ -22,7 +22,7 @@ public abstract class Lattice {
     /**
      * Create with given size (square lattice)
      *
-     * @param size
+     * @param size float, width and height of the square cell
      */
     public Lattice(float size) {
         setCellSize(size);
@@ -31,8 +31,8 @@ public abstract class Lattice {
     /**
      * Create with given size (square lattice)
      *
-     * @param width
-     * @param height
+     * @param width float, of the lattice cell
+     * @param height float, of the lattice cell
      */
     public Lattice(float width,float height) {
         setCellSize(width, height);
@@ -41,9 +41,9 @@ public abstract class Lattice {
     /**
      * Set size of a lattice unit
      *
-     * @param width
-     * @param height
-     * @return
+     * @param width float, of the lattice cell
+     * @param height float, of the lattice cell
+     * @return this,for chaining
      */
     public Lattice setCellSize(float width,float height) {
         this.cellWidth = width;
@@ -54,8 +54,8 @@ public abstract class Lattice {
     /**
      * Set size of a lattice unit
      *
-     * @param size
-     * @return
+     * @param size float, width and height of the square cell
+     * @return this,for chaining
      */
     public Lattice setCellSize(float size) {
         return setCellSize(size,size);
@@ -64,8 +64,8 @@ public abstract class Lattice {
     /**
      * Set position of center of lowest cell at left. With chaining.
      *
-     * @param left
-     * @param bottom
+     * @param left float, x-coordinate of center of cells at the left
+     * @param bottom float, y-coordinate of center of cells at the bottom
      * @return this, for chaining
      */
     public Lattice setLeftBottomCenter(float left, float bottom) {
@@ -88,22 +88,22 @@ public abstract class Lattice {
     abstract public Vector2 addressOfPosition(Vector2 address,float x,float y);
 
     /**
-     * set address depending on position
+     * set address vector depending on position
      *
-     * @param address Vector2, will be set to the address
-     * @param vector
+     * @param address Vector2, will be set to the address of cell that contains position
+     * @param position Vector2,
      * @return the changed address for chaining
      */
-    public Vector2 addressOfPosition(Vector2 address,Vector2 vector){
-        return addressOfPosition(address,vector.x,vector.y);
+    public Vector2 addressOfPosition(Vector2 address,Vector2 position){
+        return addressOfPosition(address,position.x,position.y);
     }
 
     /**
      * get address depending on position
      *
-     * @param x
-     * @param y
-     * @return the address for chaining, will be overwritten
+     * @param x float, x-coordinate
+     * @param y float, y-coordinate
+     * @return the address for chaining, will be overwritten at next call
      */
     public Vector2 addressOfPosition(float x,float y){
         return addressOfPosition(result,x,y);
@@ -112,11 +112,11 @@ public abstract class Lattice {
     /**
      * get address depending on position
      *
-     * @param vector, will be changed
-     * @return the address for chaining
+     * @param vector, Vector2 position
+     * @return the address for chaining, will be overwritten at next call
      */
     public Vector2 addressOfPosition(Vector2 vector){
-        return addressOfPosition(vector,vector.x,vector.y);
+        return addressOfPosition(result,vector.x,vector.y);
     }
 
     /**
@@ -128,47 +128,48 @@ public abstract class Lattice {
      * @param j int, y-component of address
      * @return Vector2 position for chaining
      */
-    abstract public Vector2 positionOfAddress(Vector2 vector,float i,float j);
+    abstract public Vector2 positionOfAddress(Vector2 vector,int i,int j);
 
     /**
      * set position depending on address.
      *
-     * @param vector will be set to position
-     * @return Vector2 position for chaining, will be overwritten
+     * @param position will be set to position
+     * @return Vector2 position for chaining
      */
-    public Vector2 positionOfAddress(Vector2 vector,Vector2 address){
-        return positionOfAddress(vector,address.x,address.y);
+    public Vector2 positionOfAddress(Vector2 position,Vector2 address){
+        return positionOfAddress(position,Math.round(address.x),Math.round(address.y));
     }
 
     /**
-     * set position depending on address.
+     * get position depending on address.
      *
-     * @param i
-     * @param j
+     * @param i int, x-component of address
+     * @param j int, y-component of address
      * @return Vector2 position for chaining, will be overwritten
      */
-    public Vector2 positionOfAddress(float i,float j){
+    public Vector2 positionOfAddress(int i,int j){
         return positionOfAddress(result,i,j);
     }
 
     /**
-     * set position depending on address.
+     * get position depending on address.
      *
-     * @param vector will be set to position
-     * @return Vector2 position for chaining
+     * @param address Vector2
+     * @return Vector2 position for chaining, will be overwritten at next call
      */
-    public Vector2 positionOfAddress(Vector2 vector){
-        return positionOfAddress(vector,vector.x,vector.y);
+    public Vector2 positionOfAddress(Vector2 address){
+        return positionOfAddress(result,Math.round(address.x),Math.round(address.y));
     }
 
     /**
      * Adjusts position to lattice (centers)
      *
-     * @param vector Vector2, position vector to adjust
+     * @param vector Vector2, position vector to adjust, will change its value to center position
      * @return Vector2, adjusted vector, for chaining
      */
     public Vector2 adjust(Vector2 vector){
-        return positionOfAddress(addressOfPosition(vector));
+        vector.set(positionOfAddress(addressOfPosition(vector)));
+        return vector;
     }
 
     // stepping around, methods that do nothing, to override
@@ -179,6 +180,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepUp(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepUp");
     }
 
     /**
@@ -187,6 +189,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepDown(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepDown");
     }
 
     /**
@@ -195,6 +198,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepRight(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepRight");
     }
 
     /**
@@ -203,6 +207,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepLeft(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepLeft");
     }
 
     /**
@@ -211,6 +216,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepUpLeft(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepUpLeft");
     }
 
     /**
@@ -219,6 +225,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepDownLeft(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepDownLeft");
     }
 
     /**
@@ -227,6 +234,7 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepUpRight(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepUpRight");
     }
 
     /**
@@ -235,5 +243,6 @@ public abstract class Lattice {
      * @param address Vector2, to transform
      */
     public void stepDownRight(Vector2 address) {
+        throw new RuntimeException("Current lattice does not implement stepDownRight");
     }
 }

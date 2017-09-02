@@ -6,5 +6,5 @@ package com.mygdx.game.Buttons;
 
 public interface ButtonDraw {
 
-    public void draw(ButtonExtension buttonExtension);
+    void draw(ButtonExtension buttonExtension);
 }

@@ -3,7 +3,7 @@ package com.mygdx.game.Lattice;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by peter on 7/1/17.
+ * Extend Vector2 with a lattice and methods to interact with the lattice
  */
 
 public class LatticeVector extends Vector2 {
@@ -12,7 +12,7 @@ public class LatticeVector extends Vector2 {
     /**
      * create a latticeVector with a lattice.
      *
-     * @param lattice
+     * @param lattice Lattice
      */
     public LatticeVector(Lattice lattice){
         super();
@@ -22,27 +22,27 @@ public class LatticeVector extends Vector2 {
     /**
      * Change lattice vector from address to position
      *
-     * @return
+     * @return this, for chaining
      */
     public LatticeVector positionOfAddress(){
-        lattice.positionOfAddress(this);
+        lattice.positionOfAddress(this,this);
         return this;
     }
 
     /**
      * Change lattice vector from position to address
      *
-     * @return
+     * @return this, for chaining
      */
     public LatticeVector addressOfPosition(){
-        lattice.addressOfPosition(this);
+        lattice.addressOfPosition(this,this);
         return this;
     }
 
     /**
      * Adjusts position to lattice (centers)
      *
-     * @return
+     * @return this, for chaining
      */
     public LatticeVector adjust(){
         lattice.adjust(this);
@@ -53,6 +53,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step upwards in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepUp() {
         lattice.stepUp(this);
@@ -61,6 +63,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step downwards in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepDown() {
         lattice.stepDown(this);
@@ -69,6 +73,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step right in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepRight() {
         lattice.stepRight(this);
@@ -77,6 +83,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step left in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepLeft() {
         lattice.stepLeft(this);
@@ -85,6 +93,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step up left in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepUpLeft() {
         lattice.stepUpLeft(this);
@@ -93,6 +103,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step down left in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepDownLeft() {
         lattice.stepDownLeft(this);
@@ -101,6 +113,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step up right in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepUpRight() {
         lattice.stepUpRight(this);
@@ -109,6 +123,8 @@ public class LatticeVector extends Vector2 {
 
     /**
      * Make a step down right in the address.
+     *
+     * @return this, for chaining
      */
     public LatticeVector stepDownRight() {
         lattice.stepDownRight(this);

@@ -154,34 +154,27 @@ public class Shape2DTranslate {
      */
 
     static public void shape(Shape2D shape, float dx, float dy){
-        if (shape==null){}
-        else if (shape instanceof Polygon){
-            polygon((Polygon)shape,dx,dy);
-        }
-        else if (shape instanceof Circle){
-            circle((Circle) shape,dx,dy);
-        }
-        else if (shape instanceof Rectangle){
-            rectangle((Rectangle) shape,dx,dy);
-        }
-        else if (shape instanceof Polypoint){
-            polypoint((Polypoint)shape,dx,dy);
-        }
-        else if (shape instanceof Polyline){
-            polyline((Polyline) shape,dx,dy);
-        }
-        else if (shape instanceof Edge){
-            edge((Edge) shape,dx,dy);
-        }
-        else if (shape instanceof Chain){
-            chain((Chain) shape,dx,dy);
-        }
-        else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
-            collection((Shape2DCollection) shape,dx,dy);
+        if (shape!=null) {
+            if (shape instanceof Polygon) {
+                polygon((Polygon) shape, dx, dy);
+            } else if (shape instanceof Circle) {
+                circle((Circle) shape, dx, dy);
+            } else if (shape instanceof Rectangle) {
+                rectangle((Rectangle) shape, dx, dy);
+            } else if (shape instanceof Polypoint) {
+                polypoint((Polypoint) shape, dx, dy);
+            } else if (shape instanceof Polyline) {
+                polyline((Polyline) shape, dx, dy);
+            } else if (shape instanceof Edge) {
+                edge((Edge) shape, dx, dy);
+            } else if (shape instanceof Chain) {
+                chain((Chain) shape, dx, dy);
+            } else if (shape instanceof Shape2DCollection) {                 // includes subclass DotsAndLines
+                collection((Shape2DCollection) shape, dx, dy);
 
-        }
-        else {
-            Gdx.app.log(" ******************** translate","unknown shape "+shape.getClass());
+            } else {
+                Gdx.app.log(" ******************** translate", "unknown shape " + shape.getClass());
+            }
         }
     }
 

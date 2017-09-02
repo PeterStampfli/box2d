@@ -12,7 +12,7 @@ public class RectangularLattice extends Lattice {
     /**
      * Create lattice with given cell size (square lattice)
      *
-     * @param size
+     * @param size float, width and height of cell
      */
     public RectangularLattice(float size){
         super(size);
@@ -21,8 +21,8 @@ public class RectangularLattice extends Lattice {
     /**
      * Create lattice with given cell width and height
      *
-     * @param width
-     * @param height
+     * @param width float, of cell
+     * @param height float, of cell
      */
     public RectangularLattice(float width,float height){
         super(width, height);
@@ -36,7 +36,7 @@ public class RectangularLattice extends Lattice {
     }
 
     @Override
-    public Vector2 positionOfAddress(Vector2 vector, float i, float j) {
+    public Vector2 positionOfAddress(Vector2 vector, int i, int j) {
         vector.x=left+cellWidth*i;
         vector.y=bottom+cellHeight*j;
         return vector;

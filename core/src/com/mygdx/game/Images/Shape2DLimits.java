@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.utils.FloatArray;
  */
 
 public class Shape2DLimits {
+    static final float bigNumber=1000000;
 
     /**
      * calculate maximum x-coordinate of an array of coordinates
@@ -21,7 +21,7 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxXCoordinates(float[] coordinates){
-        float x=-1000000;
+        float x=-bigNumber;
         for (int i=coordinates.length-2;i>=0;i-=2){
             x=Math.max(x,coordinates[i]);
         }
@@ -35,7 +35,7 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxXCoordinates(FloatArray coordinates){
-        float x=-1000000;
+        float x=-bigNumber;
         for (int i=coordinates.size-2;i>=0;i-=2){
             x=Math.max(x,coordinates.get(i));
         }
@@ -116,7 +116,7 @@ public class Shape2DLimits {
      * @param collection
      */
     static public float maxXCollection(Shape2DCollection collection){
-        float x=-10000000;
+        float x=-bigNumber;
         for (Shape2D subShape:collection.items){
             x=Math.max(x, maxXShape(subShape));
         }
@@ -130,8 +130,9 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxXShape(Shape2D shape){
-
-        if (shape==null){}
+        if (shape==null){
+            return -bigNumber;
+        }
         else if (shape instanceof Polygon){
             return maxXPolygon((Polygon)shape);
         }
@@ -156,12 +157,8 @@ public class Shape2DLimits {
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             return maxXCollection((Shape2DCollection) shape);
         }
-        else {
-            Gdx.app.log(" ******************** maxX","unknown shape "+shape.getClass());
-        }
-        return 0;
+        throw new RuntimeException("unknown shape "+shape.getClass());
     }
-
 
     /**
      * calculate maximum y-coordinate of an array of coordinates
@@ -170,11 +167,11 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxYCoordinates(float[] coordinates){
-        float x=-1000000;
+        float y=-bigNumber;
         for (int i=coordinates.length-1;i>=0;i-=2){
-            x=Math.max(x,coordinates[i]);
+            y=Math.max(y,coordinates[i]);
         }
-        return x;
+        return y;
     }
 
     /**
@@ -184,11 +181,11 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxYCoordinates(FloatArray coordinates){
-        float x=-1000000;
+        float y=-bigNumber;
         for (int i=coordinates.size-1;i>=0;i-=2){
-            x=Math.max(x,coordinates.get(i));
+            y=Math.max(y,coordinates.get(i));
         }
-        return x;
+        return y;
     }
 
     /**
@@ -265,11 +262,11 @@ public class Shape2DLimits {
      * @param collection
      */
     static public float maxYCollection(Shape2DCollection collection){
-        float x=-10000000;
+        float y=-bigNumber;
         for (Shape2D subShape:collection.items){
-            x=Math.max(x, maxYShape(subShape));
+            y=Math.max(y, maxYShape(subShape));
         }
-        return x;
+        return y;
     }
 
     /**
@@ -279,8 +276,9 @@ public class Shape2DLimits {
      * @return
      */
     static public float maxYShape(Shape2D shape){
-
-        if (shape==null){}
+        if (shape==null){
+            return -bigNumber;
+        }
         else if (shape instanceof Polygon){
             return maxYPolygon((Polygon)shape);
         }
@@ -305,10 +303,7 @@ public class Shape2DLimits {
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             return maxYCollection((Shape2DCollection) shape);
         }
-        else {
-            Gdx.app.log(" ******************** maxY","unknown shape "+shape.getClass());
-        }
-        return 0;
+        throw new RuntimeException("unknown shape "+shape.getClass());
     }
 
 
@@ -319,7 +314,7 @@ public class Shape2DLimits {
      * @return
      */
     static public float minXCoordinates(float[] coordinates){
-        float x=1000000;
+        float x=bigNumber;
         for (int i=coordinates.length-2;i>=0;i-=2){
             x=Math.min(x,coordinates[i]);
         }
@@ -333,7 +328,7 @@ public class Shape2DLimits {
      * @return
      */
     static public float minXCoordinates(FloatArray coordinates){
-        float x=1000000;
+        float x=bigNumber;
         for (int i=coordinates.size-2;i>=0;i-=2){
             x=Math.min(x,coordinates.get(i));
         }
@@ -414,7 +409,7 @@ public class Shape2DLimits {
      * @param collection
      */
     static public float minXCollection(Shape2DCollection collection){
-        float x=10000000;
+        float x=bigNumber;
         for (Shape2D subShape:collection.items){
             x=Math.min(x, minXShape(subShape));
         }
@@ -428,8 +423,9 @@ public class Shape2DLimits {
      * @return
      */
     static public float minXShape(Shape2D shape){
-
-        if (shape==null){}
+        if (shape==null){
+            return bigNumber;
+        }
         else if (shape instanceof Polygon){
             return minXPolygon((Polygon)shape);
         }
@@ -454,10 +450,7 @@ public class Shape2DLimits {
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             return minXCollection((Shape2DCollection) shape);
         }
-        else {
-            Gdx.app.log(" ******************** minX","unknown shape "+shape.getClass());
-        }
-        return 0;
+        throw new RuntimeException("unknown shape "+shape.getClass());
     }
 
 
@@ -468,11 +461,11 @@ public class Shape2DLimits {
      * @return
      */
     static public float minYCoordinates(float[] coordinates){
-        float x=1000000;
+        float y=bigNumber;
         for (int i=coordinates.length-1;i>=0;i-=2){
-            x=Math.min(x,coordinates[i]);
+            y=Math.min(y,coordinates[i]);
         }
-        return x;
+        return y;
     }
 
     /**
@@ -482,11 +475,11 @@ public class Shape2DLimits {
      * @return
      */
     static public float minYCoordinates(FloatArray coordinates){
-        float x=1000000;
+        float y=bigNumber;
         for (int i=coordinates.size-1;i>=0;i-=2){
-            x=Math.min(x,coordinates.get(i));
+            y=Math.min(y,coordinates.get(i));
         }
-        return x;
+        return y;
     }
 
     /**
@@ -563,11 +556,11 @@ public class Shape2DLimits {
      * @param collection
      */
     static public float minYCollection(Shape2DCollection collection){
-        float x=10000000;
+        float y=bigNumber;
         for (Shape2D subShape:collection.items){
-            x=Math.min(x, minYShape(subShape));
+            y=Math.min(y, minYShape(subShape));
         }
-        return x;
+        return y;
     }
 
     /**
@@ -577,8 +570,9 @@ public class Shape2DLimits {
      * @return
      */
     static public float minYShape(Shape2D shape){
-
-        if (shape==null){}
+        if (shape==null){
+            return bigNumber;
+        }
         else if (shape instanceof Polygon){
             return minYPolygon((Polygon)shape);
         }
@@ -603,11 +597,6 @@ public class Shape2DLimits {
         else if (shape instanceof Shape2DCollection){                 // includes subclass DotsAndLines
             return minYCollection((Shape2DCollection) shape);
         }
-        else {
-            Gdx.app.log(" ******************** minY","unknown shape "+shape.getClass());
-        }
-        return 0;
+        throw new RuntimeException("unknown shape "+shape.getClass());
     }
-
-
 }

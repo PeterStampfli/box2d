@@ -13,5 +13,5 @@ public interface Resizable {
      * @param width int, width of screen
      * @param height int, height of screen
      */
-    public void resize(int width,int height);
+    void resize(int width, int height);
 }

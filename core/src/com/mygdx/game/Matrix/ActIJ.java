@@ -6,5 +6,5 @@ package com.mygdx.game.Matrix;
 
 public interface ActIJ<T> {
 
-    public void act(int i,int j,T t);
+    void act(int i, int j, T t);
 }

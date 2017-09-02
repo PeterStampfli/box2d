@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import com.mygdx.game.utilities.Device;
 
 /**
- * Triangulates simple nonintersecting polygons. collects the tringles as Shape2D Polygons
+ * Triangulates simple non-intersecting polygons. collects the triangles as Shape2D Polygons
  */
 
 public class Triangles extends Shape2DCollection {

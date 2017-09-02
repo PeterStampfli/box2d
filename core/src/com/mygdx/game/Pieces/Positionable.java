@@ -6,11 +6,11 @@ package com.mygdx.game.Pieces;
 
 public interface Positionable {
 
-    public void setPositionAngle(float x,float y,float angle);
+    void setPositionAngle(float x, float y, float angle);
 
-    public float getX();
+    float getX();
 
-    public float getY();
+    float getY();
 
-    public float getAngle();
+    float getAngle();
 }

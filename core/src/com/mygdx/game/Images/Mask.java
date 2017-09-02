@@ -54,10 +54,10 @@ public class Mask {
     // create a mask with a border of minimum given pixel size around a shape2D shape
     // the shape will be translated to fit into the mask, fill the shape on the mask
 
-    static public Mask create(Shape2D shape,int borderWidth){
-        Shape2DTranslate.adjustLeftBottom(shape,borderWidth,borderWidth);
-        Mask mask= new Mask(MathUtils.floor(Shape2DLimits.maxXShape(shape)+borderWidth)+1,
-                            MathUtils.floor(Shape2DLimits.maxYShape(shape)+borderWidth)+1);
+    static public Mask create(Shape2D shape,int borderSize){
+        Shape2DTranslate.adjustLeftBottom(shape,borderSize,borderSize);
+        Mask mask= new Mask(MathUtils.floor(Shape2DLimits.maxXShape(shape)+borderSize)+1,
+                            MathUtils.floor(Shape2DLimits.maxYShape(shape)+borderSize)+1);
         mask.fill(shape);
         return mask;
     }
@@ -70,7 +70,7 @@ public class Mask {
     }
 
     /**
-     * Set lenghts for asymmetric smoothing, set smoothingInside=0 for composing triangles
+     * Set lengths for asymmetric smoothing, set smoothingInside=0 for composing triangles
      *
      * @param inside float, length for smoothing going inside
      * @param outside float, length for smoothing going outside
@@ -185,8 +185,8 @@ public class Mask {
      * inside. The transition region width is given by setSmoothing(transitionLength).
      * This smooths out the shape. For efficiency check if the distance is in the transition region before calling this.
      *
-     * @param index int, index of the byte in the alpha arrray
-     * @param distance float, measured from the boundary, positve sign inside, negative outside.
+     * @param index int, index of the byte in the alpha array
+     * @param distance float, measured from the boundary, positive sign inside, negative outside.
      */
     public void setOpacity(int index,float distance){
         int newOpacity=MathUtils.floor((distance+smoothLengthOutside)*smoothFactor);
@@ -207,7 +207,7 @@ public class Mask {
      * @param radius float, radius of the circle
      */
     public void fillCircle(float centerX, float centerY, float radius) {
-        float dx, dy2, dx2Plusdy2;
+        float dx, dy2, dx2PlusDy2;
         float radiusSq=radius*radius;
         float iRadius2=0.5f/radius;
         float outerRadius=radius+smoothLengthOutside;
@@ -227,12 +227,12 @@ public class Mask {
             dy2 *= dy2;
             for (i = iMin; i <= iMax; i++) {
                 dx = i + 0.5f - centerX;
-                dx2Plusdy2 = dy2 + dx * dx;
-                if (dx2Plusdy2 < innerRadiusSq) {    // d>smallLengthHalf
+                dx2PlusDy2 = dy2 + dx * dx;
+                if (dx2PlusDy2 < innerRadiusSq) {    // d>smallLengthHalf
                     alpha[index]=(byte) 255;
                 }
-                else if (dx2Plusdy2 < outerRadiusSq) {  // d>-smallLengthHalf
-                    setOpacity(index,(radiusSq-dx2Plusdy2)*iRadius2);
+                else if (dx2PlusDy2 < outerRadiusSq) {  // d>-smallLengthHalf
+                    setOpacity(index,(radiusSq-dx2PlusDy2)*iRadius2);
                 }
                     index++;
             }
@@ -499,11 +499,10 @@ public class Mask {
      */
     public void setPixmapAlpha(Pixmap pixmap) {
         ByteBuffer pixels = pixmap.getPixels();
-        int length = alpha.length;
         pixels.rewind();
-        for (int i = 0; i < length; i++) {
+        for (byte a :alpha) {
             pixels.position(pixels.position()+3);    // skip rgb channel bytes !!
-            pixels.put(alpha[i]);
+            pixels.put(a);
         }
         pixels.rewind();
     }

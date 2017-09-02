@@ -104,7 +104,7 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * set ghost A position and that it exists and that this is not a loop
+     * set ghost A position and that it exists and that this chain is not a loop
      *
      * @param position Vector2D, position of the ghost
      * @return this, for chaining
@@ -114,7 +114,7 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * set ghost a position and that it exists, set thatthis is not a loop
+     * set ghost a position and that it exists and that this chain is not a loop
      *
      * @param x float, x-coordinate of ghost
      * @param y float, y-coordinate of ghost

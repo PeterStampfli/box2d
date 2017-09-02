@@ -104,7 +104,7 @@ public class ReadShape {
     }
 
     /**
-     * create a shap2dCollection object from a byteBuffer
+     * create a shape2dCollection object from a byteBuffer
      * @param buffer
      * @return
      */
@@ -125,27 +125,27 @@ public class ReadShape {
      * @return
      */
     static public Shape2D shape2D(ByteBuffer buffer){
-        switch (Shape2DType.ofByte(ReadData.getByte(buffer))){
-            case CIRCLE:
-                return circle(buffer);
-            case RECTANGLE:
-                return rectangle(buffer);
-            case  POLYGON:
-                return polygon(buffer);
-            case POLYPOINT:
-                return polypoint(buffer);
-            case POLYLINE:
-                return polyline(buffer);
-            case EDGE:
-                return edge(buffer);
-            case CHAIN:
-                return chain(buffer);
-            case COLLECTION:
-                return shape2DCollection(buffer);
+        Shape2DType type=Shape2DType.ofByte(ReadData.getByte(buffer));
+        if (type!=null) {
+            switch (type) {
+                case CIRCLE:
+                    return circle(buffer);
+                case RECTANGLE:
+                    return rectangle(buffer);
+                case POLYGON:
+                    return polygon(buffer);
+                case POLYPOINT:
+                    return polypoint(buffer);
+                case POLYLINE:
+                    return polyline(buffer);
+                case EDGE:
+                    return edge(buffer);
+                case CHAIN:
+                    return chain(buffer);
+                case COLLECTION:
+                    return shape2DCollection(buffer);
+            }
         }
         return null;
     }
-
-
-
 }

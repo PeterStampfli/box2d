@@ -41,7 +41,6 @@ public enum Shape2DType {
                 return type;
             }
         }
-        return  null;
+        throw new RuntimeException("No type matches byte value"+i);
     }
-
 }

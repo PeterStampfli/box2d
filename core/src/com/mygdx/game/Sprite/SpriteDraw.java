@@ -8,8 +8,8 @@ public interface SpriteDraw {
 
     /**
      * Draw the sprite.
-     *  @param sprite ExtensibleSprite
      *
+     *  @param sprite ExtensibleSprite
      */
-    public void draw(ExtensibleSprite sprite);
+    void draw(ExtensibleSprite sprite);
 }

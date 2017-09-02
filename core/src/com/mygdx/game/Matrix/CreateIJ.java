@@ -6,5 +6,5 @@ package com.mygdx.game.Matrix;
 
 public interface CreateIJ<T> {
 
-    public T create(int i,int j);
+    T create(int i, int j);
 }

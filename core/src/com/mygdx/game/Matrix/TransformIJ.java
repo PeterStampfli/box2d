@@ -6,5 +6,5 @@ package com.mygdx.game.Matrix;
 
 public interface TransformIJ<T,U> {
 
-    public T transform(int i,int j,U u);
+    T transform(int i, int j, U u);
 }

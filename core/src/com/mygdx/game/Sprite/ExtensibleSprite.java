@@ -70,8 +70,8 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
     /**
      * set the position of the lower left corner
      *
-     * @param x
-     * @param y
+     * @param x float, coordinate
+     * @param y float, coordinate
      */
     public void setPosition(float x,float y){
         super.setPosition(x,y);
@@ -109,7 +109,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      *
      * @param x float, x-coordinate of the position
      * @param y float, y-coordinate of the position
-     * @param angle
+     * @param angle float, angle in radians
      */
     public void setPositionAngle(float x,float y,float angle){
         super.setPosition(x,y);
@@ -119,8 +119,8 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
     /**
      * Set the position and angle of sprite
      *
-     * @param position
-     * @param angle
+     * @param position Vector2, position
+     * @param angle float, angle in radians
      */
     public void setPositionAngle(Vector2 position,float angle){
         super.setPosition(position.x,position.y);
@@ -300,7 +300,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
     /**
      * Keep the sprite visible using the keepVisible method of the spriteKeepVisible object.
      *
-     * @return
+     * @return boolean, true if something changed
      */
     @Override
     public boolean keepVisible() {

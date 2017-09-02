@@ -1,7 +1,7 @@
 package com.mygdx.game.Buttons;
 
 /**
- * Created by peter on 5/9/17.
+ * Button action for touch end
  */
 
 public interface ButtonTouchEnd {

@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.utilities.MathU;
 
 /**
- * Created by peter on 6/29/17.
  * A lattice of triangles.
  */
 
@@ -14,21 +13,21 @@ public class TriangleLattice extends Lattice {
 
 
     /**
-     * Create triangle lattice with length for side of triangles
+     * Create triangle lattice with the length for the side of triangles as basic unit of length
      *
-     * @param sideLength
+     * @param sideLength float, length of the sides of the triangles
      */
     public TriangleLattice(float sideLength){
         super(sideLength);
         side=sideLength;
-        sideRt3=(float) (sideLength* MathU.rt3);
+        sideRt3= sideLength* MathU.rt3;
     }
 
     /**
-     * Set position of center of lowest cell at left. With chaining.
+     * Set position of center of lowest cell at left. address (0,0). With chaining.
      *
-     * @param left
-     * @param bottom
+     * @param left float, x-coordinate of cell at bottom left
+     * @param bottom float, y-coordinate of cell at bottom left
      * @return this, for chaining
      */
     @Override
@@ -71,10 +70,10 @@ public class TriangleLattice extends Lattice {
     }
 
     @Override
-    public Vector2 positionOfAddress(Vector2 position, float i, float j) {
+    public Vector2 positionOfAddress(Vector2 position, int i, int j) {
         position.x=left+0.5f*side*i;
         position.y=bottom+0.25f*sideRt3*(1+2*j);
-        if ((Math.round(i+j)&1)==0){
+        if (((i+j)&1)==0){
             position.y+=0.083333f*sideRt3;
         }
         else {

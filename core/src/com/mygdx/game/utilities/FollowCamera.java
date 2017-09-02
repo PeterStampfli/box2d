@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class FollowCamera extends OrthographicCamera {
 
-    private final float POSITION_CHANGE = 0.02f;
+    public float POSITION_CHANGE = 0.02f;
     public float gameWorldWidth, gameWorldHeight;    // game world left lower corner at (0,0), do not show outside
     public boolean debugAllowed = false;
     public boolean isFollowing = true;
