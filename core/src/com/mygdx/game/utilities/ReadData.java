@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import java.nio.ByteBuffer;
 
 /**
- * Read a file on a byte buffer, then read from the bytebuffer elementary data
+ * Read a file on a byte buffer, then read from the byte buffer elementary data
  */
 
 public class ReadData {
@@ -18,7 +18,7 @@ public class ReadData {
      * create ByteBuffer and read data from file given by fileHandle
      *
      * @param fileHandle FileHandle
-     * @return a new byteBuffer with the data, or null if file does not exist
+     * @return a new ByteBuffer with the data, or null if file does not exist
      */
     static public ByteBuffer byteBuffer(FileHandle fileHandle){
         if (fileHandle.exists()) {
@@ -195,7 +195,7 @@ public class ReadData {
     }
 
     /**
-     * read an integer length from the bytebuffer, create and read a float[] of this length
+     * read an integer length from the byteBuffer, create and read a float[] of this length
      * return the float[]
      *
      * @param buffer ByteBuffer
@@ -209,7 +209,7 @@ public class ReadData {
     }
 
     /**
-     * read an integer length from the bytebuffer, create and read an int[] of this length
+     * read an integer length from the byteBuffer, create and read an int[] of this length
      * return the int[]
      *
      * @param buffer ByteBuffer
@@ -223,7 +223,7 @@ public class ReadData {
     }
 
     /**
-     * read an integer length from the bytebuffer, create and read an short[] of this length
+     * read an integer length from the byteBuffer, create and read an short[] of this length
      * return the short[]
      *
      * @param buffer ByteBuffer

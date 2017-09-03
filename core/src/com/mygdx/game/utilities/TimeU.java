@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
 /**
- * Created by peter on 8/4/17.
+ * Measure elapsed time
  */
 
 public class TimeU {
@@ -31,7 +31,7 @@ public class TimeU {
     }
 
     /**
-     * Get the smoothed time intervall between render calls
+     * Get the smoothed time interval between render calls
      *
      * @return float, time interval in seconds
      */
@@ -40,7 +40,7 @@ public class TimeU {
     }
 
     /**
-     * Get true measured time intervall between current render call and previous render call.
+     * Get true measured time interval between current render call and previous render call.
      *
      * @return float, time interval in seconds
      */

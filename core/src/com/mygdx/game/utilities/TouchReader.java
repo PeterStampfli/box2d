@@ -8,31 +8,31 @@ import com.badlogic.gdx.math.Vector3;
 import static com.badlogic.gdx.Gdx.input;
 
 /**
- * Simplifies reading touch or mouse. Unprojects the position.
+ * Simplifies reading touch or mouse. Un-projects the position.
  * Limits the mouse position to the application window.
  */
 
-public class TouchReader implements Resizable{
+public class TouchReader implements Resizable {
 
-    private Vector3 spacePositionOfTouch=new Vector3();    // x,y-components give touch position
-    private int screenWidth,screenHeight;
     public Device device;
+    private Vector3 spacePositionOfTouch = new Vector3();    // x,y-components give touch position
+    private int screenWidth, screenHeight;
 
     /**
      * TouchReader has access to device for the actual camera.
      *
      * @param device Device, of the game
      */
-    public TouchReader(Device device){
-        this.device=device;
+    public TouchReader(Device device) {
+        this.device = device;
     }
 
     /**
      * Update screen/window size for limiting the mouse position. call in resize.
      */
-    public void resize(int width,int height){
-        screenWidth=width;
-        screenHeight=height;
+    public void resize(int width, int height) {
+        screenWidth = width;
+        screenHeight = height;
     }
 
     /**
@@ -40,8 +40,8 @@ public class TouchReader implements Resizable{
      *
      * @return float, x-coordinate
      */
-    public int getXLimited(){
-        return MathUtils.clamp(input.getX(),0,screenWidth);
+    public int getXLimited() {
+        return MathUtils.clamp(input.getX(), 0, screenWidth);
     }
 
     /**
@@ -49,19 +49,19 @@ public class TouchReader implements Resizable{
      *
      * @return float, y-coordinate
      */
-    public int getYLimited(){
-        return MathUtils.clamp(input.getY(),0,screenHeight);
+    public int getYLimited() {
+        return MathUtils.clamp(input.getY(), 0, screenHeight);
     }
 
     /**
-     * Get the touch position. Unprojected to the world seen by the camera.
+     * Get the touch position. Un-projected to the world seen by the camera.
      *
      * @param position Vector2 object, will be set to position.
      */
-    public void getPosition(Vector2 position){
-        spacePositionOfTouch.set(getXLimited(),getYLimited(),0f);
+    public void getPosition(Vector2 position) {
+        spacePositionOfTouch.set(getXLimited(), getYLimited(), 0f);
         device.camera.unproject(spacePositionOfTouch);
-        position.set(spacePositionOfTouch.x,spacePositionOfTouch.y);
+        position.set(spacePositionOfTouch.x, spacePositionOfTouch.y);
     }
 
     /**
@@ -70,7 +70,7 @@ public class TouchReader implements Resizable{
      *
      * @return boolean, true if the screen/window has been touched
      */
-    public boolean isTouching(){
+    public boolean isTouching() {
         return input.isTouched() && input.isButtonPressed(Input.Buttons.LEFT);
     }
 }

@@ -1,14 +1,9 @@
 package com.mygdx.game.TextSprite;
 
-/**
- * Created by peter on 4/22/17.
- */
-
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
- * Created by peter on 4/20/17.
  * extend a sprite to draw a simple short centered text
  */
 

@@ -61,20 +61,27 @@ public class TouchMover extends InputAdapter {
     public boolean update() {
         boolean isTouching = device.touchReader.isTouching();
         boolean somethingChanged = false;
-        if (!isTouching && !wasTouching) {
-            return false;                                     // totally out of touch
-        }
         // update touch positions
-        if (isTouching && !wasTouching) {                                     // new touch - oldPosition is invalid
-            device.touchReader.getPosition(newTouchPosition);
-            oldTouchPosition.set(newTouchPosition);
-        } else if (isTouching && wasTouching) {                         // continue touching
-            oldTouchPosition.set(newTouchPosition);
-            device.touchReader.getPosition(newTouchPosition);
-        } else {                     // !isTouching&&wasTouching   - end of touch, take last defined positions
-            oldTouchPosition.set(newTouchPosition);
+        if (isTouching){
+            if (wasTouching) {
+                oldTouchPosition.set(newTouchPosition);       // continue touching
+                device.touchReader.getPosition(newTouchPosition);
+            }
+            else {
+                device.touchReader.getPosition(newTouchPosition);  // new touch - oldPosition is invalid
+                oldTouchPosition.set(newTouchPosition);
+            }
         }
-        // relevant setPosition is average, and get change in setPosition
+        else {
+            if (wasTouching){
+                // !isTouching&&wasTouching   - end of touch, take last defined positions
+                oldTouchPosition.set(newTouchPosition);
+            }
+            else {
+                return false;                                     // totally out of touch
+            }
+        }
+        // relevant touchPosition is average, and get change in touchPosition
         touchPosition.set(oldTouchPosition).add(newTouchPosition).scl(0.5f);
         deltaTouchPosition.set(newTouchPosition).sub(oldTouchPosition);
         // for new touch see if a touchable piece has been selected

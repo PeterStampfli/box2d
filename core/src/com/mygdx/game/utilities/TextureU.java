@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
- * Created by peter on 8/4/17.
+ * simple methods for textures and textureRegions
  */
 
 public class TextureU {

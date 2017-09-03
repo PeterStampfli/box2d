@@ -194,7 +194,7 @@ public class JointBuilder {
      * Set the length of the joint.
      *
      * @param d float, the length
-     * @return this Jointbuilder
+     * @return this jointBuilder
      */
     public JointBuilder setLength(float d) {
         adjustLength=false;
@@ -206,7 +206,7 @@ public class JointBuilder {
      * Set the maximum length of the (rope) joint.
      *
      * @param d float, the maximum length
-     * @return this Jointbuilder
+     * @return this jointBuilder
      */
     public JointBuilder setMaxLength(float d) {
         maxLength = d;
@@ -216,7 +216,7 @@ public class JointBuilder {
     /**
      * Set that the joint length will be determined after joint creation using getLength/setLength.
      *
-     * @return
+     * @return this jointBuilder
      */
     public JointBuilder setAdjustLength() {
         adjustLength=true;

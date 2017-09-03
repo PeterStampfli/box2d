@@ -105,14 +105,14 @@ public class FixtureBuilder {
     }
 
     /**
-     * Set restition, bouncyness at collision (default=0.6).
+     * Set restitution, bouncy-nes at collision (default=0.6).
      * 0 for inelastic collision. 1 for elastic collision.
      *
-     * @param restitition float, fraction of elastic collision
+     * @param restitution float, fraction of elastic collision
      * @return this, for chaining
      */
-    public FixtureBuilder setRestitution(float restitition) {
-        fixtureDef.restitution = restitition;
+    public FixtureBuilder setRestitution(float restitution) {
+        fixtureDef.restitution = restitution;
         return this;
     }
 
@@ -180,7 +180,7 @@ public class FixtureBuilder {
     /**
      * Clear a body of all fixtures
      *
-     * @param body
+     * @param body Body, remove fixtures
      */
     public void clear(Body body){
         for(int i=body.getFixtureList().size;i>0;i--){

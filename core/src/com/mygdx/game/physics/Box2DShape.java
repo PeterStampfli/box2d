@@ -13,11 +13,10 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.mygdx.game.Images.Chain;
 import com.mygdx.game.Images.Edge;
 import com.mygdx.game.utilities.ArrayU;
-import com.mygdx.game.utilities.L;
 
 /**
  * Static methods to create box2d shapes from Shape2D shapes.
- * Transformes lengths because Shape2D shapes use pixels as unit for length and box2d shapes use meters for lengths.
+ * Transforms lengths because Shape2D shapes use pixels as unit for length and box2d shapes use meters for lengths.
  * CALL Box2D.init before using this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 
@@ -129,7 +128,6 @@ public class Box2DShape {
         if (shape2D instanceof Edge){
             return ofShape2D((Edge) shape2D);
         }
-        L.og("Box2DShape: cannot convert "+shape2D.getClass()+" !!!");
-        return null;
+        throw new RuntimeException("Box2DShape: cannot convert "+shape2D.getClass()+" !!!");
     }
 }

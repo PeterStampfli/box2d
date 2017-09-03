@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Created by peter on 8/4/17.
+ * Scale and copy float arrays
  */
 
 public class ArrayU {

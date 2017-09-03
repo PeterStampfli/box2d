@@ -9,7 +9,7 @@ import com.mygdx.game.Sprite.SpriteTouchBegin;
 import com.mygdx.game.Sprite.SpriteTouchEnd;
 
 /**
- * Extension to give button functions to a sprite. Use buttonbuilder to make buttons.
+ * Extension to give button functions to a sprite. Use buttonBuilder to make buttons.
  */
 
 public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchEnd {

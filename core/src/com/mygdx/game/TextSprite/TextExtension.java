@@ -7,15 +7,15 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteDraw;
 
 /**
- * Created by peter on 4/22/17.
+ * A sprite extension that shows texts
  */
 
 public abstract class TextExtension implements SpriteDraw {
     public Pool<GlyphLayout> glyphLayoutPool;
     public GlyphLayout glyphLayout;
     public BitmapFont font;
-    ExtensibleSprite sprite;
-    SpriteDraw basicSpriteDraw;
+    public ExtensibleSprite sprite;
+    public SpriteDraw basicSpriteDraw;
 
     /**
      * Create the extension with a glyphLayout pool and font. Attach to a sprite.

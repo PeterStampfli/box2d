@@ -14,7 +14,7 @@ import static com.mygdx.game.utilities.Accelerometer.FullOrientation.REVERSE_POR
  */
 
 public class Accelerometer {
-    private boolean hasAccelerometer;            // variables for mouse simmulation of accelerometer
+    private boolean hasAccelerometer;            // variables for mouse simulation of accelerometer
     private FullOrientation orientation;               // the current orientation of the userInteraction
     private float mouseAccelerometerMax = 5f;
     private float mouseAccelerometerScale;

@@ -80,7 +80,7 @@ public class RenderU {
 
     /**
      * Set the camera position to the center of its visible world dimensions.
-     * Makes that the camer sees the poin (0,0) at its lower left corner.
+     * Makes that the camera sees the point (0,0) at its lower left corner.
      *
      * @param camera Camera
      */

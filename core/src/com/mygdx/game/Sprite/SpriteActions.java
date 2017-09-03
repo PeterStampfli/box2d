@@ -66,10 +66,9 @@ public class SpriteActions {
             float unrotatedX = (cosAngle * x + sinAngle * y) / sprite.getScaleX() + sprite.getOriginX();
             float unrotatedY = (-sinAngle * x + cosAngle * y) / sprite.getScaleY() + sprite.getOriginY();
             // limit to texture/pixmap region and check the masterShape, if there is one
-            boolean isInside = (unrotatedX >= 0) && (unrotatedX <= sprite.getWidth())
+            return (unrotatedX >= 0) && (unrotatedX <= sprite.getWidth())
                     && (unrotatedY >= 0) && (unrotatedY <= sprite.getHeight())
                     && (sprite.shape == null || sprite.shape.contains(unrotatedX, unrotatedY));
-            return isInside;
         }
     };
 
@@ -86,10 +85,9 @@ public class SpriteActions {
             x -= sprite.getX();
             y -= sprite.getY();
             // limit to texture/pixmap region and check the masterShape, if there is one
-            boolean isInside = (x >= 0) && (x <= sprite.getWidth())
+            return (x >= 0) && (x <= sprite.getWidth())
                     && (y >= 0) && (y <= sprite.getHeight())
                     && (sprite.shape == null || sprite.shape.contains(x, y));
-            return isInside;
         }
     };
 

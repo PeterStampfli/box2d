@@ -39,7 +39,7 @@ public class Physics implements Disposable {
     boolean bodiesNeedUpdate = true;
     static public float PIXELS_PER_METER = 30;       // default
     static final float TIME_STEP = 1 / 60f;
-    final float MAX_TIMEINTERVAL = 0.25f;
+    final float MAX_TIME_INTERVAL = 0.25f;
     final int VELOCITY_ITERATIONS = 8;
     final int POSITION_ITERATIONS = 3;
 
@@ -310,7 +310,7 @@ public class Physics implements Disposable {
     public void advance() {
         graphicsTime = TimeU.getTime();
         if (physicsTime < graphicsTime) {   // we have to advance time with fixed time step
-            physicsTime = Math.max(physicsTime, graphicsTime - MAX_TIMEINTERVAL);  //prevent spiral of death
+            physicsTime = Math.max(physicsTime, graphicsTime - MAX_TIME_INTERVAL);  //prevent spiral of death
             if (physicsTime < graphicsTime - TIME_STEP) {   // we need more than one time step
                 while (physicsTime < graphicsTime - TIME_STEP) {  // advance until we are close
                     step();

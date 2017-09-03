@@ -62,7 +62,7 @@ public class L {
     /**
      * generate size-dependent end string for array
      *
-     * @param length
+     * @param length int, length of array
      * @return String, for terminating the array log
      */
     private static String end(int length){

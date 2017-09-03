@@ -62,7 +62,7 @@ public class Positionables extends com.mygdx.game.utilities.Collection<Positiona
      * Assumes that the touchable collection has enough place, is not mixed with other items, not fixed order
      * uses that both positionables and touchableCollection contain only references
      *
-     * @param collection TouchableCollection, put items in correct order in this collection
+     * @param collection TouchableCollection objects, put items in correct order in this collection
      * @param byteBuffer ByteBuffer, with input data, nothing happens if null
      */
     public void readIndices(TouchableCollection collection, ByteBuffer byteBuffer){

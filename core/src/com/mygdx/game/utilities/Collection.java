@@ -3,7 +3,7 @@ package com.mygdx.game.utilities;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Created by peter on 8/15/17.
+ * Collect items, wraps an ItemArray
  */
 
 public class Collection<T> {

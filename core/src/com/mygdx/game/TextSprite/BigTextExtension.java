@@ -10,15 +10,14 @@ import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteScroll;
 import com.mygdx.game.Sprite.SpriteTouchDrag;
-import com.mygdx.game.utilities.Device;
 
 /**
  * An extension for ExtensibleSprite that shows a large scrollable text.
  */
 
 public class BigTextExtension extends TextExtension implements SpriteTouchDrag, SpriteScroll {
-    static private Rectangle scissors = new Rectangle();
-    static private Rectangle bounds = new Rectangle();
+    static private final Rectangle scissors = new Rectangle();
+    static private final Rectangle bounds = new Rectangle();
     public float margin = 10;
     public float textShift;                            // amount to shift the text upwards
     public float textShiftMax;
@@ -27,11 +26,10 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
      * Create the extension. Attach to a sprite.
      * Overwrites the draw, touchDrag and scroll methods of the sprite.
      *
-     * @param device Device, device with its glyphLayoutPool
-     * @param font            BitmapFont
+     *  @param font            BitmapFont
      * @param sprite          ExtensibleSprite, the text will be attached to this sprite
      */
-    public BigTextExtension(Device device, BitmapFont font, ExtensibleSprite sprite) {
+    public BigTextExtension(BitmapFont font, ExtensibleSprite sprite) {
         super(font, sprite);
         sprite.setTouchDrag(this);
         sprite.setScroll(this);

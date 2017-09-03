@@ -22,10 +22,10 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public BodyDef.BodyType masterBodyType;
     private MouseJointMover mouseJointMover;
     private KinematicTranslate kinematicTranslate;
-    public PhysicalSpriteStep masterSpriteStep;
+    public PhysicalSpriteUpdate masterSpriteUpdate;
 
     /**
-     * Create the builder with a device that has glyphlayout pool.
+     * Create the builder with a device that has a glyphLayout pool.
      * Set minimal default actions.
      *
      * @param device Device, with pools.
@@ -34,7 +34,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         super(device);
         this.physics=physics;
         physicalSpriteActions=new PhysicalSpriteActions();
-        setContains(physicalSpriteActions.bodyContains);
+        setContains(PhysicalSpriteActions.bodyContains);
     }
 
     /**
@@ -44,7 +44,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public void reset(){
         super.reset();
         setBodyType(BodyDef.BodyType.DynamicBody);
-        setPhysicalSpriteStep(PhysicalSpriteActions.spriteStepNull);
+        setPhysicalSpriteStep(PhysicalSpriteActions.spriteUpdateNull);
     }
 
 
@@ -59,16 +59,16 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     /**
      * set the object with the update routine for steps
      *
-     * @param spriteStep
+     * @param spriteUpdate
      */
-    public void setPhysicalSpriteStep(PhysicalSpriteStep spriteStep){
-        masterSpriteStep=spriteStep;
+    public void setPhysicalSpriteStep(PhysicalSpriteUpdate spriteUpdate){
+        masterSpriteUpdate =spriteUpdate;
     }
     /**
      * Use the mouseJoint to move the sprite. Use the bodies shapes for contains method.
      * Sets the basic methods for physical sprite.
      *
-     * @param useStaticBodies boolean, true for making nonmoving bodies static
+     * @param useStaticBodies boolean, true for making non-moving bodies static
      */
     public void setMouseJointMover(boolean useStaticBodies){
         if (mouseJointMover==null){
@@ -81,14 +81,14 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         else {
             setBodyType(BodyDef.BodyType.DynamicBody);
         }
-        setContains(physicalSpriteActions.bodyContains);
+        setContains(PhysicalSpriteActions.bodyContains);
         setKeepVisible(SpriteActions.keepVisibleNull);
         setDraw(SpriteActions.draw);
         setTouchBegin(mouseJointMover);
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
         setScroll(SpriteActions.scrollNull);
-        setPhysicalSpriteStep(PhysicalSpriteActions.spriteStepNull);
+        setPhysicalSpriteStep(PhysicalSpriteActions.spriteUpdateNull);
     }
 
     /**
@@ -99,7 +99,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
             kinematicTranslate=new KinematicTranslate();
         }
         setBodyType(BodyDef.BodyType.KinematicBody);
-        setContains(physicalSpriteActions.bodyContains);
+        setContains(PhysicalSpriteActions.bodyContains);
         setKeepVisible(SpriteActions.keepVisibleNull);
         setDraw(SpriteActions.draw);
         setTouchBegin(kinematicTranslate);
@@ -128,7 +128,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);                         // ExtensibleSprite
         sprite.physics=physics;
-        sprite.spriteStep=masterSpriteStep;
+        sprite.spriteUpdate = masterSpriteUpdate;
         sprite.body=body;
         body.setUserData(sprite);
         body.setType(BodyDef.BodyType.DynamicBody);

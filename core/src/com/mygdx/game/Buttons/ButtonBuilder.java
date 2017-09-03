@@ -97,7 +97,7 @@ public class ButtonBuilder {
     }
 
     /**
-     * Add a buttonExtension to a sprite with choosen button methods
+     * Add a buttonExtension to a sprite with chosen button methods
      *
      * @param sprite ExtensibleSprite, to make a button out of it
      * @return ButtonExtension

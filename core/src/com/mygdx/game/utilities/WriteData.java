@@ -48,7 +48,7 @@ public class WriteData {
      * append a float number to a file
      *
      * @param fileHandle FileHandle
-     * @param f
+     * @param f float
      */
     static public void appendFloat(FileHandle fileHandle,float f){
         appendBuffer(fileHandle,ByteBuffer.allocate(4).putFloat(f));
@@ -58,7 +58,7 @@ public class WriteData {
      * append an int number to a file
      *
      * @param fileHandle FileHandle
-     * @param i
+     * @param i int
      */
     static public void appendInt(FileHandle fileHandle,int i){
         appendBuffer(fileHandle,ByteBuffer.allocate(4).putInt(i));
@@ -68,7 +68,7 @@ public class WriteData {
      * append a short number to a file
      *
      * @param fileHandle FileHandle
-     * @param s
+     * @param s short
      */
     static public void appendShort(FileHandle fileHandle,short s){
         appendBuffer(fileHandle,ByteBuffer.allocate(2).putShort(s));
@@ -78,7 +78,7 @@ public class WriteData {
      * append a byte to a file
      *
      * @param fileHandle FileHandle
-     * @param b
+     * @param b byte
      */
     static public void appendByte(FileHandle fileHandle,byte b){
         appendBuffer(fileHandle,ByteBuffer.allocate(1).put(b));
@@ -88,7 +88,7 @@ public class WriteData {
      * append a boolean as a byte to a file
      *
      * @param fileHandle FileHandle
-     * @param b
+     * @param b boolean
      */
     static public void appendBoolean(FileHandle fileHandle,boolean b){
         appendBuffer(fileHandle,ByteBuffer.allocate(1).put((byte) (b?1:0)));
@@ -98,7 +98,7 @@ public class WriteData {
      * append content of FloatArray on a file
      *
      * @param fileHandle FileHandle
-     * @param array
+     * @param array FloatArray
      */
     static public void appendFloats(FileHandle fileHandle,FloatArray array){
         int length=array.size;
@@ -115,7 +115,7 @@ public class WriteData {
      * write size separately (keep it simple and transparent)
      *
      * @param fileHandle FileHandle
-     *  @param array
+     *  @param array IntArray
      */
     static public void appendInts(FileHandle fileHandle,IntArray array){
         int length=array.size;

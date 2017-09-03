@@ -86,7 +86,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      * Set element with given address vector.
      *
      * @param address Vector2 or LatticeVector, address
-     * @param t onbject of type T
+     * @param t Object of type T
      */
     public void set(Vector2 address, T t){
         set(Math.round(address.x),Math.round(address.y),t);

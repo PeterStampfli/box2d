@@ -30,7 +30,7 @@ import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 /**
  * Created by peter on 11/26/16.
  * <p>
- * Create and collect standard resources: disposer and assetManager. Viewports, Renderers, framebuffer and default masterFont on demand.
+ * Create and collect standard resources: disposer and assetManager. Viewports, renderers, framebuffer and default masterFont on demand.
  * Collect objects that need to be resized.
  */
 
@@ -105,7 +105,7 @@ public class Device implements Disposable {
     // keep track of everything to resize, and do resize on demand
 
     /**
-     * Add a resizable to the list of Resizables.
+     * Add a resizable to the list of resizables.
      *
      * @param resizable Resizable object
      */

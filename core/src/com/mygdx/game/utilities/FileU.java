@@ -90,7 +90,7 @@ public class FileU {
     }
 
     /**
-     * write a pixmap as png file to internal starage
+     * write a pixmap as png file to internal storage
      *
      * @param path FileHandle, for file name and folder
      * @param pixmap Pixmap to save as png.
