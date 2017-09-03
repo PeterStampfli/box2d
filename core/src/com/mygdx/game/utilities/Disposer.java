@@ -63,7 +63,6 @@ public class Disposer implements Disposable {
     @Override
     public void dispose(){
         int i;
-        String message;
         for (i = disposables.size()-1; i>=0;i--){
             if (logging) {
                 Gdx.app.log(TAG, names.get(i));

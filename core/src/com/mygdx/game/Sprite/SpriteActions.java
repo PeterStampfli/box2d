@@ -228,10 +228,7 @@ public class SpriteActions {
     static public SpriteScroll scrollNull = new SpriteScroll() {
         @Override
         public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
-            if (sprite.contains(position.x, position.y)) {
-                return true;
-            }
-            return false;
+            return sprite.contains(position.x, position.y);
         }
     };
 

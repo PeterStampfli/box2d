@@ -1,9 +1,15 @@
 package com.mygdx.game.Matrix;
 
 /**
- * Created by peter on 7/4/17.
+ * Do something with element T independent of index.
  */
 
 public interface Act<T> {
+
+    /**
+     * Do something
+     *
+     * @param t Object of type T
+     */
     void act(T t);
 }

@@ -1,10 +1,15 @@
 package com.mygdx.game.Matrix;
 
 /**
- * Created by peter on 7/4/17.
+ * Create an object
  */
 
 public interface Create<T> {
 
+    /**
+     * create an object of type T
+     *
+     * @return object of type T
+     */
     T create();
 }

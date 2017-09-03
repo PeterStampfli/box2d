@@ -15,8 +15,8 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * create for given size
      *
-     * @param w
-     * @param h
+     * @param w int, number of columns
+     * @param h int, number of rows
      */
     public Matrix(int w, int h){
         super();
@@ -24,7 +24,7 @@ public class Matrix<T> extends TouchableCollection<T> {
     }
 
     /**
-     * create (default size)
+     * create (default size), resize later
      *
      */
     public Matrix(){
@@ -43,8 +43,9 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * Make that items array has enough space for given 2d width and height, set width and height.
      * Clear items and set size.
-     * @param w
-     * @param h
+     *
+     * @param w int, number of columns
+     * @param h int, number of rows
      */
     public Matrix resize(int w, int h){
         int newSize=w*h;
@@ -55,8 +56,12 @@ public class Matrix<T> extends TouchableCollection<T> {
         return this;
     }
 
-    // check if indizes are inside, throw exception with message
-    	//	if (index >= size) throw new IndexOutOfBoundsException("index can't be >= size: " + index + " >= " + size);
+    /**
+     * check if indices are inside, throw exception with message
+     *
+     * @param i int, column index
+     * @param j int, row index
+     */
     public void checkIndices(int i,int j){
         if ((i<0)||(i>=width)||(j<0)||(j>=height)) {
             throw new IndexOutOfBoundsException("indices ("+i+","+j+") out of range! Width "+width+", height "+height);
@@ -67,9 +72,10 @@ public class Matrix<T> extends TouchableCollection<T> {
 
     /**
      * set item with indices i,j. Throws exception if not in range.
-     * @param i
-     * @param j
-     * @param t
+     *
+     * @param i int, column index
+     * @param j int, row index
+     * @param t object of type T
      */
     public void set(int i, int j, T t){
         checkIndices(i, j);
@@ -78,8 +84,9 @@ public class Matrix<T> extends TouchableCollection<T> {
 
     /**
      * Set element with given address vector.
-     * @param address
-     * @param t
+     *
+     * @param address Vector2 or LatticeVector, address
+     * @param t onbject of type T
      */
     public void set(Vector2 address, T t){
         set(Math.round(address.x),Math.round(address.y),t);
@@ -87,8 +94,10 @@ public class Matrix<T> extends TouchableCollection<T> {
 
     /**
      * Get item with indices i,j. Throws exception if not in range.
-     * @param i
-     * @param j
+     *
+     * @param i int, column index
+     * @param j int, row index
+     * @return element of type T
      */
     public T get(int i, int j){
         checkIndices(i, j);
@@ -97,7 +106,9 @@ public class Matrix<T> extends TouchableCollection<T> {
 
     /**
      * Get element with given address vector.
-     * @param address
+     *
+     * @param address Vector2 or LatticeVector, address
+     * @return element of type T
      */
     public T get(Vector2 address){
         return get(Math.round(address.x),Math.round(address.y));
@@ -108,7 +119,7 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * Create all item elements independent of address
      *
-     * @param creation with a create method for objects of class T
+     * @param creation object with a create method for objects of class T
      */
     public void create(Create<T> creation) {
         for (int i = items.size - 1; i >= 0; i--) {
@@ -119,7 +130,7 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * Create all item elements depending on their (i,j) address.
      *
-     * @param creationIJ
+     * @param creationIJ object with a create method for objects of type T, depending on indices
      */
     public void create(CreateIJ<T> creationIJ){
         int i,j;
@@ -148,7 +159,7 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * Act/transform all item elements depending on their (i,j) address.
      *
-     * @param actionIJ
+     * @param actionIJ with an act method for objects of class T, depending on indices
      */
     public void act(ActIJ<T> actionIJ){
         int i,j;
