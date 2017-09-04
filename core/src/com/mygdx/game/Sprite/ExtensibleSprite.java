@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.Pieces.Drawable;
-import com.mygdx.game.Pieces.Positionable;
 import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.utilities.Device;
 
@@ -15,7 +14,7 @@ import com.mygdx.game.utilities.Device;
  * Use the ExtensibleSpriteBuilder for creation.
  */
 
-public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape2D,Positionable,Pool.Poolable {
+public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape2D,Pool.Poolable {
 
     public Shape2D shape;
     public Device device;
@@ -140,7 +139,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      * Set the origin (center of rotation and scaling) in local coordinates without translation.
      * The origin is always the vector from the sprite position to the center of rotation
      * and scaling, independent of rotation and scaling.
-     * Zero is left bottom corner of the unrotated, unscaled Textureregion.
+     * Zero is left bottom corner of the unrotated, unscaled TextureRegion.
      * Uses graphics lengths. The length of a pixel is the unit.
      *
      * @param centerX float, x-coordinate of the origin
@@ -154,7 +153,7 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      * Set the origin (center of rotation and scaling) in local coordinates without translation.
      * The origin is always the vector from the sprite position to the center of rotation
      * and scaling, independent of rotation and scaling.
-     * Zero is left bottom corner of the unrotated, unscaled Textureregion.
+     * Zero is left bottom corner of the unrotated, unscaled TextureRegion.
      * Uses graphics lengths. The length of a pixel is the unit.
      *
      * @param center Vector2, position of the origin

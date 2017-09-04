@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by peter on 7/2/17.
- * A touchable collection.
- * Has an array of objects. Makes touchable actions on touchable items.
+ * A collection that implements touchable, drawable and Shape2D.
+ * Has an array of objects. Makes touchable actions on touchable items. Draws drawables. Sees if items are selected.
  *
- * At selection does not change order
- * Or puts selected on top and adds and removes.
+ * At selection does not change order if fixedOrder=true
+ * Or puts selected item on top if fixedOrder=false.
  */
 
 public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<T> implements Touchable,Drawable,Shape2D {
@@ -18,7 +18,7 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
     int iSelected=-1;
 
     /**
-     * create Touchables with a new item array and choice of ordering
+     * create touchableCollection with a new item array and choice of ordering
      *
      * @param order boolean, true if order of objects may not change
      */

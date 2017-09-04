@@ -49,7 +49,7 @@ public class ExtensibleSpriteBuilder {
 
     /**
      * set the touchable of extensible sprites
-     * @param spriteCollection TouchableCollection<ExtensibleSprite> sprite belongs to this collection (of buttons for example)
+     * @param spriteCollection TouchableCollection of ExtensibleSprites, sprite belongs to this collection (of buttons for example)
      */
     public void setSpriteCollection(TouchableCollection<ExtensibleSprite> spriteCollection) {
         this.spriteCollection = spriteCollection;

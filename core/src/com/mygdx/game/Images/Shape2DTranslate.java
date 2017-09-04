@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
- * Created by peter on 8/22/17.
+ * Translate shapes and shape collections
  */
 
 public class Shape2DTranslate {

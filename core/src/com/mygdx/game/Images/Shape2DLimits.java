@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.FloatArray;
 
 /**
- * Created by peter on 8/21/17.
+ * Get limits of shapes and shape collections
  */
 
 public class Shape2DLimits {

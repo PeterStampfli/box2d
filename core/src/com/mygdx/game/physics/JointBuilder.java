@@ -260,7 +260,7 @@ public class JointBuilder {
      * Set that the bodies connected by the joint can collide or not.
      *
      * @param enabled boolean, true to enable the collision
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setCollideConnected(boolean enabled) {
         collideConnected = enabled;
@@ -271,7 +271,7 @@ public class JointBuilder {
      * Set that there are joint limits.
      *
      * @param enabled boolean, true to enable the limits
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setEnableLimit(boolean enabled) {
         enableLimit = enabled;
@@ -282,7 +282,7 @@ public class JointBuilder {
      * Set that there joint has motor.
      *
      * @param enabled boolean, true to enable the motor
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setEnableMotor(boolean enabled) {
         enableMotor = enabled;
@@ -295,7 +295,7 @@ public class JointBuilder {
      * getting current joint angle and limits.
      *
      * @param angle
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setReferenceAngle(float angle){
         referenceAngle=angle;
@@ -306,7 +306,7 @@ public class JointBuilder {
      * set upper limit for revolution angle
      *
      * @param angle
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setUpperAngle(float angle){
         upperAngle=angle;
@@ -317,7 +317,7 @@ public class JointBuilder {
      * set lower limit for revolution angle
      *
      * @param angle
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLowerAngle(float angle){
         lowerAngle=angle;
@@ -329,7 +329,7 @@ public class JointBuilder {
      * (MaxMotorTorque)
      *
      * @param torque float,limit
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setMaxTorque(float torque) {
         maxTorque=torque/(Physics.PIXELS_PER_METER*Physics.PIXELS_PER_METER);
@@ -340,7 +340,7 @@ public class JointBuilder {
      * set motor speed in radians per second for revolute joint. Positive for counter-clockwise.
      *
      * @param speed
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setRotatingMotorSpeed(float speed){
         motorSpeed=speed;
@@ -351,7 +351,7 @@ public class JointBuilder {
      * set motor speed in pixels per second for prismatic joint.
      *
      * @param speed
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLinearMotorSpeed(float speed){
         motorSpeed=speed/Physics.PIXELS_PER_METER;
@@ -362,7 +362,7 @@ public class JointBuilder {
      * set lower position of prismatic joint in pixels.
      *
      * @param limit
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLowerTranslation(float limit){
         lowerTranslation=limit/Physics.PIXELS_PER_METER;
@@ -373,7 +373,7 @@ public class JointBuilder {
      * set upper position of prismatic joint in pixels.
      *
      * @param limit
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setUpperTranslation(float limit){
         upperTranslation=limit/Physics.PIXELS_PER_METER;
@@ -386,7 +386,7 @@ public class JointBuilder {
      *
      * @param x
      * @param y
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLocalAxisA(float x,float y){
         localAxisA.set(x, y).nor();
@@ -397,7 +397,7 @@ public class JointBuilder {
      * sets the local axis at body A of a prismatic joint. (will be normalized)
      *
      * @param v
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLocalAxisA(Vector2 v){
         setLocalAxisA(v.x,v.y);
@@ -408,7 +408,7 @@ public class JointBuilder {
      * set the maximum force of a joint (in kg pixels/sec² instead of N)
      *  (MotorForce for a prismatic joint)
      * @param force
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setMaxForce(float force){
         maxForce=force/Physics.PIXELS_PER_METER;
@@ -420,7 +420,7 @@ public class JointBuilder {
      *
      * @param x
      * @param y
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setGroundAnchorA(float x,float y){
         groundAnchorA.set(x, y).scl(1f/Physics.PIXELS_PER_METER);
@@ -431,7 +431,7 @@ public class JointBuilder {
      * Set a ground anchor for connection to body A in pixel units.
      *
      * @param position
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setGroundAnchorA(Vector2 position){
         return setGroundAnchorA(position.x,position.y);
@@ -442,7 +442,7 @@ public class JointBuilder {
      *
      * @param x
      * @param y
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setGroundAnchorB(float x,float y){
         groundAnchorB.set(x, y).scl(1f/Physics.PIXELS_PER_METER);
@@ -453,7 +453,7 @@ public class JointBuilder {
      * Set a ground anchor for connection to body B in pixel units.
      *
      * @param position
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setGroundAnchorB(Vector2 position){
         return setGroundAnchorB(position.x,position.y);
@@ -462,7 +462,7 @@ public class JointBuilder {
     /**
      * set reference length for connection to body A in pixel units.
      * @param length
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLengthA(float length){
         lengthA=length/Physics.PIXELS_PER_METER;
@@ -472,7 +472,7 @@ public class JointBuilder {
     /**
      * set reference length for connection to body B in pixel units.
      * @param length
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setLengthB(float length){
         lengthB=length/Physics.PIXELS_PER_METER;
@@ -483,7 +483,7 @@ public class JointBuilder {
      * Set the ratio of a pulley joint
      *
      * @param x
-     * @return
+     * @return this, for chaining
      */
     public JointBuilder setRatio(float x){
         ratio=x;
@@ -516,7 +516,7 @@ public class JointBuilder {
      *
      * @param bodyA
      * @param bodyB
-     * @return
+     * @return PulleyJoint
      */
     public PulleyJoint buildPulleyJoint(Body bodyA, Body bodyB) {
         if (pulleyJointDef == null) {
@@ -538,7 +538,7 @@ public class JointBuilder {
      *
      * @param spriteA
      * @param spriteB
-     * @return
+     * @return PulleyJoint
      */
     public PulleyJoint buildPulleyJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
         return buildPulleyJoint(spriteA.body,spriteB.body);
@@ -549,7 +549,7 @@ public class JointBuilder {
      *
      * @param bodyA
      * @param bodyB
-     * @return
+     * @return FrictionJoint
      */
     public FrictionJoint buildFrictionJoint(Body bodyA, Body bodyB) {
         if (frictionJointDef == null) {
@@ -568,7 +568,7 @@ public class JointBuilder {
      *
      * @param spriteA
      * @param spriteB
-     * @return
+     * @return FrictionJoint
      */
     public FrictionJoint buildFrictionJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
         return buildFrictionJoint(spriteA.body,spriteB.body);
@@ -579,7 +579,7 @@ public class JointBuilder {
      *
      * @param bodyA
      * @param bodyB
-     * @return
+     * @return PrismaticJoint
      */
     public PrismaticJoint buildPrismaticJoint(Body bodyA, Body bodyB){
         if (prismaticJointDef==null){
@@ -604,7 +604,7 @@ public class JointBuilder {
      *
      * @param spriteA
      * @param spriteB
-     * @return
+     * @return PrismaticJoint
      */
     public PrismaticJoint buildPrismaticJoint(PhysicalSprite spriteA, PhysicalSprite spriteB){
         return buildPrismaticJoint(spriteA.body,spriteB.body);
@@ -669,7 +669,7 @@ public class JointBuilder {
          *
          * @param spriteA
          * @param spriteB
-         * @return
+         * @return RevoluteJoint
          */
     public RevoluteJoint buildRevoluteJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
         return buildRevoluteJoint(spriteA.body, spriteB.body);

@@ -61,7 +61,7 @@ public class SpriteActions {
             float angleDeg = sprite.getRotation();
             float sinAngle = MathUtils.sinDeg(angleDeg);
             float cosAngle = MathUtils.cosDeg(angleDeg);
-            // unrotate and unscale!
+            // un-rotate and un-scale!
             // and shift to put lower left corner at (0,0)
             float unrotatedX = (cosAngle * x + sinAngle * y) / sprite.getScaleX() + sprite.getOriginX();
             float unrotatedY = (-sinAngle * x + cosAngle * y) / sprite.getScaleY() + sprite.getOriginY();

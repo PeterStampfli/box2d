@@ -15,7 +15,8 @@ import java.nio.ByteBuffer;
 public class ReadData {
 
     /**
-     * create ByteBuffer and read data from file given by fileHandle
+     * create ByteBuffer and read data from file given by fileHandle.
+     * Return null if file does not exist.
      *
      * @param fileHandle FileHandle
      * @return a new ByteBuffer with the data, or null if file does not exist

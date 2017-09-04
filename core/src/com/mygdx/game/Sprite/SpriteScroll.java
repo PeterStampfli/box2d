@@ -3,7 +3,7 @@ package com.mygdx.game.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * sSroll action. Only for pc.
+ * scroll action. Only for pc.
  */
 
 public interface SpriteScroll {

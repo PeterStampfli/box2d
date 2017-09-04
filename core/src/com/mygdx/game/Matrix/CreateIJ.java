@@ -1,7 +1,7 @@
 package com.mygdx.game.Matrix;
 
 /**
- * Created by peter on 7/4/17.
+ * Create object depending on column and row indices
  */
 
 public interface CreateIJ<T> {

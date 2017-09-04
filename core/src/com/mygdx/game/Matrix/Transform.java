@@ -1,7 +1,7 @@
 package com.mygdx.game.Matrix;
 
 /**
- * Created by peter on 7/4/17.
+ * Transform an object: Create an object depending on another one.
  */
 
 public interface Transform<T,U> {

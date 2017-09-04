@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.utilities.WriteData;
 
 /**
- * Created by peter on 8/15/17.
+ * Write data of shapes and shape collections on a file
  */
 
 public class WriteShape {
@@ -18,7 +18,7 @@ public class WriteShape {
     /**
      * append data of a Circle object
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param circle
      */
     static public void appendCircle(FileHandle fileHandle,Circle circle){
@@ -28,7 +28,7 @@ public class WriteShape {
     /**
      * append data of a Rectangle object
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param rectangle
      */
     static public void appendRectangle(FileHandle fileHandle,Rectangle rectangle){
@@ -40,7 +40,7 @@ public class WriteShape {
      * first integer length of vertices array, then float[] vertices array
      * length=2*number of vertices
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param polygon
      */
     static public void appendPolygon(FileHandle fileHandle,Polygon polygon){
@@ -65,7 +65,7 @@ public class WriteShape {
     /**
      * append a polypoint:
      * first int number of coordinates, then float[] coordinates, then boolean isLop
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param polypoint
      */
     static public void appendPolypoint(FileHandle fileHandle, Polypoint polypoint){
@@ -77,7 +77,7 @@ public class WriteShape {
     /**
      * appending a ghost depending if it exists
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param exists
      * @param x
      * @param y
@@ -95,7 +95,7 @@ public class WriteShape {
      * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0
      * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param edge
      */
     static public void  appendEdge(FileHandle fileHandle,Edge edge){
@@ -111,7 +111,7 @@ public class WriteShape {
      * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0
      * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param chain
      */
     static public void  appendChain(FileHandle fileHandle,Chain chain){
@@ -125,7 +125,7 @@ public class WriteShape {
     /**
      * append a shape2DCollection, first int number of sub-shapes, then the sub-shapes
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param collection
      */
     static public void appendShape2DCollection(FileHandle fileHandle,Shape2DCollection collection){
@@ -138,7 +138,7 @@ public class WriteShape {
     /**
      * append a byte for the shape type to a file
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param type
      */
     static private void appendType(FileHandle fileHandle, Shape2DType type){
@@ -148,7 +148,7 @@ public class WriteShape {
     /**
      * append any Shape2D shape, preceded by its type, to a file, including collections.
      *
-     * @param fileHandle
+     * @param fileHandle FileHandle
      * @param shape Shape2D to append
      */
     static public void appendShape(FileHandle fileHandle,Shape2D shape){

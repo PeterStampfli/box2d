@@ -10,7 +10,7 @@ import com.mygdx.game.utilities.ReadData;
 import java.nio.ByteBuffer;
 
 /**
- * Created by peter on 8/15/17.
+ * Read data of shapes and shape collections from a file
  */
 
 public class ReadShape {
