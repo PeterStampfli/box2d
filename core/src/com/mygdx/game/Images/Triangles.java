@@ -16,37 +16,20 @@ public class Triangles extends Shape2DCollection {
     /**
      * create with the triangulator of the device ...
      *
-     * @param device
+     * @param device Device, delivers the triangulator
      */
     public Triangles(Device device){
         triangulator=device.createTriangulator();
     }
 
-
-    /*
-    public ShortArray computeTriangles(float[] vertices)
-See Also:
-computeTriangles(float[], int, int)
-computeTriangles
-public ShortArray computeTriangles(float[] vertices,
-                                   int offset,
-                                   int count)
-Triangulates the given (convex or concave) simple polygon to a list of triangle vertices.
-Parameters:
-vertices - pairs describing vertices of the polygon, in either clockwise or counterclockwise order.
-Returns:
-triples of triangle indices in clockwise order. Note the returned array is reused for later calls to the same method.
-
-     */
-
     /**
      * Dissect a simple polygon defined by vertices into triangle polygons.
-     * Add triangles to the collection.
+     * Add the triangles to the collection.
      *
-     * @param vertices
+     * @param vertices float... or float[], contains pairs of coordinates
      */
-    public void addTriangles(float[] vertices){
-        ShortArray triangles=triangulator.computeTriangles(vertices);
+    public void addTriangles(float... vertices){
+        ShortArray triangles=triangulator.computeTriangles(vertices);   // this array will be reused
         int vertex3;
         for (int i=triangles.size-3;i>=0;i-=3){
             float[] triangleVertices=new float[6];
@@ -67,7 +50,7 @@ triples of triangle indices in clockwise order. Note the returned array is reuse
      * Dissect a simple polygon defined by vertices into triangle polygons.
      * Add triangles to the collection.
      *
-     * @param vertices
+     * @param vertices FloatArray, contains pairs of coordinates
      */
     public void addTriangles(FloatArray vertices){
         ShortArray triangles=triangulator.computeTriangles(vertices);
@@ -91,7 +74,7 @@ triples of triangle indices in clockwise order. Note the returned array is reuse
      * Dissect a simple polygon into triangle polygons.
      * Add triangles to the collection.
      *
-     * @param polygon
+     * @param polygon Polygon
      */
     public void addTriangles(Polygon polygon){
         addTriangles(polygon.getVertices());
@@ -101,7 +84,7 @@ triples of triangle indices in clockwise order. Note the returned array is reuse
      * Dissect a simple polygon defined by polypoint object into triangle polygons.
      * Add triangles to the collection.
      *
-     * @param polypoint
+     * @param polypoint Polypoint
      */
     public void addTriangles(Polypoint polypoint){
         addTriangles(polypoint.coordinates);
@@ -111,7 +94,7 @@ triples of triangle indices in clockwise order. Note the returned array is reuse
      * Dissect a simple polygon defined by a chain object into triangle polygons.
      * Add triangles to the collection.
      *
-     * @param chain
+     * @param chain Chain
      */
     public void addTriangles(Chain chain){
         addTriangles(chain.coordinates);

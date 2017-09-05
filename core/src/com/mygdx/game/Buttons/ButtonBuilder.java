@@ -14,7 +14,7 @@ public class ButtonBuilder {
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
-    ButtonAct buttonAct;
+    ButtonEffect buttonEffect;
     boolean makeSelectionButtons;
 
     /**
@@ -23,7 +23,7 @@ public class ButtonBuilder {
     public ButtonBuilder(ExtensibleSpriteBuilder extensibleSpriteBuilder){
         this.extensibleSpriteBuilder=extensibleSpriteBuilder;
         buttonDraw=ButtonActions.drawTinted;
-        buttonAct=ButtonActions.actNull;
+        buttonEffect =ButtonActions.actNull;
         setPressButton();
     }
 
@@ -107,7 +107,7 @@ public class ButtonBuilder {
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
-        buttonExtension.setButtonAct(buttonAct);
+        buttonExtension.setButtonEffect(buttonEffect);
         buttonExtension.buttonCollection =extensibleSpriteBuilder.spriteCollection;
         return sprite;
     }

@@ -130,7 +130,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set that the local anchor of body A at its center.
+     * Set that the local anchor of body A is at its center.
      *
      * @return this, for chaining
      */
@@ -169,7 +169,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set that the local anchor of body B at its center.
+     * Set that the local anchor of body B is at its center.
      *
      * @return this, for chaining
      */
@@ -294,7 +294,7 @@ public class JointBuilder {
      * Default is zero. But the bodies might then be in a rotated state. Relevant for
      * getting current joint angle and limits.
      *
-     * @param angle
+     * @param angle float, reference angle
      * @return this, for chaining
      */
     public JointBuilder setReferenceAngle(float angle){
@@ -305,7 +305,7 @@ public class JointBuilder {
     /**
      * set upper limit for revolution angle
      *
-     * @param angle
+     * @param angle float
      * @return this, for chaining
      */
     public JointBuilder setUpperAngle(float angle){
@@ -316,7 +316,7 @@ public class JointBuilder {
     /**
      * set lower limit for revolution angle
      *
-     * @param angle
+     * @param angle float
      * @return this, for chaining
      */
     public JointBuilder setLowerAngle(float angle){
@@ -339,7 +339,7 @@ public class JointBuilder {
     /**
      * set motor speed in radians per second for revolute joint. Positive for counter-clockwise.
      *
-     * @param speed
+     * @param speed float
      * @return this, for chaining
      */
     public JointBuilder setRotatingMotorSpeed(float speed){
@@ -350,7 +350,7 @@ public class JointBuilder {
     /**
      * set motor speed in pixels per second for prismatic joint.
      *
-     * @param speed
+     * @param speed float
      * @return this, for chaining
      */
     public JointBuilder setLinearMotorSpeed(float speed){
@@ -361,7 +361,7 @@ public class JointBuilder {
     /**
      * set lower position of prismatic joint in pixels.
      *
-     * @param limit
+     * @param limit float
      * @return this, for chaining
      */
     public JointBuilder setLowerTranslation(float limit){
@@ -372,7 +372,7 @@ public class JointBuilder {
     /**
      * set upper position of prismatic joint in pixels.
      *
-     * @param limit
+     * @param limit float
      * @return this, for chaining
      */
     public JointBuilder setUpperTranslation(float limit){
@@ -384,8 +384,8 @@ public class JointBuilder {
      * sets the local axis at body A of a prismatic joint.
      * (Units are irrelevant, will be normalized)
      *
-     * @param x
-     * @param y
+     * @param x float, x-coordinate of axis direction
+     * @param y float, y-coordinate of axis direction
      * @return this, for chaining
      */
     public JointBuilder setLocalAxisA(float x,float y){
@@ -396,7 +396,7 @@ public class JointBuilder {
     /**
      * sets the local axis at body A of a prismatic joint. (will be normalized)
      *
-     * @param v
+     * @param v Vector2, axis direction
      * @return this, for chaining
      */
     public JointBuilder setLocalAxisA(Vector2 v){
@@ -416,7 +416,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set a ground anchor for connection to body A in pixel units.
+     * PulleyJoint: Set a ground anchor for connection to body A in pixel units.
      *
      * @param x
      * @param y
@@ -428,7 +428,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set a ground anchor for connection to body A in pixel units.
+     * PulleyJoint: Set a ground anchor for connection to body A in pixel units.
      *
      * @param position
      * @return this, for chaining
@@ -438,7 +438,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set a ground anchor for connection to body B in pixel units.
+     * PulleyJoint: Set a ground anchor for connection to body B in pixel units.
      *
      * @param x
      * @param y
@@ -450,7 +450,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set a ground anchor for connection to body B in pixel units.
+     * PulleyJoint: Set a ground anchor for connection to body B in pixel units.
      *
      * @param position
      * @return this, for chaining
@@ -460,7 +460,7 @@ public class JointBuilder {
     }
 
     /**
-     * set reference length for connection to body A in pixel units.
+     * PulleyJoint: set reference length for connection to body A in pixel units.
      * @param length
      * @return this, for chaining
      */
@@ -470,7 +470,7 @@ public class JointBuilder {
     }
 
     /**
-     * set reference length for connection to body B in pixel units.
+     * PulleyJoint: set reference length for connection to body B in pixel units.
      * @param length
      * @return this, for chaining
      */
@@ -480,7 +480,7 @@ public class JointBuilder {
     }
 
     /**
-     * Set the ratio of a pulley joint
+     * PulleyJoint: Set the ratio of a pulley joint
      *
      * @param x
      * @return this, for chaining

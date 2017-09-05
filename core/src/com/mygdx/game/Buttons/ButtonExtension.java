@@ -10,6 +10,7 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
 
 /**
  * Extension to give button functions to a sprite. Use buttonBuilder to make buttons.
+ * Decorator pattern for sprite draw.
  */
 
 public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchEnd {
@@ -26,7 +27,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
     public ButtonTouchEnd buttonTouchEnd;
-    public ButtonAct buttonAct;
+    public ButtonEffect buttonEffect;
 
     public int state;
     SpriteDraw basicSpriteDraw;
@@ -71,16 +72,18 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
 
     /**
      * set object that has the act-method for the effective action of the button
-     * @param buttonAct
+     *
+     * @param buttonEffect ButtonAction object with act method for doing what the button does
      */
-    public void setButtonAct(ButtonAct buttonAct) {
-        this.buttonAct = buttonAct;
+    public void setButtonEffect(ButtonEffect buttonEffect) {
+        this.buttonEffect = buttonEffect;
     }
 
     /**
      * Set state of button, especially to lock or unlock button
+     * Locked=0,up=1,pressed=2
      *
-     * @param state int
+     * @param state int, for the state
      */
     public void setState(int state) {
         this.state = state;
@@ -150,7 +153,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      * May act on others. Or toggle itself.
      *
      * @param sprite   ExtensibleSprite
-     * @param touchPosition
+     * @param touchPosition Vector2, position of the touch
      * @return boolean, true if something changes
      */
     @Override
@@ -166,16 +169,16 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      * Method for calling the buttonAct object that does what the button is supposed to do.
      */
     public void act(){
-        buttonAct.act(this);
+        buttonEffect.act(this);
     }
 
     /**
-     * Touch end on the sprite: only this action. No decorator.
-     * Calls the effective button act.
+     * Touch end on the sprite: Does nothing if locked,
+     * else calls the effective buttonTouchEnd.
      *
      * @param sprite   ExtensibleSprite
      * @param position Vector2, position of touch
-     * @return
+     * @return boolean, true if something changed
      */
     @Override
     public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
@@ -187,7 +190,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     }
 
     /**
-     * do a button press (to choose first button pressed of a buttonCollection)
+     * do a button press (for the initial button press of a buttonCollection)
      */
     public void press(){
         if (state!=LOCKED){

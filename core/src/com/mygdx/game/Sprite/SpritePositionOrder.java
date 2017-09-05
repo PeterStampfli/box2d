@@ -23,8 +23,16 @@ public class SpritePositionOrder extends com.mygdx.game.utilities.Collection<Ext
      */
     public SpritePositionOrder(SpriteCollection spriteCollection){
         this.spriteCollection=spriteCollection;
+        updateList();
+    }
+
+    /**
+     * update the list of sprites
+     * call at construction and when number or types of sprites change
+     */
+    public void updateList(){
         for (ExtensibleSprite item : spriteCollection.items) {
-            this.items.add(item);
+            add(item);
         }
     }
 
@@ -71,7 +79,7 @@ public class SpritePositionOrder extends com.mygdx.game.utilities.Collection<Ext
             for (ExtensibleSprite item : items) {
                 index = byteBuffer.getInt();
                 if (index >= 0) {
-                    spriteCollection.items.set(index, item);
+                    spriteCollection.set(index, item);
                 }
             }
         }

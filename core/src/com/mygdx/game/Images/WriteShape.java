@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
@@ -19,7 +18,7 @@ public class WriteShape {
      * append data of a Circle object
      *
      * @param fileHandle FileHandle
-     * @param circle
+     * @param circle Circle
      */
     static public void appendCircle(FileHandle fileHandle,Circle circle){
         WriteData.appendFloats(fileHandle,circle.x,circle.y,circle.radius);
@@ -29,7 +28,7 @@ public class WriteShape {
      * append data of a Rectangle object
      *
      * @param fileHandle FileHandle
-     * @param rectangle
+     * @param rectangle Rectangle
      */
     static public void appendRectangle(FileHandle fileHandle,Rectangle rectangle){
         WriteData.appendFloats(fileHandle,rectangle.x,rectangle.y,rectangle.width,rectangle.height);
@@ -41,7 +40,7 @@ public class WriteShape {
      * length=2*number of vertices
      *
      * @param fileHandle FileHandle
-     * @param polygon
+     * @param polygon Polygon
      */
     static public void appendPolygon(FileHandle fileHandle,Polygon polygon){
         float[] vertices=polygon.getVertices();
@@ -54,7 +53,7 @@ public class WriteShape {
      * first integer length of vertices array, then float[] vertices array
      * length=2*number of vertices
      *
-     * @param polyline
+     * @param polyline Polyline
      */
     static public void appendPolyline(FileHandle fileHandle,Polyline polyline){
         float[] vertices=polyline.getVertices();
@@ -66,7 +65,7 @@ public class WriteShape {
      * append a polypoint:
      * first int number of coordinates, then float[] coordinates, then boolean isLop
      * @param fileHandle FileHandle
-     * @param polypoint
+     * @param polypoint Polypoint
      */
     static public void appendPolypoint(FileHandle fileHandle, Polypoint polypoint){
         WriteData.appendInt(fileHandle,polypoint.coordinates.size);
@@ -78,9 +77,9 @@ public class WriteShape {
      * appending a ghost depending if it exists
      *
      * @param fileHandle FileHandle
-     * @param exists
-     * @param x
-     * @param y
+     * @param exists boolean, true if ghost exists
+     * @param x float, x-coordinate of ghost
+     * @param y float, y-coordinate
      */
     static private void appendGhost(FileHandle fileHandle, boolean exists, float x, float y){
         WriteData.appendBoolean(fileHandle,exists);
@@ -96,7 +95,7 @@ public class WriteShape {
      * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
      *
      * @param fileHandle FileHandle
-     * @param edge
+     * @param edge Edge
      */
     static public void  appendEdge(FileHandle fileHandle,Edge edge){
         WriteData.appendFloats(fileHandle,edge.aX,edge.aY,edge.bX,edge.bY);
@@ -112,7 +111,7 @@ public class WriteShape {
      * following byte is 1 if ghostB exists followed by ghostB coordinates, else byte is 0
      *
      * @param fileHandle FileHandle
-     * @param chain
+     * @param chain Chain
      */
     static public void  appendChain(FileHandle fileHandle,Chain chain){
         WriteData.appendInt(fileHandle,chain.coordinates.length);
@@ -126,7 +125,7 @@ public class WriteShape {
      * append a shape2DCollection, first int number of sub-shapes, then the sub-shapes
      *
      * @param fileHandle FileHandle
-     * @param collection
+     * @param collection Shape2DCollection
      */
     static public void appendShape2DCollection(FileHandle fileHandle,Shape2DCollection collection){
         WriteData.appendInt(fileHandle,collection.items.size);
@@ -139,7 +138,7 @@ public class WriteShape {
      * append a byte for the shape type to a file
      *
      * @param fileHandle FileHandle
-     * @param type
+     * @param type Shape2DType, will be transformed to byte and appended
      */
     static private void appendType(FileHandle fileHandle, Shape2DType type){
         WriteData.appendByte(fileHandle,type.toByte());
@@ -185,7 +184,7 @@ public class WriteShape {
             appendShape2DCollection(fileHandle,(Shape2DCollection) shape);
         }
         else {
-            Gdx.app.log(" ******************** draw","unknown shape "+shape.getClass());
+            throw new RuntimeException("unknown shape "+shape.getClass());
         }
     }
 

@@ -99,7 +99,7 @@ public class ButtonActions {
     /**
      * button act: does nothing
      */
-    static public ButtonAct actNull=new ButtonAct() {
+    static public ButtonEffect actNull=new ButtonEffect() {
         @Override
         public void act(ButtonExtension buttonExtension) {
         }
