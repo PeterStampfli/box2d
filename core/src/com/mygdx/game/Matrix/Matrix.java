@@ -68,6 +68,10 @@ public class Matrix<T> extends TouchableCollection<T> {
         }
     }
 
+
+
+    //compere indices
+
     // how to get or set single elements
 
     /**
@@ -178,9 +182,9 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * set elements of one matrix depending on the elements of another one. independent of address.
      *
-     * @param transformation
-     * @param matrix
-     * @param <U>
+     * @param transformation Transform object with U to T transform method
+     * @param matrix Matrix of same dimensions with objects of type U
+     * @param <U> Type of input objects for the transformation
      */
     public <U extends Touchable> void transform(Transform<T,U> transformation,
                                                 Matrix<U> matrix){
@@ -196,9 +200,9 @@ public class Matrix<T> extends TouchableCollection<T> {
     /**
      * set elements of one matrix depending on the elements of another one and of address.
      *
-     * @param transformation
-     * @param matrix
-     * @param <U>
+     * @param transformation TransformIJ object with U to T transform method depending on indices
+     * @param matrix Matrix of same dimensions with objects of type U
+     * @param <U> Type of input objects for the transformation
      */
     public <U extends Touchable> void transformIJ(TransformIJ<T,U> transformation,
                                                 Matrix<U> matrix){

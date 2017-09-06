@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.FloatArray;
  */
 
 public class Shape2DLimits {
-    static final float bigNumber=1000000;
+    static private final float bigNumber=1000000;
 
     /**
      * calculate maximum x-coordinate of an array of coordinate pairs
@@ -31,8 +31,8 @@ public class Shape2DLimits {
     /**
      * calculate maximum x-coordinate of a FloatArray of coordinate pairs
      *
-     * @param coordinates
-     * @return
+     * @param coordinates FloatArray
+     * @return float, maximum of x-coordinates (numbers of even index)
      */
     static public float maxXCoordinates(FloatArray coordinates){
         float x=-bigNumber;
@@ -45,77 +45,79 @@ public class Shape2DLimits {
     /**
      * calculate maximum x-coordinate of a circle
      *
-     * @param circle
+     * @param circle Circle
+     * @return float
      */
-    static public float maxXCircle(Circle circle) {
+    static private float maxXCircle(Circle circle) {
         return circle.x+circle.radius;
     }
 
     /**
      * calculate the maximum x-coordinate of a rectangle
-     * @param rectangle
-     * @return
+     * @param rectangle Rectangle
+     * @return float
      */
-    static public float maxXRectangle(Rectangle rectangle){
+    static private float maxXRectangle(Rectangle rectangle){
         return rectangle.x+rectangle.width;
     }
 
     /**
      * calculate the maximum x-coordinate of a chain, without ghosts
      *
-     * @param chain
-     * @return
+     * @param chain Chain
+     * @return float
      */
-    static public float maxXChain(Chain chain){
+    static private float maxXChain(Chain chain){
         return maxXCoordinates(chain.coordinates);
     }
 
     /**
      * calculate the maximum x-coordinate of an edge, without ghosts
      *
-     * @param edge
-     * @return
+     * @param edge Edge
+     * @return float
      */
-    static public float maxXEdge(Edge edge){
+    static private float maxXEdge(Edge edge){
         return Math.max(edge.aX,edge.bX);
     }
 
     /**
      * calculate the maximum x-coordinate of a polygon, local vertices
      *
-     * @param polygon
-     * @return
+     * @param polygon Polygon
+     * @return float
      */
-    static public float maxXPolygon(Polygon polygon){
+    static private float maxXPolygon(Polygon polygon){
         return maxXCoordinates(polygon.getVertices());
     }
 
     /**
      * calculate the maximum x-coordinate of a polygon, local vertices
      *
-     * @param polyline
-     * @return
+     * @param polyline Polyline
+     * @return float
      */
-    static public float maxXPolyline(Polyline polyline){
+    static private float maxXPolyline(Polyline polyline){
         return maxXCoordinates(polyline.getVertices());
     }
 
     /**
      * calculate the maximum x-coordinate of a polypoint, local vertices
      *
-     * @param polypoint
-     * @return
+     * @param polypoint Polypoint
+     * @return float
      */
-    static public float maxXPolypoint(Polypoint polypoint){
+    static private float maxXPolypoint(Polypoint polypoint){
         return maxXCoordinates(polypoint.coordinates);
     }
 
     /**
      * determine maximum x-coordinate for a shape2DCollection (including dots and lines)
      *
-     * @param collection
+     * @param collection Shape2DCollection
+     * @return float
      */
-    static public float maxXCollection(Shape2DCollection collection){
+    static private float maxXCollection(Shape2DCollection collection){
         float x=-bigNumber;
         for (Shape2D subShape:collection.items){
             x=Math.max(x, maxXShape(subShape));
@@ -126,8 +128,8 @@ public class Shape2DLimits {
     /**
      *  determine maximum of x-coordinate for a shape2D
      *
-     * @param shape
-     * @return
+     * @param shape Shape2D
+     * @return float
      */
     static public float maxXShape(Shape2D shape){
         if (shape==null){
@@ -163,8 +165,8 @@ public class Shape2DLimits {
     /**
      * calculate maximum y-coordinate of an array of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates float[], coordinate pairs
+     * @return float, maximum of numbers with odd index
      */
     static public float maxYCoordinates(float[] coordinates){
         float y=-bigNumber;
@@ -177,8 +179,8 @@ public class Shape2DLimits {
     /**
      * calculate maximum y-coordinate of a FloatArray of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates FloatArray, coordinate pairs
+     * @return float, maximum of numbers with odd index
      */
     static public float maxYCoordinates(FloatArray coordinates){
         float y=-bigNumber;
@@ -191,77 +193,79 @@ public class Shape2DLimits {
     /**
      * calculate maximum y-coordinate of a circle
      *
-     * @param circle
+     * @param circle Circle
      */
-    static public float maxYCircle(Circle circle) {
+    static private float maxYCircle(Circle circle) {
         return circle.y+circle.radius;
     }
 
     /**
      * calculate the maximum y-coordinate of a rectangle
-     * @param rectangle
-     * @return
+     *
+     * @param rectangle Rectangle
+     * @return float
      */
-    static public float maxYRectangle(Rectangle rectangle){
+    static private float maxYRectangle(Rectangle rectangle){
         return rectangle.y+rectangle.height;
     }
 
     /**
      * calculate the maximum y-coordinate of a chain, without ghosts
      *
-     * @param chain
-     * @return
+     * @param chain Chain
+     * @return float
      */
-    static public float maxYChain(Chain chain){
+    static private float maxYChain(Chain chain){
         return maxYCoordinates(chain.coordinates);
     }
 
     /**
      * calculate the maximum y-coordinate of an edge, without ghosts
      *
-     * @param edge
-     * @return
+     * @param edge Edge
+     * @return float
      */
-    static public float maxYEdge(Edge edge){
+    static private float maxYEdge(Edge edge){
         return Math.max(edge.aY,edge.bY);
     }
 
     /**
      * calculate the maximum y-coordinate of a polygon, local vertices
      *
-     * @param polygon
-     * @return
+     * @param polygon Polygon
+     * @return float
      */
-    static public float maxYPolygon(Polygon polygon){
+    static private float maxYPolygon(Polygon polygon){
         return maxYCoordinates(polygon.getVertices());
     }
 
     /**
      * calculate the maximum y-coordinate of a polygon, local vertices
      *
-     * @param polyline
-     * @return
+     * @param polyline Polyline
+     * @return float
      */
-    static public float maxYPolyline(Polyline polyline){
+    static private float maxYPolyline(Polyline polyline){
         return maxYCoordinates(polyline.getVertices());
     }
 
     /**
      * calculate the maximum y-coordinate of a polypoint, local vertices
      *
-     * @param polypoint
-     * @return
+     * @param polypoint Polypoint
+     * @return float
      */
-    static public float maxYPolypoint(Polypoint polypoint){
+    static private float maxYPolypoint(Polypoint polypoint){
         return maxYCoordinates(polypoint.coordinates);
     }
 
     /**
      * determine maximum y-coordinate for a shape2DCollection (including dots and lines)
      *
-     * @param collection
+     * @param collection Shape2DCollection
+     * @return float
      */
-    static public float maxYCollection(Shape2DCollection collection){
+    static private float maxYCollection(Shape2DCollection collection){
         float y=-bigNumber;
         for (Shape2D subShape:collection.items){
             y=Math.max(y, maxYShape(subShape));
@@ -272,8 +276,8 @@ public class Shape2DLimits {
     /**
      *  determine maximum of y-coordinate for a shape2D
      *
-     * @param shape
-     * @return
+     * @param shape Shape2D
+     * @return float
      */
     static public float maxYShape(Shape2D shape){
         if (shape==null){
@@ -310,8 +314,8 @@ public class Shape2DLimits {
     /**
      * calculate minimum x-coordinate of an array of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates float[]
+     * @return float, minimum of numbers with even index
      */
     static public float minXCoordinates(float[] coordinates){
         float x=bigNumber;
@@ -324,8 +328,8 @@ public class Shape2DLimits {
     /**
      * calculate minimum x-coordinate of a FloatArray of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates FloatArray
+     * @return float, minimum of numbers with even index
      */
     static public float minXCoordinates(FloatArray coordinates){
         float x=bigNumber;
@@ -338,77 +342,80 @@ public class Shape2DLimits {
     /**
      * calculate minimum x-coordinate of a circle
      *
-     * @param circle
+     * @param circle Circle
+     * @return float
      */
-    static public float minXCircle(Circle circle) {
+    static private float minXCircle(Circle circle) {
         return circle.x-circle.radius;
     }
 
     /**
      * calculate the minimum x-coordinate of a rectangle
-     * @param rectangle
-     * @return
+     *
+     * @param rectangle Rectangle
+     * @return float
      */
-    static public float minXRectangle(Rectangle rectangle){
+    static private float minXRectangle(Rectangle rectangle){
         return rectangle.x-rectangle.width;
     }
 
     /**
      * calculate the minimum x-coordinate of a chain, without ghosts
      *
-     * @param chain
-     * @return
+     * @param chain Chain
+     * @return float
      */
-    static public float minXChain(Chain chain){
+    static private float minXChain(Chain chain){
         return minXCoordinates(chain.coordinates);
     }
 
     /**
      * calculate the minimum x-coordinate of an edge, without ghosts
      *
-     * @param edge
-     * @return
+     * @param edge Edge
+     * @return float
      */
-    static public float minXEdge(Edge edge){
+    static private float minXEdge(Edge edge){
         return Math.min(edge.aX,edge.bX);
     }
 
     /**
      * calculate the minimum x-coordinate of a polygon, local vertices
      *
-     * @param polygon
-     * @return
+     * @param polygon Polygon
+     * @return float
      */
-    static public float minXPolygon(Polygon polygon){
+    static private float minXPolygon(Polygon polygon){
         return minXCoordinates(polygon.getVertices());
     }
 
     /**
      * calculate the minimum x-coordinate of a polygon, local vertices
      *
-     * @param polyline
-     * @return
+     * @param polyline Polyline
+     * @return float
      */
-    static public float minXPolyline(Polyline polyline){
+    static private float minXPolyline(Polyline polyline){
         return minXCoordinates(polyline.getVertices());
     }
 
     /**
      * calculate the minimum x-coordinate of a polypoint, local vertices
      *
-     * @param polypoint
-     * @return
+     * @param polypoint Polypoint
+     * @return float
      */
-    static public float minXPolypoint(Polypoint polypoint){
+    static private float minXPolypoint(Polypoint polypoint){
         return minXCoordinates(polypoint.coordinates);
     }
 
     /**
      * determine minimum x-coordinate for a shape2DCollection (including dots and lines)
      *
-     * @param collection
+     * @param collection Shape2DCollection
+     * @return float
      */
-    static public float minXCollection(Shape2DCollection collection){
+    static private float minXCollection(Shape2DCollection collection){
         float x=bigNumber;
         for (Shape2D subShape:collection.items){
             x=Math.min(x, minXShape(subShape));
@@ -419,8 +426,8 @@ public class Shape2DLimits {
     /**
      *  determine minimum of x-coordinate for a shape2D
      *
-     * @param shape
-     * @return
+     * @param shape Shape2D
+     * @return float
      */
     static public float minXShape(Shape2D shape){
         if (shape==null){
@@ -457,8 +464,8 @@ public class Shape2DLimits {
     /**
      * calculate minimum y-coordinate of an array of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates float[]
+     * @return float
      */
     static public float minYCoordinates(float[] coordinates){
         float y=bigNumber;
@@ -471,8 +478,8 @@ public class Shape2DLimits {
     /**
      * calculate minimum y-coordinate of a FloatArray of coordinates
      *
-     * @param coordinates
-     * @return
+     * @param coordinates FloatArray
+     * @return float
      */
     static public float minYCoordinates(FloatArray coordinates){
         float y=bigNumber;
@@ -485,77 +492,79 @@ public class Shape2DLimits {
     /**
      * calculate minimum y-coordinate of a circle
      *
-     * @param circle
+     * @param circle Circle
      */
-    static public float minYCircle(Circle circle) {
+    static private float minYCircle(Circle circle) {
         return circle.y-circle.radius;
     }
 
     /**
      * calculate the minimum y-coordinate of a rectangle
-     * @param rectangle
-     * @return
+     *
+     * @param rectangle Rectangle
+     * @return float
      */
-    static public float minYRectangle(Rectangle rectangle){
+    static private float minYRectangle(Rectangle rectangle){
         return rectangle.y-rectangle.height;
     }
 
     /**
      * calculate the minimum y-coordinate of a chain, without ghosts
      *
-     * @param chain
-     * @return
+     * @param chain Chain
+     * @return float
      */
-    static public float minYChain(Chain chain){
+    static private float minYChain(Chain chain){
         return minYCoordinates(chain.coordinates);
     }
 
     /**
      * calculate the minimum y-coordinate of an edge, without ghosts
      *
-     * @param edge
-     * @return
+     * @param edge Edge
+     * @return float
      */
-    static public float minYEdge(Edge edge){
+    static private float minYEdge(Edge edge){
         return Math.min(edge.aY,edge.bY);
     }
 
     /**
      * calculate the minimum y-coordinate of a polygon, local vertices
      *
-     * @param polygon
-     * @return
+     * @param polygon Polygon
+     * @return float
      */
-    static public float minYPolygon(Polygon polygon){
+    static private float minYPolygon(Polygon polygon){
         return minYCoordinates(polygon.getVertices());
     }
 
     /**
      * calculate the minimum y-coordinate of a polygon, local vertices
      *
-     * @param polyline
-     * @return
+     * @param polyline Polyline
+     * @return float
      */
-    static public float minYPolyline(Polyline polyline){
+    static private float minYPolyline(Polyline polyline){
         return minYCoordinates(polyline.getVertices());
     }
 
     /**
      * calculate the minimum y-coordinate of a polypoint, local vertices
      *
-     * @param polypoint
-     * @return
+     * @param polypoint Polypoint
+     * @return float
      */
-    static public float minYPolypoint(Polypoint polypoint){
+    static private float minYPolypoint(Polypoint polypoint){
         return minYCoordinates(polypoint.coordinates);
     }
 
     /**
      * determine minimum y-coordinate for a shape2DCollection (including dots and lines)
      *
-     * @param collection
+     * @param collection Shape2DCollection
+     * @return float
      */
-    static public float minYCollection(Shape2DCollection collection){
+    static private float minYCollection(Shape2DCollection collection){
         float y=bigNumber;
         for (Shape2D subShape:collection.items){
             y=Math.min(y, minYShape(subShape));
@@ -566,8 +575,8 @@ public class Shape2DLimits {
     /**
      *  determine minimum of y-coordinate for a shape2D
      *
-     * @param shape
-     * @return
+     * @param shape Shape2D
+     * @return float
      */
     static public float minYShape(Shape2D shape){
         if (shape==null){

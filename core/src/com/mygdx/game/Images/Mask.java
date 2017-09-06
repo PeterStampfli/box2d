@@ -263,10 +263,10 @@ public class Mask {
     /**
      * add line data
      *
-     * @param ax
-     * @param ay
-     * @param bx
-     * @param by
+     * @param ax float, x-coordinate of point a
+     * @param ay float, y-coordinate of point a
+     * @param bx float, x-coordinate of point b
+     * @param by float, y-coordinate of point b
      */
     private void addLine(float ax,float ay,float bx,float by){
         ay = flipY(ay);

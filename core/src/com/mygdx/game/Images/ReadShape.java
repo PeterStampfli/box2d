@@ -19,8 +19,8 @@ public class ReadShape {
     /**
      * create a new circle object with data read from byteBuffer
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Circle
      */
     static public Circle circle(ByteBuffer buffer){
         return new Circle(buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
@@ -29,8 +29,8 @@ public class ReadShape {
     /**
      * create a new Rectangle object from data on a byteBuffer
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Rectangle
      */
     static public Rectangle rectangle(ByteBuffer buffer){
         return new Rectangle(buffer.getFloat(),buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
@@ -40,8 +40,8 @@ public class ReadShape {
      * create a new polygon object from data on a byteBuffer
      * first int length, then float[length] vertices
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Polygon
      */
     static public Polygon polygon(ByteBuffer buffer){
         return new Polygon(ReadData.getFloats(buffer));
@@ -51,8 +51,8 @@ public class ReadShape {
      * create a new polyline object from data on a byteBuffer
      * first int length, then float[length] vertices
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Polyline
      */
     static public Polyline polyline(ByteBuffer buffer){
         return new Polyline(ReadData.getFloats(buffer));
@@ -61,8 +61,8 @@ public class ReadShape {
     /**
      * create a new polyPoint object from data on byte buffer
      * first int length, then coordinates, then boolean isLoop
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Polypoint
      */
     static public Polypoint polypoint(ByteBuffer buffer){
         return new Polypoint(ReadData.getBoolean(buffer), ReadData.getFloats(buffer));
@@ -71,8 +71,8 @@ public class ReadShape {
     /**
      * Create an edge object from data on byteBuffer
      * first coordinates of a and b, then ghost a,then ghost b
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Edge
      */
     static public Edge edge(ByteBuffer buffer){
         Edge edge=new Edge(buffer.getFloat(),buffer.getFloat(),buffer.getFloat(),buffer.getFloat());
@@ -88,8 +88,8 @@ public class ReadShape {
     /**
      * Create an chain object from data on byteBuffer
      * first length of coordinates, then coordinates , then isLoop, then ghost a,then ghost b
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Chain
      */
     static public Chain chain(ByteBuffer buffer){
         Chain chain=new Chain(ReadData.getFloats(buffer));
@@ -105,8 +105,8 @@ public class ReadShape {
 
     /**
      * create a shape2dCollection object from a byteBuffer
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Shape2DCollection
      */
     static public Shape2DCollection shape2DCollection(ByteBuffer buffer){
         Shape2DCollection collection=new Shape2DCollection();
@@ -121,30 +121,28 @@ public class ReadShape {
      * create and read a shape2D from buffer.
      * first type of shape, then shape data
      *
-     * @param buffer
-     * @return
+     * @param buffer ByteBuffer
+     * @return Shape2D
      */
     static public Shape2D shape2D(ByteBuffer buffer){
         Shape2DType type=Shape2DType.ofByte(ReadData.getByte(buffer));
-        if (type!=null) {
-            switch (type) {
-                case CIRCLE:
-                    return circle(buffer);
-                case RECTANGLE:
-                    return rectangle(buffer);
-                case POLYGON:
-                    return polygon(buffer);
-                case POLYPOINT:
-                    return polypoint(buffer);
-                case POLYLINE:
-                    return polyline(buffer);
-                case EDGE:
-                    return edge(buffer);
-                case CHAIN:
-                    return chain(buffer);
-                case COLLECTION:
-                    return shape2DCollection(buffer);
-            }
+        switch (type) {
+            case CIRCLE:
+                return circle(buffer);
+            case RECTANGLE:
+                return rectangle(buffer);
+            case POLYGON:
+                return polygon(buffer);
+            case POLYPOINT:
+                return polypoint(buffer);
+            case POLYLINE:
+                return polyline(buffer);
+            case EDGE:
+                return edge(buffer);
+            case CHAIN:
+                return chain(buffer);
+            case COLLECTION:
+                return shape2DCollection(buffer);
         }
         return null;
     }

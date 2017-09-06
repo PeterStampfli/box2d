@@ -76,8 +76,8 @@ public class Shape2DRenderer extends ShapeRenderer{
     /**
      * Draw a circle, center given by vector2 object
      *
-     * @param center
-     * @param radius
+     * @param center Vector2, center of circle
+     * @param radius float
      */
     public void circle(Vector2 center, float radius){
         circle(center.x,center.y,radius);
