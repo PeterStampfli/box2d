@@ -15,10 +15,10 @@ public class Shape2DLimits {
     static final float bigNumber=1000000;
 
     /**
-     * calculate maximum x-coordinate of an array of coordinates
+     * calculate maximum x-coordinate of an array of coordinate pairs
      *
-     * @param coordinates
-     * @return
+     * @param coordinates float[]
+     * @return float, maximum of x-coordinates (numbers of even index)
      */
     static public float maxXCoordinates(float[] coordinates){
         float x=-bigNumber;
@@ -29,7 +29,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate maximum x-coordinate of a FloatArray of coordinates
+     * calculate maximum x-coordinate of a FloatArray of coordinate pairs
      *
      * @param coordinates
      * @return

@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
@@ -18,8 +17,8 @@ public class Shape2DTranslate {
      * Translate a circle.
      *
      * @param circle Circle to translate.
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void circle(Circle circle,float dx,float dy){
         circle.x+=dx;
@@ -30,6 +29,8 @@ public class Shape2DTranslate {
      * translate a rectangle.
      *
      * @param rectangle Rectangle to translate.
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void rectangle(Rectangle rectangle,float dx,float dy){
         rectangle.x+=dx;
@@ -40,8 +41,8 @@ public class Shape2DTranslate {
      * translate vertices in a float[] array
      *
      * @param coordinates
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public float[] translate(float[] coordinates, float dx, float dy){
         for (int i=coordinates.length-2;i>=0;i-=2){
@@ -55,8 +56,8 @@ public class Shape2DTranslate {
      * translate vertices in a floatArray
      *
      * @param coordinates
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public FloatArray translate(FloatArray coordinates, float dx, float dy){
         for (int i=coordinates.size-2;i>=0;i-=2){
@@ -70,8 +71,8 @@ public class Shape2DTranslate {
      * translate local vertices of polygon
      *
      * @param polygon Polygon object to translate
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void polygon(Polygon polygon,float dx,float dy){
         polygon.setVertices(translate(polygon.getVertices(),dx,dy));
@@ -81,8 +82,8 @@ public class Shape2DTranslate {
      * translate local vertices of polyline
      *
      * @param polyline Polygon object to translate
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void polyline(Polyline polyline,float dx,float dy){
         polyline.setVertices(translate(polyline.getVertices(),dx,dy));
@@ -92,8 +93,8 @@ public class Shape2DTranslate {
      * translate polypoint object.
      *
      * @param polypoint Polypoint, to translate
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void polypoint(Polypoint polypoint,float dx,float dy){
         translate(polypoint.coordinates,dx,dy);
@@ -103,8 +104,8 @@ public class Shape2DTranslate {
      * Translate edge, including ghosts.
      *
      * @param edge Edge
-     * @param dx
-     * @param dy
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void edge(Edge edge,float dx,float dy){
         edge.aX+=dx;
@@ -118,11 +119,11 @@ public class Shape2DTranslate {
     }
 
     /**
-     * translate a chain
+     * translate a chain, with ghosts
      *
-     * @param chain Chain to draw as a polyline with ghost points.
-     * @param dx
-     * @param dy
+     * @param chain Chain
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void chain(Chain chain,float dx,float dy){
         translate(chain.coordinates,dx,dy);
@@ -133,11 +134,11 @@ public class Shape2DTranslate {
     }
 
     /**
-     *   translate a shape2DCollection (includes dots and lines)
+     *   translate a shape2DCollection (includes dots and lines as subclass)
      *
-     * @param collection
-     * @param dx
-     * @param dy
+     * @param collection Shape2DCollection to translate
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
     static public void collection(Shape2DCollection collection, float dx, float dy){
         for (Shape2D subShape:collection.items){
@@ -148,9 +149,9 @@ public class Shape2DTranslate {
     /**
      * Translate any Shape2D shape, including collections.
      *
-     * @param shape Shape2D to draw
-     * @param dx
-     * @param dy
+     * @param shape Shape2D to translate
+     * @param dx float, translate x-coordinate
+     * @param dy float, translate y-coordinate
      */
 
     static public void shape(Shape2D shape, float dx, float dy){
@@ -171,9 +172,8 @@ public class Shape2DTranslate {
                 chain((Chain) shape, dx, dy);
             } else if (shape instanceof Shape2DCollection) {                 // includes subclass DotsAndLines
                 collection((Shape2DCollection) shape, dx, dy);
-
             } else {
-                Gdx.app.log(" ******************** translate", "unknown shape " + shape.getClass());
+                throw new RuntimeException("unknown shape " + shape.getClass());
             }
         }
     }
@@ -181,9 +181,9 @@ public class Shape2DTranslate {
     /**
      * adjust the shape to have its lowest x- and y-coordinates at given values
      *
-     * @param shape
-     * @param left
-     * @param bottom
+     * @param shape Shape2D, its position will be adjusted
+     * @param left float, smallest x-coordinate of shape
+     * @param bottom float, smallest y-coordinate of shape
      */
     static public void adjustLeftBottom(Shape2D shape,float left,float bottom){
         shape(shape,left-Shape2DLimits.minXShape(shape),bottom-Shape2DLimits.minYShape(shape));

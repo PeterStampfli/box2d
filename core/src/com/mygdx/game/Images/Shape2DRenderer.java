@@ -1,6 +1,5 @@
 package com.mygdx.game.Images;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -68,7 +67,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     /**
      * Draw a point in the 2d plane as a small circle of nullRadius.
      *
-     * @param p
+     * @param p Vector2, position of the point
      */
     public void point(Vector2 p){
         point(p.x,p.y);
@@ -178,7 +177,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     /**
      *     draw a shape2DCollection (including dots and lines)
      *
-     * @param collection
+     * @param collection Shape2DCollection, to draw
      */
     public void collection(Shape2DCollection collection){
         for (Shape2D subShape:collection.items){
@@ -209,9 +208,8 @@ public class Shape2DRenderer extends ShapeRenderer{
                 chain((Chain) shape);
             } else if (shape instanceof Shape2DCollection) {                 // includes subclass DotsAndLines
                 collection((Shape2DCollection) shape);
-
             } else {
-                Gdx.app.log(" ******************** draw", "unknown shape " + shape.getClass());
+                throw new RuntimeException( "unknown shape " + shape.getClass());
             }
         }
     }

@@ -23,7 +23,7 @@ public enum Shape2DType {
     /**
      * get the byte value that represents the type
      *
-     * @return
+     * @return byte, number of the type
      */
     public byte toByte() {
         return (byte) value;
@@ -32,15 +32,15 @@ public enum Shape2DType {
     /**
      * from a byte value obtain the type
      *
-     * @param i
-     * @return
+     * @param key byte, number for type
+     * @return Shape2DType, resulting from the number
      */
-    public static Shape2DType ofByte(int i){
+    public static Shape2DType ofByte(byte key){
         for (Shape2DType type:Shape2DType.values()){
-            if (type.toByte()==i){
+            if (type.toByte()==key){
                 return type;
             }
         }
-        throw new RuntimeException("No type matches byte value"+i);
+        throw new RuntimeException("No type matches byte value"+key);
     }
 }
