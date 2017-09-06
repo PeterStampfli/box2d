@@ -30,10 +30,9 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      *
      * @param sprite   ExtensibleSprite, actually PhysicalSprite
      * @param touchPosition Vector2, the position of touch (in pixels)
-     * @return boolean, false, nothing changed
      */
     @Override
-    public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
+    public void touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         if (useStaticBodies){
             physicalSprite.body.setType(BodyDef.BodyType.DynamicBody);
@@ -44,7 +43,6 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
         jointBuilder.setMaxAcceleration(maxAcceleration);
         jointBuilder.setCollideConnected(false);
         mouseJoint=jointBuilder.buildMouseJoint(physicalSprite,touchPosition);
-        return false;
     }
 
     /**
@@ -54,21 +52,18 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
      * @param sprite        ExtensibleSprite, actually PhysicalSprite
      * @param touchPosition Vector2, the average position of touch (in pixels)
      * @param deltaTouchPosition Vector2, the change in the position of touch (in pixels)
-     * @return boolean, true, something changed
      */
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition,Vector2 deltaTouchPosition) {
+    public void touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
         target.set(deltaTouchPosition).scl(0.5f).add(touchPosition).scl(1f/Physics.PIXELS_PER_METER);
         mouseJoint.setTarget(target);
-        return true;
     }
 
     /**
      * End the move: destroy the mouseJoint.
      * @param sprite   ExtensibleSprite
      * @param touchPosition Vector2, the position of touch (in pixels)
-     * @return boolean, false, nothing changed
      */
-    public boolean touchEnd(ExtensibleSprite sprite,Vector2 touchPosition){
+    public void touchEnd(ExtensibleSprite sprite, Vector2 touchPosition){
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         physicalSprite.physics.world.destroyJoint(mouseJoint);
         mouseJoint=null;
@@ -80,6 +75,5 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
             physicalSprite.body.setAngularVelocity(0);
             physicalSprite.body.setLinearVelocity(0, 0);
         }
-        return false;
     }
 }

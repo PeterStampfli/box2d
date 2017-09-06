@@ -1,7 +1,6 @@
 package com.mygdx.game.Matrix;
 
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Pieces.Touchable;
 import com.mygdx.game.Pieces.TouchableCollection;
 
 /**
@@ -69,8 +68,17 @@ public class Matrix<T> extends TouchableCollection<T> {
     }
 
 
-
-    //compere indices
+    /**
+     * Compare matrix dimensions with another matrix, throw exception if not equal.
+     *
+     * @param other Matrix, to compare with
+     */
+    public void checkDimensions(Matrix other){
+        if ((width!=other.width)||(height!=other.height)){
+            throw new RuntimeException("matrix dimensions do not match : width, height "+width
+                    +", "+height+" other: "+other.width+", "+other.height);
+        }
+    }
 
     // how to get or set single elements
 
@@ -186,8 +194,9 @@ public class Matrix<T> extends TouchableCollection<T> {
      * @param matrix Matrix of same dimensions with objects of type U
      * @param <U> Type of input objects for the transformation
      */
-    public <U extends Touchable> void transform(Transform<T,U> transformation,
+    public <U> void transform(Transform<T,U> transformation,
                                                 Matrix<U> matrix){
+        checkDimensions(matrix);
         U u;
         for (int index=items.size-1;index>=0;index--){
             u= matrix.items.get(index);
@@ -204,8 +213,9 @@ public class Matrix<T> extends TouchableCollection<T> {
      * @param matrix Matrix of same dimensions with objects of type U
      * @param <U> Type of input objects for the transformation
      */
-    public <U extends Touchable> void transformIJ(TransformIJ<T,U> transformation,
+    public <U> void transformIJ(TransformIJ<T,U> transformation,
                                                 Matrix<U> matrix){
+        checkDimensions(matrix);
         U u;
         int i,j;
         int index=0;

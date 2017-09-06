@@ -15,5 +15,5 @@ public interface SpriteTouchEnd {
      * @param position Vector2, position of touch
      * @return boolean, true if something changed
      */
-    boolean touchEnd(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position);
+    void touchEnd(ExtensibleSprite sprite, Vector2 position);
 }

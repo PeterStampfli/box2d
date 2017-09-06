@@ -118,8 +118,7 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible keepVisibleNull = new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite) {
-            return false;
+        public void keepVisible(ExtensibleSprite sprite) {
         }
     };
 
@@ -130,48 +129,40 @@ public class SpriteActions {
      */
     static public SpriteKeepVisible keepVisibleOrigin = new SpriteKeepVisible() {
         @Override
-        public boolean keepVisible(ExtensibleSprite sprite) {
+        public void keepVisible(ExtensibleSprite sprite) {
             Camera camera=sprite.device.camera;
             float diff = sprite.getWorldOriginX() - camera.position.x;
             float half = 0.5f * camera.viewportWidth;
-            boolean somethingChanged = false;
             if (diff < -half) {
                 sprite.setWorldOriginX(camera.position.x - half);
-                somethingChanged = true;
             } else if (diff > half) {
                 sprite.setWorldOriginX(camera.position.x + half);
-                somethingChanged = true;
             }
             diff = sprite.getWorldOriginY() - camera.position.y;
             half = 0.5f * camera.viewportHeight;
             if (diff < -half) {
                 sprite.setWorldOriginY(camera.position.y - half);
-                somethingChanged = true;
             } else if (diff > half) {
                 sprite.setWorldOriginY(camera.position.y + half);
-                somethingChanged = true;
             }
-            return somethingChanged;
         }
     };
     /**
      * An object that implements SpriteTouchBegin:
-     * Does nothing and returns false.
+     * Does nothing.
      */
     static public SpriteTouchBegin touchBeginNull = new SpriteTouchBegin() {
         @Override
-        public boolean touchBegin(ExtensibleSprite sprite, Vector2 position) {
-            return false;
+        public void touchBegin(ExtensibleSprite sprite, Vector2 position) {
         }
     };
     /**
      * An object that implements SpriteTouchDrag:
-     * Does nothing and returns false.
+     * Does nothing.
      */
     static public SpriteTouchDrag touchDragNull = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
-            return false;
+        public void touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
         }
     };
 
@@ -181,18 +172,18 @@ public class SpriteActions {
      */
     static public SpriteTouchDrag touchDragTranslate = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+        public void touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
             sprite.translate(deltaPosition.x, deltaPosition.y);
-            return true;
         }
     };
+
     /**
      * An object that implements SpriteTouchDrag:
      * Translates and rotates the sprite.
      */
     static public SpriteTouchDrag touchDragTransRotate = new SpriteTouchDrag() {
         @Override
-        public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
+        public void touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
             float centerTouchX = touchPosition.x - sprite.getWorldOriginX();
             float centerTouchY = touchPosition.y - sprite.getWorldOriginY();
             float centerTouchLength = Vector2.len(centerTouchX, centerTouchY);
@@ -205,17 +196,16 @@ public class SpriteActions {
             float cosDeltaAngle = MathUtils.cos(deltaAngle);
             sprite.translate(deltaTouchPosition.x - ((cosDeltaAngle - 1) * centerTouchX - sinDeltaAngle * centerTouchY),
                     deltaTouchPosition.y - (sinDeltaAngle * centerTouchX + (cosDeltaAngle - 1) * centerTouchY));
-            return true;
         }
     };
+
     /**
      * An object that implements SpriteTouchEnd:
      * Does nothing and returns false.
      */
     static public SpriteTouchEnd touchEndNull = new SpriteTouchEnd() {
         @Override
-        public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
-            return false;
+        public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
         }
     };
     /**
@@ -225,8 +215,7 @@ public class SpriteActions {
      */
     static public SpriteScroll scrollNull = new SpriteScroll() {
         @Override
-        public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
-            return sprite.contains(position.x, position.y);
+        public void scroll(ExtensibleSprite sprite, int amount) {
         }
     };
 

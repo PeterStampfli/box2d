@@ -97,42 +97,34 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
     }
 
     /**
-     * Calls the touchBegin method on the first element of the collection.
-     * The calling method has to make sure that this makes sense.
-     * Returns false if there is no touchable.
+     * Calls the touchBegin method on the selected element of the collection.
      *
      * @param position, Vector2 touch position
-     * @return true if something changed
      */
     @Override
-    public boolean touchBegin(Vector2 position) {
+    public void touchBegin(Vector2 position) {
         if (items.size > 0) {
             Object item=items.get(iSelected);
             if (item instanceof Touchable) {
-                return ((Touchable) item).touchBegin(position);
+                ((Touchable) item).touchBegin(position);
             }
         }
-        return false;
     }
 
     /**
-     * Calls the touchDrag method on the first element of the collection.
-     * The calling method has to make sure that this makes sense.
-     * Returns false if there is no touchable
+     * Calls the touchDrag method on the selected element of the collection.
      *
      * @param position      Vector2 touch position
      * @param deltaPosition Vector2, change in the touch position
-     * @return true if something changed
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
+    public void touchDrag(Vector2 position, Vector2 deltaPosition) {
         if (items.size > 0) {
             Object item=items.get(iSelected);
             if (item instanceof Touchable) {
-                return ((Touchable) item).touchDrag(position, deltaPosition);
+                ((Touchable) item).touchDrag(position, deltaPosition);
             }
         }
-        return false;
     }
 
     /**
@@ -141,50 +133,46 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
      * Returns false if there is no touchable.
      *
      * @param position, Vector2 touch position
-     * @return true if something changed
      */
     @Override
-    public boolean touchEnd(Vector2 position) {
+    public void touchEnd(Vector2 position) {
         if (items.size > 0) {
             Object item=items.get(iSelected);
             if (item instanceof Touchable) {
-                return ((Touchable) item).touchEnd(position);
+                ((Touchable) item).touchEnd(position);
             }
         }
-        return false;
     }
 
     /**
-     * Calls the scroll method on the collection from first to last until an object returns true.
-     * (If an object contains the touch position, it does something and returns true.)
+     * Searches the collection from first to last until an object contains the touch position.
+     * Calls the scroll method if it is touchable.
      *
      * @param position, Vector2 touch position
      * @param amount    int, indicates if scrolling up or down
-     * @return true if something changed
      */
     @Override
-    public boolean scroll(Vector2 position, int amount) {
+    public void scroll(Vector2 position, int amount) {
         for (T item : items) {
-            if ((item instanceof  Touchable)&&((Touchable) item).scroll(position, amount)) {
-                return true;
+            if ((item instanceof Shape2D)&&((Shape2D) item).contains(position)) {
+                if ((item instanceof Touchable)){
+                    ((Touchable) item).scroll(position, amount);
+                }
+                return;
             }
         }
-        return false;
     }
 
     /**
      * Call the keep visible method on all elements.
      *
-     * @return true if something changed
      */
     @Override
-    public boolean keepVisible() {
-        boolean somethingChanged = false;
+    public void keepVisible() {
         for (T item : items) {
-            if ((item instanceof  Touchable)&&((Touchable) item).keepVisible()) {
-                somethingChanged = true;
+            if (item instanceof  Touchable){
+                ((Touchable) item).keepVisible();
             }
         }
-        return somethingChanged;
     }
 }

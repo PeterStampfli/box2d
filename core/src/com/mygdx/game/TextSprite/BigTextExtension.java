@@ -85,28 +85,20 @@ public class BigTextExtension extends TextExtension implements SpriteTouchDrag, 
      * @param sprite        Extensible Sprite
      * @param position      Vector2, position of touch
      * @param deltaPosition Vector2, change in the position of touch
-     * @return boolean, true
      */
     @Override
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
+    public void touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition) {
         textShift += deltaPosition.y;
-        return true;
     }
 
     /**
      * scroll the text up and down.
      *
-     * @param sprite   ExtensibleSprite
-     * @param position Vector2, position of touch
+     *  @param sprite   ExtensibleSprite
      * @param amount   int=(+/-)1, for the scroll direction
-     * @return boolean, true
      */
     @Override
-    public boolean scroll(ExtensibleSprite sprite, Vector2 position, int amount) {
-        if (sprite.contains(position)) {
+    public void scroll(ExtensibleSprite sprite, int amount) {
             textShift += 0.4f * amount * font.getLineHeight();
-            return true;
-        }
-        return false;
     }
 }

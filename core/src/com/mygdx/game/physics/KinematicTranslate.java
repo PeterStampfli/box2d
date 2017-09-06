@@ -20,15 +20,13 @@ public class KinematicTranslate
      * determine relative position of touch to body, start motion
      *
      * @param sprite   ExtensibleSprite
-     * @param touchPosition
-     * @return
+     * @param touchPosition Vector2
      */
     @Override
-    public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition) {
+    public void touchBegin(ExtensibleSprite sprite, Vector2 touchPosition) {
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         bodyTargetPosition.set(Physics.getPosition(physicalSprite.body));
         moving=true;
-        return false;
     }
 
     /**
@@ -36,12 +34,10 @@ public class KinematicTranslate
      * @param sprite        ExtensibleSprite
      * @param touchPosition
      * @param deltaTouchPosition
-     * @return
      */
     @Override
-    public boolean touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
+    public void touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
         bodyTargetPosition.add(deltaTouchPosition);
-        return false;
     }
 
     /**
@@ -49,14 +45,12 @@ public class KinematicTranslate
      *
      * @param sprite   ExtensibleSprite
      * @param position Vector2, position of touch
-     * @return
      */
     @Override
-    public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
+    public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         moving=false;
         physicalSprite.body.setLinearVelocity(0,0);
-        return false;
     }
 
     @Override

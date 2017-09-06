@@ -48,7 +48,7 @@ public class BodyBuilder {
      * Set if body is active at start (default=true).
      *
      * @param isActive boolean, true if body should be active at start
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setIsActive(boolean isActive) {
         bodyDef.active = isActive;
@@ -59,7 +59,7 @@ public class BodyBuilder {
      * Set if body is awake at start (default=true).
      *
      * @param isAwake boolean, true if body should be awake at start
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setIsAwake(boolean isAwake) {
         bodyDef.awake = isAwake;
@@ -70,7 +70,7 @@ public class BodyBuilder {
      * Set if body may sleep (default=true).
      *
      * @param allowed boolean, true if body may sleep
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setAllowSleep(boolean allowed) {
         bodyDef.allowSleep = allowed;
@@ -81,7 +81,7 @@ public class BodyBuilder {
      * Set if body is a bullet (default=false).
      *
      * @param isBullet boolean, true for a bullet
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setIsBullet(boolean isBullet) {
         bodyDef.bullet = isBullet;
@@ -93,7 +93,7 @@ public class BodyBuilder {
      *
      * @param positionX float, x-component of the position in the graphics world.
      * @param positionY float, y-component of the position in the graphics world.
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setPosition(float positionX, float positionY) {
         bodyDef.position.set(positionX, positionY).scl(1f / Physics.PIXELS_PER_METER);
@@ -103,8 +103,8 @@ public class BodyBuilder {
     /**
      * Set body position  (in pixel units).
      *
-     * @param position
-     * @return
+     * @param position Vector2
+     * @return this, for chaining
      */
     public BodyBuilder setPosition(Vector2 position) {
         setPosition(position.x,position.y);
@@ -115,7 +115,7 @@ public class BodyBuilder {
      * Set body angle, in radians.
      *
      * @param angle float, radians
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setAngle(float angle) {
         bodyDef.angle = angle;
@@ -127,7 +127,7 @@ public class BodyBuilder {
      * Can be larger than 1. Effect depends on time step for large values.
      *
      * @param damping float, angular damping, between 0 and 1 ?
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setAngularDamping(float damping) {
         bodyDef.angularDamping = damping;
@@ -138,7 +138,7 @@ public class BodyBuilder {
      * Set if angle of body is fixed.
      *
      * @param fixed boolean, true for no rotation
-     * @return this BodyBuilder
+     * @return this, for chaining this BodyBuilder
      */
     public BodyBuilder setFixedRotation(boolean fixed){
         bodyDef.fixedRotation=fixed;
@@ -148,8 +148,8 @@ public class BodyBuilder {
     /**
      * Set the angular velocity in radians/sec (default=0).
      *
-     * @param velocity
-     * @return
+     * @param velocity float
+     * @return this, for chaining
      */
     public BodyBuilder setAngularVelocity(float velocity) {
         bodyDef.angularVelocity = velocity;
@@ -161,7 +161,7 @@ public class BodyBuilder {
      * Can be larger than 1. Effect depends on time step for large values.
      *
      * @param damping float, linear damping, between 0 and 1 ?
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setLinearDamping(float damping) {
         bodyDef.linearDamping = damping;
@@ -171,9 +171,9 @@ public class BodyBuilder {
     /**
      * Set initial velocity (default=0) in pixels/sec.
      *
-     * @param velocityX
-     * @param velocityY
-     * @return
+     * @param velocityX float, x-component of velocity
+     * @param velocityY float, x-component of velocity
+     * @return this, for chaining
      */
     public BodyBuilder setLinearVelocity(float velocityX, float velocityY) {
         bodyDef.linearVelocity.set(velocityX, velocityY).scl(1f / Physics.PIXELS_PER_METER);
@@ -183,8 +183,8 @@ public class BodyBuilder {
     /**
      * Set initial velocity (default=0) in pixels/sec.
      *
-     * @param velocity
-     * @return
+     * @param velocity Vector2, velocity
+     * @return this, for chaining
      */
     public BodyBuilder setLinearVelocity(Vector2 velocity) {
         setLinearVelocity(velocity.x,velocity.y);
@@ -196,7 +196,7 @@ public class BodyBuilder {
      * For particles that float ?
      *
      * @param scale float, multiplier for gravity.
-     * @return
+     * @return this, for chaining
      */
     public BodyBuilder setGravityScale(float scale) {
         bodyDef.gravityScale = scale;

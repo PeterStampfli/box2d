@@ -154,15 +154,12 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      *
      * @param sprite   ExtensibleSprite
      * @param touchPosition Vector2, position of the touch
-     * @return boolean, true if something changes
      */
     @Override
-    public boolean touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
-        if (state== LOCKED){
-            return false;
+    public void touchBegin(ExtensibleSprite sprite, Vector2 touchPosition){
+        if (state!= LOCKED) {
+            buttonTouchBegin.touchBegin(this);
         }
-        buttonTouchBegin.touchBegin(this);
-        return true;
     }
 
     /**
@@ -178,15 +175,12 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      *
      * @param sprite   ExtensibleSprite
      * @param position Vector2, position of touch
-     * @return boolean, true if something changed
      */
     @Override
-    public boolean touchEnd(ExtensibleSprite sprite, Vector2 position) {
-        if (state== LOCKED){
-            return false;
+    public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
+        if (state!= LOCKED) {
+            buttonTouchEnd.touchEnd(this);
         }
-        buttonTouchEnd.touchEnd(this);
-        return true;
     }
 
     /**

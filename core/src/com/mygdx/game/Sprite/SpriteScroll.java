@@ -10,11 +10,8 @@ public interface SpriteScroll {
 
     /**
      * Scroll action on the sprite.
-     *
-     * @param sprite   ExtensibleSprite
-     * @param position Vector2, position of the mouse (PC)
+     *  @param sprite   ExtensibleSprite
      * @param amount   int, (+/-) 1, depending on scrolling up or down
-     * @return boolean, true if something changed
      */
-    boolean scroll(com.mygdx.game.Sprite.ExtensibleSprite sprite, Vector2 position, int amount);
+    void scroll(ExtensibleSprite sprite, int amount);
 }

@@ -299,11 +299,10 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
     /**
      * Keep the sprite visible using the keepVisible method of the spriteKeepVisible object.
      *
-     * @return boolean, true if something changed
      */
     @Override
-    public boolean keepVisible() {
-        return spriteKeepVisible.keepVisible(this);
+    public void keepVisible() {
+        spriteKeepVisible.keepVisible(this);
     }
 
     /**
@@ -319,11 +318,10 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      * Call the touchBegin method of the spriteTouchBegin object.
      *
      * @param position Vector2, position of touch.
-     * @return boolean, true if something changed
      */
     @Override
-    public boolean touchBegin(Vector2 position) {
-        return spriteTouchBegin.touchBegin(this, position);
+    public void touchBegin(Vector2 position) {
+        spriteTouchBegin.touchBegin(this, position);
     }
 
     /**
@@ -341,13 +339,11 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      *
      * @param position      Vector2, position of touch.
      * @param deltaPosition Vector2, change in the position of touch.
-     * @return boolean, true if something changed
      */
     @Override
-    public boolean touchDrag(Vector2 position, Vector2 deltaPosition) {
-        boolean changed= spriteTouchDrag.touchDrag(this, position, deltaPosition);
+    public void touchDrag(Vector2 position, Vector2 deltaPosition) {
+        spriteTouchDrag.touchDrag(this, position, deltaPosition);
         keepVisible();
-        return changed;
     }
 
     /**
@@ -363,11 +359,9 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      * Call the touchEnd method of the spriteTouchEnd object.
      *
      * @param position Vector2, position of touch.
-     * @return boolean, true if something changed
      */
     @Override
-    public boolean touchEnd(Vector2 position) {
-        return spriteTouchEnd.touchEnd(this, position);
+    public void touchEnd(Vector2 position) {spriteTouchEnd.touchEnd(this, position);
     }
 
     /**
@@ -384,11 +378,10 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
      *
      * @param position Vector2, position of the mouse (pc only).
      * @param amount   int, tells if the wheel turns up or down.
-     * @return boolean, true if the sprite contains the mouse position.
      */
     @Override
-    public boolean scroll(Vector2 position, int amount) {
-        return spriteScroll.scroll(this, position, amount);
+    public void scroll(Vector2 position, int amount) {
+        spriteScroll.scroll(this, amount);
     }
 
     // additional effects as decorations. Add to sprite after it has been built

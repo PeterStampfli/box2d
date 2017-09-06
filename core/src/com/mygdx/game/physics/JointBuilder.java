@@ -407,7 +407,7 @@ public class JointBuilder {
     /**
      * set the maximum force of a joint (in kg pixels/sec² instead of N)
      *  (MotorForce for a prismatic joint)
-     * @param force
+     * @param force float, limit for the force
      * @return this, for chaining
      */
     public JointBuilder setMaxForce(float force){
@@ -416,10 +416,10 @@ public class JointBuilder {
     }
 
     /**
-     * PulleyJoint: Set a ground anchor for connection to body A in pixel units.
+     * PulleyJoint: Set a ground anchor for the connection to the body A in pixel units.
      *
-     * @param x
-     * @param y
+     * @param x float, x-coordinate
+     * @param y float, y-coordinate
      * @return this, for chaining
      */
     public JointBuilder setGroundAnchorA(float x,float y){
@@ -428,9 +428,9 @@ public class JointBuilder {
     }
 
     /**
-     * PulleyJoint: Set a ground anchor for connection to body A in pixel units.
+     * PulleyJoint: Set a ground anchor for the connection to the body A in pixel units.
      *
-     * @param position
+     * @param position Vector2
      * @return this, for chaining
      */
     public JointBuilder setGroundAnchorA(Vector2 position){
@@ -438,10 +438,10 @@ public class JointBuilder {
     }
 
     /**
-     * PulleyJoint: Set a ground anchor for connection to body B in pixel units.
+     * PulleyJoint: Set a ground anchor for the connection to the body B in pixel units.
      *
-     * @param x
-     * @param y
+     * @param x float, x-coordinate
+     * @param y float, y-coordinate
      * @return this, for chaining
      */
     public JointBuilder setGroundAnchorB(float x,float y){
@@ -450,9 +450,9 @@ public class JointBuilder {
     }
 
     /**
-     * PulleyJoint: Set a ground anchor for connection to body B in pixel units.
+     * PulleyJoint: Set a ground anchor for the connection to the body B in pixel units.
      *
-     * @param position
+     * @param position Vector2
      * @return this, for chaining
      */
     public JointBuilder setGroundAnchorB(Vector2 position){
@@ -461,7 +461,7 @@ public class JointBuilder {
 
     /**
      * PulleyJoint: set reference length for connection to body A in pixel units.
-     * @param length
+     * @param length float
      * @return this, for chaining
      */
     public JointBuilder setLengthA(float length){
@@ -471,7 +471,8 @@ public class JointBuilder {
 
     /**
      * PulleyJoint: set reference length for connection to body B in pixel units.
-     * @param length
+     *
+     * @param length float
      * @return this, for chaining
      */
     public JointBuilder setLengthB(float length){
@@ -482,7 +483,7 @@ public class JointBuilder {
     /**
      * PulleyJoint: Set the ratio of a pulley joint
      *
-     * @param x
+     * @param x float
      * @return this, for chaining
      */
     public JointBuilder setRatio(float x){
@@ -495,9 +496,9 @@ public class JointBuilder {
      * Can't set local anchors because they are not fields of JointDef.
      * Set collideConnected.
      *
-     * @param jointDef
-     * @param bodyA
-     * @param bodyB
+     * @param jointDef JointDef superclass, may be PulleyJointDef, MouseJointDef, ...
+     * @param bodyA Body
+     * @param bodyB Body
      */
     private void setBodiesAndAnchors(JointDef jointDef, Body bodyA, Body bodyB){
         jointDef.bodyA=bodyA;
@@ -514,8 +515,8 @@ public class JointBuilder {
     /**
      * build a pulley joint between two bodies
      *
-     * @param bodyA
-     * @param bodyB
+     * @param bodyA Body
+     * @param bodyB Body
      * @return PulleyJoint
      */
     public PulleyJoint buildPulleyJoint(Body bodyA, Body bodyB) {
@@ -536,8 +537,8 @@ public class JointBuilder {
     /**
      * build a pulley joint between two physical sprites
      *
-     * @param spriteA
-     * @param spriteB
+     * @param spriteA PhysicalSprite
+     * @param spriteB PhysicalSprite
      * @return PulleyJoint
      */
     public PulleyJoint buildPulleyJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
@@ -547,8 +548,8 @@ public class JointBuilder {
     /**
      * build a friction joint between two bodies
      *
-     * @param bodyA
-     * @param bodyB
+     * @param bodyA Body
+     * @param bodyB Body
      * @return FrictionJoint
      */
     public FrictionJoint buildFrictionJoint(Body bodyA, Body bodyB) {
@@ -566,8 +567,8 @@ public class JointBuilder {
     /**
      * build a friction joint between two physical sprites
      *
-     * @param spriteA
-     * @param spriteB
+     * @param spriteA PhysicalSprite
+     * @param spriteB PhysicalSprite
      * @return FrictionJoint
      */
     public FrictionJoint buildFrictionJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {
@@ -577,8 +578,8 @@ public class JointBuilder {
     /**
      * build a prismatic joint between two bodies
      *
-     * @param bodyA
-     * @param bodyB
+     * @param bodyA Body
+     * @param bodyB Body
      * @return PrismaticJoint
      */
     public PrismaticJoint buildPrismaticJoint(Body bodyA, Body bodyB){
@@ -602,8 +603,8 @@ public class JointBuilder {
     /**
      * build a prismatic joint between two physical sprites
      *
-     * @param spriteA
-     * @param spriteB
+     * @param spriteA PhysicalSprite
+     * @param spriteB PhysicalSprite
      * @return PrismaticJoint
      */
     public PrismaticJoint buildPrismaticJoint(PhysicalSprite spriteA, PhysicalSprite spriteB){
@@ -631,8 +632,8 @@ public class JointBuilder {
     /**
      * Build a rope joint between two physical bodies. Use it to keep a chain from breaking. Attach user data later if needed.
      *
-     * @param spriteA Body
-     * @param spriteB Body
+     * @param spriteA PhysicalSprite
+     * @param spriteB PhysicalSprite
      * @return RopeJoint
      */
     public RopeJoint buildRopeJoint(PhysicalSprite spriteA, PhysicalSprite spriteB){
@@ -667,8 +668,8 @@ public class JointBuilder {
         /**
          * Build a revolute joint between two physical sprites. Attach user data later if needed.
          *
-         * @param spriteA
-         * @param spriteB
+         * @param spriteA PhysicalSprite
+         * @param spriteB PhysicalSprite
          * @return RevoluteJoint
          */
     public RevoluteJoint buildRevoluteJoint(PhysicalSprite spriteA,PhysicalSprite spriteB) {

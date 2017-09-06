@@ -10,11 +10,9 @@ public interface SpriteTouchDrag {
 
     /**
      * TouchDrag action on the sprite.
-     *
-     * @param sprite        ExtensibleSprite
+     *  @param sprite        ExtensibleSprite
      * @param position      Vector2, position of touch
      * @param deltaPosition Vector2, change in the touch position
-     * @return boolean, true if something changed
      */
-    boolean touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition);
+    void touchDrag(ExtensibleSprite sprite, Vector2 position, Vector2 deltaPosition);
 }

@@ -10,7 +10,6 @@ public interface SpriteKeepVisible {
      * Makes that the sprite stays visible. Uses the camera of the device reference in the sprite.
      *
      *  @param sprite ExtensibleSprite
-     * @return boolean, true if something changed
      */
-    boolean keepVisible(ExtensibleSprite sprite);
+    void keepVisible(ExtensibleSprite sprite);
 }

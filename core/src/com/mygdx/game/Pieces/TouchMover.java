@@ -56,11 +56,9 @@ public class TouchMover extends InputAdapter {
      * At touch down see if a touchable is selected. Put it in front. Apply touch begin, dra and
      * end commands on this object.
      *
-     * @return boolean, true if something changed and redraw is needed
      */
-    public boolean update() {
+    public void update() {
         boolean isTouching = device.touchReader.isTouching();
-        boolean somethingChanged = false;
         // update touch positions
         if (isTouching){
             if (wasTouching) {
@@ -78,7 +76,7 @@ public class TouchMover extends InputAdapter {
                 oldTouchPosition.set(newTouchPosition);
             }
             else {
-                return false;                                     // totally out of touch
+                return;                                     // totally out of touch
             }
         }
         // relevant touchPosition is average, and get change in touchPosition
@@ -91,18 +89,17 @@ public class TouchMover extends InputAdapter {
         // act
         if (isSelected) {
             if (isTouching && !wasTouching) {
-                somethingChanged = touchable.touchBegin(touchPosition);
+                touchable.touchBegin(touchPosition);
             } else if (isTouching && wasTouching) {
                 if (!deltaTouchPosition.isZero()) {
-                    somethingChanged = touchable.touchDrag(touchPosition, deltaTouchPosition);
+                    touchable.touchDrag(touchPosition, deltaTouchPosition);
                 }
             } else {                     // !isTouching&&wasTouching
-                somethingChanged = touchable.touchEnd(touchPosition);
+                touchable.touchEnd(touchPosition);
                 isSelected = false;
             }
         }
         wasTouching = isTouching;
-        return somethingChanged;
     }
 
     /**
@@ -117,12 +114,13 @@ public class TouchMover extends InputAdapter {
      * Note: scroll occurs only on PC, where touch (mouse) position is always defined.
      *
      * @param amount int, tells if scrolling up or down
-     * @return boolean, true if something changed
+     * @return boolean, true if input was processed
      */
     @Override
     public boolean scrolled(int amount) {
         device.touchReader.getPosition(scrollPosition);
-        return touchable.scroll(scrollPosition, amount);
+        touchable.scroll(scrollPosition, amount);
+        return true;
     }
 
 }
