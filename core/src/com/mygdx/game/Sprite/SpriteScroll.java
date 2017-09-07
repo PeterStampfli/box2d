@@ -1,7 +1,5 @@
 package com.mygdx.game.Sprite;
 
-import com.badlogic.gdx.math.Vector2;
-
 /**
  * scroll action. Only for pc.
  */

@@ -12,7 +12,7 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     Physics physics;
     public Body body;
-    public PhysicalSpriteUpdate spriteUpdate;
+    public PhysicalSpritePrepareTimeStep spriteUpdate;
     public float anglePreviousPhysicsTime, angleCurrentPhysicsTime;
     public Vector2 centerMassPreviousPhysicsTime =new Vector2();
     public Vector2 centerMassCurrentPhysicsTime =new Vector2();
@@ -67,7 +67,7 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     }
 
     /**
-     * adjust body data before time step
+     * adjust body and sprite data before time step
      */
     @Override
     public void prepareTimeStep() {
@@ -172,19 +172,20 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     /**
      * Set the position of sprite and body
      *
-     * @param vector
+     * @param position Vector2
      */
     @Override
-    public void setPosition(Vector2 vector){
-        super.setPosition(vector.x,vector.y);
-        setPositionAngleOfBody();    }
+    public void setPosition(Vector2 position){
+        super.setPosition(position.x,position.y);
+        setPositionAngleOfBody();
+    }
 
     /**
-     * Set the position of sprite and body
+     * Set position and angle of sprite and body
      *
      * @param x float, x-coordinate of the position
      * @param y float, y-coordinate of the position
-     * @param angle
+     * @param angle float
      */
     public void setPositionAngle(float x,float y,float angle){
         super.setPositionAngle(x,y,angle);
@@ -192,13 +193,13 @@ public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     }
 
     /**
-     * Set the position of sprite and body
+     * Set position and angle of sprite and body
      *
-     * @param vector
-     * @param angle
+     * @param position Vector2
+     * @param angle float
      */
-    public void setPositionAngle(Vector2 vector,float angle){
-        super.setPositionAngle(vector,angle);
+    public void setPositionAngle(Vector2 position,float angle){
+        super.setPositionAngle(position,angle);
         setPositionAngleOfBody();
     }
 

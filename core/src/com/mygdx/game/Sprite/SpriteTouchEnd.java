@@ -13,7 +13,6 @@ public interface SpriteTouchEnd {
      *
      * @param sprite   ExtensibleSprite
      * @param position Vector2, position of touch
-     * @return boolean, true if something changed
      */
     void touchEnd(ExtensibleSprite sprite, Vector2 position);
 }

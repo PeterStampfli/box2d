@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -23,7 +22,7 @@ import com.mygdx.game.utilities.TimeU;
  * Setting up the physics world and debugCamera. Advancing physics.
  */
 
-public class Physics implements Disposable {
+public class Physics {
     Device device;
     public World world;
     Box2DDebugRenderer debugRenderer;
@@ -46,13 +45,14 @@ public class Physics implements Disposable {
     /**
      * Initialize box2D and debugRenderer.
      *
-     * @param device
+     * @param device Device
      * @param debug boolean, true for creating a debugRenderer
      */
     public Physics(Device device, boolean debug) {
         bodies = new Array<Body>();
         if (debug) {
             debugRenderer = new Box2DDebugRenderer();
+            device.disposer.add(debugRenderer,"Box2DDebugRenderer");
             debugCamera = new OrthographicCamera();
         }
         Box2D.init();
@@ -68,8 +68,8 @@ public class Physics implements Disposable {
      * Then the physics gives the same graphics results for different PIXELS_PER_METER values.
      *
      * @param gravityX float, gravitational acceleration in x-direction, pixels/sec²
-     * @param gravityY
-     * @param maySleep
+     * @param gravityY float, gravitational acceleration in y-direction, pixels/sec²
+     * @param maySleep boolean
      * @return World, a box2D world
      */
     public World createWorld(float gravityX, float gravityY, boolean maySleep) {
@@ -78,6 +78,7 @@ public class Physics implements Disposable {
         } else {
             world = new World(new Vector2(gravityX/PIXELS_PER_METER, gravityY/PIXELS_PER_METER),
                                 maySleep);
+            device.disposer.add(world,"Physics.world");
         }
         return world;
     }
@@ -86,7 +87,8 @@ public class Physics implements Disposable {
      * If debug==true at physics creation then do a debug rendering of result of last physics step.
      * Note that because of interpolation, the graphics positions lag slightly behind the physics positions.
      *
-     * @param graphicsViewport Viewport, of the graphics world, its camera data is scaled to set the camera for the debugRenderer
+     * @param graphicsViewport Viewport, of the graphics world,
+     *                         its camera data is scaled for setting the camera of the debugRenderer
      */
     public void debugRender(Viewport graphicsViewport) {
         if (debugRenderer != null) {
@@ -151,7 +153,7 @@ public class Physics implements Disposable {
     /**
      * Get the position of the body in graphics units.
      *
-     * @param body
+     * @param body Body
      * @return Vector2, for center of mass, always the same instance
      */
     static public Vector2 getPosition(Body body){
@@ -159,12 +161,12 @@ public class Physics implements Disposable {
     }
 
     /**
-     * Get the center of mass of the body. Reading its position and using the rotated local origin
-     * of the sprite.
+     * Get the center of mass of the body. World position in graphics units.
+     * Reading its position and using the rotated local origin of the sprite.
      *
-     * @param body
-     * @param originX
-     * @param originY
+     * @param body Body
+     * @param originX float, x-coordinate of the local origin of the sprite in pixels
+     * @param originY float, y-coordinate of the local origin of the sprite in pixels
      * @return Vector2, for center of mass, always the same instance
      */
     static public Vector2 getCenterOfMass(Body body,float originX, float originY){
@@ -178,14 +180,15 @@ public class Physics implements Disposable {
     }
 
     /**
-     * Set the position of body and angle. Position results from center of mass and rotated sprites origin.
+     * Set the position of center of mass of the body and its angle. Pixel units.
+     * Position of the body results from its center of mass and rotated sprites origin.
      *
-     * @param body
-     * @param centerX    center of mass
-     * @param centerY
-     * @param angle
-     * @param originX
-     * @param originY
+     * @param body Body
+     * @param centerX float, x-coordinate of center of mass
+     * @param centerY float, y-coordinate of center of mass
+     * @param angle float
+     * @param originX float, x-coordinate of the local origin of the sprite in pixels
+     * @param originY float, y-coordinate of the local origin of the sprite in pixels
      */
     static public void setCenterOfMassAngle(Body body,float centerX,float centerY,float angle,
                                             float originX,float originY){
@@ -199,11 +202,11 @@ public class Physics implements Disposable {
     /**
      * Set the position of body and angle. Position results from center of mass and rotated sprites origin.
      *
-     * @param body
-     * @param center
-     * @param angle
-     * @param originX
-     * @param originY
+     * @param body Body
+     * @param center Vector2
+     * @param angle float
+     * @param originX float, x-coordinate of the local origin of the sprite in pixels
+     * @param originY float, y-coordinate of the local origin of the sprite in pixels
      */
     static public void setCenterOfMassAngle(Body body,Vector2 center,float angle,
                                             float originX,float originY){
@@ -213,9 +216,9 @@ public class Physics implements Disposable {
     /**
      * set the velocity (of a kinematic body). Given in pixels/sec
      *
-     * @param body
-     * @param vx
-     * @param vy
+     * @param body Body
+     * @param vx float, x-component of velocity
+     * @param vy float, y-component of velocity
      */
     static public void setVelocity(Body body,float vx,float vy){
         body.setLinearVelocity(vx/PIXELS_PER_METER,vy/PIXELS_PER_METER);
@@ -224,8 +227,8 @@ public class Physics implements Disposable {
     /**
      * set the velocity (of a kinematic body). Given in pixels/sec
      *
-     * @param body
-     * @param v
+     * @param body Body
+     * @param v Vector2, velocity
      */
     static public void setVelocity(Body body,Vector2 v){
         body.setLinearVelocity(v.x/PIXELS_PER_METER,v.y/PIXELS_PER_METER);
@@ -324,13 +327,5 @@ public class Physics implements Disposable {
         }
         float progress = 1 - (physicsTime - graphicsTime) / TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
         updateGraphicsData(progress);
-    }
-
-    /**
-     * Dispose the world and the debugRenderer.
-     */
-    public void dispose() {
-        world.dispose();
-        if (debugRenderer != null) debugRenderer.dispose();
     }
 }

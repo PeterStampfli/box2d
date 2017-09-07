@@ -22,7 +22,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public BodyDef.BodyType masterBodyType;
     private MouseJointMover mouseJointMover;
     private KinematicTranslate kinematicTranslate;
-    public PhysicalSpriteUpdate masterSpriteUpdate;
+    public PhysicalSpritePrepareTimeStep spritePrepareTimeStep;
 
     /**
      * Create the builder with a device that has a glyphLayout pool.
@@ -35,10 +35,11 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         this.physics=physics;
         physicalSpriteActions=new PhysicalSpriteActions();
         setContains(PhysicalSpriteActions.bodyContains);
+        reset();
     }
 
     /**
-     * reset, including dynamic body
+     * reset, including bodyType=dynamic body
      */
     @Override
     public void reset(){
@@ -50,19 +51,20 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
 
     /**
      * set the body type for future sprites
-     * @param bodyType
+     *
+     * @param bodyType BodyDef.BodyType, static, dynamic or kinematic
      */
     public void setBodyType(BodyDef.BodyType bodyType){
         this.masterBodyType=bodyType;
     }
 
     /**
-     * set the object with the update routine for steps
+     * set the object with the update routine for preparing steps
      *
-     * @param spriteUpdate
+     * @param spriteUpdate PhysicalSpriteUpdate
      */
-    public void setPhysicalSpriteStep(PhysicalSpriteUpdate spriteUpdate){
-        masterSpriteUpdate =spriteUpdate;
+    public void setPhysicalSpriteStep(PhysicalSpritePrepareTimeStep spriteUpdate){
+        spritePrepareTimeStep =spriteUpdate;
     }
     /**
      * Use the mouseJoint to move the sprite. Use the bodies shapes for contains method.
@@ -120,18 +122,18 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * mass of the body. Thus we have to create the body before setting its position.
      *
      * @param textureRegion TextureRegion, the sprites image
-     * @param shape Shape2D shape for the sprite and the body.
-     * @param body may be static, dynamical or kinematic, without fixtures (related to shape)
-     * @return
+     * @param shape Shape2D shape for the sprite and the body fixtures.
+     * @param body Body, will get masterBodyType
+     * @return PhysicalSprite
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);                         // ExtensibleSprite
         sprite.physics=physics;
-        sprite.spriteUpdate = masterSpriteUpdate;
+        sprite.spriteUpdate = spritePrepareTimeStep;
         sprite.body=body;
         body.setUserData(sprite);
-        body.setType(BodyDef.BodyType.DynamicBody);
+        body.setType(BodyDef.BodyType.DynamicBody);              // dynamical body type to get its local origin
         physics.fixtureBuilder.setIsSensor(false).build(body,shape);
         sprite.setLocalOriginFromBody();
         sprite.readPositionAngleOfBody();
@@ -152,7 +154,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      *
      * @param textureRegion TextureRegion, the sprites image
      * @param shape Shape2D shape for the sprite and the body.
-     * @return
+     * @return PhysicalSprite
      */
     public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape){
         Body body=physics.bodyBuilder.buildDynamicalBody(null);

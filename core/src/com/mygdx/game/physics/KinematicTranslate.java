@@ -11,7 +11,7 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
  */
 
 public class KinematicTranslate
-        implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd,PhysicalSpriteUpdate {
+        implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd,PhysicalSpritePrepareTimeStep {
     public Vector2 bodyTargetPosition=new Vector2();
     public boolean moving=false;
     public Vector2 velocity=new Vector2();
@@ -32,8 +32,8 @@ public class KinematicTranslate
     /**
      * determine the (target) position of body at end of next time steps
      * @param sprite        ExtensibleSprite
-     * @param touchPosition
-     * @param deltaTouchPosition
+     * @param touchPosition Vector2
+     * @param deltaTouchPosition Vector2
      */
     @Override
     public void touchDrag(ExtensibleSprite sprite, Vector2 touchPosition, Vector2 deltaTouchPosition) {
