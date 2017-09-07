@@ -59,9 +59,8 @@ public class TouchReader implements Resizable {
      * @param position Vector2 object, will be set to position.
      */
     public void getPosition(Vector2 position) {
-        spacePositionOfTouch.set(getXLimited(), getYLimited(), 0f);
-        device.camera.unproject(spacePositionOfTouch);
-        position.set(spacePositionOfTouch.x, spacePositionOfTouch.y);
+        position.set(getXLimited(), getYLimited());
+        device.unproject(position);
     }
 
     /**

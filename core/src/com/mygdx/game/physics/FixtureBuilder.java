@@ -117,7 +117,7 @@ public class FixtureBuilder {
     }
 
     /**
-     * Build and return a fixture, attached to given body with a box2D Shape and userData.
+     * Build and return one fixture, attached to given body with a box2D Shape and userData.
      * Dispose the Shape later.
      *
      * @param body Body, to attach the fixture
@@ -125,7 +125,7 @@ public class FixtureBuilder {
      * @param userData Object
      * @return this, for chaining
      */
-    public Fixture build(Body body, Shape shape, Object userData){
+    public Fixture buildOne(Body body, Shape shape, Object userData){
         fixtureDef.shape=shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(userData);
@@ -133,15 +133,15 @@ public class FixtureBuilder {
     }
 
     /**
-     * Build and return a fixture, attached to given body with a box2D Shape. No userData.
+     * Build and return one fixture, attached to given body with a box2D Shape. No userData.
      * Dispose the Shape later.
      *
      * @param body Body, gets the fixture
      * @param shape Shape, box2D, for the fixture
      * @return Fixture, the fixture that has been attached
      */
-    public Fixture build(Body body, Shape shape){
-        return build(body, shape, null);
+    public Fixture buildOne(Body body, Shape shape){
+        return buildOne(body, shape, null);
     }
 
     /**
@@ -161,7 +161,7 @@ public class FixtureBuilder {
         }
         else {
             Shape shape = Box2DShape.ofShape2D(shape2D);
-            build(body, shape, userData);
+            buildOne(body, shape, userData);
             shape.dispose();
         }
     }

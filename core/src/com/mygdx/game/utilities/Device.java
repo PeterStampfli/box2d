@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
@@ -53,6 +55,7 @@ public class Device implements Disposable {
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
+    private Vector3 vector3=new Vector3();
 
     /**
      * Create with an assetManager, spriteBatch, pools and basic assets.
@@ -84,23 +87,33 @@ public class Device implements Disposable {
     }
 
     /**
-     * Set the camera for touchReader. Call in show() method of screens. Or render if using more than one camera/viewport.
+     * Set the camera for un-projecting (TouchReader). Call in show() method of screens. Or in render-update if using more than one camera/viewport.
      *
-     * @param camera Camera, for TouchReader
+     * @param camera Camera
      */
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
     /**
-     * Set the camera for touchReader, using the camera of a viewport. Call in show() method of screens.
+     * Set the camera for un-projecting (TouchReader), using the camera of a viewport. Call in show() method of screens.
      *
-     * @param viewport Viewport, with camera for TouchReader
+     * @param viewport Viewport, with camera for unprojecting
      */
     public void setCamera(Viewport viewport) {
         this.camera = viewport.getCamera();
     }
 
+    /**
+     * un-project a position as defined by the current camera
+     *
+     * @param position Vector2
+     */
+    public void unproject(Vector2 position){
+        vector3.set(position.x, position.y, 0f);
+        camera.unproject(vector3);
+        position.set(vector3.x, vector3.y);
+    }
 
     // keep track of everything to resize, and do resize on demand
 
