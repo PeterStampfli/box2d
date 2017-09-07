@@ -123,18 +123,19 @@ public class Device implements Disposable {
     }
 
     /**
-     * Resize the resizables and update viewports.
+     * First update viewports and then Resize the resizables.
+     * (the resizables might depend on viewports)
      * Call this in the main resize method.
      *
      * @param width int, width of screen
      * @param height int, height of screen
      */
     public void resize(int width, int height) {
-        for (Resizable resizable : resizables) {
-            resizable.resize(width, height);
-        }
         for (Viewport viewport : viewports) {
             viewport.update(width, height);
+        }
+        for (Resizable resizable : resizables) {
+            resizable.resize(width, height);
         }
     }
 

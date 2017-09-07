@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.L;
 import com.mygdx.game.utilities.TimeU;
 
 /**
@@ -49,6 +50,7 @@ public class Physics {
      * @param debug boolean, true for creating a debugRenderer
      */
     public Physics(Device device, boolean debug) {
+        this.device=device;
         bodies = new Array<Body>();
         if (debug) {
             debugRenderer = new Box2DDebugRenderer();
