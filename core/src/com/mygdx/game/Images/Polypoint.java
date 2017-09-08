@@ -60,18 +60,41 @@ public class Polypoint extends Shape2DAdapter {
      * @return this, for chaining
      */
     public Polypoint setIsLoop() {
-        this.isLoop = true;
-        return this;
+        return setIsLoop(true);
     }
 
     /**
-     * Get a shape2D polygon based on the vertices of a polypoint object.
+     * Create a shape2D polygon based on the vertices of this object.
+     * Is closed independent of isLoop.
      *
      * @return Polygon, with the same points. An independent copy.
      */
-    public Polygon getPolygon() {
+    public Polygon createPolygon() {
         return new Polygon(coordinates.toArray());
     }
+
+    /**
+     * Create a shape2D Edge based on the vertices of this object.
+     * Is closed if isLoop=true.
+     *
+     * @return Edge, with the same points. An independent copy.
+     */
+    public Chain createChain(){return new Chain(this);}
+
+    /**
+     * Create a dotsAndLines object using vertices of this object.
+     * Is closed if isLoop=true.
+     *
+     * @param width float
+     * @return DotsAndLines
+     */
+    public DotsAndLines createDotsAndLines(float width){
+        DotsAndLines dotsAndLines=new DotsAndLines();
+        dotsAndLines.setLineWidth(width);
+        dotsAndLines.add(this);
+        return dotsAndLines;
+    }
+
 
     /**
      * Add points given by coordinate pairs (x,y)

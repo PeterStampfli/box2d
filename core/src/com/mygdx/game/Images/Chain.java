@@ -60,6 +60,7 @@ public class Chain extends Shape2DAdapter {
     public Chain set(Polypoint polypoint) {
         this.coordinates = polypoint.coordinates.toArray();
         setIsLoop(polypoint.isLoop);
+        deleteGhosts();
         return this;
     }
 
