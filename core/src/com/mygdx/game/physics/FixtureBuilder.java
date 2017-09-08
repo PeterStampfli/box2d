@@ -117,18 +117,19 @@ public class FixtureBuilder {
     }
 
     /**
-     * Build and return one fixture, attached to given body with a box2D Shape and userData.
-     * Dispose the Shape later.
+     * Build and return one fixture, attached to given body with a Shape2D Shape and userData.
      *
      * @param body Body, to attach the fixture
-     * @param shape Shape, box2D, for the fixture
+     * @param shape2D Shape2D, of the fixture
      * @param userData Object
-     * @return this, for chaining
+     * @return Fixture, the fixture that has been attached
      */
-    public Fixture buildOne(Body body, Shape shape, Object userData){
+    public Fixture buildOne(Body body, Shape2D shape2D, Object userData){
+        Shape shape = Box2DShape.ofShape2D(shape2D);
         fixtureDef.shape=shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(userData);
+        shape.dispose();
         return fixture;
     }
 
@@ -137,11 +138,11 @@ public class FixtureBuilder {
      * Dispose the Shape later.
      *
      * @param body Body, gets the fixture
-     * @param shape Shape, box2D, for the fixture
+     * @param shape2D Shape2D, of the fixture
      * @return Fixture, the fixture that has been attached
      */
-    public Fixture buildOne(Body body, Shape shape){
-        return buildOne(body, shape, null);
+    public Fixture buildOne(Body body, Shape2D shape2D){
+        return buildOne(body, shape2D, null);
     }
 
     /**
@@ -160,9 +161,7 @@ public class FixtureBuilder {
             }
         }
         else {
-            Shape shape = Box2DShape.ofShape2D(shape2D);
-            buildOne(body, shape, userData);
-            shape.dispose();
+            buildOne(body, shape2D, userData);
         }
     }
 
@@ -178,11 +177,11 @@ public class FixtureBuilder {
     }
 
     /**
-     * Clear a body of all fixtures
+     * Destroy all fixtures of a body.
      *
      * @param body Body, remove fixtures
      */
-    public void clear(Body body){
+    public void destroyFixtures(Body body){
         for(int i=body.getFixtureList().size;i>0;i--){
             body.destroyFixture(body.getFixtureList().first());
         }
