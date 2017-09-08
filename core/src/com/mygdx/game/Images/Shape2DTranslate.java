@@ -90,7 +90,7 @@ public class Shape2DTranslate {
     }
 
     /**
-     * translate polypoint object.
+     * translate borderPoints object.
      *
      * @param polypoint Polypoint, to translate
      * @param dx float, translate x-coordinate
@@ -119,7 +119,7 @@ public class Shape2DTranslate {
     }
 
     /**
-     * translate a chain, with ghosts
+     * translate a borderShape, with ghosts
      *
      * @param chain Chain
      * @param dx float, translate x-coordinate

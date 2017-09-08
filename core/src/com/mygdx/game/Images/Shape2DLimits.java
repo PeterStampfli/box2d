@@ -62,7 +62,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the maximum x-coordinate of a chain, without ghosts
+     * calculate the maximum x-coordinate of a borderShape, without ghosts
      *
      * @param chain Chain
      * @return float
@@ -102,7 +102,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the maximum x-coordinate of a polypoint, local vertices
+     * calculate the maximum x-coordinate of a borderPoints, local vertices
      *
      * @param polypoint Polypoint
      * @return float
@@ -210,7 +210,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the maximum y-coordinate of a chain, without ghosts
+     * calculate the maximum y-coordinate of a borderShape, without ghosts
      *
      * @param chain Chain
      * @return float
@@ -250,7 +250,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the maximum y-coordinate of a polypoint, local vertices
+     * calculate the maximum y-coordinate of a borderPoints, local vertices
      *
      * @param polypoint Polypoint
      * @return float
@@ -360,7 +360,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the minimum x-coordinate of a chain, without ghosts
+     * calculate the minimum x-coordinate of a borderShape, without ghosts
      *
      * @param chain Chain
      * @return float
@@ -400,7 +400,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the minimum x-coordinate of a polypoint, local vertices
+     * calculate the minimum x-coordinate of a borderPoints, local vertices
      *
      * @param polypoint Polypoint
      * @return float
@@ -509,7 +509,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the minimum y-coordinate of a chain, without ghosts
+     * calculate the minimum y-coordinate of a borderShape, without ghosts
      *
      * @param chain Chain
      * @return float
@@ -549,7 +549,7 @@ public class Shape2DLimits {
     }
 
     /**
-     * calculate the minimum y-coordinate of a polypoint, local vertices
+     * calculate the minimum y-coordinate of a borderPoints, local vertices
      *
      * @param polypoint Polypoint
      * @return float

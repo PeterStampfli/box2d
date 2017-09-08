@@ -104,7 +104,7 @@ public class Shape2DRenderer extends ShapeRenderer{
     }
 
     /**
-     * Draw the points of a polypoint object.
+     * Draw the points of a borderPoints object.
      *
      * @param polypoint Polypoint, to draw as a collection of points
      */

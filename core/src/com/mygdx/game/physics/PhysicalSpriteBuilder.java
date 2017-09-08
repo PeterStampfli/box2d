@@ -22,7 +22,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public BodyDef.BodyType masterBodyType;
     private MouseJointMover mouseJointMover;
     private KinematicTranslate kinematicTranslate;
-    public PhysicalSpritePrepareTimeStep spritePrepareTimeStep;
+    public PhysicalSpriteUpdate spritePrepareTimeStep;
 
     /**
      * Create the builder with a device that has a glyphLayout pool.
@@ -45,7 +45,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
     public void reset(){
         super.reset();
         setBodyType(BodyDef.BodyType.DynamicBody);
-        setPhysicalSpriteStep(PhysicalSpriteActions.spriteUpdateNull);
+        setPhysicalSpriteUpdate(PhysicalSpriteActions.spriteUpdateNull);
     }
 
 
@@ -63,7 +63,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      *
      * @param spriteUpdate PhysicalSpriteUpdate
      */
-    public void setPhysicalSpriteStep(PhysicalSpritePrepareTimeStep spriteUpdate){
+    public void setPhysicalSpriteUpdate(PhysicalSpriteUpdate spriteUpdate){
         spritePrepareTimeStep =spriteUpdate;
     }
     /**
@@ -90,7 +90,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         setTouchDrag(mouseJointMover);
         setTouchEnd(mouseJointMover);
         setScroll(SpriteActions.scrollNull);
-        setPhysicalSpriteStep(PhysicalSpriteActions.spriteUpdateNull);
+        setPhysicalSpriteUpdate(PhysicalSpriteActions.spriteUpdateNull);
     }
 
     /**
@@ -108,7 +108,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
         setTouchDrag(kinematicTranslate);
         setTouchEnd(kinematicTranslate);
         setScroll(SpriteActions.scrollNull);
-        setPhysicalSpriteStep(kinematicTranslate);
+        setPhysicalSpriteUpdate(kinematicTranslate);
     }
 
     /**
@@ -126,7 +126,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * @param body Body, will get masterBodyType
      * @return PhysicalSprite
      */
-    public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape, Body body){
+    public PhysicalSprite build(TextureRegion textureRegion, Shape2D shape, Body body){
         PhysicalSprite sprite=physics.physicalSpritePool.obtain();
         setup(sprite,textureRegion,shape);                         // ExtensibleSprite
         sprite.physics=physics;
@@ -144,7 +144,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
 
     /**
      * Get a physical sprite from the sprite pool. Set image and other data.
-     * Create a body with current settings of physics.bodyBuilder.
+     * Create a dynamical body with current settings of physics.bodyBuilder.
      * Attach the body to the sprite and create its fixtures from shape.
      * Set local origin of the sprite from center of mass of the body.
      * Position and angle of sprite and body will be set afterwards.
@@ -156,8 +156,8 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * @param shape Shape2D shape for the sprite and the body.
      * @return PhysicalSprite
      */
-    public PhysicalSprite buildPhysical(TextureRegion textureRegion, Shape2D shape){
+    public PhysicalSprite build(TextureRegion textureRegion, Shape2D shape){
         Body body=physics.bodyBuilder.buildDynamicalBody(null);
-        return buildPhysical(textureRegion,shape,body);
+        return build(textureRegion,shape,body);
     }
 }

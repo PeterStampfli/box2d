@@ -64,7 +64,7 @@ public class Box2DShape {
 
     /**
      * Create a box2D ChainShape from a Shape2D Chain.
-     * Takes into account if it is a loop or chain (with ghosts).
+     * Takes into account if it is a loop or borderShape (with ghosts).
      *
      * @param chain Chain (Shape2D)
      * @return ChainShape (box2D)
@@ -121,6 +121,9 @@ public class Box2DShape {
         }
         if (shape2D instanceof Circle){
             return ofShape2D((Circle) shape2D);
+        }
+        if (shape2D instanceof Rectangle){
+            return ofShape2D((Rectangle) shape2D);
         }
         if (shape2D instanceof Chain){
             return ofShape2D((Chain) shape2D);

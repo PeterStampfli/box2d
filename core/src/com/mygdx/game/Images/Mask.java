@@ -579,7 +579,7 @@ public class Mask {
      *
      * @return TextureRegion
      */
-    public TextureRegion createWhiteTextureRegion() {
+    public TextureRegion createColorTextureRegion() {
         Pixmap pixmap=createColorPixmap();
         TextureRegion textureRegion=TextureU.textureRegionFromPixmap(pixmap);
         pixmap.dispose();

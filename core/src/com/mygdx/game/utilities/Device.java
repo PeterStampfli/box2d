@@ -108,11 +108,12 @@ public class Device implements Disposable {
      * un-project a position as defined by the current camera
      *
      * @param position Vector2
+     * @return Vector2, the unprojected position
      */
-    public void unproject(Vector2 position){
+    public Vector2 unproject(Vector2 position){
         vector3.set(position.x, position.y, 0f);
         camera.unproject(vector3);
-        position.set(vector3.x, vector3.y);
+        return position.set(vector3.x, vector3.y);
     }
 
     // keep track of everything to resize, and do resize on demand
@@ -146,6 +147,7 @@ public class Device implements Disposable {
     public void resize(int width, int height) {
         for (Viewport viewport : viewports) {
             viewport.update(width, height);
+            L.og(viewport);
         }
         for (Resizable resizable : resizables) {
             resizable.resize(width, height);

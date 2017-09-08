@@ -17,7 +17,7 @@ public class Polypoint extends Shape2DAdapter {
     public boolean isLoop = false;
 
     /**
-     * default creator, for polypoint with empty coordinates
+     * default creator, for borderPoints with empty coordinates
      */
     public Polypoint(){
         coordinates = new FloatArray();
@@ -25,7 +25,7 @@ public class Polypoint extends Shape2DAdapter {
 
     /**
      * creator for known coordinates and if it is a loop
-     *  @param isLoop boolean, true if polypoint should be loop
+     *  @param isLoop boolean, true if borderPoints should be loop
      * @param coordinates float... or float[] with coordinate pairs
      */
     public Polypoint(boolean isLoop, float... coordinates){
@@ -98,6 +98,7 @@ public class Polypoint extends Shape2DAdapter {
 
     /**
      * Add points given by coordinate pairs (x,y)
+     * do not add sequential points with same coordinates
      *
      * @param newCoordinates float... or float[], containing pairs of (x,y) coordinates
      */

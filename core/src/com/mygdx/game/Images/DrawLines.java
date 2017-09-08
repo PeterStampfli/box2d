@@ -302,7 +302,7 @@ public class DrawLines {
     }
 
     /**
-     * draw the lines of a polypoint object
+     * draw the lines of a borderPoints object
      *
      * @param polypoint Polypoint object
      */
@@ -329,7 +329,7 @@ public class DrawLines {
     }
 
     /**
-     * draw the lines of a chain object. May be a closed loop or not.
+     * draw the lines of a borderShape object. May be a closed loop or not.
      *
      * @param chain Chain
      */

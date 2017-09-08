@@ -62,7 +62,7 @@ public class WriteShape {
     }
 
     /**
-     * append a polypoint:
+     * append a borderPoints:
      * first int number of coordinates, then float[] coordinates, then boolean isLop
      * @param fileHandle FileHandle
      * @param polypoint Polypoint
@@ -104,7 +104,7 @@ public class WriteShape {
     }
 
     /**
-     * append a chain object.
+     * append a borderShape object.
      * First int length and coordinates
      * then boolean isLoop
      * following byte is 1 if ghostA exists followed by ghostA coordinates, else byte is 0

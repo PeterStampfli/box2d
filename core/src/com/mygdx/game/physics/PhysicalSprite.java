@@ -12,7 +12,7 @@ import com.mygdx.game.Sprite.ExtensibleSprite;
 public class PhysicalSprite extends ExtensibleSprite implements BodyFollower{
     Physics physics;
     public Body body;
-    public PhysicalSpritePrepareTimeStep spriteUpdate;
+    public PhysicalSpriteUpdate spriteUpdate;
     public float anglePreviousPhysicsTime, angleCurrentPhysicsTime;
     public Vector2 centerMassPreviousPhysicsTime =new Vector2();
     public Vector2 centerMassCurrentPhysicsTime =new Vector2();

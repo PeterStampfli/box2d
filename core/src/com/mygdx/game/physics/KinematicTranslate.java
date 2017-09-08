@@ -11,7 +11,7 @@ import com.mygdx.game.Sprite.SpriteTouchEnd;
  */
 
 public class KinematicTranslate
-        implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd,PhysicalSpritePrepareTimeStep {
+        implements SpriteTouchBegin,SpriteTouchDrag,SpriteTouchEnd,PhysicalSpriteUpdate {
     public Vector2 bodyTargetPosition=new Vector2();
     public boolean moving=false;
     public Vector2 velocity=new Vector2();

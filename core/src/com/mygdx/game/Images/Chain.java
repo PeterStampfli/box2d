@@ -14,13 +14,13 @@ public class Chain extends Shape2DAdapter {
     public boolean isLoop = false;
 
     /**
-     * create an empty chain.
+     * create an empty borderShape.
      */
     public Chain() {
     }
 
     /**
-     * Create a chain with float coordinate pairs of the points.
+     * Create a borderShape with float coordinate pairs of the points.
      * Set ghosts or set isLoop separately.
      *
      * @param coordinates float ... or float[] of (x,y) coordinate pairs
@@ -30,17 +30,17 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * Create a chain with points from a Polypoint object, including isLoop.
+     * Create a borderShape with points from a Polypoint object, including isLoop.
      * Set ghosts separately.
      *
-     * @param polypoint Polypoint object that defines the chain, except ghosts.
+     * @param polypoint Polypoint object that defines the borderShape, except ghosts.
      */
     public Chain(Polypoint polypoint) {
         set(polypoint);
     }
 
     /**
-     * Set internal vertices of the chain with float coordinate pairs of the points.
+     * Set internal vertices of the borderShape with float coordinate pairs of the points.
      *
      * @param coordinates float ... or float[] of (x,y) coordinate pairs
      * @return this, for chaining
@@ -51,23 +51,23 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * set internal vertices of the chain from polypoint
-     * If the polypoint object is a loop then delete ghosts and set isLoop=true.
+     * set internal vertices of the borderShape from borderPoints
+     * If the borderPoints object is a loop then delete ghosts and set isLoop=true.
      *
-     * @param polypoint Polypoint, defines the chain
+     * @param polypoint Polypoint, defines the borderShape
      * @return this, for chaining.
      */
     public Chain set(Polypoint polypoint) {
-        this.coordinates = polypoint.coordinates.toArray();
+        set(polypoint.coordinates.toArray());
         setIsLoop(polypoint.isLoop);
         deleteGhosts();
         return this;
     }
 
     /**
-     * Set that chain is a loop or not. If it is a loop then delete ghosts.
+     * Set that borderShape is a loop or not. If it is a loop then delete ghosts.
      *
-     * @param isLoop boolean, true if chain is a loop
+     * @param isLoop boolean, true if borderShape is a loop
      * @return this, for chaining
      */
     public Chain setIsLoop(boolean isLoop) {
@@ -105,7 +105,7 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * set ghost A position and that it exists and that this chain is not a loop
+     * set ghost A position and that it exists and that this borderShape is not a loop
      *
      * @param position Vector2D, position of the ghost
      * @return this, for chaining
@@ -115,7 +115,7 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
-     * set ghost a position and that it exists and that this chain is not a loop
+     * set ghost a position and that it exists and that this borderShape is not a loop
      *
      * @param x float, x-coordinate of ghost
      * @param y float, y-coordinate of ghost

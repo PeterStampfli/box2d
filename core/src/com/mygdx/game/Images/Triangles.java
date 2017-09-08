@@ -81,7 +81,7 @@ public class Triangles extends Shape2DCollection {
     }
 
     /**
-     * Dissect a simple polygon defined by polypoint object into triangle polygons.
+     * Dissect a simple polygon defined by borderPoints object into triangle polygons.
      * Add triangles to the collection.
      *
      * @param polypoint Polypoint
@@ -91,7 +91,7 @@ public class Triangles extends Shape2DCollection {
     }
 
     /**
-     * Dissect a simple polygon defined by a chain object into triangle polygons.
+     * Dissect a simple polygon defined by a borderShape object into triangle polygons.
      * Add triangles to the collection.
      *
      * @param chain Chain

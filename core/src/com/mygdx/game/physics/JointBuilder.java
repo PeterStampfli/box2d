@@ -612,7 +612,7 @@ public class JointBuilder {
     }
 
     /**
-     * Build a rope joint between two bodies. Use it to keep a chain from breaking. Attach user data later if needed.
+     * Build a rope joint between two bodies. Use it to keep a borderShape from breaking. Attach user data later if needed.
      *
      * @param bodyA Body
      * @param bodyB Body
@@ -630,7 +630,7 @@ public class JointBuilder {
     }
 
     /**
-     * Build a rope joint between two physical bodies. Use it to keep a chain from breaking. Attach user data later if needed.
+     * Build a rope joint between two physical bodies. Use it to keep a borderShape from breaking. Attach user data later if needed.
      *
      * @param spriteA PhysicalSprite
      * @param spriteB PhysicalSprite

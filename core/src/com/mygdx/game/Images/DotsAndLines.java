@@ -10,7 +10,7 @@ import com.mygdx.game.utilities.MathU;
 
 /**
  * Shape2DCollection that joins points with lines and discs (collected Shape2D polygons and discs).
- * Takes the points as they are at the moment. Input can be polypoint, polyline, polygon and pairs of coordinates.
+ * Takes the points as they are at the moment. Input can be borderPoints, polyline, polygon and pairs of coordinates.
  * Do smoothing afterwards.
  */
 
@@ -185,7 +185,7 @@ public class DotsAndLines extends Shape2DCollection {
 
     /**
      * Add shape2D shapes as dotsAndLines.
-     * Includes collections, polyPoint, polyLine, polygon,chain and edge.
+     * Includes collections, polyPoint, polyLine, polygon,borderShape and edge.
      *
      * @param shape Shape2D to add transformed
      */

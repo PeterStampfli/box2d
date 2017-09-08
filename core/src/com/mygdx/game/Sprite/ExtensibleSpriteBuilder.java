@@ -34,7 +34,7 @@ public class ExtensibleSpriteBuilder {
     }
 
     /**
-     * reset
+     * reset: set simple draw, contains with rotation, null touch and scroll actions
      */
     public void reset() {
         setContains(SpriteActions.containsTransRotate);

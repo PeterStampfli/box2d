@@ -86,7 +86,7 @@ public class ReadShape {
     }
 
     /**
-     * Create an chain object from data on byteBuffer
+     * Create an borderShape object from data on byteBuffer
      * first length of coordinates, then coordinates , then isLoop, then ghost a,then ghost b
      * @param buffer ByteBuffer
      * @return Chain
