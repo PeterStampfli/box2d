@@ -1,12 +1,9 @@
 package com.mygdx.game.physics;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.Chain;
-import com.mygdx.game.Images.Polypoint;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 import com.mygdx.game.utilities.Resizable;
 
 /**
@@ -17,8 +14,6 @@ public class BorderBarrier implements Resizable{
     public Device device;
     public Viewport viewport;
     public Physics physics;
-    public Polypoint borderPoints;
-    public Vector2 position=new Vector2();
     public Chain borderShape;
     public Body borderBody;
 
@@ -27,26 +22,18 @@ public class BorderBarrier implements Resizable{
         this.device=device;
         this.physics=physics;
         this.viewport=viewport;
-        borderPoints =new Polypoint();
-        borderPoints.setIsLoop();
         borderShape =new Chain();
+        borderShape.setIsLoop();
         physics.bodyBuilder.setPosition(0,0);
         borderBody=physics.bodyBuilder.buildStaticBody(null);
     }
 
     @Override
     public void resize(int width, int height) {
-        L.og("resize border");
-        viewport.apply();
-        L.og(viewport);
-        L.og(" ww "+viewport.getWorldWidth());//!!!!!!!!!!!!!!!!!!!!!!!¨¨¨
-        borderPoints.clear();
-        borderPoints.add(device.unproject(position.set(0,0)));
-        borderPoints.add(device.unproject(position.set(width,0)));
-        borderPoints.add(device.unproject(position.set(width,height)));
-        borderPoints.add(device.unproject(position.set(0,height)));
-
-        L.og(borderPoints.coordinates);
+        borderShape.set(0,0,viewport.getWorldWidth(),0,viewport.getWorldWidth(),
+                viewport.getWorldHeight(),0,viewport.getWorldHeight());
+        physics.fixtureBuilder.destroyFixtures(borderBody);
+        physics.fixtureBuilder.build(borderBody,borderShape);
     }
 
 

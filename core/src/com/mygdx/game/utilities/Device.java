@@ -105,7 +105,11 @@ public class Device implements Disposable {
     }
 
     /**
-     * un-project a position as defined by the current camera
+     * Un-project a screen position as defined by the current camera.
+     * Screen coordinates are inverted. The upper left corner is at (0,0).
+     * Coordinates are in pixels.
+     * Un-projected coordinates are upright. For an extendViewport the lower left corner is at (0,0)
+     * and the upper right corner is at its (worldWidth,worldHeight)
      *
      * @param position Vector2
      * @return Vector2, the unprojected position
@@ -147,7 +151,6 @@ public class Device implements Disposable {
     public void resize(int width, int height) {
         for (Viewport viewport : viewports) {
             viewport.update(width, height);
-            L.og(viewport);
         }
         for (Resizable resizable : resizables) {
             resizable.resize(width, height);

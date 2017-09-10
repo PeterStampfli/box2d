@@ -3,7 +3,6 @@ package com.mygdx.game.utilities;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -15,7 +14,6 @@ import static com.badlogic.gdx.Gdx.input;
 public class TouchReader implements Resizable {
 
     public Device device;
-    private Vector3 spacePositionOfTouch = new Vector3();    // x,y-components give touch position
     private int screenWidth, screenHeight;
 
     /**

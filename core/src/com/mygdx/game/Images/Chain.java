@@ -65,6 +65,14 @@ public class Chain extends Shape2DAdapter {
     }
 
     /**
+     * Set that borderShape is a loop and delete ghosts.
+     *
+     */
+    public Chain setIsLoop() {
+        return setIsLoop(true);
+    }
+
+    /**
      * Set that borderShape is a loop or not. If it is a loop then delete ghosts.
      *
      * @param isLoop boolean, true if borderShape is a loop
