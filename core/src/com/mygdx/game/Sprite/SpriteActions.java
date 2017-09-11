@@ -147,6 +147,39 @@ public class SpriteActions {
             }
         }
     };
+
+    /**
+     * An object that implements SpriteKeepVisible:
+     * Makes that the texture region of the sprite can be seen by the camera.
+     * Shifts the sprite back if it is too far outside.
+     *
+     * using a simple estimate for the extension of the texture region around the local center:
+     * Maximum distance between (local) Origin and corners
+     *
+     * if the sprite can rotate, then more precise becomes very expensive
+     */
+    static public SpriteKeepVisible keepVisibleTexture = new SpriteKeepVisible() {
+        @Override
+        public void keepVisible(ExtensibleSprite sprite) {
+            Camera camera=sprite.device.camera;
+            float diff = sprite.getWorldOriginX() - camera.position.x;
+            float maxDistance=0;                                         //improve
+            float halfFree = 0.5f * camera.viewportWidth-maxDistance;
+            if (diff < -halfFree) {
+                sprite.setWorldOriginX(camera.position.x - halfFree);
+            } else if (diff > halfFree) {
+                sprite.setWorldOriginX(camera.position.x + halfFree);
+            }
+            diff = sprite.getWorldOriginY() - camera.position.y;
+            halfFree = 0.5f * camera.viewportHeight-maxDistance;
+            if (diff < -halfFree) {
+                sprite.setWorldOriginY(camera.position.y - halfFree);
+            } else if (diff > halfFree) {
+                sprite.setWorldOriginY(camera.position.y + halfFree);
+            }
+        }
+    };
+
     /**
      * An object that implements SpriteTouchBegin:
      * Does nothing.
