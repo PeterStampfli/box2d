@@ -358,10 +358,9 @@ public class ExtensibleSprite extends Sprite implements Touchable,Drawable,Shape
     /**
      * Call the touchEnd method of the spriteTouchEnd object.
      *
-     * @param position Vector2, position of touch.
      */
     @Override
-    public void touchEnd(Vector2 position) {spriteTouchEnd.touchEnd(this, position);
+    public void touchEnd() {spriteTouchEnd.touchEnd(this);
     }
 
     /**

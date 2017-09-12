@@ -95,7 +95,7 @@ public class TouchMover extends InputAdapter {
                     touchable.touchDrag(touchPosition, deltaTouchPosition);
                 }
             } else {                     // !isTouching&&wasTouching
-                touchable.touchEnd(touchPosition);
+                touchable.touchEnd();
                 isSelected = false;
             }
         }

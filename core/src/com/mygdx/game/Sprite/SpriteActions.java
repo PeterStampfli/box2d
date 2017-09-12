@@ -163,7 +163,9 @@ public class SpriteActions {
         public void keepVisible(ExtensibleSprite sprite) {
             Camera camera=sprite.device.camera;
             float diff = sprite.getWorldOriginX() - camera.position.x;
-            float maxDistance=0;                                         //improve
+            float dx=Math.max(sprite.getOriginX(),sprite.getWidth()-sprite.getOriginX());
+            float dy=Math.max(sprite.getOriginY(),sprite.getHeight()-sprite.getOriginY());
+            float maxDistance=(float) Math.sqrt(dx*dx+dy*dy);
             float halfFree = 0.5f * camera.viewportWidth-maxDistance;
             if (diff < -halfFree) {
                 sprite.setWorldOriginX(camera.position.x - halfFree);
@@ -238,7 +240,7 @@ public class SpriteActions {
      */
     static public SpriteTouchEnd touchEndNull = new SpriteTouchEnd() {
         @Override
-        public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
+        public void touchEnd(ExtensibleSprite sprite) {
         }
     };
     /**

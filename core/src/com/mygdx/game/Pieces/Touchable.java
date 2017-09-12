@@ -33,9 +33,8 @@ public interface Touchable extends Shape2D {
     /**
      * Action for touch end.
      *
-     * @param position Vector2, position of touch.
      */
-    void touchEnd(Vector2 position);
+    void touchEnd();
 
     /**
      * Action for turning the scroll wheel. Test if touch position is inside the sprite. Then maybe do something.

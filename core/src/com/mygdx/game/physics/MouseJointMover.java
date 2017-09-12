@@ -60,10 +60,10 @@ public class MouseJointMover implements SpriteTouchBegin,SpriteTouchDrag,SpriteT
 
     /**
      * End the move: destroy the mouseJoint.
-     * @param sprite   ExtensibleSprite
      * @param touchPosition Vector2, the position of touch (in pixels)
+     * @param sprite   ExtensibleSprite
      */
-    public void touchEnd(ExtensibleSprite sprite, Vector2 touchPosition){
+    public void touchEnd(ExtensibleSprite sprite){
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         physicalSprite.physics.world.destroyJoint(mouseJoint);
         mouseJoint=null;

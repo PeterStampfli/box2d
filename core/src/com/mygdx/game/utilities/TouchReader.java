@@ -34,6 +34,15 @@ public class TouchReader implements Resizable {
     }
 
     /**
+     * test if mouse (touch) is on screen
+     *
+     * @return boolean
+     */
+    public boolean touchIsOnScreen() {
+        return MathU.isOrdered(0f,input.getX(),screenWidth)&&MathU.isOrdered(0,input.getY(),screenHeight);
+    }
+
+    /**
      * Get the x-coordinate of the touch position on the screen. Limited to the window for mouse.
      *
      * @return float, x-coordinate
@@ -63,11 +72,12 @@ public class TouchReader implements Resizable {
 
     /**
      * Get touch event. Using a mouse you have to press the left button to get a touch event.
+     * Mouse has to be on screen.
      * Touch on touchscreen is always left button press.
      *
      * @return boolean, true if the screen/window has been touched
      */
     public boolean isTouching() {
-        return input.isTouched() && input.isButtonPressed(Input.Buttons.LEFT);
+        return input.isTouched() && input.isButtonPressed(Input.Buttons.LEFT)&& touchIsOnScreen();
     }
 }

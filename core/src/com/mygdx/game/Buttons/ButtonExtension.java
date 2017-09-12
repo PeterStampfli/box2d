@@ -172,12 +172,11 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     /**
      * Touch end on the sprite: Does nothing if locked,
      * else calls the effective buttonTouchEnd.
+     *  @param sprite   ExtensibleSprite
      *
-     * @param sprite   ExtensibleSprite
-     * @param position Vector2, position of touch
      */
     @Override
-    public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
+    public void touchEnd(ExtensibleSprite sprite) {
         if (state!= LOCKED) {
             buttonTouchEnd.touchEnd(this);
         }

@@ -42,12 +42,11 @@ public class KinematicTranslate
 
     /**
      * stop the body
+     *  @param sprite   ExtensibleSprite
      *
-     * @param sprite   ExtensibleSprite
-     * @param position Vector2, position of touch
      */
     @Override
-    public void touchEnd(ExtensibleSprite sprite, Vector2 position) {
+    public void touchEnd(ExtensibleSprite sprite) {
         PhysicalSprite physicalSprite=(PhysicalSprite) sprite;
         moving=false;
         physicalSprite.body.setLinearVelocity(0,0);

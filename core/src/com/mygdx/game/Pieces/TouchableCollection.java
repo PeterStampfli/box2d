@@ -131,15 +131,13 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
      * Calls the touchEnd method on the first element of the collection.
      * The calling method has to make sure that this makes sense.
      * Returns false if there is no touchable.
-     *
-     * @param position, Vector2 touch position
      */
     @Override
-    public void touchEnd(Vector2 position) {
+    public void touchEnd() {
         if (items.size > 0) {
             Object item=items.get(iSelected);
             if (item instanceof Touchable) {
-                ((Touchable) item).touchEnd(position);
+                ((Touchable) item).touchEnd();
             }
         }
     }
