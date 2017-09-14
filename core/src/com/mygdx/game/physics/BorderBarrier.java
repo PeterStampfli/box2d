@@ -7,7 +7,7 @@ import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.Resizable;
 
 /**
- * A barrier around the visible screen
+ * A barrier around the visible screen to stop physical sprites.
  */
 
 public class BorderBarrier implements Resizable{

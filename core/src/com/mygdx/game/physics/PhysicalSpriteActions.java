@@ -37,6 +37,9 @@ public class PhysicalSpriteActions extends SpriteActions {
         }
     };
 
+    /**
+     * A PhysicalSpriteUpdate object that does nothing
+     */
     static public PhysicalSpriteUpdate spriteUpdateNull =new PhysicalSpriteUpdate() {
         @Override
         public void update(PhysicalSprite sprite) {
