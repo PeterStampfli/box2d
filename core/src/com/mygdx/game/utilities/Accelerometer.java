@@ -13,12 +13,13 @@ import static com.mygdx.game.utilities.Accelerometer.FullOrientation.REVERSE_POR
  * Read the accelerometer of a mobile device or replace it on a PC by the mouse position.
  */
 
-public class Accelerometer {
+public class Accelerometer implements Resizable{
     private boolean hasAccelerometer;            // variables for mouse simulation of accelerometer
     private FullOrientation orientation;               // the current orientation of the userInteraction
     private float mouseAccelerometerMax = 5f;
     private float mouseAccelerometerScale;
     private Vector2 acceleration = new Vector2();
+    private Vector2 mouseAcceleration=new Vector2();
     private int screenWidth2 = 0;
     private int screenHeight2 = 0;
 
@@ -103,12 +104,13 @@ public class Accelerometer {
      * Read the accelerometer if there is one and transform to (x,y) display axis values.
      * Use the current orientation to take into account the device rotation.
      * <p>
-     * If there is no accelerometer and the right mouse button is pressed,
-     * then read the touch position and use it to simulate an accelerometer.
+     * If there is no accelerometer use the mouse to simulate the accelerometer.
+     * If the right mouse button is pressed, then read the touch position.
+     * else use the last reading
      *
      * @return Vector2, acceleration read from the accelerometer or mouse substitute. (Reuses a single Vector2 instance.)
      */
-    public Vector2 readAccelerometer() {
+    public Vector2 read() {
         if (hasAccelerometer) {
             switch (orientation) {
                 case LANDSCAPE:
@@ -128,10 +130,11 @@ public class Accelerometer {
             if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
                 // if the right mouse button is pressed update the replacement accelerometer values
                 //  screen origin is top left corner
-                acceleration.x = mouseAccelerometerScale * (Gdx.input.getX() - screenWidth2);
-                acceleration.y = -mouseAccelerometerScale * (Gdx.input.getY() - screenHeight2);
-                acceleration.clamp(0.0f, mouseAccelerometerMax);
+                mouseAcceleration.x = mouseAccelerometerScale * (Gdx.input.getX() - screenWidth2);
+                mouseAcceleration.y = -mouseAccelerometerScale * (Gdx.input.getY() - screenHeight2);
+                mouseAcceleration.clamp(0.0f, mouseAccelerometerMax);
             }
+            acceleration.set(mouseAcceleration);
         }
         return acceleration;
     }

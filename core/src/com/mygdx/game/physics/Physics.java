@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 import com.mygdx.game.utilities.TimeU;
 
 /**
@@ -33,6 +32,7 @@ public class Physics {
     public JointBuilder jointBuilder;
     Pool<PhysicalSprite> physicalSpritePool;
     public PhysicalSpriteBuilder physicalSpriteBuilder;
+    public Balance balance;
     float physicsTime;
     float graphicsTime;
     Array<Body> bodies;
@@ -78,7 +78,7 @@ public class Physics {
         if (world != null) {
             Gdx.app.log("***** Physics", "World already exists!!!!!!!!!!!!!");
         } else {
-            world = new World(new Vector2(gravityX/PIXELS_PER_METER, gravityY/PIXELS_PER_METER),
+            world = new World(new Vector2(gravityX, gravityY).scl(1f/PIXELS_PER_METER),
                                 maySleep);
             device.disposer.add(world,"Physics.world");
         }

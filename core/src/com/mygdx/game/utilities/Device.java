@@ -45,6 +45,7 @@ public class Device implements Disposable {
     public BitmapFont bitmapFont;
     public Shape2DRenderer shape2DRenderer;
     public EarClippingTriangulator triangulator;
+    public Accelerometer accelerometer;
     public AssetManager assetManager;
     public BasicAssets basicAssets;
     public Camera camera;
@@ -242,7 +243,7 @@ public class Device implements Disposable {
     }
 
     /**
-     * create a new earclipping triangulator
+     * create a new earclipping triangulator if it does not yet exist
      *
      * @return the triangulator
      */
@@ -251,6 +252,19 @@ public class Device implements Disposable {
             triangulator=new EarClippingTriangulator();
         }
         return triangulator;
+    }
+
+    /**
+     * create a new accelerometer if it does not exist. add to list of resizables
+     *
+     * @return accelerometer
+     */
+    public Accelerometer createAccelerometer(){
+        if (accelerometer==null){
+            accelerometer=new Accelerometer();
+            addResizable(accelerometer);
+        }
+        return accelerometer;
     }
 
     /**
