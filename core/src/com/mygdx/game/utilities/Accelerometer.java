@@ -106,7 +106,7 @@ public class Accelerometer implements Resizable{
      * <p>
      * If there is no accelerometer use the mouse to simulate the accelerometer.
      * If the right mouse button is pressed, then read the touch position.
-     * else use the last reading
+     * else acceleration=0
      *
      * @return Vector2, acceleration read from the accelerometer or mouse substitute. (Reuses a single Vector2 instance.)
      */
@@ -130,11 +130,13 @@ public class Accelerometer implements Resizable{
             if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
                 // if the right mouse button is pressed update the replacement accelerometer values
                 //  screen origin is top left corner
-                mouseAcceleration.x = mouseAccelerometerScale * (Gdx.input.getX() - screenWidth2);
-                mouseAcceleration.y = -mouseAccelerometerScale * (Gdx.input.getY() - screenHeight2);
-                mouseAcceleration.clamp(0.0f, mouseAccelerometerMax);
+                acceleration.set( mouseAccelerometerScale * (Gdx.input.getX() - screenWidth2),
+                                -mouseAccelerometerScale * (Gdx.input.getY() - screenHeight2));
+                acceleration.clamp(0.0f, mouseAccelerometerMax);
             }
-            acceleration.set(mouseAcceleration);
+            else {
+                acceleration.setZero();
+            }
         }
         return acceleration;
     }

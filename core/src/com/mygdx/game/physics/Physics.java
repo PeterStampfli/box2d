@@ -44,19 +44,13 @@ public class Physics {
     final int POSITION_ITERATIONS = 3;
 
     /**
-     * Initialize box2D and debugRenderer.
+     * Initialize box2D.
+     *  @param device Device
      *
-     * @param device Device
-     * @param debug boolean, true for creating a debugRenderer
      */
-    public Physics(Device device, boolean debug) {
+    public Physics(Device device) {
         this.device=device;
         bodies = new Array<Body>();
-        if (debug) {
-            debugRenderer = new Box2DDebugRenderer();
-            device.disposer.add(debugRenderer,"Box2DDebugRenderer");
-            debugCamera = new OrthographicCamera();
-        }
         Box2D.init();
         bodyBuilder=new BodyBuilder(this);
         fixtureBuilder=new FixtureBuilder();
@@ -66,27 +60,45 @@ public class Physics {
     }
 
     /**
-     * Create and return a box2D world with gravity acceleration in pixels/sec².
+     * Create a box2D world with gravity acceleration in pixels/sec².
      * Then the physics gives the same graphics results for different PIXELS_PER_METER values.
      *
      * @param gravityX float, gravitational acceleration in x-direction, pixels/sec²
      * @param gravityY float, gravitational acceleration in y-direction, pixels/sec²
-     * @param maySleep boolean
-     * @return World, a box2D world
+     * @param doSleep boolean, true if non-moving bodies are not simulated (saves computer time,
+     *                but resting bodies do not begin to move if gravity changes
      */
-    public World createWorld(float gravityX, float gravityY, boolean maySleep) {
+    public void createWorld(float gravityX, float gravityY, boolean doSleep) {
         if (world != null) {
             Gdx.app.log("***** Physics", "World already exists!!!!!!!!!!!!!");
         } else {
             world = new World(new Vector2(gravityX, gravityY).scl(1f/PIXELS_PER_METER),
-                                maySleep);
+                                doSleep);
             device.disposer.add(world,"Physics.world");
         }
-        return world;
     }
 
     /**
-     * If debug==true at physics creation then do a debug rendering of result of last physics step.
+     * create a balance object with given boost scale. registers it for resizing in device.
+     *
+     * @param scale float, scaling the gravity
+     */
+    public void createBalance(float scale){
+        balance=new Balance(this,scale);
+        device.addResizable(balance);
+    }
+
+    /**
+     * create the debug renderer. comment out call of this method to suppress debug rendering.
+     */
+    public void createDebugRenderer(){
+        debugRenderer = new Box2DDebugRenderer();
+        device.disposer.add(debugRenderer,"Box2DDebugRenderer");
+        debugCamera = new OrthographicCamera();
+    }
+
+    /**
+     * If debugRenderer exists then do a debug rendering of result of last physics step.
      * Note that because of interpolation, the graphics positions lag slightly behind the physics positions.
      *
      * @param graphicsViewport Viewport, of the graphics world,
@@ -311,8 +323,10 @@ public class Physics {
      * The graphics time is the real world time at the call of this method.
      * Thus advance the physics time past the graphics time.
      * Uses interpolation for the positions and angles of sprites at graphics time.
+     * Clears forces explicitly.
      */
     public void advance() {
+        world.setAutoClearForces(false);
         graphicsTime = TimeU.getTime();
         if (physicsTime < graphicsTime) {   // we have to advance time with fixed time step
             physicsTime = Math.max(physicsTime, graphicsTime - MAX_TIME_INTERVAL);  //prevent spiral of death
@@ -327,6 +341,7 @@ public class Physics {
             step();
             setPhysicsData();
         }
+        world.clearForces();
         float progress = 1 - (physicsTime - graphicsTime) / TIME_STEP;  // 1 if physicsTime=graphicsTime, decreasing to zero
         updateGraphicsData(progress);
     }

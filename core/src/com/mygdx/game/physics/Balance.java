@@ -20,15 +20,7 @@ public class Balance extends Accelerometer {
         super();
         this.physics=physics;
         setScale(scale);
-    }
 
-    /**
-     * Create an Balance object to set the gravity from accelerometer readings. scale=1
-     *
-     * @param physics Physics
-     */
-    public Balance(Physics physics){
-        this(physics,1f);
     }
 
     /**
