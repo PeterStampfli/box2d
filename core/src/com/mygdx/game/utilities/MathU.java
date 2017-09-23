@@ -21,4 +21,15 @@ public class MathU {
         return (a<=b)&&(b<=c);
     }
 
+    /**
+     * calculate the correct modulus for negative numbers too. Not the remainder.
+     *
+     * @param a int
+     * @param b int
+     * @return int, a mod b
+     */
+    public static int mod(int a,int b){
+        return a=(a>=0)?a%b:a%b+b;
+    }
+
 }
