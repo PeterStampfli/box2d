@@ -2,6 +2,7 @@ package com.mygdx.game.Pieces;
 
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 
 /**
  * Created by peter on 7/2/17.
@@ -34,6 +35,20 @@ public class TouchableCollection<T> extends com.mygdx.game.utilities.Collection<
         this(false);
     }
 
+    /**
+     * determine number of extensible sprites for layout
+     *
+     * @return int, number of extensible sprites
+     */
+    public int nSprites(){
+        int n=0;
+        for (int i = items.size - 1; i >= 0; i--) {
+            if (items.get(i) instanceof ExtensibleSprite){
+                n++;
+            }
+        }
+        return n;
+    }
 
     // the drawable methods
 

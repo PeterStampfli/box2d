@@ -7,13 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Pieces.Drawable;
 import com.mygdx.game.Pieces.TouchableAdapter;
 import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.L;
 
 /**
  * a varying image
  */
 
 public class BigChoiceCenter extends TouchableAdapter implements Drawable {
-    private Device device;                                  // for renderer
+    public Device device;                                  // for spriteBatch
     public Rectangle region=new Rectangle();                          // the "window"
     public TextureRegion image;
 
@@ -24,16 +25,22 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
     /**
      * create a carouselCenter object with a sample image that defines the size
      *
-     * @param device Device
+     * @param device Device, for spriteRenderer
+     */
+    public BigChoiceCenter(Device device){
+        this.device=device;
+    }
+
+    /**
+     * set dimensions
+     *
      * @param width float width of image
      * @param height float height of image
      */
-    public BigChoiceCenter(Device device, float width, float height){
-        this.device=device;
+    public void setDimensions(float width, float height){
         region.setWidth(width);
         region.setHeight(height);
     }
-
 
     /**
      * set position
@@ -46,10 +53,66 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
         region.setY(y);
     }
 
-
+    /**
+     * set the number of choices
+     *
+     * @param nChoices int, number of choices
+     */
     public void setNumberChoices(int nChoices) {
         this.nChoices = nChoices;
     }
+
+    //depending on actual choices
+
+    /**
+     * Create a textureRegion image for the center (default, for overwriting)
+     *
+     * @param choice int, the choice
+     * @return TextureRegion, image
+     */
+     public TextureRegion createImage(int choice){
+
+
+
+
+
+     }
+
+    /**
+     * do something depending on choice (default, for overwriting)
+     *
+     * @param choice int, the choice
+     */
+    public void action(int choice){
+        L.og("do action choice "+choice);
+    }
+
+    // navigation
+
+    /**
+     * switch to the next choice, change image
+     */
+    public void nextChoice(){
+        choice++;
+        if (choice>=nChoices){
+            choice=0;
+        }
+        image=createImage(choice);
+    }
+
+    /**
+     * switch to the previous choice, change image
+     */
+    public void previousChoice(){
+        choice--;
+        if (choice<0){
+            choice=nChoices-1;
+        }
+        image=createImage(choice);
+    }
+
+
+    // the touchable methods
 
     // the region is where the image is drawn and if there is touch
     @Override
@@ -63,6 +126,9 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
         return region.contains(x, y);
     }
 
+    /**
+     * draw the center, filling the rectangle region with the texture region
+     */
     @Override
     public void draw() {
         if (pressed){
@@ -71,7 +137,13 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
         else {
             device.spriteBatch.setColor(ButtonExtension.COLOR_UP);
         }
-        device.spriteBatch.draw(image,region.getX(),region.getY());
+        device.spriteBatch.draw(image,region.getX(),region.getY(),region.getWidth(),region.getHeight());
         device.spriteBatch.setColor(Color.WHITE);
+    }
+
+
+    @Override
+    public void touchBegin(Vector2 position){
+        pressed=true;
     }
 }

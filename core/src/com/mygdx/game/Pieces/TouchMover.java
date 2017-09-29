@@ -53,7 +53,7 @@ public class TouchMover extends InputAdapter {
 
     /**
      * Poll the touch data. Set touch position and change in touch. Have them defined at all times.
-     * At touch down see if a touchable is selected. Put it in front. Apply touch begin, dra and
+     * At touch down see if a touchable is selected. Put it in front. Apply touch begin, drag and
      * end commands on this object.
      *
      */
