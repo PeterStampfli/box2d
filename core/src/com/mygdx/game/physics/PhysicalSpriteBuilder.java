@@ -29,6 +29,7 @@ public class PhysicalSpriteBuilder extends ExtensibleSpriteBuilder {
      * Set minimal default actions.
      *
      * @param device Device, with pools.
+     * @param physics Physics, with the physicalSprite pool
      */
     public PhysicalSpriteBuilder(Device device,Physics physics){
         super(device);

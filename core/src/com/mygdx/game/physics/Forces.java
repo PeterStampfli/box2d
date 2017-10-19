@@ -29,7 +29,6 @@ abstract public class Forces {
      *
      * @param acceleration Vector2 acceleration to calculate
      * @param position Vector2 position in pixels (graphics units)
-     * @return
      */
     abstract public void calculateAcceleration(Vector2 acceleration, Vector2 position);
 

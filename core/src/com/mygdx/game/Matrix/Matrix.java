@@ -45,6 +45,7 @@ public class Matrix<T> extends TouchableCollection<T> {
      *
      * @param w int, number of columns
      * @param h int, number of rows
+     * @return this Matrix, for chaining
      */
     public Matrix resize(int w, int h){
         int newSize=w*h;

@@ -555,6 +555,7 @@ public class Mask {
     /**
      * Create a pixmap with transparency resulting from the mask and given solid color.
      *
+     * @param color Color, for the image
      * @return pixmap
      */
     public Pixmap createColorPixmap(Color color) {

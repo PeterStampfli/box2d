@@ -182,7 +182,7 @@ public class ExtensibleSpriteBuilder {
     /**
      * Set sprite actions for a sprite that does not move.
      *
-     * @return this, for chaining.
+     * @return this, for chaining.chosen
      */
     public ExtensibleSpriteBuilder setNoMovement(){
         setContains(SpriteActions.containsTranslate);

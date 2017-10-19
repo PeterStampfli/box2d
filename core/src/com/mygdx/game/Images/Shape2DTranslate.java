@@ -43,6 +43,7 @@ public class Shape2DTranslate {
      * @param coordinates float[], pairs of coordinates to translate
      * @param dx float, translate x-coordinates
      * @param dy float, translate y-coordinates
+     * @return float[], the translated coordinates
      */
     static public float[] translate(float[] coordinates, float dx, float dy){
         for (int i=coordinates.length-2;i>=0;i-=2){
@@ -58,6 +59,7 @@ public class Shape2DTranslate {
      * @param coordinates FloatArray, pairs of coordinates to translate
      * @param dx float, translate x-coordinate
      * @param dy float, translate y-coordinate
+     * @return FloatArray, the translated coordinates
      */
     static public FloatArray translate(FloatArray coordinates, float dx, float dy){
         for (int i=coordinates.size-2;i>=0;i-=2){

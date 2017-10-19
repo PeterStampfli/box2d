@@ -13,6 +13,8 @@ public class Timer {
 
     /**
      * create a new timer, everything is stopped
+     *
+     * @param event Runnable, the run method does the timer action
      */
     public Timer(Runnable event){
         stop();

@@ -19,6 +19,8 @@ public class ButtonBuilder {
 
     /**
      * Create the buttonBuilder, with default methods for a simple button.
+     *
+     * @param extensibleSpriteBuilder ExtensibleSpriteBuilder, basis for buttons
      */
     public ButtonBuilder(ExtensibleSpriteBuilder extensibleSpriteBuilder){
         this.extensibleSpriteBuilder=extensibleSpriteBuilder;
@@ -97,7 +99,7 @@ public class ButtonBuilder {
     }
 
     /**
-     * Add a buttonExtension to a sprite with chosen button methods
+     * Add a buttonExtension to a sprite with the button methods that have been chosen before
      *
      * @param sprite ExtensibleSprite, to make a button out of it
      * @return ButtonExtension
@@ -112,11 +114,28 @@ public class ButtonBuilder {
         return sprite;
     }
 
-    public ExtensibleSprite build(TextureRegion image, Shape2D shape2D){
+    /**
+     * build a button extension and a sprite from a texture region image and a shape
+     *
+     with given texture region and shape2d shape.
+     *
+     * @param image TextureRegion, image
+     * @param shape Shape2D, shape
+     * @return ExtensibleSprite, the sprite with button extension
+     */
+    public ExtensibleSprite build(TextureRegion image, Shape2D shape){
         extensibleSpriteBuilder.setNoMovement();
-        return build(extensibleSpriteBuilder.build(image, shape2D));
+        return build(extensibleSpriteBuilder.build(image, shape));
     }
 
+    /**
+     * build a button extension and a sprite from a texture region image without shape
+     *
+     with given texture region and shape2d shape.
+     *
+     * @param image TextureRegion, image
+     * @return ExtensibleSprite, the sprite with button extension
+     */
     public ExtensibleSprite build(TextureRegion image){
         return build(image,null);
     }

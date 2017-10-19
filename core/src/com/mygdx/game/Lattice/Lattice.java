@@ -133,7 +133,8 @@ public abstract class Lattice {
     /**
      * set position depending on address.
      *
-     * @param position will be set to position
+     * @param position will be set to position given by the address
+     * @param address Address
      * @return Vector2 position for chaining
      */
     public Vector2 positionOfAddress(Vector2 position,Vector2 address){

@@ -53,6 +53,7 @@ public class WriteShape {
      * first integer length of vertices array, then float[] vertices array
      * length=2*number of vertices
      *
+     * @param fileHandle FileHandle
      * @param polyline Polyline
      */
     static public void appendPolyline(FileHandle fileHandle,Polyline polyline){
