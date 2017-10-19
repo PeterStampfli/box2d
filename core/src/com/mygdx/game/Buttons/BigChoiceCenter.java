@@ -14,8 +14,8 @@ import com.mygdx.game.utilities.L;
  */
 
 public class BigChoiceCenter extends TouchableAdapter implements Drawable {
-    public Device device;                                  // for spriteBatch
-    public Rectangle region=new Rectangle();                          // the "window"
+    public Device device;                                      // for spriteBatch
+    public Rectangle imageRectangle=new Rectangle();                          // the "window"
     public TextureRegion image;
 
     int nChoices;                                // number of different choices
@@ -38,8 +38,8 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
      * @param height float height of image
      */
     public void setDimensions(float width, float height){
-        region.setWidth(width);
-        region.setHeight(height);
+        imageRectangle.setWidth(width);
+        imageRectangle.setHeight(height);
     }
 
     /**
@@ -49,8 +49,8 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
      * @param y float, y-coordinate
      */
     public void setPosition(float x, float y){
-        region.setX(x);
-        region.setY(y);
+        imageRectangle.setX(x);
+        imageRectangle.setY(y);
     }
 
     /**
@@ -114,7 +114,7 @@ return null;
 
     // the touchable methods
 
-    // the region is where the image is drawn and if there is touch
+    // the imageRectangle is where the image is drawn and if there is touch
     @Override
     public boolean contains(Vector2 point) {
         return contains(point.x, point.y);
@@ -123,11 +123,11 @@ return null;
 
     @Override
     public boolean contains(float x, float y) {
-        return region.contains(x, y);
+        return imageRectangle.contains(x, y);
     }
 
     /**
-     * draw the center, filling the rectangle region with the texture region
+     * draw the center, filling the imageRectangle with the texture region
      */
     @Override
     public void draw() {
@@ -137,7 +137,7 @@ return null;
         else {
             device.spriteBatch.setColor(ButtonExtension.COLOR_UP);
         }
-        device.spriteBatch.draw(image,region.getX(),region.getY(),region.getWidth(),region.getHeight());
+        device.spriteBatch.draw(image,imageRectangle.getX(),imageRectangle.getY(),imageRectangle.getWidth(),imageRectangle.getHeight());
         device.spriteBatch.setColor(Color.WHITE);
     }
 
