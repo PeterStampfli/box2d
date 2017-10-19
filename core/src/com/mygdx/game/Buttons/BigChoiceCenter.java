@@ -45,8 +45,8 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
     /**
      * set position
      *
-     * @param x
-     * @param y
+     * @param x float, x-coordinate
+     * @param y float, y-coordinate
      */
     public void setPosition(float x, float y){
         region.setX(x);
@@ -73,7 +73,7 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
      public TextureRegion createImage(int choice){
 
 
-
+return null;
 
 
      }
@@ -84,7 +84,7 @@ public class BigChoiceCenter extends TouchableAdapter implements Drawable {
      * @param choice int, the choice
      */
     public void action(int choice){
-        L.og("do action choice "+choice);
+        L.og("do action choice: "+choice);
     }
 
     // navigation
