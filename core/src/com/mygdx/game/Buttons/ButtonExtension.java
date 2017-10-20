@@ -27,7 +27,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     public ButtonDraw buttonDraw;
     public ButtonTouchBegin buttonTouchBegin;
     public ButtonTouchEnd buttonTouchEnd;
-    public ButtonEffect buttonEffect;
+    public Runnable buttonAction;
 
     public int state;
     SpriteDraw basicSpriteDraw;
@@ -73,10 +73,10 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
     /**
      * set object that has the act-method for the effective action of the button
      *
-     * @param buttonEffect ButtonAction object with act method for doing what the button does
+     * @param buttonAction ButtonAction object with act method for doing what the button does
      */
-    public void setButtonEffect(ButtonEffect buttonEffect) {
-        this.buttonEffect = buttonEffect;
+    public void setButtonAction(Runnable buttonAction) {
+        this.buttonAction = buttonAction;
     }
 
     /**
@@ -166,7 +166,7 @@ public class ButtonExtension implements SpriteDraw,SpriteTouchBegin,SpriteTouchE
      * Method for calling the buttonAct object that does what the button is supposed to do.
      */
     public void act(){
-        buttonEffect.act(this);
+        buttonAction.run();
     }
 
     /**

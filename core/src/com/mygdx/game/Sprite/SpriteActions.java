@@ -103,7 +103,7 @@ public class SpriteActions {
 
     /**
      * An object that implements SpriteDraw:
-     * Draws the basic sprite without extras.
+     * Draws the basic sprite without extras. Uses the draw(batch) method of the sprite supertype.
      */
     static public SpriteDraw draw = new SpriteDraw() {
         @Override

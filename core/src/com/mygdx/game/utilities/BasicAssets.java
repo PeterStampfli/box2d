@@ -264,13 +264,18 @@ public class BasicAssets {
      * @return the textureRegion or null (if nothing found)
      */
     public TextureRegion getTextureRegion(String name) {
+        L.og(name);
         TextureRegion result;
         FileHandle fileHandle;
         fileHandle = Gdx.files.internal(name + ".png");                    // try to find as a png
         if (!fileHandle.exists()) {
             fileHandle = Gdx.files.internal(name + ".jpg");           // if not found try jpg
         }
+        if (!fileHandle.exists()) {
+            fileHandle = Gdx.files.internal(name + ".JPG");           // if not found try jpg
+        }
         if (fileHandle.exists()) {
+            L.og("loading "+name);
             Texture texture = new Texture(fileHandle);
             device.disposer.add(texture, name + " texture");
             result = new TextureRegion(texture);        // if found load the masterTextureRegion as texture->textureRegion

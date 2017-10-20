@@ -14,7 +14,6 @@ public class ButtonBuilder {
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
-    ButtonEffect buttonEffect;
     boolean makeSelectionButtons;
 
     /**
@@ -25,7 +24,6 @@ public class ButtonBuilder {
     public ButtonBuilder(ExtensibleSpriteBuilder extensibleSpriteBuilder){
         this.extensibleSpriteBuilder=extensibleSpriteBuilder;
         buttonDraw=ButtonActions.drawTinted;
-        buttonEffect =ButtonActions.actNull;
         setPressButton();
     }
 
@@ -100,43 +98,72 @@ public class ButtonBuilder {
 
     /**
      * Add a buttonExtension to a sprite with the button methods that have been chosen before
+     * and a given action
      *
+     * @param action Runnable with the run method that does it
      * @param sprite ExtensibleSprite, to make a button out of it
      * @return ButtonExtension
      */
-    public ExtensibleSprite build(ExtensibleSprite sprite){
+    public ExtensibleSprite build(Runnable action,ExtensibleSprite sprite){
         ButtonExtension buttonExtension=new ButtonExtension(sprite);
         buttonExtension.setButtonDraw(buttonDraw);
         buttonExtension.setButtonTouchBegin(buttonTouchBegin);
         buttonExtension.setButtonTouchEnd(buttonTouchEnd);
-        buttonExtension.setButtonEffect(buttonEffect);
+        buttonExtension.setButtonAction(action);
         buttonExtension.buttonCollection =extensibleSpriteBuilder.spriteCollection;
         return sprite;
     }
 
     /**
-     * build a button extension and a sprite from a texture region image and a shape
-     *
-     with given texture region and shape2d shape.
-     *
+     * build a button extension and a sprite from an action, a texture region image and a shape
+     **
+     * @param action Runnable with the run method that does it
      * @param image TextureRegion, image
      * @param shape Shape2D, shape
      * @return ExtensibleSprite, the sprite with button extension
      */
-    public ExtensibleSprite build(TextureRegion image, Shape2D shape){
+    public ExtensibleSprite build(Runnable action,TextureRegion image, Shape2D shape){
         extensibleSpriteBuilder.setNoMovement();
-        return build(extensibleSpriteBuilder.build(image, shape));
+        return build(action,extensibleSpriteBuilder.build(image, shape));
     }
 
     /**
-     * build a button extension and a sprite from a texture region image without shape
+     * build a button extension and a sprite from an action, a texture region image
+     * The shape is the texture region
      *
-     with given texture region and shape2d shape.
-     *
+     * @param action Runnable with the run method that does it
      * @param image TextureRegion, image
      * @return ExtensibleSprite, the sprite with button extension
      */
-    public ExtensibleSprite build(TextureRegion image){
-        return build(image,null);
+    public ExtensibleSprite build(Runnable action,TextureRegion image){
+        return build(action,image,null);
+    }
+
+    /**
+     * build a push button from an action,a texture region image and a shape
+     **
+     * @param action Runnable with the run method that does it
+     * @param image TextureRegion, image
+     * @param shape Shape2D, shape
+     * @return ExtensibleSprite, the sprite with button extension
+     */
+    public ExtensibleSprite pushButton(Runnable action,TextureRegion image, Shape2D shape){
+        extensibleSpriteBuilder.setNoMovement();
+        setPressButton();
+        return build(action,extensibleSpriteBuilder.build(image, shape));
+    }
+
+    /**
+     * build a push button from an action,a texture region image
+     * The shape is the texture region
+     *
+     with given texture region and shape2d shape.
+     *
+     * @param action Runnable with the run method that does it
+     * @param image TextureRegion, image
+     * @return ExtensibleSprite, the sprite with button extension
+     */
+    public ExtensibleSprite pushButton(Runnable action,TextureRegion image){
+        return build(action,image,null);
     }
 }

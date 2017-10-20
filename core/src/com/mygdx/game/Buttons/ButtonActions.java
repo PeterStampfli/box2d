@@ -99,9 +99,9 @@ public class ButtonActions {
     /**
      * button act: does nothing
      */
-    static public ButtonEffect actNull=new ButtonEffect() {
+    static public Runnable actNull=new Runnable() {
         @Override
-        public void act(ButtonExtension buttonExtension) {
+        public void run() {
         }
     };
 }
