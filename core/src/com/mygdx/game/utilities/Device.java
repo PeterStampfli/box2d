@@ -36,7 +36,7 @@ import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
  * Collect objects that need to be resized.
  */
 
-public class Device implements Disposable {
+public class Device implements Disposable,Resizable {
 
     public final Pool<ExtensibleSprite> extensibleSpritePool;
     public final Pool<GlyphLayout> glyphLayoutPool;
