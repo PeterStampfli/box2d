@@ -53,6 +53,7 @@ public class Device implements Disposable,Resizable {
     public TouchMover touchMover;
     public ExtensibleSpriteBuilder extensibleSpriteBuilder;
     public ButtonBuilder buttonBuilder;
+    public Timer timer;                                        // a timer for ui elements, only one can be touched
     public Array<Resizable> resizables = new Array<Resizable>();
     public Array<Viewport> viewports = new Array<Viewport>();
     public boolean soundIsOn=true;
@@ -73,6 +74,7 @@ public class Device implements Disposable,Resizable {
         touchMover=new TouchMover(this);
         extensibleSpriteBuilder=new ExtensibleSpriteBuilder(this);
         buttonBuilder=new ButtonBuilder(extensibleSpriteBuilder);
+        timer=new Timer();
         extensibleSpritePool = Pools.get(ExtensibleSprite.class);
         glyphLayoutPool = Pools.get(GlyphLayout.class);
     }

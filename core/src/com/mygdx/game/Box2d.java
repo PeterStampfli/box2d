@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Images.DrawLines;
 import com.mygdx.game.Images.Mask;
+import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.SpriteActions;
 import com.mygdx.game.Sprite.SpriteCollection;
 import com.mygdx.game.physics.BorderBarrier;
@@ -16,7 +17,6 @@ import com.mygdx.game.physics.PhysicalSprite;
 import com.mygdx.game.physics.Physics;
 import com.mygdx.game.utilities.Device;
 import com.mygdx.game.utilities.L;
-import com.mygdx.game.utilities.MathU;
 import com.mygdx.game.utilities.RenderU;
 import com.mygdx.game.utilities.TimeU;
 import com.mygdx.game.utilities.Timer;
@@ -39,14 +39,14 @@ public class Box2d extends ApplicationAdapter {
 	@Override
 	public void create () {
 
-		timer=new Timer(new Runnable() {
+		timer=new Timer();
+
+		timer.repeatForever(new Runnable() {
 			@Override
 			public void run() {
 				L.og("something happens"+ TimeU.getTime());
 			}
-		});
-
-		timer.repeatForever(1);
+		},1,0.5f);
 		device=new Device().logging();
 		spriteBatch=device.spriteBatch;
 		int size=512;
@@ -63,9 +63,23 @@ public class Box2d extends ApplicationAdapter {
 		//physics.physicalSpriteBuilder.setKeepVisible(SpriteActions.keepVisibleTexture);
 		extensibleSprite=physics.physicalSpriteBuilder.build(textureRegion,circle);
 		extensibleSprite.setPosition(100,300);
+
+		extensibleSprite.setRegion(device.basicAssets.getTextureRegion("beeAvatar"));
 		spriteCollection=new SpriteCollection(device);
 		spriteCollection.add(extensibleSprite);
-		spriteCollection.add(device.extensibleSpriteBuilder.build(textureRegion,circle));
+
+
+		Runnable buttonEffect=new Runnable() {
+			@Override
+			public void run() {
+				L.og("magic happens");
+				device.logging();
+			}
+		};
+
+		ExtensibleSprite button= device.buttonBuilder.pushButton(buttonEffect,textureRegion);
+
+		spriteCollection.add(button);
 		device.touchMover.setTouchable(spriteCollection);
 
 		drawLines=new DrawLines(device,"disc","line",10);
@@ -73,7 +87,7 @@ public class Box2d extends ApplicationAdapter {
 		physics.createBalance(200);
 		forceTest=new ForceTest(viewport,physics);
 		physics.start();
-		L.og(MathU.mod(0,5));
+		L.og("start"+ TimeU.getTime());
 
 	}
 
