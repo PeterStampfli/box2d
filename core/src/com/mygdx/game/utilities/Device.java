@@ -90,6 +90,14 @@ public class Device implements Disposable,Resizable {
     }
 
     /**
+     * update objects of device
+     */
+    public void update(){
+        timer.update();
+        touchMover.update();
+    }
+
+    /**
      * Set the camera for un-projecting (TouchReader). Call in show() method of screens. Or in render-update if using more than one camera/viewport.
      *
      * @param camera Camera

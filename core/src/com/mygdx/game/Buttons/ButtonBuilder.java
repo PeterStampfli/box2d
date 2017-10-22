@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
+import com.mygdx.game.utilities.Device;
+import com.mygdx.game.utilities.L;
 
 /**
  * Add a button function to an extensibleSprite
@@ -11,10 +13,13 @@ import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 
 public class ButtonBuilder {
     ExtensibleSpriteBuilder extensibleSpriteBuilder;
+    Device device;
     ButtonDraw buttonDraw;
     ButtonTouchBegin buttonTouchBegin;
     ButtonTouchEnd buttonTouchEnd;
     boolean makeSelectionButtons;
+    float initialDelay=1;
+    float timeInterval=0.5f;
 
     /**
      * Create the buttonBuilder, with default methods for a simple button.
@@ -23,8 +28,9 @@ public class ButtonBuilder {
      */
     public ButtonBuilder(ExtensibleSpriteBuilder extensibleSpriteBuilder){
         this.extensibleSpriteBuilder=extensibleSpriteBuilder;
+        device=extensibleSpriteBuilder.device;
         buttonDraw=ButtonActions.drawTinted;
-        setPressButton();
+        setPushButton();
     }
 
     /**
@@ -61,11 +67,11 @@ public class ButtonBuilder {
     }
 
     /**
-     * Build simple single press buttons.
+     * Build simple single push buttons.
      *
      * @return ButtonBuilder, for chaining
      */
-    public ButtonBuilder setPressButton(){
+    public ButtonBuilder setPushButton(){
         makeSelectionButtons =false;
         buttonTouchBegin=ButtonActions.touchBeginPressed;
         buttonTouchEnd=ButtonActions.touchEndUpAct;
@@ -141,7 +147,7 @@ public class ButtonBuilder {
 
     /**
      * build a push button from an action,a texture region image and a shape
-     **
+     *
      * @param action Runnable with the run method that does it
      * @param image TextureRegion, image
      * @param shape Shape2D, shape
@@ -149,7 +155,7 @@ public class ButtonBuilder {
      */
     public ExtensibleSprite pushButton(Runnable action,TextureRegion image, Shape2D shape){
         extensibleSpriteBuilder.setNoMovement();
-        setPressButton();
+        setPushButton();
         return build(action,extensibleSpriteBuilder.build(image, shape));
     }
 
@@ -166,4 +172,38 @@ public class ButtonBuilder {
     public ExtensibleSprite pushButton(Runnable action,TextureRegion image){
         return build(action,image,null);
     }
+
+
+
+    /**
+     * build a repeating push button from an action,a texture region image and a shape
+     *
+     * @param action Runnable with the run method that does it
+     * @param image TextureRegion, image
+     * @param shape Shape2D, shape
+     * @return ExtensibleSprite, the sprite with button extension
+     */
+    public ExtensibleSprite repeatingPushButton(final Runnable action, TextureRegion image, Shape2D shape){
+        extensibleSpriteBuilder.setNoMovement();
+        setPushButton();
+        final ExtensibleSprite button= build(new Runnable() {
+            @Override
+            public void run() {
+                if (device.timer.starting){
+                    action.run();
+                }
+                device.timer.stop();
+            }
+        }, extensibleSpriteBuilder.build(image, shape));
+        button.buttonExtension.setButtonTouchBegin(new ButtonTouchBegin() {
+            @Override
+            public void touchBegin(ButtonExtension buttonExtension) {
+                button.buttonExtension.setStatePressed();
+                device.timer.repeatForever(action,initialDelay,timeInterval);
+            }
+        });
+
+        return button;
+    }
+
 }

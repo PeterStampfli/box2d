@@ -1,8 +1,7 @@
 package com.mygdx.game.utilities;
 
 /**
- * Created by peter on 4/15/17.
- * An interface for objects that have to be resized at startup . For collecting and automatic resizing.
+ * An interface for objects that have to be resized at startup and resize events . For collecting and automatic resizing.
  */
 
 public interface Resizable {
