@@ -576,15 +576,25 @@ public class Mask {
     }
 
     /**
-     * Create a white textureRegion with transparency resulting from the mask.
+     * Create a solid color image textureRegion with transparency resulting from the mask.
+     *
+     * @param color Color, for the image
+     * @return TextureRegion
+     */
+    public TextureRegion createColorTextureRegion(Color color) {
+        Pixmap pixmap=createColorPixmap(color);
+        TextureRegion textureRegion=TextureU.textureRegionFromPixmap(pixmap);
+        pixmap.dispose();
+        return textureRegion;
+    }
+
+    /**
+     * Create a solid white image textureRegion with transparency resulting from the mask.
      *
      * @return TextureRegion
      */
     public TextureRegion createColorTextureRegion() {
-        Pixmap pixmap=createColorPixmap();
-        TextureRegion textureRegion=TextureU.textureRegionFromPixmap(pixmap);
-        pixmap.dispose();
-        return textureRegion;
+        return createColorTextureRegion(Color.WHITE);
     }
 }
 

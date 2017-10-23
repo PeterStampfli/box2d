@@ -21,10 +21,12 @@ public abstract class ImageUpdater implements Disposable{
      * @param disposeTextures
      * @param device Device, with disposer
      */
-    public void ImageUpdater(boolean disposeTextures, Device device){
+    public ImageUpdater(boolean disposeTextures, Device device){
         this.disposeTextures=disposeTextures;
         this.device=device;
-        device.disposer.add(this,"ImageUpdater");
+        if (disposeTextures) {
+            device.disposer.add(this, "ImageUpdater");
+        }
 
     }
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Shape2D;
 import com.mygdx.game.Sprite.ExtensibleSprite;
 import com.mygdx.game.Sprite.ExtensibleSpriteBuilder;
 import com.mygdx.game.utilities.Device;
-import com.mygdx.game.utilities.L;
 
 /**
  * Add a button function to an extensibleSprite
@@ -173,8 +172,6 @@ public class ButtonBuilder {
         return build(action,image,null);
     }
 
-
-
     /**
      * build a repeating push button from an action,a texture region image and a shape
      *
@@ -194,16 +191,27 @@ public class ButtonBuilder {
                 }
                 device.timer.stop();
             }
-        }, extensibleSpriteBuilder.build(image, shape));
+        }, image, shape);
         button.buttonExtension.setButtonTouchBegin(new ButtonTouchBegin() {
             @Override
             public void touchBegin(ButtonExtension buttonExtension) {
-                button.buttonExtension.setStatePressed();
+                buttonExtension.setStatePressed();
                 device.timer.repeatForever(action,initialDelay,timeInterval);
             }
         });
-
         return button;
     }
 
+
+    /**
+     * build a repeating push button from an action,a texture region image
+     * the texture region is the shape
+     *
+     * @param action Runnable with the run method that does it
+     * @param image TextureRegion, image
+     * @return ExtensibleSprite, the sprite with button extension
+     */
+    public ExtensibleSprite repeatingPushButton(final Runnable action, TextureRegion image){
+        return repeatingPushButton(action, image,null);
+    }
 }

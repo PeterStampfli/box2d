@@ -21,11 +21,11 @@ abstract public class BigChoice extends TouchableCollection implements Resizable
     float repeatDelay=1;
     float repeatIntervall=0.5f;
 
-    int choice=0;                           // going from 0 to numberOfChoices-1
-    int numberOfChoices=0;
+    public int choice=0;                           // going from 0 to numberOfChoices-1
+    public int numberOfChoices=0;
     // the buttons (for resizing)
-    ExtensibleSprite nextButton,previousButton,centerButton;
-    ImageUpdater centerImageUpdater;
+    public ExtensibleSprite nextButton,previousButton,centerButton;
+    public ImageUpdater centerImageUpdater;
 
     /**
      * Create and add to resizables of the device
@@ -56,16 +56,6 @@ abstract public class BigChoice extends TouchableCollection implements Resizable
     }
 
     // create the buttons
-    /**
-     * go to the next choice and image
-     */
-    Runnable goNext=new Runnable() {
-        @Override
-        public void run() {
-            choice=(choice==numberOfChoices-1)?0:choice+1;
-            updateCenterImage();
-        }
-    };
 
     /**
      * Create the button for going to next choice
@@ -74,28 +64,17 @@ abstract public class BigChoice extends TouchableCollection implements Resizable
      * @return BigChoice, for chaining
      */
     public BigChoice createNextButton(TextureRegion image){
-        Runnable action=new Runnable() {
+        Runnable goNext=new Runnable() {
             @Override
             public void run() {
                 choice=(choice==numberOfChoices-1)?0:choice+1;
                 updateCenterImage();
             }
         };
-        nextButton=device.buttonBuilder.pushButton(action,image);
+        nextButton=device.buttonBuilder.repeatingPushButton(goNext,image);
         add(nextButton);
         return  this;
     }
-
-    /**
-     * goto previous choice and image
-     */
-    Runnable goPrevious=new Runnable() {
-        @Override
-        public void run() {
-            choice=(choice==0)?numberOfChoices-1:choice-1;
-            updateCenterImage();
-        }
-    };
 
     /**
      * Create the button for going to previous choice
@@ -105,23 +84,33 @@ abstract public class BigChoice extends TouchableCollection implements Resizable
      * @return BigChoice, for chaining
      */
     public BigChoice createPreviousButton(TextureRegion image){
-        Runnable action=new Runnable() {
+        Runnable goPrevious=new Runnable() {
             @Override
             public void run() {
-                if (timer.starting){
-                    goPrevious.run();
-                }
-                timer.stop();
+                choice=(choice==0)?numberOfChoices-1:choice-1;
+                updateCenterImage();
             }
         };
-        previousButton=device.buttonBuilder.pushButton(action,image);
-        add(nextButton);
+        previousButton=device.buttonBuilder.repeatingPushButton(goPrevious,image);
+        add(previousButton);
         return this;
     }
 
 
 // center button is extensibleSprite with buttonextension, change image with setRegion(textureregion)
+
+
     public BigChoice createCenterButton(ImageUpdater imageUpdater){
+        centerImageUpdater=imageUpdater;
+        Runnable doCenter=new Runnable() {
+            @Override
+            public void run() {
+                centerAction();
+            }
+        };
+        centerButton=device.buttonBuilder.pushButton(doCenter,centerImageUpdater.updateImage(0));
+
+        add(centerButton);
 
         return this;
     }
